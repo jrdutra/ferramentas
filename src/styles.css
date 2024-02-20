@@ -1,0 +1,53 @@
+body {
+    background-color: rgb(164, 164, 164);
+}
+
+.sombra {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.textareaclasse {
+    background-color: rgb(75, 75, 75);
+    color: rgb(223, 223, 223);
+}
+
+.textareaclasse:focus {
+    background-color: rgb(98, 98, 98);
+    color: rgb(243, 243, 243);
+}
+
+.card-escuro {
+    background-color: #333;
+    /* Altere para corresponder à cor de fundo do seu card */
+    color: #fff;
+    /* Cor do texto */
+}
+
+.header-escuro  {
+    background-color: #444444;
+    /* Cor de fundo do cabeçalho do card */
+    color: #fff;
+    /* Cor do texto do cabeçalho */
+}
+
+.body-escuro  {
+    background-color: #303030;
+    /* Cor de fundo do corpo do card */
+    color: #fff;
+    /* Cor do texto do corpo */
+}
+
+.btn-azul-escuro  {
+    background-color: #375A7F;
+    /* Cor de fundo dos botões */
+    color: #fff;
+    /* Cor do texto dos botões */
+    border: 1px solid #3d5e81;
+    /* Cor da borda dos botões */
+}
+
+.btn-azul-escuro:hover {
+    background-color: #2a4a63; /* Nova cor de fundo para o hover */
+    color: #ffffff; /* Nova cor do texto para o hover, se necessário */
+    border: 1px solid #2d5175; /* Nova cor da borda para o hover */
+}
