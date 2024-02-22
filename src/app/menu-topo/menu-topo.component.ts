@@ -80,6 +80,23 @@ export class MenuTopoComponent {
               icon: 'pi pi-fw pi-verified'
             }
           ]
+        },
+        {
+          separator: true
+        },
+        {
+          label: 'Conversores',
+          icon: 'pi pi-fw pi-arrow-right-arrow-left',
+          items:[
+            {
+              label: 'Pdf para Imagem',
+              icon: 'pi pi-fw pi-file-pdf'
+            },
+            {
+              label: 'Imagem para Pdf',
+              icon: 'pi pi-fw pi-image'
+            }
+          ]
         }
       ]
     }
