@@ -1,2 +1,12 @@
 <menu-topo></menu-topo>
+
+<h2>Meu título: {{ meuTitulo }}</h2>
+  <button type="submit" (click)="addItem()">Add</button><br>
+  <button type="submit" (click)="removeItem()">Remover</button>
+<ul>
+  @for (ingredient of ingredientList; track ingredient.name) {
+    <li>{{ ingredient.quantity }} - {{ ingredient.name }}</li>
+  }
+</ul>
+
 <router-outlet></router-outlet> 
