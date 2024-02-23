@@ -1,0 +1,17 @@
+<mat-toolbar color="primary" class="mat-elevation-z4">
+    <button mat-button>
+        <mat-icon>home</mat-icon>
+        Início
+    </button>
+
+    <button mat-button [matMenuTriggerFor]="menuFerramentas">
+        <mat-icon>build</mat-icon>
+        Ferramentas
+    </button>
+    <mat-menu #menuFerramentas="matMenu">
+        <button mat-menu-item (click)="navigateMenu('ferramenta1')">Ferramenta 1</button>
+        <button mat-menu-item (click)="navigateMenu('ferramenta2')">Ferramenta 2</button>
+    </mat-menu>
+
+    <!-- Outros botões ou conteúdo podem ser adicionados aqui -->
+</mat-toolbar>

@@ -1,30 +1,19 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MenuTopoComponent } from './menu-topo/menu-topo.component'
+import { RouterOutlet, RouterLink, RouterLinkActive, RouterModule  } from '@angular/router';
 
+import {MenuComponent} from './menu/menu.component'
+import {MatCardModule} from '@angular/material/card';
+
+import { Ferramenta1Component } from './ferramentas/ferramenta1/ferramenta1.component'
+import { Ferramenta2Component } from './ferramentas/ferramenta2/ferramenta2.component'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MenuTopoComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, RouterModule , MenuComponent, MatCardModule, Ferramenta1Component, Ferramenta2Component],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  meuTitulo = 'Esse é meu titulo renderizado';
-  ingredientList = [
-    {name: 'noodles', quantity: 1},
-    {name: 'miso broth', quantity: 1},
-    {name: 'egg', quantity: 2},
-    {name: 'egg', quantity: 4},
-  ];
-
-  addItem(){
-    this.ingredientList.push({name: 'item', quantity: 1})
-  }
-
-  removeItem(){
-    this.ingredientList.pop();
-  }
-
+  title = 'ferramentas';
 }
