@@ -23,5 +23,8 @@ export class MenuComponent {
     if (tag === 'ferramenta2') {
       this.router.navigate(['/ferramenta2']);
     }
+    if (tag === 'home') {
+      this.router.navigate(['/home']);
+    }
   }
 }
