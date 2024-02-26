@@ -5,7 +5,9 @@ import { Ferramenta2Component } from './ferramentas/ferramenta2/ferramenta2.comp
 import { HomeComponent } from './home/home.component'
 
 export const routes: Routes = [
+    { path: '', component: HomeComponent },
+    { path: 'home', component: HomeComponent },
     { path: 'ferramenta1', component: Ferramenta1Component },
-    { path: 'ferramenta2', component: Ferramenta2Component },
-    { path: 'home', component: HomeComponent }
+    { path: 'ferramenta2', component: Ferramenta2Component }
+    
 ];
