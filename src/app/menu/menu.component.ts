@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,17 +10,19 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [MatButtonModule, MatToolbarModule, MatIconModule, MatMenuModule],
   templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+  styleUrl: './menu.component.css',
+
 })
 export class MenuComponent {
 
-  tituloAplicacao: string = '';
+  tituloAplicacao: string = "...";
 
   ngOnInit(): void {
-    this.tituloAplicacao = "Início";
+    let currentRoutePath = this.router.url; // Isso divide a URL no ponto de interrogação (excluindo os parâmetros de consulta)
   }
 
   constructor(private router: Router) { }
+
 
   navigateMenu(tag: string) {
     if (tag === 'ferramenta1') {
@@ -34,6 +36,10 @@ export class MenuComponent {
     if (tag === 'home') {
       this.router.navigate(['/home']);
       this.tituloAplicacao = "Início";
+    }
+    if (tag === 'leitor-area-cws') {
+      this.router.navigate(['/leitor-area-cws']);
+      this.tituloAplicacao = "Leitor de área CWS";
     }
   }
 }

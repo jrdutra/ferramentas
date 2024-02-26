@@ -1,0 +1,32 @@
+<div class="parent-div">
+    <div class="vetical-div">
+        <div class="horizontal-div alinhar-texto-esquerda">
+            Esse é um leitor de área de comunicação do CWS. Basta informar a BOOK e a área de comunicação.
+        </div>
+    </div><br/>
+    <div class="vetical-div">
+        <div class="horizontal-div">BOOK DO CWS</div>
+        <div class="horizontal-div">ÁREA DE COMUNICAÇÃO</div>
+    </div>
+    <div class="vetical-div">
+        <div class="horizontal-div" style="height: 300px; display: inline-block;">
+                <mat-form-field appearance="fill">
+                    <mat-label>Informe a book do CWS neste campo</mat-label>
+                    <textarea matInput class="myTextarea"></textarea>
+                </mat-form-field>
+        </div>
+        <div class="horizontal-div" style="height: 300px; display: inline-block;">
+                <mat-form-field appearance="fill">
+                    <mat-label>Informe a área de comunicação neste campo</mat-label>
+                    <textarea matInput class="myTextarea"></textarea>
+                </mat-form-field>
+        </div>
+    </div>
+    <div class="vetical-div">
+        <div class="horizontal-div"><button mat-raised-button color="primary">Executar Leitura</button> <mat-checkbox
+                class="example-margin" [(ngModel)]="esconderBrancoseZeros">Esconder Brancos e Zeros</mat-checkbox></div>
+    </div><br/>
+    <div class="vetical-div">
+        Conteúdo da Div inferior
+    </div>
+</div>

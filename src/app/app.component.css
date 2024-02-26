@@ -15,11 +15,11 @@
 }
 
 .footer {
-    height: 8em; /* Define a altura do rodapé */
+    height: 3.5em; /* Define a altura do rodapé */
     background-color: #505050; /* Define a cor de fundo do rodapé para cinza claro */
     color: rgb(255, 255, 255); /* Define a cor do texto do rodapé */
     text-align: center; /* Centraliza o texto horizontalmente */
-    line-height: 100px; /* Centraliza o texto verticalmente, deve ser igual à altura */
+    line-height: 3.5em; /* Centraliza o texto verticalmente, deve ser igual à altura */
     width: 100%; /* Garante que o rodapé se estenda por toda a largura da página */
     position: relative; /* Pode ser 'absolute' se precisar fixar no fundo, mas 'relative' é o padrão */
     bottom: 0; /* Alinha o rodapé na parte inferior da página, útil se usar position absolute */

@@ -1,0 +1,44 @@
+.parent-div {
+    display: flex;
+    flex-direction: column;
+    /* Isso garante que as divs filhas (top-div e bottom-div) sejam empilhadas verticalmente */
+}
+
+.vetical-div {
+    display: flex;
+    /* Isso torna as divs flex containers */
+    flex-direction: row;
+    /* Isso alinha as divs internas da top-div horizontalmente */
+    /* border: 1px solid black;*/
+    /* Adiciona uma borda para melhor visualização */
+}
+
+.horizontal-div {
+    flex: 1;
+   /*  border: 1px solid black;*/
+    /* Adiciona uma borda para melhor visualização */
+}
+
+.alinhar-texto-esquerda {
+    text-align: left;
+}
+
+.alinhar-texto-centro {
+    text-align: center;
+    /* Centraliza o texto dentro das divs internas */
+}
+
+.myTextarea {
+    width: 100%;
+    /* Faz o textarea preencher a largura da div */
+    height: 100%;
+    /* Faz o textarea preencher a altura da div */
+    box-sizing: border-box;
+    /* Garante que padding e bordas estejam incluídos no tamanho total */
+}
+
+mat-form-field {
+    width: 98%;
+    height: 100%;
+    /* Faz o mat-form-field preencher a largura da div pai */
+}

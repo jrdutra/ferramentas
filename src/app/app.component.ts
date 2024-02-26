@@ -12,7 +12,7 @@ import { Ferramenta2Component } from './ferramentas/ferramenta2/ferramenta2.comp
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, RouterModule , MenuComponent, MatCardModule, Ferramenta1Component, Ferramenta2Component],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'ferramentas';
