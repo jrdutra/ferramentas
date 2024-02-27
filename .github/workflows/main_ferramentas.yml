@@ -71,4 +71,7 @@ jobs:
           app-name: 'ferramentas'
           slot-name: 'Production'
           package: .
+      
+      - name: Executando servidor
+        run: node dist/ferramentas/server/server.mjs
           
