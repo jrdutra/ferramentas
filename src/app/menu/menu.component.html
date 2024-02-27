@@ -1,23 +1,39 @@
 <div class="div-principal">
     <div class="div-topo">
         <mat-toolbar color="primary" class="mat-elevation-z4">
-            <button mat-button (click)="navegaMenu('home')">
+
+            <div class="menu-grande">
+                <button mat-button (click)="navegaMenu('home')">
+                    <mat-icon>home</mat-icon>
+                    Início
+                </button>
+
+                <button mat-button [matMenuTriggerFor]="menuFerramentas">
+                    <mat-icon>build</mat-icon>
+                    Ferramentas
+                </button>
+                <mat-menu #menuFerramentas="matMenu">
+                    <button mat-menu-item (click)="navegaMenu('leitor-area-cws')">Leitor de área CWS</button>
+                </mat-menu>
+            </div>
+
+            <div class="menu-hamburger">
+                <button [matMenuTriggerFor]="menuHamburger" mat-icon-button class="example-icon">
+                    <mat-icon>menu</mat-icon>
+                </button>
+                <mat-menu #menuHamburger="matMenu">
+                    <button mat-menu-item (click)="navegaMenu('leitor-area-cws')">Leitor de área CWS</button>
+                </mat-menu>
+            </div>
+            <span class="menu-hamburger">Ferramentas</span>
+            <span class="example-spacer menu-hamburger"></span>
+            <button mat-icon-button class="example-icon home-icon menu-hamburger" aria-label="Example icon-button with heart icon" (click)="navegaMenu('home')">
                 <mat-icon>home</mat-icon>
-                Início
             </button>
-        
-            <button mat-button [matMenuTriggerFor]="menuFerramentas">
-                <mat-icon>build</mat-icon>
-                Ferramentas
-            </button>
-            <mat-menu #menuFerramentas="matMenu">
-                <button mat-menu-item (click)="navegaMenu('leitor-area-cws')">Leitor de área CWS</button>
-            </mat-menu>
-        
             <!-- Outros botões ou conteúdo podem ser adicionados aqui -->
         </mat-toolbar>
     </div>
     <div class="div-rodape">
-      {{ tituloAplicacao }}
+        {{ tituloAplicacao }}
     </div>
-  </div>
+</div>
