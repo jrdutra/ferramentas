@@ -33,5 +33,9 @@ export class MenuComponent {
       this.router.navigate(['/leitor-area-cws']);
       this.tituloAplicacao = "Leitor de área CWS";
     }
+    if (tag === 'base64') {
+      this.router.navigate(['/base64']);
+      this.tituloAplicacao = "Base64 Codec";
+    }
   }
 }

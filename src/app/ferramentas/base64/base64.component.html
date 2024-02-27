@@ -1,0 +1,24 @@
+
+<div class="alinhar-texto-esquerda">
+    Esse é um Coder/Decoder (Codec) de Base64
+</div><br />
+<div class="div-principal">
+
+    <div class="div-interna-texto-esqueda">
+
+        <mat-form-field appearance="fill">
+            <mat-label>TEXTO</mat-label>
+            <textarea [(ngModel)]="strTexto" (ngModelChange)="codificaTexto()" matInput style="height: 10em; box-sizing: border-box; resize: none; border: none;"></textarea>
+        </mat-form-field>
+
+    </div>
+    <div class="div-interna-texto-direita">
+
+        <mat-form-field appearance="fill">
+            <mat-label>BASE64</mat-label>
+            <textarea [(ngModel)]="strBase64" (ngModelChange)="decodificaTexto()" matInput style="height: 10em; box-sizing: border-box; resize: none; border: none;"></textarea>
+        </mat-form-field>
+
+    </div>
+
+</div>
