@@ -31,13 +31,13 @@ jobs:
         run: ng build --configuration production
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip dist/* # Aqui assumimos que seu diretório de build é 'dist', o padrão para aplicações Angular.
+        run: zip -r ferramentas.zip dist/* # Aqui assumimos que seu diretório de build é 'dist', o padrão para aplicações Angular.
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: ferramentas
-          path: release.zip
+          path: ferramentas.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
           name: ferramentas
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: unzip ferramentas.zip
       
       - name: Login to Azure
         uses: azure/login@v1
