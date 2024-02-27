@@ -21,7 +21,10 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: Install npm dependencies
+      - name: Instalando angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Instalando depencias do projeto
         run: npm install
       
       - name: Build do angular para producao
