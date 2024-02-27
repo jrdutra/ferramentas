@@ -6,17 +6,11 @@
 
 .vetical-div {
     display: flex;
-    /* Isso torna as divs flex containers */
     flex-direction: row;
-    /* Isso alinha as divs internas da top-div horizontalmente */
-    /* border: 1px solid black;*/
-    /* Adiciona uma borda para melhor visualização */
 }
 
 .horizontal-div {
     flex: 1;
-   /*  border: 1px solid black;*/
-    /* Adiciona uma borda para melhor visualização */
 }
 
 .alinhar-texto-esquerda {
@@ -41,4 +35,10 @@ mat-form-field {
     width: 98%;
     height: 100%;
     /* Faz o mat-form-field preencher a largura da div pai */
+}
+
+@media (max-width: 510px) {
+    .vetical-div {
+        flex-direction: column;
+    }
 }

@@ -4,13 +4,10 @@ import { RouterOutlet, RouterLink, RouterLinkActive, RouterModule  } from '@angu
 import {MenuComponent} from './menu/menu.component'
 import {MatCardModule} from '@angular/material/card';
 
-import { Ferramenta1Component } from './ferramentas/ferramenta1/ferramenta1.component'
-import { Ferramenta2Component } from './ferramentas/ferramenta2/ferramenta2.component'
-
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, RouterModule , MenuComponent, MatCardModule, Ferramenta1Component, Ferramenta2Component],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, RouterModule , MenuComponent, MatCardModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

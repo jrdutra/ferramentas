@@ -23,16 +23,7 @@ export class MenuComponent {
 
   constructor(private router: Router) { }
 
-
-  navigateMenu(tag: string) {
-    if (tag === 'ferramenta1') {
-      this.router.navigate(['/ferramenta1']);
-      this.tituloAplicacao = "Ferramenta 1";
-    }
-    if (tag === 'ferramenta2') {
-      this.router.navigate(['/ferramenta2']);
-      this.tituloAplicacao = "Ferramenta 2";
-    }
+  navegaMenu(tag: string) {
     if (tag === 'home') {
       this.router.navigate(['/home']);
       this.tituloAplicacao = "Início";

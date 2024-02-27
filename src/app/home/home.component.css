@@ -4,15 +4,11 @@
 
 .div-externa {
     display: flex;
-    /* Isso habilita o flexbox para a div externa */
-    justify-content: space-around;
-    /* Isso define o alinhamento das divs internas (opcional) */
+    flex-direction: row;
 }
 
 .div-interna {
-    width: 50%;
-    /* Define a largura de cada div interna (opcional, ajuste conforme necessário) */
-    /* Adicione qualquer outro estilo que você deseje para as divs internas aqui */
+    flex: 1;
 }
 
 .icon-white {
@@ -20,15 +16,21 @@
 }
 
 .icon-link-container {
-    display: flex; /* Habilita o Flexbox para o contêiner */
-    align-items: center; /* Alinha verticalmente os itens no centro */
+    display: flex;
+    align-items: center;
 }
 
 .icon-white {
-    margin-right: 10px; /* Adiciona espaço entre o ícone e o texto */
+    margin-right: 10px;
 }
 
 .linkbranco {
-    color: white; /* Define a cor do texto para branco (ajuste conforme necessário) */
+    color: white;
     text-decoration: underline;
+}
+
+@media (max-width: 510px) {
+    .div-externa {
+        flex-direction: column;
+    }
 }

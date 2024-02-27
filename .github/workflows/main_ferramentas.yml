@@ -16,24 +16,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      - name: Configurar versão do Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
 
-      - name: Instalando angular CLI
+      - name: Instalar angular CLI
         run: npm install -g @angular/cli
 
-      - name: Instalando depencias do projeto
+      - name: Instalar dependencias do projeto
         run: npm install
       
-      - name: Build do angular para producao
+      - name: Build do projeto angular para producao
         run: ng build --configuration production
 
-      - name: Zip artifact for deployment
+      - name: Zipar artefato para deploy
         run: zip -r ferramentas.zip dist/* # Aqui assumimos que seu diretório de build é 'dist', o padrão para aplicações Angular.
 
-      - name: Upload artifact for deployment job
+      - name: Upload de artefato para job de deploy
         uses: actions/upload-artifact@v3
         with:
           name: ferramentas
@@ -49,22 +49,22 @@ jobs:
       id-token: write #This is required for requesting the JWT
 
     steps:
-      - name: Download artifact from build job
+      - name: Download do artefato do job de build
         uses: actions/download-artifact@v3
         with:
           name: ferramentas
 
-      - name: Unzip artifact for deployment
+      - name: Descompactando artefato para deploy
         run: unzip ferramentas.zip
       
-      - name: Login to Azure
+      - name: Login no Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_593B0115475B48A386B0D6C4B7FCD906 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2356A44DD649400B8A2153D49C65D7BE }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D1730C8204D1417B91DE7424EC992A05 }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: 'Deploy no Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:

@@ -1,7 +1,7 @@
 <div class="div-principal">
     <div class="div-topo">
         <mat-toolbar color="primary" class="mat-elevation-z4">
-            <button mat-button (click)="navigateMenu('home')">
+            <button mat-button (click)="navegaMenu('home')">
                 <mat-icon>home</mat-icon>
                 Início
             </button>
@@ -11,9 +11,7 @@
                 Ferramentas
             </button>
             <mat-menu #menuFerramentas="matMenu">
-                <button mat-menu-item (click)="navigateMenu('leitor-area-cws')">Leitor de área CWS</button>
-                <button mat-menu-item (click)="navigateMenu('ferramenta1')">Ferramenta 1</button>
-                <button mat-menu-item (click)="navigateMenu('ferramenta2')">Ferramenta 2</button>
+                <button mat-menu-item (click)="navegaMenu('leitor-area-cws')">Leitor de área CWS</button>
             </mat-menu>
         
             <!-- Outros botões ou conteúdo podem ser adicionados aqui -->
