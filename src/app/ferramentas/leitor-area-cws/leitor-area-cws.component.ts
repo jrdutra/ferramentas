@@ -14,20 +14,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class LeitorAreaCwsComponent {
   esconderBrancoseZeros = true;
-  bookCws = '';
-  areaComunicacao = '';
-  resultadoLeitura = "arquivo lido com sucesso!";
+  bookCws: string = "";
+  areaComunicacao = "";
+  resultadoLeitura = "";
 
   executar(): void {
     let textoBook: string = this.bookCws;
     let textoComunicacao: string = this.areaComunicacao;
-
+    //console.log(textoComunicacao)
     let linhas: string[] = textoBook.split(/\r?\n/);
     
     let linhasUteis: string[] = this.retornaLinhasUteis(linhas);
-
+    
     let campos: Campo[] = this.lerCampos(linhasUteis, textoComunicacao); // Supondo que `lerCampos` retorna um array de tipo 'Campo', substitua 'Campo' pelo tipo correto.
-
+    //console.log(campos)
     const checkOmitirZeros: boolean = this.esconderBrancoseZeros;
 
     let textoResultado: string = "";
@@ -52,7 +52,7 @@ export class LeitorAreaCwsComponent {
   retornaTextoLinhaExibicao(campo: any): string {
     let espacamento = "";
     for (let l = 0; l < campo.nivel; l++) {
-      espacamento += "&nbsp";
+      espacamento += "&nbsp;";
     }
     let textoOcorrencia = parseInt(campo.ocorrencia) !== -1 ? `[${(parseInt(campo.ocorrencia) + 1).toString()} de ${campo.ocorrenciaTotal}] ` : "";
     let textoLinha = `<br>${espacamento}${textoOcorrencia}${campo.nome} = ${campo.conteudo}`;
@@ -65,8 +65,13 @@ export class LeitorAreaCwsComponent {
     const regexSomenteNumeros = /^[0-9]+$/;
 
     for (let i = 0; i < linhas.length; i++) {
+      //console.log(linhas[i]);
       if (!regexSomenteNumeros.test(linhas[i])) {
+        //console.log('Não é Somente numeros: ', !regexSomenteNumeros.test(linhas[i]));
         let conteudoCampo = textoComunicacao.substring(pivor, pivor + this.retornaTamanho(linhas[i]));
+        //console.log('Linha: ',linhas[i])
+        //console.log('Tamanho linha ', this.retornaTamanho(linhas[i]));
+        //console.log('Conteudo do Campo: ', conteudoCampo);
         pivor += this.retornaTamanho(linhas[i]);
         let campo = { nome: this.retornaNome(linhas[i]), tamanho: this.retornaTamanho(linhas[i]), nivel: this.retornaNivel(linhas[i]), ocorrencia: -1, ocorrenciaTotal: -1, conteudo: conteudoCampo };
         campos.push(campo);
@@ -181,11 +186,16 @@ export class LeitorAreaCwsComponent {
 
 
   retornaTamanho(linha: string): number {
-    let tamanhoAlfaNumerico = /X\([0-9]+\)/;
-    let tamanhoInteiroRegex = /9\.[0-9]+\./;
-    let tamanhoDecimalRegex = /9\.[0-9]+\.[A-Z].+/;
+    let tamanhoAlfaNumerico = new RegExp("X\\([0-9]+\\)");
+    let tamanhoInteiroRegex = new RegExp("9\\([0-9]+\\)(?!V9(?:9)?)");
+    let tamanhoDecimalRegex = new RegExp("9\\([0-9]+\\)[A-Z][0-9]+");
 
     let tamanho: string;
+    //console.log('linha: ' + linha);
+    //console.log('tamanhoAlfaNumerico: ' + tamanhoAlfaNumerico.test(linha));
+    //console.log('tamanhoDecimalRegex: ' + tamanhoDecimalRegex.test(linha));
+    //console.log('tamanhoInteiroRegex: ' + tamanhoInteiroRegex.test(linha));
+    
 
     if (tamanhoAlfaNumerico.test(linha)) {
       tamanho = linha.match(tamanhoAlfaNumerico)![0]; // Usamos '!' para afirmar que o resultado não será nulo.
@@ -195,26 +205,39 @@ export class LeitorAreaCwsComponent {
     }
 
     if (tamanhoDecimalRegex.test(linha)) {
+      console.log('Achou tamnho decimal...');
+      console.log('linha:', linha)
+
       tamanho = linha.match(tamanhoDecimalRegex)![0];
-      const regexApenasNumeroParenteses = /[0-9]+\)/;
+      console.log('tamanho:', tamanho)
+      const regexApenasNumeroParenteses = new RegExp("[0-9]+\\)");
+
       let tamanhoInteiro = tamanho.substring(2).match(regexApenasNumeroParenteses)![0];
+      console.log('tamanhoInteiro1:', tamanhoInteiro)
       tamanhoInteiro = tamanhoInteiro.slice(0, tamanhoInteiro.length - 1);
+      console.log('tamanhoInteiro2:', tamanhoInteiro)
 
       // Calcular tamanho decimal
       let tamanhoDecimal = tamanho.substring(5);
+      console.log('string tamanhoDecimal:', tamanhoDecimal)
+
       let tamanhoDecimalNum = 0;
-      const regexTamanhoDecimal1 = /V9/;
+
+      const regexTamanhoDecimal1 = new RegExp("V9");
       if (regexTamanhoDecimal1.test(tamanhoDecimal)) {
+        console.log('Achou tamanho decimal 1.');
         tamanhoDecimalNum = 1;
       }
 
-      const regexTamanhoDecimal2 = /V99/;
+      const regexTamanhoDecimal2 = new RegExp("V99");
       if (regexTamanhoDecimal2.test(tamanhoDecimal)) {
         tamanhoDecimalNum = 2;
+        console.log('Achou tamanho decimal 2.');
       }
 
-      const regexTamanhoDecimalN = /V9\([0-9]+\)/;
+      const regexTamanhoDecimalN = new RegExp("V9\\([0-9]+\\)");
       if (regexTamanhoDecimalN.test(tamanhoDecimal)) {
+        console.log('Achou tamanho decimal N');
         tamanhoDecimal = tamanhoDecimal.match(regexTamanhoDecimalN)![0];
         tamanhoDecimal = tamanhoDecimal.substring(2);
         tamanhoDecimal = tamanhoDecimal.match(new RegExp("[0-9]+"))![0];

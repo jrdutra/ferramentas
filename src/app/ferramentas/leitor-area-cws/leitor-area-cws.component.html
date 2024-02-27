@@ -12,23 +12,22 @@
         <div class="horizontal-div" style="height: 300px; display: inline-block;">
             <mat-form-field appearance="fill">
                 <mat-label>Informe a book do CWS neste campo</mat-label>
-                <textarea matInput class="myTextarea" [(ngModel)]="bookCws"></textarea>
+                <textarea matInput class="myTextarea" style="height: 15em;" [(ngModel)]="bookCws"></textarea>
             </mat-form-field>
         </div>
         <div class="horizontal-div" style="height: 300px; display: inline-block;">
             <mat-form-field appearance="fill">
                 <mat-label>Informe a área de comunicação neste campo</mat-label>
-                <textarea matInput class="myTextarea" [(ngModel)]="areaComunicacao"></textarea>
+                <textarea matInput class="myTextarea" style="height: 15em;" [(ngModel)]="areaComunicacao"></textarea>
             </mat-form-field>
         </div>
     </div>
     <div class="vetical-div">
         <div class="horizontal-div"><button mat-raised-button color="primary" (click)="executar()">Executar Leitura</button> <mat-checkbox
-                class="example-margin" [(ngModel)]="esconderBrancoseZeros">Esconder Brancos e Zeros</mat-checkbox></div>
+                class="example-margin" [(ngModel)]="esconderBrancoseZeros" (click)="executar()">Esconder Brancos e Zeros</mat-checkbox></div>
     </div><br />
-    <div class="vetical-div">
-        {{bookCws}}<br/>
-        {{areaComunicacao}}<br/>
-        {{resultadoLeitura}}
+    <div class="vetical-div" [innerHTML]="resultadoLeitura">
+      
     </div>
+    
 </div>
