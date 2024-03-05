@@ -24,3 +24,7 @@
     position: relative; /* Pode ser 'absolute' se precisar fixar no fundo, mas 'relative' é o padrão */
     bottom: 0; /* Alinha o rodapé na parte inferior da página, útil se usar position absolute */
 }
+
+.icon-white {
+    filter: invert(100%);
+}
