@@ -1,4 +1,3 @@
-
 <div class="alinhar-texto-esquerda">
     <h4>Coder e Decoder de Base64 (Codec)</h4>
 </div><br />
@@ -8,7 +7,8 @@
 
         <mat-form-field appearance="fill">
             <mat-label>TEXTO</mat-label>
-            <textarea [(ngModel)]="strTexto" (ngModelChange)="codificaTexto()" matInput style="height: 10em; box-sizing: border-box; resize: none; border: none;"></textarea>
+            <textarea [(ngModel)]="strTexto" (ngModelChange)="codificaTexto()" matInput
+                style="height: 10em; box-sizing: border-box; resize: none; border: none;"></textarea>
         </mat-form-field>
 
     </div>
@@ -16,7 +16,8 @@
 
         <mat-form-field appearance="fill">
             <mat-label>BASE64</mat-label>
-            <textarea [(ngModel)]="strBase64" (ngModelChange)="decodificaTexto()" matInput style="height: 10em; box-sizing: border-box; resize: none; border: none;"></textarea>
+            <textarea [(ngModel)]="strBase64" (ngModelChange)="decodificaTexto()" matInput
+                style="height: 10em; box-sizing: border-box; resize: none; border: none;"></textarea>
         </mat-form-field>
 
     </div>
@@ -25,9 +26,33 @@
 <div class="alinhar-texto-esquerda">
     <img class="icon-white" width="65" height="65" src="./assets/base64-logo.svg" />
     <h2>Instruções</h2>
-    
+
     <h4>Codificando um texto em base64:</h4>
-    <p>* Para codificar um texto em base64, basta colocar o texto na caixa de texto à esqueda ou acima, dependendo da resolução da sua tela. O fato de alterar o conteúdo da caixa de texto de nome "texto" já executa a função de codificar o conteúdo em base64.</p>
+    <p>Para codificar um texto em base64, basta colocar o texto na caixa de texto à esqueda ou acima, dependendo da
+        resolução da sua tela. O fato de alterar o conteúdo da caixa de texto de nome "texto" já executa a função de
+        codificar o conteúdo em base64.</p>
     <h4>Decodificando um conteúdo em base64 para texto:</h4>
-    <p>* Para decodificar um conteúdo em base64 para texto, basta colar o conteúdo em base64 na caixa de texto à direita ou abaixo, dependendo da resolução da sua tela. Quando a caixa de texto "base64" tem seu conteúdo alterado, a função de decodificação de base64 já é executada.</p>
+    <p>Para decodificar um conteúdo em base64 para texto, basta colar o conteúdo em base64 na caixa de texto à direita
+        ou abaixo, dependendo da resolução da sua tela. Quando a caixa de texto "base64" tem seu conteúdo alterado, a
+        função de decodificação de base64 já é executada.</p>
+
+    <h2>O que é o Base64</h2>
+    <p>Base64 é um método para codificar dados usando apenas 64 caracteres, tipicamente escolhidos de um conjunto que é
+        comum aos sistemas de codificação de e-mail e páginas web. Os 64 caracteres incluem letras maiúsculas e
+        minúsculas (A-Z, a-z), números (0-9), além de dois símbolos especiais (+ e /). Em algumas variantes de Base64, o
+        sinal de igual (=) é usado como um caractere de preenchimento para garantir que a cadeia de caracteres final
+        tenha um tamanho múltiplo de 4.</p>
+
+    <p>O processo de codificação Base64 pega dados binários e os divide em strings de 6 bits. Cada string de 6 bits é
+        então mapeada para um dos 64 caracteres no conjunto de Base64. Como cada caractere em Base64 representa 6 bits
+        de dados, ele é eficiente para codificar grandes quantidades de informações que precisam ser transferidas ou
+        armazenadas de maneira mais legível.</p>
+
+    <p>O Base64 é comumente usado em diversas aplicações, como na codificação de anexos de e-mail para garantir que
+        passem corretamente pelos sistemas de correio, na codificação de dados em URLs, e para converter imagens ou
+        outros tipos de arquivos em strings para incorporação em documentos XML ou JSON. Embora o Base64 seja útil para
+        essas finalidades, é importante notar que ele não é uma forma de criptografia e não deve ser usado para proteger
+        dados sensíveis.</p>
+
+
 </div>
