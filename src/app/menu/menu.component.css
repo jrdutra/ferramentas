@@ -1,3 +1,11 @@
+.menu-fixo {
+  position: fixed;
+  top: 0; /* Ajuste de acordo com a sua necessidade */
+  left: 0; /* Ajuste de acordo com a sua necessidade */
+  width: 100%; /* ou a largura que você desejar */
+  z-index: 1000; /* Garante que o menu fique acima dos outros conteúdos */
+}
+
 .div-principal {
   display: flex;
   /* Ativa o Flexbox */
@@ -20,7 +28,7 @@
   background-color: #7b1fa2;
   padding: 0.7em 0.7em 0.6em 1.3em;
   color: white;
-  height: 1.5em;
+  height: 5em;
   font-size: 20px;
   /* Seu tamanho de fonte desejado */
   display: flex;
