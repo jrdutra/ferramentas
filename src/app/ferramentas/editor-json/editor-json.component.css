@@ -1,0 +1,39 @@
+.div-principal {
+    display: flex;
+    flex-direction: row;
+}
+
+.div-interna-texto-esqueda {
+    flex: 1;
+    flex-direction: column;
+    margin-right: 5px;
+}
+
+.div-interna-texto-direita {
+    flex: 1;
+    flex-direction: column;
+    margin-left: 5px;
+}
+
+.texto-alinhado-esquerda {
+    text-align: left;
+}
+
+mat-form-field {
+    width: 100%;
+    height: 100%;
+    /* Faz o mat-form-field preencher a largura da div pai */
+}
+
+@media (max-width: 720px) {
+    .div-principal {
+        flex-direction: column;
+    }
+    .div-interna-texto-esqueda {
+        margin-right: 0px;
+    }
+    
+    .div-interna-texto-direita {
+        margin-left: 0px;
+    }
+}

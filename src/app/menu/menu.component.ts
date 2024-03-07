@@ -37,5 +37,9 @@ export class MenuComponent {
       this.router.navigate(['/base64']);
       this.tituloAplicacao = "Base64 Codec";
     }
+    if (tag === 'editor-json') {
+      this.router.navigate(['/editor-json']);
+      this.tituloAplicacao = "Editor de Json";
+    }
   }
 }
