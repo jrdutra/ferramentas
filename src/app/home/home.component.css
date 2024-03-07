@@ -15,15 +15,12 @@
 
 .icon-white {
     filter: invert(100%);
+    margin-right: 10px;
 }
 
 .icon-link-container {
     display: flex;
     align-items: center;
-}
-
-.icon-white {
-    margin-right: 10px;
 }
 
 .linkbranco {

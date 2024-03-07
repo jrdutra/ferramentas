@@ -17,6 +17,19 @@
   /* Altura da div principal, ajuste conforme necessário */
 }
 
+.div-principal-menu{
+  display: flex;
+  flex-direction: row;
+}
+
+.div-principal-menu-esquerda{
+  justify-content: flex-start;
+}
+
+.div-principal-menu-direita{
+  justify-content: flex-end;
+}
+
 .div-topo {
   z-index: 2;
   /* Valor maior que o da div-rodape */
@@ -29,7 +42,7 @@
   padding: 0.7em 0.7em 0.6em 1.3em;
   color: white;
   height: 5em;
-  font-size: 20px;
+  font-size: 1.5em;
   /* Seu tamanho de fonte desejado */
   display: flex;
   /* Faz a div se comportar como um contêiner flexível */
@@ -45,9 +58,25 @@
   flex: 1 1 auto;
 }
 
+.logo-direita {
+  height: 2em; /* Ajuste a altura conforme necessário */
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 1em;
+}
+
+.logo-cor-invertida {
+  filter: invert(100%);
+  margin-right: 10px;
+}
 
 @media (max-width: 510px) {
   .menu-grande {
+    display: none;
+  }
+  .logo-direita {
     display: none;
   }
 }
