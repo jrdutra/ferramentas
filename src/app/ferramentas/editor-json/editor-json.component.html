@@ -5,14 +5,14 @@
     <div class="div-externa-texto">
         <div class="div-interna-texto-esqueda">
             <mat-form-field appearance="fill">
-                <mat-label>Json</mat-label>
+                <mat-label>Json de Entrada</mat-label>
                 <textarea [(ngModel)]="strJson" matInput style="height: 15em; box-sizing: border-box; resize: none; border: none;">
                 </textarea>
             </mat-form-field>
         </div>
         <div class="div-interna-texto-esqueda">
             <mat-form-field appearance="fill">
-                <mat-label>Resultado</mat-label>
+                <mat-label>Json Processado</mat-label>
                 <textarea [(ngModel)]="strResultado" matInput style="height: 15em; box-sizing: border-box; resize: none; border: none;">
                 </textarea>
             </mat-form-field>
@@ -20,9 +20,9 @@
     </div>
     <div class="texto-validade-json"><p>{{strJsonValido}}</p></div>
     <div class="caixa-botoes">
-        <button mat-raised-button (click)="minificaJson()" class="botao" color="primary">Minifica</button>
-        <button mat-raised-button (click)="stringficaJson()" class="botao" color="primary">Stringfica</button>
-        <button mat-raised-button (click)="formataJson()" class="botao" color="primary">Formata</button> 
+        <button mat-raised-button (click)="minificaJson()" class="botao" color="primary">Minificar</button>
+        <button mat-raised-button (click)="stringficaJson()" class="botao" color="primary">Stringficar</button>
+        <button mat-raised-button (click)="formataJson()" class="botao" color="primary">Formatar</button> 
         
     </div>
 </div>

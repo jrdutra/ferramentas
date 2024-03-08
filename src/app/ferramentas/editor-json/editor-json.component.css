@@ -43,6 +43,9 @@ mat-form-field {
     .div-principal {
         flex-direction: column;
     }
+    .div-externa-texto {
+        flex-direction: column;
+    }
     .div-interna-texto-esqueda {
         margin-right: 0px;
     }
