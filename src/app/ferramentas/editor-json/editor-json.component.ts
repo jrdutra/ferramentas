@@ -14,11 +14,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class EditorJsonComponent {
 
-  strFonte: string = '';
-  strResultado: string = '';
+  strJson: string = '';
 
-  codificaTexto(){
-    
+  minificaJson(){
+    this.strJson = "minifica"
+  }
+
+  formataJson(){
+    this.strJson = "formata"
+  }
+
+  stringficaJson(){
+    this.strJson = "stringfica"
   }
 
 }
