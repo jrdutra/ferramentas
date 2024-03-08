@@ -15,17 +15,28 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class EditorJsonComponent {
 
   strJson: string = '';
+  strJsonValido = '...';
 
   minificaJson(){
-    this.strJson = "minifica"
+    try {
+      this.strJson = JSON.stringify(this.strJson);
+      this.strJsonValido = "Json válido";
+    } catch (error) {
+      this.strJsonValido = "Json inválido";
+    }
   }
 
   formataJson(){
-    this.strJson = "formata"
+    this.strJson = JSON.stringify(this.strJson, null, 2);
   }
 
   stringficaJson(){
-    this.strJson = "stringfica"
+    try {
+      this.strJson = JSON.stringify(this.strJson);
+      this.strJsonValido = "Json válido";
+    } catch (error) {
+      this.strJsonValido = "Json inválido";
+    }
   }
 
 }
