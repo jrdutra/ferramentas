@@ -2,29 +2,27 @@
     <h2>Ferramentas para formatação de Json</h2>
 </div><br />
 <div class="div-principal">
-
-    <div><p>Validade do Json: {{strJsonValido}}</p></div>
-
     <div class="div-externa-texto">
         <div class="div-interna-texto-esqueda">
             <mat-form-field appearance="fill">
                 <mat-label>Json</mat-label>
-                <textarea [(ngModel)]="strJson" matInput style="height: 10em; box-sizing: border-box; resize: none; border: none;">
+                <textarea [(ngModel)]="strJson" matInput style="height: 15em; box-sizing: border-box; resize: none; border: none;">
                 </textarea>
             </mat-form-field>
         </div>
         <div class="div-interna-texto-esqueda">
             <mat-form-field appearance="fill">
                 <mat-label>Resultado</mat-label>
-                <textarea [(ngModel)]="strResultado" matInput style="height: 10em; box-sizing: border-box; resize: none; border: none;">
+                <textarea [(ngModel)]="strResultado" matInput style="height: 15em; box-sizing: border-box; resize: none; border: none;">
                 </textarea>
             </mat-form-field>
         </div>
     </div>
-    
+    <div class="texto-validade-json"><p>{{strJsonValido}}</p></div>
     <div class="caixa-botoes">
         <button mat-raised-button (click)="minificaJson()" class="botao" color="primary">Minifica</button>
         <button mat-raised-button (click)="stringficaJson()" class="botao" color="primary">Stringfica</button>
         <button mat-raised-button (click)="formataJson()" class="botao" color="primary">Formata</button> 
+        
     </div>
 </div>

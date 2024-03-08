@@ -16,22 +16,31 @@ export class EditorJsonComponent {
 
   strJson: string = '';
   strResultado: string = ''
-  strJsonValido = '...';
+  strJsonValido = 'Validade do Json';
 
   minificaJson() {
-    this.strResultado = this.padronizaJson(this.strJson);
+    if (this.isValidJson(this.strJson)) {
+      this.strResultado = this.padronizaJson(this.strJson);
+    }
+
   }
 
   formataJson() {
-    let jsonPadronizado = this.padronizaJson(this.strJson);
-    this.strResultado = JSON.stringify(JSON.parse(jsonPadronizado), null, 2);
+    if (this.isValidJson(this.strJson)) {
+      let jsonPadronizado = this.padronizaJson(this.strJson);
+      this.strResultado = JSON.stringify(JSON.parse(jsonPadronizado), null, 2);
+    }
+
   }
 
   stringficaJson() {
-    this.strResultado = JSON.stringify(this.strJson);
+    if (this.isValidJson(this.strJson)) {
+      this.strResultado = JSON.stringify(this.strJson);
+    }
+
   }
 
-  padronizaJson(strJsonRecebido: string): string{
+  padronizaJson(strJsonRecebido: string): string {
     // Remover \n fora das aspas
     let texto1 = strJsonRecebido.replaceAll("\\n", '');
     // Remover \" por "
@@ -59,4 +68,14 @@ export class EditorJsonComponent {
     return texto7;
   }
 
+  isValidJson(stringJson: string): boolean {
+    try {
+      JSON.parse(stringJson);
+      this.strJsonValido = "Json válido";
+      return true;
+    } catch (error) {
+      this.strJsonValido = "Json inválido";
+      return false;
+    }
+  }
 }
