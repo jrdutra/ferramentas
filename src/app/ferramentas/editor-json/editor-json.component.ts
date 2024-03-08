@@ -15,28 +15,48 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class EditorJsonComponent {
 
   strJson: string = '';
+  strResultado: string = ''
   strJsonValido = '...';
 
-  minificaJson(){
-    try {
-      this.strJson = JSON.stringify(this.strJson);
-      this.strJsonValido = "Json válido";
-    } catch (error) {
-      this.strJsonValido = "Json inválido";
-    }
+  minificaJson() {
+    this.strResultado = this.padronizaJson(this.strJson);
   }
 
-  formataJson(){
-    this.strJson = JSON.stringify(this.strJson, null, 2);
+  formataJson() {
+    let jsonPadronizado = this.padronizaJson(this.strJson);
+    this.strResultado = JSON.stringify(JSON.parse(jsonPadronizado), null, 2);
   }
 
-  stringficaJson(){
-    try {
-      this.strJson = JSON.stringify(this.strJson);
-      this.strJsonValido = "Json válido";
-    } catch (error) {
-      this.strJsonValido = "Json inválido";
-    }
+  stringficaJson() {
+    this.strResultado = JSON.stringify(this.strJson);
+  }
+
+  padronizaJson(strJsonRecebido: string): string{
+    // Remover \n fora das aspas
+    let texto1 = strJsonRecebido.replaceAll("\\n", '');
+    // Remover \" por "
+    let texto2 = texto1.replaceAll("\\\"", '"');
+    // Remover \n fora das aspas
+    let texto3 = texto2.replace(/\n/g, '');
+    // Substitui  , " por , "
+    let texto4 = texto3.replace(/\s*,\s*\"/g, ', \"');
+    // Substitui  {   " por { " 
+    let texto4_1 = texto4.replace(/\{\s*/g, '\{');
+    // Substitui }            por }
+    let texto4_2 = texto4_1.replace(/\}\s*/g, '\}');
+    // Substitui            { por {
+    let texto5 = texto4_2.replace(/\s*\{/g, '\{');
+    //substitui       } por }
+    let texto5_1 = texto5.replace(/\s*\}/g, '\}');
+    //substitui         ] por ]
+    let texto5_2 = texto5_1.replace(/\s*\]/g, '\]');
+    //substitui [           por []
+    let texto5_3 = texto5_2.replace(/\[\s*/g, '\[');
+    //substituiu "{ por {
+    let texto6 = texto5_3.replaceAll("\"{", '{');
+    //substituiu "{ por {
+    let texto7 = texto6.replaceAll("}\"", '}');
+    return texto7;
   }
 
 }
