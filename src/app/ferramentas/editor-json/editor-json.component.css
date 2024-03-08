@@ -1,4 +1,9 @@
-.div-principal {
+.div-principal{
+    display: flex;
+    flex-direction: column;
+}
+
+.div-externa-texto {
     display: flex;
     flex-direction: row;
 }
@@ -17,6 +22,15 @@
 
 .texto-alinhado-esquerda {
     text-align: left;
+}
+
+.caixa-botoes{
+    display: flex;
+    flex-direction: row;
+}
+
+.botao{
+    margin-right: 0.5em;
 }
 
 mat-form-field {

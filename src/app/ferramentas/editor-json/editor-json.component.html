@@ -1,17 +1,27 @@
 <div class="alinhar-texto-esquerda">
-    <h2>Edição de Json</h2>
+    <h2>Ferramentas para padronização de Json</h2>
 </div><br />
 <div class="div-principal">
-
-    <div class="div-interna-texto-esqueda">
-
-        <h2>Fonte</h2>
-
+    <div class="div-externa-texto">
+        <div class="div-interna-texto-esqueda">
+            <mat-form-field appearance="fill">
+                <mat-label>Fonte</mat-label>
+                <textarea [(ngModel)]="strFonte" matInput style="height: 10em; box-sizing: border-box; resize: none; border: none;">
+                </textarea>
+            </mat-form-field>
+        </div>
+        <div class="div-interna-texto-direita">
+            <mat-form-field appearance="fill">
+                <mat-label>Resultado</mat-label>
+                <textarea [(ngModel)]="strResultado" matInput style="height: 10em; box-sizing: border-box; resize: none; border: none;">
+                </textarea>
+            </mat-form-field>
+        </div>
     </div>
-    <div class="div-interna-texto-direita">
-
-        <h2>Destino</h2>
-
+    
+    <div class="caixa-botoes">
+        <button mat-raised-button class="botao" color="primary">Minifica</button>
+        <button mat-raised-button class="botao" color="primary">Stringfica</button>
+        <button mat-raised-button class="botao" color="primary">Formata</button> 
     </div>
-
 </div>
