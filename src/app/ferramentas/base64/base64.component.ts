@@ -5,6 +5,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DataService } from '../../data.service';
+import { Base64Service } from '../../services/base64/base64.service'
 
 @Component({
   selector: 'app-base64',
@@ -18,34 +19,18 @@ export class Base64Component {
   strTexto: string = '';
   strBase64: string = '';
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private base64Service: Base64Service) { }
 
   ngOnInit(): void {
     this.dataService.setTituloAplicacao("Conversor de Base64");
   }
 
   codificaTexto(){
-    let utf8Bytes  = new TextEncoder().encode(this.strTexto);
-    // Converte os bytes UTF-8 para uma string de caracteres Latin1
-    let binaryString = '';
-    utf8Bytes.forEach((byte) => {
-        binaryString += String.fromCharCode(byte);
-    });
-    this.strBase64 = btoa(binaryString);
+    this.strBase64 = this.base64Service.codificaTexto(this.strTexto);
   }
 
   decodificaTexto(){
-    // Decodifica a string Base64 para uma string de caracteres Latin1
-    const binaryString = atob(this.strBase64);
-
-    // Converte a string Latin1 para um array de bytes UTF-8
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-    }
-
-    // Converte os bytes UTF-8 para uma string UTF-8
-    this.strTexto = new TextDecoder().decode(bytes);
+    this.strTexto = this.base64Service.decodificaTexto(this.strBase64);
   }
 
 }
