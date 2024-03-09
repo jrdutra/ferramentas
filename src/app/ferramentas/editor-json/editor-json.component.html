@@ -1,28 +1,72 @@
 <div class="alinhar-texto-esquerda">
-    <h2>Ferramentas para formatação de Json</h2>
+    <h2>Ferramentas Para Manipulação de Json</h2>
 </div><br />
 <div class="div-principal">
+
+    <div class="texto-validade-json" [ngClass]="{'texto-vermelho': textoVermelho}">
+        <p>{{strJsonValido}}</p>
+    </div>
     <div class="div-externa-texto">
-        <div class="div-interna-texto-esqueda">
+        <div class="div-interna-esqueda">
             <mat-form-field appearance="fill">
                 <mat-label>Json de Entrada</mat-label>
-                <textarea [(ngModel)]="strJson" matInput style="height: 15em; box-sizing: border-box; resize: none; border: none;">
+                <textarea [(ngModel)]="strJson" matInput
+                    style="height: 15em; box-sizing: border-box; resize: none; border: none;">
                 </textarea>
             </mat-form-field>
         </div>
-        <div class="div-interna-texto-esqueda">
+        <div class="div-interna-direita">
             <mat-form-field appearance="fill">
                 <mat-label>Json Processado</mat-label>
-                <textarea [(ngModel)]="strResultado" matInput style="height: 15em; box-sizing: border-box; resize: none; border: none;">
+                <textarea [(ngModel)]="strResultado" matInput
+                    style="height: 15em; box-sizing: border-box; resize: none; border: none;">
                 </textarea>
             </mat-form-field>
         </div>
     </div>
-    <div class="texto-validade-json"><p>{{strJsonValido}}</p></div>
+    <div class="div-externa-texto">
+        <div class="div-interna-esqueda">
+            <button style="margin-bottom: 0.5em;" mat-raised-button (click)="copiaJsonProcessadoEntrada()" class="botao botao-flutuante"
+                color="primary">Copiar Json Processado</button>
+        </div>
+    </div>
     <div class="caixa-botoes">
         <button mat-raised-button (click)="minificaJson()" class="botao" color="primary">Minificar</button>
         <button mat-raised-button (click)="stringficaJson()" class="botao" color="primary">Stringficar</button>
-        <button mat-raised-button (click)="formataJson()" class="botao" color="primary">Formatar</button> 
-        
+        <button mat-raised-button (click)="formataJson()" class="botao" color="primary">Formatar</button>
     </div>
+</div>
+<div>
+    <img class="icon-white" width="65" height="65" src="./assets/json-icon.svg" />
+    <h2>Instruções</h2>
+
+    <h4 class="sublinhado">Minificar</h4>
+    <p>Funcionalidade de remover toda quebra de linha do JSON, bem como espaços que não fazem parte das informações dos
+        campos do JSON.</p>
+
+    <h4 class="sublinhado">Stringficar</h4>
+    <p>Funcionalidade de converter um json em um formato stringficado, em resumo essa funcionalidade converte quebras de
+        linhas em "\n" e " em \".</p>
+
+    <h4 class="sublinhado">Formatar</h4>
+    <p>Funcionalide chamada de beautify em ingles, onde estrutura um json minificado ou stringficado em um json
+        formatado, com quebras de linhas e identações.</p>
+
+    <h2>O que é JSON</h2>
+    <p>JSON (JavaScript Object Notation) é um formato leve de troca de dados que é fácil de ler e escrever para humanos,
+        além de ser fácil para máquinas interpretarem e gerarem. Ele é baseado em um subconjunto da linguagem de
+        programação JavaScript, embora seja independente de linguagem. JSON é frequentemente utilizado para transmitir
+        dados estruturados através da internet entre um servidor e um cliente da web, mas também é amplamente utilizado
+        em muitas outras situações de armazenamento e troca de dados.</p>
+
+    <p>JSON foi derivado de uma linguagem de programação chamada JavaScript, que é comumente usada para criar páginas da
+        web interativas. Foi formalizado por Douglas Crockford na especificação RFC 4627 em 2006. Desde então, tornou-se
+        um formato de dados popular e amplamente adotado em diversas áreas, como desenvolvimento de software, análise de
+        dados, Internet das Coisas (IoT) e muito mais.</p>
+
+    <p>Sua simplicidade e capacidade de representar dados de forma estruturada e legível fazem do JSON uma escolha comum
+        para muitas aplicações. Um objeto JSON consiste em pares chave/valor, onde as chaves são strings e os valores
+        podem ser strings, números, booleanos, arrays, objetos ou null. Isso o torna extremamente flexível para
+        representar uma ampla variedade de dados.</p>
+
 </div>

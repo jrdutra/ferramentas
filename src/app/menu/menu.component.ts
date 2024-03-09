@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Renderer2} from '@angular/core';
+import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { DataService } from '../data.service';
 
 
 @Component({
@@ -16,13 +17,18 @@ import { Router } from '@angular/router';
 })
 export class MenuComponent {
 
-  tituloAplicacao: string = "...";
+  tituloAplicacao: any;
+  router: Router;
 
-  ngOnInit(): void {
-    let currentRoutePath = this.router.url; // Isso divide a URL no ponto de interrogação (excluindo os parâmetros de consulta)
+  constructor(private r: Router, private dataService: DataService, private renderer: Renderer2) { 
+    this.router = r;
   }
 
-  constructor(private router: Router) { }
+  ngOnInit(): void {
+    this.renderer.listen('window', 'load', () => {
+      this.tituloAplicacao = this.dataService.getTituloAplicacao();
+    });
+  }
 
   navegaMenu(tag: string) {
     if (tag === 'home') {
@@ -35,7 +41,7 @@ export class MenuComponent {
     }
     if (tag === 'base64') {
       this.router.navigate(['/base64']);
-      this.tituloAplicacao = "Base64 Codec";
+      this.tituloAplicacao = "Conversor de Base64";
     }
     if (tag === 'editor-json') {
       this.router.navigate(['/editor-json']);

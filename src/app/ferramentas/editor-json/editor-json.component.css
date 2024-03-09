@@ -8,16 +8,16 @@
     flex-direction: row;
 }
 
-.div-interna-texto-esqueda {
+.div-interna-esqueda {
     flex: 1;
     flex-direction: column;
-    margin-right: 5px;
+    margin-right: 6px;
 }
 
-.div-interna-texto-direita {
+.div-interna-direita {
     flex: 1;
     flex-direction: column;
-    margin-left: 5px;
+    margin-left: 6px;
 }
 
 .texto-alinhado-esquerda {
@@ -31,6 +31,19 @@
 
 .botao{
     margin-right: 0.5em;
+    margin-bottom: 2em;
+}
+
+.icon-white {
+    filter: invert(100%);
+}
+
+.sublinhado {
+    text-decoration: underline;
+}
+
+.texto-vermelho{
+    color: rgb(255, 122, 122);
 }
 
 mat-form-field {

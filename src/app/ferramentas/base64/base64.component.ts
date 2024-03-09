@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
+import { DataService } from '../../data.service';
 
 @Component({
   selector: 'app-base64',
@@ -17,6 +17,12 @@ export class Base64Component {
 
   strTexto: string = '';
   strBase64: string = '';
+
+  constructor(private dataService: DataService) { }
+
+  ngOnInit(): void {
+    this.dataService.setTituloAplicacao("Conversor de Base64");
+  }
 
   codificaTexto(){
     let utf8Bytes  = new TextEncoder().encode(this.strTexto);

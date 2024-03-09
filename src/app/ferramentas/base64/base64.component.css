@@ -25,15 +25,15 @@
     align-items: center;
 }
 
-.botao{
+.botao {
     margin: 1%;
     width: 12em;
 }
 
-textarea{
-    height: 8em; 
-    box-sizing: border-box; 
-    resize: none; 
+textarea {
+    height: 8em;
+    box-sizing: border-box;
+    resize: none;
     border: none;
 }
 
@@ -43,7 +43,7 @@ textarea{
 
 .sublinhado {
     text-decoration: underline;
-  }
+}
 
 mat-form-field {
     width: 100%;
@@ -55,10 +55,11 @@ mat-form-field {
     .div-principal {
         flex-direction: column;
     }
+
     .div-interna-texto-esqueda {
         margin-right: 0px;
     }
-    
+
     .div-interna-texto-direita {
         margin-left: 0px;
     }

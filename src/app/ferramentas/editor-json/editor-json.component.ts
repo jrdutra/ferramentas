@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { DataService } from '../../data.service';
 
 @Component({
   selector: 'app-editor-json',
   standalone: true,
-  imports: [MatButtonModule, MatCheckboxModule, FormsModule, MatInputModule, MatFormFieldModule],
+  imports: [MatButtonModule, MatCheckboxModule, FormsModule, MatInputModule, MatFormFieldModule, CommonModule],
   templateUrl: './editor-json.component.html',
   styleUrl: './editor-json.component.css'
 })
@@ -17,27 +19,36 @@ export class EditorJsonComponent {
   strJson: string = '';
   strResultado: string = ''
   strJsonValido = 'Validade do Json';
+  textoVermelho: boolean = false;
+
+  constructor(private dataService: DataService) { }
+
+  ngOnInit(): void {
+    this.dataService.setTituloAplicacao("Editor de Json");
+  }
 
   minificaJson() {
-    if (this.isValidJson(this.strJson)) {
+    if (this.seJsonValido(this.strJson)) {
       this.strResultado = this.padronizaJson(this.strJson);
     }
-
   }
 
   formataJson() {
-    if (this.isValidJson(this.strJson)) {
+    if (this.seJsonValido(this.strJson)) {
       let jsonPadronizado = this.padronizaJson(this.strJson);
       this.strResultado = JSON.stringify(JSON.parse(jsonPadronizado), null, 2);
     }
-
   }
 
   stringficaJson() {
-    if (this.isValidJson(this.strJson)) {
+    if (this.seJsonValido(this.strJson)) {
       this.strResultado = JSON.stringify(this.strJson);
     }
+  }
 
+  copiaJsonProcessadoEntrada(){
+    this.strJson = this.strResultado;
+    this.strResultado = '';
   }
 
   padronizaJson(strJsonRecebido: string): string {
@@ -68,13 +79,15 @@ export class EditorJsonComponent {
     return texto7;
   }
 
-  isValidJson(stringJson: string): boolean {
+  seJsonValido(stringJson: string): boolean {
     try {
       JSON.parse(stringJson);
       this.strJsonValido = "Json válido";
+      this.textoVermelho = false;
       return true;
     } catch (error) {
       this.strJsonValido = "Json inválido";
+      this.textoVermelho = true;
       return false;
     }
   }
