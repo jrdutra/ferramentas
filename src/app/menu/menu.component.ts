@@ -47,5 +47,9 @@ export class MenuComponent {
       this.router.navigate(['/editor-json']);
       this.tituloAplicacao = "Editor de Json";
     }
+    if (tag === 'visualizador-jwt') {
+      this.router.navigate(['/visualizador-jwt']);
+      this.tituloAplicacao = "Visualizador de Jwt";
+    }
   }
 }
