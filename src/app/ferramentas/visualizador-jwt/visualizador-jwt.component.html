@@ -1,1 +1,71 @@
-<p>visualizador-jwt works!</p>
+<div class="principal">
+    <div class="linha">
+        <div class="coluna1">
+            <mat-form-field appearance="fill">
+                <mat-label>JWT <span
+                        [ngClass]="{'texto-vermelho': textoValidadeVermelho}">{{textoValidade}}</span></mat-label>
+                <textarea [(ngModel)]="strJwt" matInput (ngModelChange)="lerTokenJwt()" style="height: 51.8em;">
+                </textarea>
+            </mat-form-field>
+        </div>
+        <div class="coluna2">
+            <mat-form-field appearance="fill">
+                <mat-label>Cabeçalho</mat-label>
+                <textarea [disabled]="true" [(ngModel)]="strJwtCabecalho" matInput style="height: 10em; color: white;">
+                </textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Corpo</mat-label>
+                <textarea [disabled]="true" [(ngModel)]="strJwtCorpo" matInput style="height: 25em; color: white;">
+                </textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Assinatura</mat-label>
+                <textarea [disabled]="true" [(ngModel)]="strJwtAssinatura" matInput style="height: 10em; color: white;">
+                </textarea>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div>
+    <img class="inverte-cor-icone" width="65" height="65" src="./assets/key-icon.svg" />
+    <h2>Instruções</h2>
+
+    <h4 class="sublinhado">Como decodificar o JWT</h4>
+    <p>Para decodificar o Jwt basta colar o codigo no campo JWT, a ferramenta realiza o processo de validação e leitura
+        de forma automática. A assinatura é repassada para o campo assinatura sem decodificação, pois é um sistema
+        dinâmico e diferente do base64 para decodificar.</p>
+
+    <h2>Um Pouco Sobre o JWT e Suas Variantes</h2>
+    <p>JWT, que significa JSON Web Token, é um padrão aberto (RFC 7519) que define um método compacto e autossuficiente
+        para transmitir informações de forma segura entre partes como um objeto JSON. A história do JWT remonta a 2010,
+        quando a necessidade de um método mais eficiente e seguro de transmitir informações de identidade em ambientes
+        distribuídos surgiu. Este padrão foi desenvolvido pelo grupo de trabalho IETF OAuth, liderado por Michael B.
+        Jones e Nat Sakimura..</p>
+
+    <p>JWT é geralmente utilizado para autenticação e troca de informações entre diferentes sistemas de forma segura.
+        Ele é composto por três partes: o cabeçalho (header), a carga útil (payload) e a assinatura (signature). O
+        cabeçalho geralmente contém informações sobre o tipo de token e o algoritmo de criptografia usado, a carga útil
+        contém os dados que queremos transmitir e a assinatura é usada para verificar se os dados foram alterados
+        durante a transmissão.</p>
+
+    <h4 class="sublinhado">Existem algumas variações do JWT, que são frequentemente usadas em diferentes contextos</h4>
+
+    <ul>
+        <li><span class="sublinhado">JWK (JSON Web Key):</span> É um formato de chave pública que é normalmente usado
+            com JWT para permitir que o receptor verifique a assinatura do token.</li><br/>
+        <li><span class="sublinhado">JWS (JSON Web Signature):</span> É um formato para assinar conteúdos JSON. É usado
+            para assinar os JWT, garantindo que eles não tenham sido alterados durante a transmissão.</li><br/>
+        <li><span class="sublinhado">JWE (JSON Web Encryption):</span> Este é usado quando a carga útil do JWT precisa
+            ser criptografada para garantir a confidencialidade dos dados.</li><br/>
+        <li><span class="sublinhado">JWKS (JSON Web Key Set):</span> É um conjunto de chaves públicas usadas para
+            verificar as assinaturas dos JWTs. É especialmente útil quando você precisa verificar assinaturas de tokens
+            de diferentes emissores.</li>
+    </ul>
+
+    <p>Sua simplicidade e capacidade de representar dados de forma estruturada e legível fazem do JSON uma escolha comum
+        para muitas aplicações. Um objeto JSON consiste em pares chave/valor, onde as chaves são strings e os valores
+        podem ser strings, números, booleanos, arrays, objetos ou null. Isso o torna extremamente flexível para
+        representar uma ampla variedade de dados.</p>
+
+</div>
