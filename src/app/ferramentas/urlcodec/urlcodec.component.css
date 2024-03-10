@@ -1,0 +1,18 @@
+.largura-completa {
+    width: 100%;
+    height: 100%;
+}
+
+.botao{
+  margin-right: 0.5em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.inverte-cor-icone {
+  filter: invert(100%);
+}
+
+.sublinhado {
+  text-decoration: underline;
+}

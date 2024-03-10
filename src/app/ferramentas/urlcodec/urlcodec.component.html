@@ -1,0 +1,31 @@
+<div class="largura-completa ">
+    <mat-form-field appearance="outline" class="largura-completa ">
+        <mat-label>URL</mat-label>
+        <input [(ngModel)]="strUrl" matInput placeholder="URL para codificar ou decodificar">
+        <mat-icon matSuffix>abc</mat-icon>
+        <mat-hint>Cole aqui a URL para codificar ou decodificar</mat-hint>
+    </mat-form-field>
+</div>
+<div class="caixa-botoes">
+    <button mat-raised-button (click)="codificarUrl()" class="botao" color="primary">Codificar</button>
+    <button mat-raised-button (click)="decodificarUrl()" class="botao" color="primary">Decodificar</button>
+</div>
+<div>
+    <img class="inverte-cor-icone" width="65" height="65" src="./assets/url-icon.svg" />
+    <h2>Instruções</h2>
+    <h4 class="sublinhado">Como codificar e decodificar uma URL</h4>
+    <p>Basta colar a URL codificada ou decodificada na caixa de texto e clicar no respectivo botão para a executar a
+        tarefa de codificar ou decodificar.</p>
+    <h2>Um Pouco Sobre a documentação RFC 3986</h2>
+    <p>A RFC 3986 é um documento que especifica as regras para a construção de identificadores uniformes de recursos
+        (URIs), que são usados para identificar e localizar recursos na internet. URIs incluem URLs (Uniform Resource
+        Locators) e URNs (Uniform Resource Names).</p>
+    <p>A RFC 3986, intitulada "Uniform Resource Identifier (URI): Generic Syntax", descreve a sintaxe genérica e as
+        regras para a formação de URIs. Ela define como os componentes de uma URI (como esquema, autoridade, caminho,
+        consulta e fragmento) são estruturados e como eles devem ser codificados e interpretados.</p>
+    <p>Além disso, a RFC 3986 especifica como caracteres especiais devem ser codificados em uma URI para garantir que a
+        URI seja transmitida corretamente e que não haja ambiguidades na interpretação dos componentes.</p>
+    <p>Em resumo, a RFC 3986 é uma especificação crucial para garantir a interoperabilidade e a segurança na construção
+        e interpretação de URIs na internet. Ela fornece diretrizes claras sobre como criar URIs válidas e robustas que
+        possam ser interpretadas corretamente pelos sistemas de computadores em todo o mundo.</p>
+</div>

@@ -4,6 +4,8 @@ import { LeitorAreaCwsComponent } from './ferramentas/leitor-area-cws/leitor-are
 import { Base64Component } from './ferramentas/base64/base64.component'
 import { EditorJsonComponent } from './ferramentas/editor-json/editor-json.component'
 import { VisualizadorJwtComponent } from './ferramentas/visualizador-jwt/visualizador-jwt.component'
+import { UrlcodecComponent } from './ferramentas/urlcodec/urlcodec.component'
+
 import { HomeComponent } from './home/home.component'
 
 export const routes: Routes = [
@@ -12,5 +14,6 @@ export const routes: Routes = [
     { path: 'leitor-area-cws', component: LeitorAreaCwsComponent },
     { path: 'base64', component: Base64Component },
     { path: 'editor-json', component: EditorJsonComponent },
-    { path: 'visualizador-jwt', component: VisualizadorJwtComponent }
+    { path: 'visualizador-jwt', component: VisualizadorJwtComponent },
+    { path: 'codec-de-url', component: UrlcodecComponent }
 ];

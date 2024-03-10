@@ -49,7 +49,11 @@ export class MenuComponent {
     }
     if (tag === 'visualizador-jwt') {
       this.router.navigate(['/visualizador-jwt']);
-      this.tituloAplicacao = "Visualizador de Jwt";
+      this.tituloAplicacao = "Visualizador de JWT";
+    }
+    if (tag === 'codec-de-url') {
+      this.router.navigate(['/codec-de-url']);
+      this.tituloAplicacao = "Codec de URL";
     }
   }
 }

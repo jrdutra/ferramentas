@@ -6,13 +6,13 @@
 .div-interna-texto-esqueda {
     flex: 1;
     flex-direction: column;
-    margin-right: 5px;
+    margin-right: 0.55em;
 }
 
 .div-interna-texto-direita {
     flex: 1;
     flex-direction: column;
-    margin-left: 5px;
+    margin-left: 0.55em;
 }
 
 .texto-alinhado-esquerda {

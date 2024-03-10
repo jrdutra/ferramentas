@@ -33,7 +33,7 @@ export class VisualizadorJwtComponent {
     private jwtService: JwtService) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Visualizador de Jwt");
+    this.dataService.setTituloAplicacao("Visualizador de JWT");
   }
 
   lerTokenJwt() {
