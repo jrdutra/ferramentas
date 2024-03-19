@@ -55,5 +55,9 @@ export class MenuComponent {
       this.router.navigate(['/codec-de-url']);
       this.tituloAplicacao = "Codec de URL";
     }
+    if (tag === 'conversor-imagem-texto-ocr') {
+      this.router.navigate(['/conversor-imagem-texto-ocr']);
+      this.tituloAplicacao = "Conversor OCR";
+    }
   }
 }
