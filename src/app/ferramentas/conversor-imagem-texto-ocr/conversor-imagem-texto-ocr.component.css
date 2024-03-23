@@ -28,6 +28,14 @@
   margin-bottom: 1em;
 }
 
+.inverte-cor-icone {
+  filter: invert(100%);
+}
+
+.sublinhado {
+  text-decoration: underline;
+}
+
 @media (max-width: 650px) {
   .principal {
     flex-direction: column;

@@ -1,17 +1,40 @@
 <div class="principal">
-        <div class="coluna1">
-            <button class="botao" mat-raised-button type="button" color="primary" (click)="fileInput.click()">Escolher
-                Arquivo</button>
-            <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
-            <button class="botao" mat-raised-button color="primary" (click)="executarOcr()">{{strTextoBotaoExecutarOcr}}</button>
-            <!--<span class="file-name">{{selectedFile?.name}}</span><br /><br />-->
-            <img class="imagemCarregada" [src]="selectedFile ? getPreviewUrl(selectedFile) : ''" />
-        </div>
-        <div class="coluna2">
-            <mat-form-field appearance="fill">
-                <mat-label>Texto</mat-label>
-                <textarea [disabled]="true" [(ngModel)]="strTextoExtraido" matInput style="height: 25em; color: white;">
+    <div class="coluna1">
+        <button class="botao" mat-raised-button type="button" color="primary" (click)="fileInput.click()">Escolher
+            Arquivo</button>
+        <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
+        <button class="botao" mat-raised-button color="primary"
+            (click)="executarOcr()">{{strTextoBotaoExecutarOcr}}</button>
+        <!--<span class="file-name">{{selectedFile?.name}}</span><br /><br />-->
+        <img class="imagemCarregada" [src]="selectedFile ? getPreviewUrl(selectedFile) : ''" />
+    </div>
+    <div class="coluna2">
+        <mat-form-field appearance="fill">
+            <mat-label>Texto</mat-label>
+            <textarea [disabled]="true" [(ngModel)]="strTextoExtraido" matInput style="height: 25em; color: white;">
             </textarea>
-            </mat-form-field>
-        </div>
+        </mat-form-field>
+    </div>
 </div>
+
+<img class="inverte-cor-icone" width="65" height="65" src="./assets/ocr-icon.svg" />
+<h2>Instruções</h2>
+
+<h4 class="sublinhado">Como executar o OCR em uma imagem</h4>
+<p>Para executar o OCR, clique no botão "Escolher Aquivo", selecione um arquivo de imagem png, jpg, gif ou bmp. Após
+    essa etapa, a imagem será carregada na tela, então basta clicar no botão "Executar OCR". Caso ocorra tudo bem, o
+    texto será carregado no campo "Texto", caso haja algum problema, é carregado o texto "Erro ao executar OCR"</p>
+
+<h2>O que é OCR</h2>
+<p>OCR (Optical Character Recognition) é uma tecnologia que permite converter imagens de texto, como documentos
+    digitalizados ou fotografados, em texto editável e pesquisável. Basicamente, ele "lê" o texto presente na imagem e o
+    converte em texto digital que pode ser processado por computadores.</p>
+
+<p>O OCR funciona identificando padrões nos pixels da imagem que correspondem a caracteres alfabéticos, numéricos e
+    outros símbolos. Depois de identificar esses padrões, o software de OCR os interpreta e os converte em texto
+    digital.</p>
+
+<p>Essa tecnologia é usada em uma variedade de aplicações, incluindo digitalização de documentos, reconhecimento de
+    placas de veículos, processamento de formulários, reconhecimento de caracteres em imagens de livros e revistas,
+    entre outros. Ele desempenha um papel crucial na automação de processos que envolvem grande quantidade de documentos
+    físicos, permitindo que o texto seja pesquisável e manipulável digitalmente.</p>
