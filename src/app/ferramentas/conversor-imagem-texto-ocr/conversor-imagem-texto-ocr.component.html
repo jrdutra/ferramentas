@@ -3,7 +3,7 @@
             <button class="botao" mat-raised-button type="button" color="primary" (click)="fileInput.click()">Escolher
                 Arquivo</button>
             <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
-            <button class="botao" mat-raised-button color="primary" (click)="executarOcr()">Executar OCR</button>
+            <button class="botao" mat-raised-button color="primary" (click)="executarOcr()">{{strTextoBotaoExecutarOcr}}</button>
             <!--<span class="file-name">{{selectedFile?.name}}</span><br /><br />-->
             <img class="imagemCarregada" [src]="selectedFile ? getPreviewUrl(selectedFile) : ''" />
         </div>

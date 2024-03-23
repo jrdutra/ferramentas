@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { DataService } from '../../data.service';
+import { OcrService } from '../../services/ocr/ocr.service'
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+
 
 @Component({
   selector: 'app-conversor-imagem-texto-ocr',
@@ -16,18 +18,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class ConversorImagemTextoOcrComponent {
 
-  selectedFile: File | null = null;
-
+  selectedFile: File | string = "";
   strTextoExtraido: string = "";
-
-  constructor(private dataService: DataService) { 
+  strTextoBotaoExecutarOcr = "Executar OCR";
+ 
+  constructor(private dataService: DataService, 
+    private ocrService: OcrService) { 
 
   }
 
   ngOnInit(): void {
     this.dataService.setTituloAplicacao("Conversor OCR");
   }
-
 
   carregaArquivo(event: any): void {
     if(event.target != null){
@@ -36,12 +38,28 @@ export class ConversorImagemTextoOcrComponent {
   }
 
   executarOcr(): void {
-    // Aqui você pode enviar o arquivo para um serviço ou fazer o que for necessário com ele
+    
+    this.strTextoBotaoExecutarOcr = "PROCESSANDO...";
+
     console.log('Arquivo selecionado:', this.selectedFile);
+    if(this.selectedFile instanceof File){
+      this.ocrService.executarOcr(this.selectedFile)
+      .then(result => {
+        this.strTextoExtraido = result;
+        this.strTextoBotaoExecutarOcr = "Executar OCR";
+      })
+      .catch(error => {
+        this.strTextoExtraido = error;
+        this.strTextoBotaoExecutarOcr = "Executar OCR";
+      });;
+    
+    }
   }
 
-  getPreviewUrl(file: File): string {
-    return URL.createObjectURL(file);
+  getPreviewUrl(file: File | string): string {
+    if(file instanceof File){
+      return URL.createObjectURL(file);
+    }
+    return file;
   }
-
 }
