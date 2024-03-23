@@ -1,1 +1,17 @@
-<h2>Conversor OCR em Construção...</h2>
+<div class="principal">
+        <div class="coluna1">
+            <button class="botao" mat-raised-button type="button" color="primary" (click)="fileInput.click()">Escolher
+                Arquivo</button>
+            <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
+            <button class="botao" mat-raised-button color="primary" (click)="executarOcr()">Executar OCR</button>
+            <!--<span class="file-name">{{selectedFile?.name}}</span><br /><br />-->
+            <img class="imagemCarregada" [src]="selectedFile ? getPreviewUrl(selectedFile) : ''" />
+        </div>
+        <div class="coluna2">
+            <mat-form-field appearance="fill">
+                <mat-label>Texto</mat-label>
+                <textarea [disabled]="true" [(ngModel)]="strTextoExtraido" matInput style="height: 25em; color: white;">
+            </textarea>
+            </mat-form-field>
+        </div>
+</div>

@@ -1,0 +1,53 @@
+.principal {
+  display: flex;
+  flex-direction: row;
+}
+
+.coluna1 {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  margin-right: 0.55em;
+}
+
+.coluna2 {
+  display: flex;
+  flex: 100%;
+  flex-direction: column;
+  margin-left: 0.55em;
+}
+
+.imagemCarregada {
+  max-width: 15em;
+  filter: grayscale(100%);
+}
+
+.botao {
+  width: 15em;
+  /* Define a largura do botão como 200 pixels */
+  margin-bottom: 1em;
+}
+
+@media (max-width: 650px) {
+  .principal {
+    flex-direction: column;
+  }
+
+  .botao {
+    width: 100%;
+    /* Define a largura do botão como 200 pixels */
+  }
+
+  .imagemCarregada {
+    max-width: 100%;
+    margin-bottom: 1em;
+  }
+
+  .coluna1 {
+    margin-right: 0em;
+  }
+
+  .coluna2 {
+    margin-left: 0em;
+  }
+}
