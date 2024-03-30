@@ -59,5 +59,9 @@ export class MenuComponent {
       this.router.navigate(['/conversor-imagem-texto-ocr']);
       this.tituloAplicacao = "Conversor OCR";
     }
+    if (tag === 'unix-timestamp') {
+      this.router.navigate(['/unix-timestamp']);
+      this.tituloAplicacao = "Unix Timestamp";
+    }
   }
 }
