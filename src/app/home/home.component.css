@@ -45,8 +45,8 @@
     line-height: 1.2em;
     padding: 1.3em;
     background-color: #525252;
-    border-radius: 1em;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 0.5em;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
     text-align: justify;
     border: 0.1em solid #3d3d3d;
     margin-top: 0.6em;
