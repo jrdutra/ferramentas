@@ -1,0 +1,40 @@
+mat-form-field{
+    margin-right: 0.6em;
+}
+
+.container-principal{
+    display: flex;
+    flex-direction: column;
+}
+
+.container-datahora{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.container-timestamp{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.largura-completa-unix-timestamp{
+    width: 100%;
+}
+
+.largura-completa{
+    width: auto;
+}
+
+@media (max-width: 720px) {
+    .container-principal {
+        flex-direction: column;
+    }
+    .container-datahora{
+        flex-direction: column;
+    }
+    .largura-completa{
+        width: 100%;
+    }
+}

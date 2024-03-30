@@ -1,2 +1,43 @@
-<h3>Em construção</h3>
-<p>Esta ferrametna será dedicadaa fazer conversores de datas e horas em unix timestamp</p>
+<div class="container-principal">
+    <div class="container-datahora">
+        <mat-form-field appearance="outline" class="largura-completa ">
+            <mat-label>Dia</mat-label>
+            <input type="number" min="0" max="31" (blur)="atualizaDataHora()" [(ngModel)]="dia" matInput
+                placeholder="Dia da data">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="largura-completa ">
+            <mat-label>Mês</mat-label>
+            <input type="number" min="0" max="12" (blur)="atualizaDataHora()" [(ngModel)]="mes" matInput
+                placeholder="Mês da data">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="largura-completa ">
+            <mat-label>Ano</mat-label>
+            <input type="number" min="0" (blur)="atualizaDataHora()" [(ngModel)]="ano" matInput
+                placeholder="Ano da data">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="largura-completa ">
+            <mat-label>Hora</mat-label>
+            <input type="number" min="0" max="23" (blur)="atualizaDataHora()" [(ngModel)]="hora" matInput
+                placeholder="Dia da data">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="largura-completa ">
+            <mat-label>Minuto</mat-label>
+            <input type="number" min="0" max="59" (blur)="atualizaDataHora()" [(ngModel)]="minuto" matInput
+                placeholder="Mês da data">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="largura-completa ">
+            <mat-label>Segundo</mat-label>
+            <input type="number" min="0" max="59" (blur)="atualizaDataHora()" [(ngModel)]="segundo" matInput
+                placeholder="Ano da data">
+        </mat-form-field>
+    </div>
+</div>
+
+<div class="container-timestamp">
+    <mat-form-field appearance="outline" class="largura-completa-unix-timestamp">
+        <mat-label>Unix Timestamp</mat-label>
+        <input type="number" (blur)="atualizaTimestamp()" [(ngModel)]="unixTimestamp" matInput placeholder="Valor do unix timestamp">
+    </mat-form-field>
+</div>
+
+<button mat-raised-button (click)="atualizaDataHoraAgora()" class="botao" color="primary">Agora</button>
