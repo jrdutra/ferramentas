@@ -34,6 +34,9 @@ mat-form-field{
     .container-datahora{
         flex-direction: column;
     }
+    .container-timestamp{
+        flex-direction: column;
+    }
     .largura-completa{
         width: 100%;
     }
