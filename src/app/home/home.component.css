@@ -39,6 +39,9 @@
 .texto-pequeno {
     color: #d6d6d6;
     font-size: 0.7em;
+}
+
+.container-home{
     line-height: 1.2em;
     padding: 1.3em;
     background-color: #525252;
