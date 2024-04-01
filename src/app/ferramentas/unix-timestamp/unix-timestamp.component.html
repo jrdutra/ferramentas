@@ -36,8 +36,36 @@
 <div class="container-timestamp">
     <mat-form-field appearance="outline" class="largura-completa-unix-timestamp">
         <mat-label>Unix Timestamp</mat-label>
-        <input type="number" (blur)="atualizaTimestamp()" [(ngModel)]="unixTimestamp" matInput placeholder="Valor do unix timestamp">
+        <input type="number" (blur)="atualizaTimestamp()" [(ngModel)]="unixTimestamp" matInput
+            placeholder="Valor do unix timestamp">
     </mat-form-field>
 </div>
 
 <button mat-raised-button (click)="atualizaDataHoraAgora()" class="botao" color="primary">Agora</button>
+
+<div>
+    <img class="icon-white" width="65" height="65" src="./assets/relogio-icon.svg" />
+    <h2>Instruções</h2>
+
+    <h4 class="sublinhado">Converter</h4>
+    <p>Para realizar a conversão de data e hora, basta alterar qualquer campo e clicar em algum lugar da página para o
+        campo perder o foco, assim é disparada a respectiva função de conversão.</p>
+
+    <h2>O que é o Unix Timestamp</h2>
+    <p>O Unix Timestamp é uma representação numérica do tempo, geralmente expressa em segundos desde a meia-noite
+        (00:00:00) do dia 1º de janeiro de 1970, no horário UTC (Tempo Universal Coordenado).</p>
+
+    <p>Sua origem remonta ao desenvolvimento do sistema operacional Unix na década de 1970. Naquela época, os
+        programadores precisavam de uma forma padrão de representar datas e horas que fosse independente de fuso horário
+        e fácil de manipular computacionalmente.</p>
+
+    <p>Os criadores do Unix, principalmente Ken Thompson e Dennis Ritchie, decidiram adotar um sistema de tempo baseado
+        no número de segundos decorridos desde uma data de referência fixa. Essa escolha oferecia simplicidade e
+        consistência na manipulação de datas e horários, independentemente da localização geográfica do computador ou do
+        usuário.</p>
+
+    <p>O Unix Timestamp, portanto, é uma maneira de representar o tempo de forma universal e consistente, sendo
+        amplamente utilizada em sistemas informáticos para registrar e manipular datas e horários de forma precisa e
+        eficiente.</p>
+
+</div>
