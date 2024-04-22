@@ -16,25 +16,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      - name: Configurar versão do Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+      - name: Instalar angular CLI
+        run: npm install -g @angular/cli
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+      - name: Instalar dependencias do projeto
+        run: npm install
+      
+      - name: Build do projeto angular para producao
+        run: ng build --configuration production
 
-      - name: Upload artifact for deployment job
+      - name: Zipar artefato para deploy
+        run: zip -r ferramentasdev.zip dist/* # Aqui assumimos que seu diretório de build é 'dist', o padrão para aplicações Angular.
+
+      - name: Upload de artefato para job de deploy
         uses: actions/upload-artifact@v3
         with:
-          name: node-app
-          path: release.zip
+          name: ferramentasdev
+          path: ferramentasdev.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,10 +52,10 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: node-app
+          name: ferramentasdev
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
+      - name: Descompactando artefato para deploy
+        run: unzip ferramentasdev.zip
       
       - name: Login to Azure
         uses: azure/login@v1
@@ -68,4 +71,3 @@ jobs:
           app-name: 'ferramentasdev'
           slot-name: 'Production'
           package: .
-          
