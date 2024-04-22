@@ -16,25 +16,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      - name: Configurar versão do Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+      - name: Instalar angular CLI
+        run: npm install -g @angular/cli
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+      - name: Instalar dependencias do projeto
+        run: npm install
+      
+      - name: Build do projeto angular para producao
+        run: ng build --configuration production
 
-      - name: Upload artifact for deployment job
+      - name: Zipar artefato para deploy
+        run: zip -r ferramentas.zip dist/* # Aqui assumimos que seu diretório de build é 'dist', o padrão para aplicações Angular.
+
+      - name: Upload de artefato para job de deploy
         uses: actions/upload-artifact@v3
         with:
-          name: node-app
-          path: release.zip
+          name: ferramentas
+          path: ferramentas.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -46,22 +49,22 @@ jobs:
       id-token: write #This is required for requesting the JWT
 
     steps:
-      - name: Download artifact from build job
+      - name: Download do artefato do job de build
         uses: actions/download-artifact@v3
         with:
-          name: node-app
+          name: ferramentas
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
+      - name: Descompactando artefato para deploy
+        run: unzip ferramentas.zip
       
-      - name: Login to Azure
+      - name: Login no Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_18C5BA9BBF9E467EAA60E4395822E135 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2C9D611A3A934DC1B381D33C96EDE440 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6A683DE9E6C247EF9B4AD0CED88DEC73 }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: 'Deploy no Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
