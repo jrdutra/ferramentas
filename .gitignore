@@ -41,3 +41,9 @@ vscode.bat
 # System files
 .DS_Store
 Thumbs.db
+
+#Arquivos ngrock
+/dist/ferramentas/server/ngrock.bat
+/dist/ferramentas/server/node-server.bat
+/dist/ferramentas/server/start-server.bat
+/dist/ferramentas/server/ngrock.exe
