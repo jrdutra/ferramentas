@@ -1,4 +1,25 @@
-<p>texto-qrcode works!</p>
+<div class="largura-completa ">
+    <mat-form-field appearance="outline" class="largura-completa ">
+        <mat-label>Texto para converção em QrCode</mat-label>
+        <input [(ngModel)]="texto" matInput placeholder="URL para codificar ou decodificar">
+        <mat-icon matSuffix>abc</mat-icon>
+    </mat-form-field>
+
+</div>
+
+<div class="slide-label-container">
+    <label id="example-name-label" class="example-name-label">Tamanho: </label>
+    <label class="example-value-label">{{tamanho}} px</label>
+</div>
+<div class="slide-container">
+    <mat-slider class="slide-container" min="100" max="380" step="1">
+        <input matSliderThumb [(ngModel)]="tamanho" value="380">
+    </mat-slider>
+</div>
+
+
+
+
 <div class="qrcodediv">
-    <qrcode [qrdata]="text" [width]="256" errorCorrectionLevel="M"></qrcode>
+    <qrcode [qrdata]="texto" [width]="tamanho" errorCorrectionLevel="M"></qrcode>
 </div>
