@@ -63,5 +63,9 @@ export class MenuComponent {
       this.router.navigate(['/unix-timestamp']);
       this.tituloAplicacao = "Unix Timestamp";
     }
+    if (tag === 'texto-qrcode') {
+      this.router.navigate(['/texto-qrcode']);
+      this.tituloAplicacao = "Texto para QrCode";
+    }
   }
 }
