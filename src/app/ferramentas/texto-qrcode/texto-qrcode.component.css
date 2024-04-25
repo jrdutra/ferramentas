@@ -8,10 +8,10 @@
 }
 
 .slide-label-container {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 10px 0;
-  max-width: 25%;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 10px 0;
+    max-width: 25%;
 }
 
 .slide-container {
@@ -19,10 +19,19 @@
     width: 25%;
 }
 
+.inverte-cor-icone {
+    filter: invert(100%);
+}
+
+.sublinhado {
+    text-decoration: underline;
+}
+
 @media (max-width: 720px) {
     .slide-label-container {
         max-width: 100%;
     }
+
     .slide-container {
         max-width: 99%;
         width: 99%;
