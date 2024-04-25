@@ -6,19 +6,14 @@
     </mat-form-field>
 
 </div>
-
 <div class="slide-label-container">
-    <label id="example-name-label" class="example-name-label">Tamanho: </label>
+    <label>Tamanho: </label>
     <label class="example-value-label">{{tamanho}} px</label>
 </div>
-<div class="slide-container">
-    <mat-slider class="slide-container" min="100" max="380" step="1">
-        <input matSliderThumb [(ngModel)]="tamanho" value="380">
-    </mat-slider>
-</div>
 
-
-
+<mat-slider class="slide-container" min="100" max="380" step="1">
+    <input matSliderThumb [(ngModel)]="tamanho" value="380">
+</mat-slider>
 
 <div class="qrcodediv">
     <qrcode [qrdata]="texto" [width]="tamanho" errorCorrectionLevel="M"></qrcode>
