@@ -28,8 +28,8 @@ interface OcrResponse {
 })
 export class OcrService {
 
-  private apiUrl = 'https://ferramentasdevocr.cognitiveservices.azure.com/vision/v3.0/ocr';
-  private subscriptionKey = 'fe69f10d1a1344b1b66e7706e9cd83b7';
+  private apiUrl = 'https://ferramentaocr.cognitiveservices.azure.com/vision/v3.0/ocr';
+  private subscriptionKey = '5ec41d2976304b119e87567683550f38';
 
   constructor(private http: HttpClient) { }
 
