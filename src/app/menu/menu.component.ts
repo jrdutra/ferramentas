@@ -67,5 +67,9 @@ export class MenuComponent {
       this.router.navigate(['/texto-qrcode']);
       this.tituloAplicacao = "Texto para QrCode";
     }
+    if (tag === 'quebra-linha') {
+      this.router.navigate(['/quebra-linha']);
+      this.tituloAplicacao = "Quebra Linha";
+    }
   }
 }

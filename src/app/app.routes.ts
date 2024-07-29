@@ -7,6 +7,7 @@ import { UrlcodecComponent } from './ferramentas/urlcodec/urlcodec.component'
 import { ConversorImagemTextoOcrComponent } from './ferramentas/conversor-imagem-texto-ocr/conversor-imagem-texto-ocr.component'
 import { UnixTimestampComponent } from './ferramentas/unix-timestamp/unix-timestamp.component'
 import { TextoQrcodeComponent } from './ferramentas/texto-qrcode/texto-qrcode.component'
+import { QuebraLinhaComponent } from './ferramentas/quebra-linha/quebra-linha.component'
 
 import { HomeComponent } from './home/home.component'
 
@@ -19,5 +20,6 @@ export const routes: Routes = [
     { path: 'codec-de-url', component: UrlcodecComponent },
     { path: 'conversor-imagem-texto-ocr', component: ConversorImagemTextoOcrComponent },
     { path: 'unix-timestamp', component: UnixTimestampComponent },
-    { path: 'texto-qrcode', component: TextoQrcodeComponent }
+    { path: 'texto-qrcode', component: TextoQrcodeComponent },
+    { path: 'quebra-linha', component: QuebraLinhaComponent }
 ];
