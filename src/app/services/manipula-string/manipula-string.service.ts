@@ -17,6 +17,7 @@ export class ManipulaStringService {
   }
 
   quebraPorCaractere(strTexto: string, caractere: string): string {
+    strTexto = this.removeQuebraLinha(strTexto);
     return strTexto.split(caractere).join(caractere + '\n');
   }
 
