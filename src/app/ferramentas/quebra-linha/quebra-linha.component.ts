@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DataService } from '../../data.service';
+import { ManipulaStringService } from '../../services/manipula-string/manipula-string.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -16,20 +17,25 @@ export class QuebraLinhaComponent {
 
   strTexto: string = '';
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private manipulaStringService: ManipulaStringService) { }
+
+  ngOnInit(): void {
+    this.dataService.setTituloAplicacao("Quebra Linha");
+  }
 
   onButtonClick(event: MouseEvent) {
     console.log('Button clicked');
   }
 
   onInputClick(event: MouseEvent) {
-    // Impede que o clique do input seja propagado para o botão
     event.stopPropagation();
     console.log('Input clicked');
   }
 
-  ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Quebra Linha");
+  removeQuebraDeLinha(){
+    this.strTexto = this.manipulaStringService.removeQuebraLinha( this.strTexto);
   }
+
+
 
 }
