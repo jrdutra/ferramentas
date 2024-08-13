@@ -1,1 +1,31 @@
-<p>quebra-linha works!</p>
+<div class="div-principal">
+
+    <div class="div-menu-opcoes">
+        <button mat-raised-button class="botao" color="primary">Remover Quebras 
+        </button>
+        <button mat-raised-button class="botao" color="primary">Trim()
+        </button>
+        <button (click)="onButtonClick($event)" mat-raised-button class="botao" color="primary">Substituir 
+            <input (click)="onInputClick($event)" type="text" min="0" matInput
+                placeholder="0" value="abc">
+                Por:
+                <input (click)="onInputClick($event)" type="text" min="0" matInput
+                placeholder="0" value="def">
+        </button>
+        <button mat-raised-button class="botao" color="primary">Quebrar Por Caractere
+            <input type="text" min="0" matInput
+                placeholder="0" value=";">
+        </button>
+        <button mat-raised-button class="botao" color="primary">Quebrar Por Quantidade De Caracteres 
+            <input type="number" min="0" matInput
+                placeholder="0" value="0">
+        </button>
+    </div>
+
+    <mat-form-field appearance="fill">
+        <mat-label>TEXTO</mat-label>
+        <textarea [(ngModel)]="strTexto" matInput
+            style="height: 30em; box-sizing: border-box; resize: none; border: none;"></textarea>
+    </mat-form-field>
+
+</div>

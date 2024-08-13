@@ -1,0 +1,58 @@
+.div-principal {
+    display: flex;
+    flex-direction: column;
+}
+
+.div-menu-opcoes {
+    flex: 1;
+    flex-direction: row;
+}
+
+button {
+    margin-bottom: 1em;
+    margin-right: 1em;
+}
+
+input {
+    background-color: rgb(75, 75, 75);
+    /* Fundo roxo */
+    border: 0.1em solid #ffffff;
+    /* Bordas roxo escuro */
+    color: white;
+    /* Cor do texto branco */
+    border-radius: 0.3em;
+    width: 3em;
+}
+
+input:focus {
+    background-color: #525252;
+    /* Fundo cinza no foco */
+    outline: none;
+    /* Remove a borda padrão ao focar */
+    color: white;
+    /* Cor do texto branco */
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remover as setas nos navegadores que suportam a propriedade 'appearance' */
+input[type="number"] {
+    appearance: none;
+}
+
+@media (max-width: 800px) {
+    button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .div-menu-opcoes {
+        width: 100%;
+    }
+}
