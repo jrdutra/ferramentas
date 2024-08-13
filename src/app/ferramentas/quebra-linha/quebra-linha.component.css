@@ -63,3 +63,9 @@ input[type="number"] {
         width: 100%;
     }
 }
+
+@media (max-width: 800px) {
+    .input-medio{
+        width: 4em;
+    }
+}
