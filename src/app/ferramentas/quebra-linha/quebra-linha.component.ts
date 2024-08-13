@@ -18,6 +18,8 @@ export class QuebraLinhaComponent {
   strTexto: string = '';
   strCaractereQuebra: string = ';';
   numQtQuebra: number = 0;
+  strSubstituir: string = "abc";
+  strSubstituirPor: string = "cde";
 
   constructor(private dataService: DataService, private manipulaStringService: ManipulaStringService) { }
 
@@ -48,6 +50,22 @@ export class QuebraLinhaComponent {
 
   quebraPorQuantidade(){
     this.strTexto = this.manipulaStringService.quebraPorQuantidade(this.strTexto, this.numQtQuebra);
+  }
+
+  substituirTexto(){
+    this.strTexto = this.manipulaStringService.substituiStr(this.strTexto, this.strSubstituir, this.strSubstituirPor);
+  }
+
+  todasMaiusculas() {
+    this.strTexto = this.manipulaStringService.todasMaiusculas(this.strTexto);
+  }
+
+  todasMinusculas() {
+    this.strTexto = this.manipulaStringService.todasMinusculas(this.strTexto);
+  }
+
+  primeirasMaiusculas(){
+    this.strTexto = this.manipulaStringService.primeirasMaiusculas(this.strTexto);
   }
 
 }

@@ -33,4 +33,24 @@ export class ManipulaStringService {
     return strTexto;
   }
 
+  substituiStr(strTexto: string, strSubstituir: string, strSubstituirPor: string, ): string {
+    return strTexto.replace(strSubstituir, strSubstituirPor);
+  }
+
+  todasMaiusculas(strTexto: string): string {
+    return strTexto.toUpperCase();
+  }
+
+  todasMinusculas(strTexto: string): string {
+    return strTexto.toLowerCase();
+  }
+
+  primeirasMaiusculas(strTexto: string): string {
+    let textoCapitalizado: string = strTexto
+    .split(' ')
+    .map(palavra => palavra.charAt(0).toUpperCase() + palavra.slice(1).toLowerCase())
+    .join(' ');
+    return textoCapitalizado;
+  }
+
 }

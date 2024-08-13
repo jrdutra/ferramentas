@@ -13,18 +13,18 @@
             <input (click)="onInputClick($event)" [(ngModel)]="numQtQuebra" type="number" min="0" matInput
                 placeholder="0" value="0" class="input-pequeno">
         </button>
-        <button (click)="onButtonClick($event)" mat-raised-button class="botao" color="primary">Substituir 
-            <input (click)="onInputClick($event)" type="text" min="0" matInput
+        <button (click)="substituirTexto()" mat-raised-button class="botao" color="primary">Substituir 
+            <input [(ngModel)]="strSubstituir" (click)="onInputClick($event)" type="text" min="0" matInput
                 placeholder="0" value="abc" class="input-medio">
                 Por
-                <input (click)="onInputClick($event)" type="text" min="0" matInput
+                <input [(ngModel)]="strSubstituirPor" (click)="onInputClick($event)" type="text" min="0" matInput
                 placeholder="0" value="def" class="input-medio">
         </button>
-        <button mat-raised-button class="botao" color="primary">Todas Maiúsculas
+        <button (click)="todasMaiusculas()" mat-raised-button class="botao" color="primary">Todas Maiúsculas
         </button>
-        <button mat-raised-button class="botao" color="primary">Todas Minúsculas
+        <button (click)="todasMinusculas()" mat-raised-button class="botao" color="primary">Todas Minúsculas
         </button>
-        <button mat-raised-button class="botao" color="primary">Primeiras Minúsculas
+        <button (click)="primeirasMaiusculas()" mat-raised-button class="botao" color="primary">Primeiras Minúsculas
         </button>
     </div>
 
