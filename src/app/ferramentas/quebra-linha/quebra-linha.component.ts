@@ -16,6 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class QuebraLinhaComponent {
 
   strTexto: string = '';
+  strCaractereQuebra: string = ';';
+  numQtQuebra: number = 0;
 
   constructor(private dataService: DataService, private manipulaStringService: ManipulaStringService) { }
 
@@ -40,6 +42,12 @@ export class QuebraLinhaComponent {
     this.strTexto = this.manipulaStringService.executaTrim(this.strTexto);
   }
 
+  quebraPorCaractere(){
+    this.strTexto = this.manipulaStringService.quebraPorCaractere(this.strTexto, this.strCaractereQuebra);
+  }
 
+  quebraPorQuantidade(){
+    this.strTexto = this.manipulaStringService.quebraPorQuantidade(this.strTexto, this.numQtQuebra);
+  }
 
 }

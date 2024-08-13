@@ -16,4 +16,20 @@ export class ManipulaStringService {
     return strTexto.trim();
   }
 
+  quebraPorCaractere(strTexto: string, caractere: string): string {
+    return strTexto.split(caractere).join(caractere + '\n');
+  }
+
+  quebraPorQuantidade(strTexto: string, quantidade: number): string {
+    if (quantidade != 0) {
+      strTexto = this.removeQuebraLinha(strTexto);
+      const partes: string[] = [];
+      for (let i = 0; i < strTexto.length; i += quantidade) {
+        partes.push(strTexto.slice(i, i + quantidade));
+      }
+      return partes.join("\n");
+    }
+    return strTexto;
+  }
+
 }
