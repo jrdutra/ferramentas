@@ -32,8 +32,12 @@ export class QuebraLinhaComponent {
     console.log('Input clicked');
   }
 
-  removeQuebraDeLinha(){
-    this.strTexto = this.manipulaStringService.removeQuebraLinha( this.strTexto);
+  removeQuebraDeLinhaEmStrTexto(){
+    this.strTexto = this.manipulaStringService.removeQuebraLinha(this.strTexto);
+  }
+
+  executaTrimEmStrTexto(){
+    this.strTexto = this.manipulaStringService.executaTrim(this.strTexto);
   }
 
 
