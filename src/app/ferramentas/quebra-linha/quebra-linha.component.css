@@ -21,7 +21,14 @@ input {
     color: white;
     /* Cor do texto branco */
     border-radius: 0.3em;
+}
+
+.input-pequeno{
     width: 3em;
+}
+
+.input-medio{
+    width: 6em;
 }
 
 input:focus {
