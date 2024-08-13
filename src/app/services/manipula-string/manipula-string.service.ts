@@ -34,7 +34,7 @@ export class ManipulaStringService {
   }
 
   substituiStr(strTexto: string, strSubstituir: string, strSubstituirPor: string, ): string {
-    return strTexto.replace(strSubstituir, strSubstituirPor);
+    return strTexto.replaceAll(strSubstituir, strSubstituirPor);
   }
 
   todasMaiusculas(strTexto: string): string {
