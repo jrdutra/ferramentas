@@ -64,7 +64,7 @@ input[type="number"] {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 410px) {
     .input-medio{
         width: 4em;
     }
