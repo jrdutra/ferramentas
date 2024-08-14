@@ -13,6 +13,10 @@ button {
     margin-right: 1em;
 }
 
+.icon-white {
+    filter: invert(100%);
+}
+
 input {
     background-color: rgb(75, 75, 75);
     /* Fundo roxo */

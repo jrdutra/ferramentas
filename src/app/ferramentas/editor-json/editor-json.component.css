@@ -34,10 +34,6 @@
     margin-bottom: 2em;
 }
 
-.icon-white {
-    filter: invert(100%);
-}
-
 .sublinhado {
     text-decoration: underline;
 }
@@ -45,6 +41,11 @@
 .texto-vermelho{
     color: rgb(255, 122, 122);
 }
+
+.icon-white {
+    filter: invert(100%);
+}
+
 
 mat-form-field {
     width: 100%;
