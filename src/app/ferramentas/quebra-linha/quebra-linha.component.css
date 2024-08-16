@@ -17,6 +17,11 @@ button {
     filter: invert(100%);
 }
 
+.texto-vermelho{
+    color: rgb(255, 178, 178);
+    font-weight: bold;
+}
+
 input {
     background-color: rgb(75, 75, 75);
     /* Fundo roxo */

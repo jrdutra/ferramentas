@@ -53,4 +53,14 @@ export class ManipulaStringService {
     return textoCapitalizado;
   }
 
+  quantidadePalavras(strTexto: string): number {
+    if (!strTexto.trim()) {
+      return 0;
+    }
+    return strTexto.trim().split(/\s+/).length;
+  }
+  quantidadeCaracteres(strTexto: string): number {
+    return strTexto.length;
+  }
+
 }

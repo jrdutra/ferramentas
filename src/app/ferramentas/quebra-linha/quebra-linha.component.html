@@ -30,8 +30,11 @@
 
     <mat-form-field appearance="fill">
         <mat-label>TEXTO</mat-label>
-        <textarea [(ngModel)]="strTexto" matInput
+        <textarea (input)="atualizaQtCaracterePalavra()"  [(ngModel)]="strTexto" matInput
             style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
+        
+        <label> Quantidade de palavras: </label> <label class="texto-vermelho"> {{strQtPalavras}}</label> <br/>
+        <label> Quantidade de caracteres: </label> <label class="texto-vermelho"> {{strQtCaractere}}</label>  
     </mat-form-field>
 
 </div>
