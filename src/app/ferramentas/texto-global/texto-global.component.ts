@@ -24,13 +24,14 @@ export class TextoGlobalComponent {
   strCaminhoIndicadorConexao: string = './assets/light-red-icon.png'
   strTexto: string = ''
 
-
   constructor(private dataService: DataService) {
     this.socket = io(this.url, {
       rejectUnauthorized: false
     });
     this.socket.on('connect', () => {
       console.log('Conectado ao servidor Socket.io');
+      this.strCaminhoIndicadorConexao = './assets/light-green-icon.png'
+      this.strStatusConexao = "Conectado"
     });
   }
 
@@ -44,11 +45,15 @@ export class TextoGlobalComponent {
     // Evento acionado quando a conexão for fechada
     this.socket.on('disconnect', () => {
       console.log('Conexão com o servidor Socket.io foi fechada');
+      this.strCaminhoIndicadorConexao = './assets/light-red-icon.png'
+      this.strStatusConexao = "Desconectado"
     });
 
     // Evento acionado quando ocorre um erro
     this.socket.on('connect_error', (err) => {
       console.error('Erro na conexão com o Socket.io:', err);
+      this.strCaminhoIndicadorConexao = './assets/light-red-icon.png'
+      this.strStatusConexao = "Desconectado"
     });
   }
 
