@@ -28,15 +28,14 @@ export class TextoGlobalComponent {
     this.socket = io(this.url, {
       rejectUnauthorized: false
     });
+  }
+
+  ngOnInit(): void {
     this.socket.on('connect', () => {
       console.log('Conectado ao servidor Socket.io');
       this.strCaminhoIndicadorConexao = './assets/light-green-icon.png'
       this.strStatusConexao = "Conectado"
     });
-  }
-
-  ngOnInit(): void {
-    // Evento acionado quando a variável global for atualizada
     this.socket.on('update', (data) => {
       this.strTexto = data;
     });
