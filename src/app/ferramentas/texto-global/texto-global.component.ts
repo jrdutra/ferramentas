@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../data.service';
-//import { SocketService } from '../../services/socket/socket.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -31,26 +30,11 @@ export class TextoGlobalComponent {
   }
 
   ngOnInit(): void {
-    this.socket.on('connect', () => {
-      console.log('Conectado ao servidor Socket.io');
-      this.strCaminhoIndicadorConexao = './assets/light-green-icon.png'
-      this.strStatusConexao = "Conectado"
-    });
-    this.socket.on('update', (data) => {
-      this.strTexto = data;
-    });
+    
+  }
 
-    // Evento acionado quando a conexão for fechada
-    this.socket.on('disconnect', () => {
-      this.strCaminhoIndicadorConexao = './assets/light-red-icon.png'
-      this.strStatusConexao = "Desconectado"
-    });
-
-    // Evento acionado quando ocorre um erro
-    this.socket.on('connect_error', (err) => {
-      this.strCaminhoIndicadorConexao = './assets/light-red-icon.png'
-      this.strStatusConexao = "Desconectado"
-    });
+  ngOnDestroy(): void {
+    
   }
 
   emiteTextoParaServidor() {
