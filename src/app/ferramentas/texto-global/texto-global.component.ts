@@ -54,6 +54,7 @@ export class TextoGlobalComponent {
 
   ngOnDestroy(): void {
     if (this.socket) {
+      console.log('Desconectado ao servidor Socket.io');
       this.socket.disconnect();
     }
   }
