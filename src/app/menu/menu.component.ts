@@ -71,5 +71,9 @@ export class MenuComponent {
       this.router.navigate(['/quebra-linha']);
       this.tituloAplicacao = "Quebra Linha";
     }
+    if (tag === 'texto-global') {
+      this.router.navigate(['/texto-global']);
+      this.tituloAplicacao = "Texto Global";
+    }
   }
 }

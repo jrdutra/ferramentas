@@ -1,0 +1,12 @@
+<div class="div-principal">
+    <div class="div-cabecalho">
+        <img class="inverte-cor-icone" width="30" height="30" src="{{strCaminhoIndicadorConexao}}" />
+        <label class="texto-cabecalho">{{strStatusConexao}}</label>
+    </div>
+    <div class="div-caixa-texto">
+        <mat-form-field appearance="fill">
+            <mat-label>TEXTO</mat-label>
+            <textarea [(ngModel)]="strTexto" (input)="emiteTextoParaServidor()" matInput style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
+        </mat-form-field>
+    </div>
+</div>

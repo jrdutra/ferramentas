@@ -8,6 +8,7 @@ import { ConversorImagemTextoOcrComponent } from './ferramentas/conversor-imagem
 import { UnixTimestampComponent } from './ferramentas/unix-timestamp/unix-timestamp.component'
 import { TextoQrcodeComponent } from './ferramentas/texto-qrcode/texto-qrcode.component'
 import { QuebraLinhaComponent } from './ferramentas/quebra-linha/quebra-linha.component'
+import { TextoGlobalComponent } from './ferramentas/texto-global/texto-global.component'
 
 import { HomeComponent } from './home/home.component'
 
@@ -21,5 +22,6 @@ export const routes: Routes = [
     { path: 'conversor-imagem-texto-ocr', component: ConversorImagemTextoOcrComponent },
     { path: 'unix-timestamp', component: UnixTimestampComponent },
     { path: 'texto-qrcode', component: TextoQrcodeComponent },
-    { path: 'quebra-linha', component: QuebraLinhaComponent }
+    { path: 'quebra-linha', component: QuebraLinhaComponent },
+    { path: 'texto-global', component: TextoGlobalComponent }
 ];

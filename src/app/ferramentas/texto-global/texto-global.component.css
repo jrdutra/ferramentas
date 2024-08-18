@@ -1,0 +1,23 @@
+.div-principal{
+    display: flex;
+    flex-direction: column;
+}
+
+.div-cabecalho{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+.div-caixa-texto{
+    display: flex;
+    flex-direction: column;
+}
+
+.texto-cabecalho{
+    margin-left: 0.1em;
+    font-size: 2em;
+}
