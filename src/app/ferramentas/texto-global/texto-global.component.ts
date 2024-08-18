@@ -38,27 +38,23 @@ export class TextoGlobalComponent {
   ngOnInit(): void {
     // Evento acionado quando a variável global for atualizada
     this.socket.on('update', (data) => {
-      console.log(`Valor atualizado da variável global: ${data}`);
       this.strTexto = data;
     });
 
     // Evento acionado quando a conexão for fechada
     this.socket.on('disconnect', () => {
-      console.log('Conexão com o servidor Socket.io foi fechada');
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png'
       this.strStatusConexao = "Desconectado"
     });
 
     // Evento acionado quando ocorre um erro
     this.socket.on('connect_error', (err) => {
-      console.error('Erro na conexão com o Socket.io:', err);
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png'
       this.strStatusConexao = "Desconectado"
     });
   }
 
   emiteTextoParaServidor() {
-    console.log('Enviou o texto ', this.strTexto);
     this.socket.emit('updateTextoGlobal', this.strTexto);
   }
 
