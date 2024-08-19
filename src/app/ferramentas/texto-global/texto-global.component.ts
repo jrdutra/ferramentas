@@ -25,6 +25,7 @@ export class TextoGlobalComponent {
   constructor(private dataService: DataService) {  }
 
   async ngOnInit(): Promise<void> {
+    this.dataService.setTituloAplicacao("Texto Global");
     const { io } = await import('socket.io-client');
     this.socket = io(this.url, {
       rejectUnauthorized: false
