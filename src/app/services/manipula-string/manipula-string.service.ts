@@ -59,8 +59,17 @@ export class ManipulaStringService {
     }
     return strTexto.trim().split(/\s+/).length;
   }
+
   quantidadeCaracteres(strTexto: string): number {
     return strTexto.length;
+  }
+
+  numerarLinhas(strTexto: string): string {
+    let contador = 1;
+    return strTexto.replace(/^|(\n)/g, (_, p1) => {
+        // Adiciona o número seguido por um único espaço, removendo espaços extras
+        return `${p1 || ''}${contador++} `;
+    }).replace(/(\d)\s+/g, '$1 ');
   }
 
 }

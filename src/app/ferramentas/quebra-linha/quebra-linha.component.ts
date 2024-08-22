@@ -75,4 +75,8 @@ export class QuebraLinhaComponent {
     this.strQtPalavras = this.manipulaStringService.quantidadePalavras(this.strTexto).toString();
   }
 
+  numerarLinhas(){
+    this.strTexto = this.manipulaStringService.numerarLinhas(this.strTexto);
+  }
+
 }
