@@ -18,8 +18,8 @@ export class QuebraLinhaComponent {
   strTexto: string = '';
   strCaractereQuebra: string = '.';
   numQtQuebra: number = 0;
-  strSubstituir: string = "abc";
-  strSubstituirPor: string = "cde";
+  strSubstituir: string = "";
+  strSubstituirPor: string = "";
   strQtCaractere: string = "0";
   strQtPalavras: string = "0";
 
