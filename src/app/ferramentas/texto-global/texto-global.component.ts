@@ -26,10 +26,12 @@ export class TextoGlobalComponent {
 
   async ngOnInit(): Promise<void> {
     this.dataService.setTituloAplicacao("Texto Global");
+    
     const { io } = await import('socket.io-client');
     this.socket = io(this.url, {
       rejectUnauthorized: false
     });
+
     this.socket.on('connect', () => {
       console.log('Conectado ao servidor Socket.io');
       this.strCaminhoIndicadorConexao = './assets/light-green-icon.png'
