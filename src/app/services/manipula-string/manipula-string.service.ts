@@ -72,4 +72,11 @@ export class ManipulaStringService {
     }).replace(/(\d)\s+/g, '$1 ');
   }
 
+  tracoInicioLinhas(strTexto: string): string{
+    return strTexto.replace(/^|(\n)/g, (_, p1) => {
+      // Adiciona o caractere '-' seguido por um único espaço
+      return `${p1 || ''}- `;
+  }).replace(/(-)\s+/g, '$1 ');
+  }
+
 }

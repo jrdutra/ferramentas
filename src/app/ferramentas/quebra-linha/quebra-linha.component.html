@@ -7,7 +7,7 @@
         </button>
         <button (click)="quebraPorCaractere()" mat-raised-button class="botao" color="primary">Quebrar Por Caractere
             <input (click)="onInputClick($event)" [(ngModel)]="strCaractereQuebra" type="text" matInput
-                placeholder="0" value=";" class="input-pequeno">
+                placeholder="0" value="." class="input-pequeno">
         </button>
         <button (click)="quebraPorQuantidade()" mat-raised-button class="botao" color="primary">Quebrar Por Quantidade 
             <input (click)="onInputClick($event)" [(ngModel)]="numQtQuebra" type="number" min="0" matInput
@@ -27,6 +27,8 @@
         <button (click)="primeirasMaiusculas()" mat-raised-button class="botao" color="primary">Primeiras Maiúsculas
         </button>
         <button (click)="numerarLinhas()" mat-raised-button class="botao" color="primary">Numerar Linhas
+        </button>
+        <button (click)="tracoInicioLinhas()" mat-raised-button class="botao" color="primary">Traço no Início das Linhas
         </button>
     </div>
 

@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class QuebraLinhaComponent {
 
   strTexto: string = '';
-  strCaractereQuebra: string = ';';
+  strCaractereQuebra: string = '.';
   numQtQuebra: number = 0;
   strSubstituir: string = "abc";
   strSubstituirPor: string = "cde";
@@ -77,6 +77,10 @@ export class QuebraLinhaComponent {
 
   numerarLinhas(){
     this.strTexto = this.manipulaStringService.numerarLinhas(this.strTexto);
+  }
+
+  tracoInicioLinhas(){
+    this.strTexto = this.manipulaStringService.tracoInicioLinhas(this.strTexto);
   }
 
 }
