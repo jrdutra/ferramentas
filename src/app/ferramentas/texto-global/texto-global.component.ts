@@ -32,6 +32,8 @@ export class TextoGlobalComponent {
       rejectUnauthorized: false
     });
 
+    this.strStatusConexao = "Conectando..."
+
     this.socket.on('connect', () => {
       console.log('Conectado ao servidor Socket.io');
       this.strCaminhoIndicadorConexao = './assets/light-green-icon.png'
@@ -51,7 +53,7 @@ export class TextoGlobalComponent {
     // Evento acionado quando ocorre um erro
     this.socket.on('connect_error', (err: Error) => {
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png'
-      this.strStatusConexao = "Desconectado"
+      this.strStatusConexao = "Erro na conexão"
     });
   }
 
