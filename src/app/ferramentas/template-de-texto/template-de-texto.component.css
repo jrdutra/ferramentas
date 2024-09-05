@@ -1,0 +1,47 @@
+.div-principal {
+    display: flex;
+    flex-direction: row;
+}
+
+.div-coluna {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.div-campos{
+    padding-left: 1em;
+}
+
+button {
+    margin-bottom: 1em;
+}
+
+.icon-white {
+    filter: invert(100%);
+}
+
+.texto-vermelho{
+    color: rgb(255, 178, 178);
+    font-weight: bold;
+}
+
+
+@media (max-width: 800px) {
+    button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .div-menu-opcoes {
+        width: 100%;
+    }
+}
+
+@media (max-width: 410px) {
+    .input-medio{
+        width: 4em;
+    }
+}
