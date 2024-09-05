@@ -1,6 +1,6 @@
 <div class="div-principal">
 
-    <div class="div-coluna">
+    <div class="div-coluna-Texto">
         <mat-form-field appearance="fill">
             <mat-label>{{strTipoTexto}}</mat-label>
             <textarea (input)="atualizaQtCaracterePalavra()"  [(ngModel)]="strTexto" matInput
@@ -10,11 +10,13 @@
         </mat-form-field>
     </div>
 
-    <div class="div-coluna div-campos">
-        <button  mat-raised-button class="botao" color="primary">Remover Quebras 
+    <div class="div-coluna-campos">
+        <button  mat-raised-button class="botao" color="primary">Gerar Texto 
         </button>
-        <button  mat-raised-button class="botao" color="primary">Remover Quebras 
-        </button>
+        <mat-form-field appearance="outline" class="largura-completa ">
+            <mat-label>URL</mat-label>
+            <input matInput>
+        </mat-form-field>
     </div>
 
 </div>
