@@ -9,6 +9,7 @@ import { UnixTimestampComponent } from './ferramentas/unix-timestamp/unix-timest
 import { TextoQrcodeComponent } from './ferramentas/texto-qrcode/texto-qrcode.component'
 import { QuebraLinhaComponent } from './ferramentas/quebra-linha/quebra-linha.component'
 import { TextoGlobalComponent } from './ferramentas/texto-global/texto-global.component'
+import { TemplateDeTextoComponent } from './ferramentas/template-de-texto/template-de-texto.component'
 
 import { HomeComponent } from './home/home.component'
 
@@ -23,5 +24,6 @@ export const routes: Routes = [
     { path: 'unix-timestamp', component: UnixTimestampComponent },
     { path: 'texto-qrcode', component: TextoQrcodeComponent },
     { path: 'quebra-linha', component: QuebraLinhaComponent },
-    { path: 'texto-global', component: TextoGlobalComponent }
+    { path: 'texto-global', component: TextoGlobalComponent },
+    { path: 'template-de-texto', component: TemplateDeTextoComponent }
 ];

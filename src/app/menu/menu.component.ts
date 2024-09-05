@@ -75,5 +75,9 @@ export class MenuComponent {
       this.router.navigate(['/texto-global']);
       this.tituloAplicacao = "Texto Global";
     }
+    if (tag === 'template-de-texto') {
+      this.router.navigate(['/template-de-texto']);
+      this.tituloAplicacao = "Template de Texto";
+    }
   }
 }
