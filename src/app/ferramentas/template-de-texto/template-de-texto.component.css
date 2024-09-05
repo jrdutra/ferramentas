@@ -29,21 +29,8 @@ button {
 }
 
 
-@media (max-width: 800px) {
-    button {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-    .div-menu-opcoes {
-        width: 100%;
-    }
-}
-
-@media (max-width: 410px) {
-    .input-medio{
-        width: 4em;
+@media (max-width: 780px) {
+    .div-principal {
+        flex-direction: column;
     }
 }
