@@ -5,13 +5,13 @@
 
 .div-coluna-Texto {
     display: flex;
-    flex: 0.6;
+    flex: 0.7;
     flex-direction: column;
 }
 
 .div-coluna-campos {
     display: flex;
-    flex: 0.4;
+    flex: 0.3;
     flex-direction: column;
     padding-left: 1em;
 }
@@ -50,7 +50,7 @@
     }
 }
 
-@media (max-width: 1035px) {
+@media (max-width: 1346px) {
     .div-botoes {
         flex-direction: column;
     }
