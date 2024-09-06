@@ -8,6 +8,7 @@
     flex: 0.6;
     flex-direction: column;
 }
+
 .div-coluna-campos {
     display: flex;
     flex: 0.4;
@@ -15,8 +16,22 @@
     padding-left: 1em;
 }
 
-button {
+.div-botoes{
+    display: flex;
+    flex-direction: row;
+}
+
+.botao{
     margin-bottom: 1em;
+    width: 100%;
+}
+
+.botao-esqueda{
+    margin-right: 0.5em;
+}
+
+.botao-direita{
+    margin-left: 0.5em;
 }
 
 .icon-white {
@@ -32,5 +47,17 @@ button {
 @media (max-width: 780px) {
     .div-principal {
         flex-direction: column;
+    }
+}
+
+@media (max-width: 1035px) {
+    .div-botoes {
+        flex-direction: column;
+    }
+    .botao-esqueda{
+        margin-right: 0em;
+    }
+    .botao-direita{
+        margin-left: 0em;
     }
 }
