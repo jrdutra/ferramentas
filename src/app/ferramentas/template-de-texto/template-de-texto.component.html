@@ -3,60 +3,55 @@
     <div class="div-coluna-Texto">
         <mat-form-field appearance="fill">
             <mat-label>{{strTipoTexto}}</mat-label>
-            <textarea (input)="atualizaQtCaracterePalavra()"  [(ngModel)]="strTexto" matInput
+            <textarea (input)="atualizaQtCaracterePalavra()" [(ngModel)]="strTexto" matInput
                 style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
-            <label> Quantidade de palavras: </label> <label class="texto-vermelho"> {{strQtPalavras}}</label> <br/>
-            <label> Quantidade de caracteres: </label> <label class="texto-vermelho"> {{strQtCaractere}}</label>  
+            <label> Quantidade de palavras: </label> <label class="texto-vermelho"> {{strQtPalavras}}</label> <br />
+            <label> Quantidade de caracteres: </label> <label class="texto-vermelho"> {{strQtCaractere}}</label>
         </mat-form-field>
     </div>
 
     <div class="div-coluna-campos">
         <div class="div-botoes">
-            <button (click)="carregaTemplate()" mat-raised-button class="botao botao-esqueda" color="primary">Carregar Template
+            <button (click)="carregaTemplate()" mat-raised-button class="botao botao-esqueda" color="primary">Carregar
+                Template
             </button>
-            <button (click)="visualizarTemplate()" mat-raised-button class="botao botao-direita" color="primary">Visualizar Template
+            <button (click)="visualizarTemplate()" mat-raised-button class="botao botao-direita"
+                color="primary">Visualizar Template
             </button>
         </div>
         @for(variavel of variaveisTemplate; track variavel){
-            <mat-form-field appearance="outline" class="largura-completa">
-                <mat-label>{{variavel.nomeVariavel}}</mat-label>
-                <input [(ngModel)]="variavel.conteudoVariavel" (ngModelChange)="gerarTexto()" matInput>
-            </mat-form-field>
+        <mat-form-field appearance="outline" class="largura-completa">
+            <mat-label>{{variavel.nomeVariavel}}</mat-label>
+            <input [(ngModel)]="variavel.conteudoVariavel" (ngModelChange)="gerarTexto()" matInput>
+        </mat-form-field>
         }@empty {
-            <label>Insira um template válido. Um template válido deve ter pelo menos uma variável indicada desta forma: [[nome_da_variavel]]</label>
+        <label>Insira um template válido. Um template válido deve ter pelo menos uma variável indicada desta forma:
+            [[nome_da_variavel]]</label>
         }
     </div>
-    
+
 </div>
 <div>
-    <img class="icon-white" width="65" height="65" src="./assets/texto-icon.svg" />
+    <img class="icon-white" width="65" height="65" src="./assets/text-template-icon.svg" />
     <h2>Instruções</h2>
 
-    <h4 class="sublinhado">Remover Quebras</h4>
-    <p>Cole o texto e clique neste botão para linearizar todo o texto colado.</p>
+    <h4 class="sublinhado">Carregar Template</h4>
+    <p>Cole o template de texto no campo de texto. As variáveis devem estar indicadas como <code>[[variavel]]</code>.
+        Clique neste botão para identificar as variáveis e gerar campos de entrada exclusivos para cada uma. Após
+        preencher os valores nos campos gerados, esses valores serão automaticamente substituídos no template onde as
+        variáveis aparecem.</p>
 
-    <h4 class="sublinhado">Trim</h4>
-    <p>Além de remover as quebras de linha, remove os espaços duplicados e tabulações.</p>
+    <h4 class="sublinhado">Visualizar Template</h4>
+    <p>Exibe o template de texto original que foi colado no campo de texto <code>textarea</code>, sem as substituições.
+        Útil para revisar o template antes de gerar o texto final.</p>
 
-    <h4 class="sublinhado">Quebra por Caractere</h4>
-    <p>Quebra linha depois do caractere especificado.</p>
+    <h4 class="sublinhado">Campo de Texto (Textarea)</h4>
+    <p>Use este campo para colar o template de texto. Insira as variáveis no formato <code>[[variavel]]</code> para que
+        sejam identificadas e processadas pela ferramenta. Esse template servirá como base para a geração de textos
+        personalizados.</p>
 
-    <h4 class="sublinhado">Quebra por Quantidade</h4>
-    <p>Quebra linha por quantidade de caracteres. A cada n caracteres, o algoritmo insere uma quebra de linha.</p>
-
-    <h4 class="sublinhado">Substituir</h4>
-    <p>Substitui o texto do primeiro input pelo texto do segundo input.</p>
-
-    <h4 class="sublinhado">Todas Maiúsculas</h4>
-    <p>Coloca todas as letras do texto em maiúsculo.</p>
-
-    <h4 class="sublinhado">Todas Minúsculas</h4>
-    <p>Coloca todas as letras do texto em minúsculo.</p>
-
-    <h4 class="sublinhado">Primeiras Maiúsculas</h4>
-    <p>Coloca apenas as primeiras letras das palavras em maiúsculo.</p>
-
-    <h4 class="sublinhado">Numerar Linhas</h4>
-    <p>Coloca números ordenados no início de cada linha</p>
+    <h4 class="sublinhado">Objetivo</h4>
+    <p>Essa ferramenta permite criar textos padronizados com trechos personalizados de forma rápida e segura,
+        substituindo automaticamente as variáveis indicadas no template com os valores inseridos nos campos gerados.</p>
 
 </div>
