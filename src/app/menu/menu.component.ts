@@ -79,5 +79,9 @@ export class MenuComponent {
       this.router.navigate(['/template-de-texto']);
       this.tituloAplicacao = "Template de Texto";
     }
+    if (tag === 'visualizador-x-509') {
+      this.router.navigate(['/visualizador-x-509']);
+      this.tituloAplicacao = "Visualizador de X.509";
+    }
   }
 }

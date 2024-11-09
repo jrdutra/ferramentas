@@ -10,6 +10,7 @@ import { TextoQrcodeComponent } from './ferramentas/texto-qrcode/texto-qrcode.co
 import { QuebraLinhaComponent } from './ferramentas/quebra-linha/quebra-linha.component'
 import { TextoGlobalComponent } from './ferramentas/texto-global/texto-global.component'
 import { TemplateDeTextoComponent } from './ferramentas/template-de-texto/template-de-texto.component'
+import { VisualizadorX509Component } from './ferramentas/visualizador-x-509/visualizador-x-509.component'
 
 import { HomeComponent } from './home/home.component'
 
@@ -25,5 +26,6 @@ export const routes: Routes = [
     { path: 'texto-qrcode', component: TextoQrcodeComponent },
     { path: 'quebra-linha', component: QuebraLinhaComponent },
     { path: 'texto-global', component: TextoGlobalComponent },
-    { path: 'template-de-texto', component: TemplateDeTextoComponent }
+    { path: 'template-de-texto', component: TemplateDeTextoComponent },
+    { path: 'visualizador-x-509', component: VisualizadorX509Component }
 ];
