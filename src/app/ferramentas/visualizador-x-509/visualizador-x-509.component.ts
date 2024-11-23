@@ -172,7 +172,6 @@ export class VisualizadorX509Component {
     // this.fingerPrintSha256 = sha256;
     // this.fingerPrintSha384 = sha384;
     // this.fingerPrintSha512 = sha512;
-    
   }
 
   converteParaHexadecimal(uint8Array: Uint8Array): string {
