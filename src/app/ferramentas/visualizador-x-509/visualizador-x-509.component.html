@@ -1,9 +1,101 @@
 <div class="principal">
-    <div class="conjunto-seleciona-arquivo">
+    <div class="seleciona-arquivo">
         <button class="botao" mat-raised-button type="button" color="primary" (click)="fileInput.click()">Escolher
             Arquivo</button>
         <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
-        <mat-label class="texto-nome-arquivo">{{fileName}}</mat-label>
+    </div>
+    <div class="informacoes-arquivos">
+        <mat-divider></mat-divider>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Nome do arquivo:</mat-label>
+            <mat-label class="valor">{{fileName}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Blob:</mat-label>
+            <mat-label class="valor">{{blob}}</mat-label>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Fingerprint (MD5):</mat-label>
+            <mat-label class="valor">{{fingerPrintMD5}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Fingerprint (Sha1):</mat-label>
+            <mat-label class="valor">{{fingerPrintSha1}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Fingerprint (Sha256):</mat-label>
+            <mat-label class="valor">{{fingerPrintSha256}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Fingerprint (Sha384):</mat-label>
+            <mat-label class="valor">{{fingerPrintSha384}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Fingerprint (Sha512):</mat-label>
+            <mat-label class="valor">{{fingerPrintSha512}}</mat-label>
+        </div>
+
+        <mat-divider></mat-divider>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Issuer (Emissor):</mat-label>
+            <mat-label class="valor">{{issuer}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Subject (Sujeito):</mat-label>
+            <mat-label class="valor">{{subject}}</mat-label>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Validade (Not Before):</mat-label>
+            <mat-label class="valor">{{validadeNotBefore}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Validade (Not After):</mat-label>
+            <mat-label class="valor">{{validadeNotAfter}}</mat-label>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Serial number:</mat-label>
+            <mat-label class="valor">{{serial}}</mat-label>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Algoritmo da Assinatura:</mat-label>
+            <mat-label class="valor">{{assinaturaAlgoritmo}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Assinatura: </mat-label>
+            <mat-label class="valor">{{assinaturaValor}}</mat-label>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Algoritmo da Chave Pública:</mat-label>
+            <mat-label class="valor">{{chavePublicaAlgoritmo}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Chave Pública (Valor):</mat-label>
+            <mat-label class="valor">{{chavePublicaValor}}</mat-label>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Extenções (Id):</mat-label>
+            <mat-label class="valor">{{extensoesId}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Extenções (Critical):</mat-label>
+            <mat-label class="valor">{{extensoesCritical}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Extenções (Valor): </mat-label>
+            <mat-label class="valor">{{extensoesValor}}</mat-label>
+        </div>
+        <div class="informacao-arquivo">
+            <mat-label class="descricao">Extenções (Nome Alternativo):</mat-label>
+            <mat-label class="valor">{{nomeAlternativo}}</mat-label>
+        </div>
+        <mat-divider></mat-divider>
     </div>
 </div>
-<br/>
+<br />

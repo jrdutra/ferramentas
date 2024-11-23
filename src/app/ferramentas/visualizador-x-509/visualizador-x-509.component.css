@@ -3,10 +3,10 @@
     flex-direction: column;
 }
 
-.conjunto-seleciona-arquivo {
-    display: flex;
+.seleciona-arquivo {
     flex-direction: row;
     margin-right: 0.55em;
+    margin-bottom: 1em;
     align-items: center;
 }
 
@@ -16,20 +16,44 @@
     margin-right: 1em;
 }
 
-.texto-nome-arquivo {
-    font-size: 1.5em;
-    padding-bottom: 0.7em;
-    font-family: 'Courier New', Courier, 'Consolas', monospace;
-}
-
 .largura-completa {
     width: 100%;
     height: 100%;
 }
 
+.informacoes-arquivos {
+    flex-direction: column;
+    margin-right: 0.55em;
+}
+
+.informacao-arquivo {
+    flex-direction: row;
+    margin-bottom: 0.5em;
+}
+
+mat-divider {
+    height: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+mat-label.descricao{
+    margin-right: 0.5em;
+    font-size: 1.2em;
+    font-weight: bold;
+    font-family: monospace;
+}
+mat-label.valor{
+    font-size: 1.2em;
+    font-family: 'Courier New', Courier, 'Consolas', monospace;
+    word-wrap: break-word; /* Permite quebra de palavra longa */
+    overflow-wrap: break-word; /* Quebra palavras automaticamente */
+    white-space: normal; /* Permite quebra de linha */
+}
+
 
 @media (max-width: 540px) {
-    .conjunto-seleciona-arquivo {
+    .seleciona-arquivo {
         flex-direction: column;
         margin-right: 0em;
         align-items: flex-start;
