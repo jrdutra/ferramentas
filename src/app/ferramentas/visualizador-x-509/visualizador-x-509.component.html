@@ -1,1 +1,8 @@
-<p>visualizador-x-509 em implementação</p>
+<div class="principal">
+    <div class="conjunto-seleciona-arquivo">
+        <button class="botao" mat-raised-button type="button" color="primary" (click)="fileInput.click()">Escolher
+            Arquivo</button>
+        <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
+        <mat-label class="texto-nome-arquivo">{{fileName}}</mat-label>
+    </div>
+</div>

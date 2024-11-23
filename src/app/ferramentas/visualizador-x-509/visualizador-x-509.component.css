@@ -1,0 +1,37 @@
+.principal {
+    display: flex;
+    flex-direction: column;
+}
+
+.conjunto-seleciona-arquivo {
+    display: flex;
+    flex-direction: row;
+    margin-right: 0.55em;
+    align-items: center;
+}
+
+.botao {
+    width: 15em;
+    margin-bottom: 1em;
+    margin-right: 1em;
+}
+
+.texto-nome-arquivo {
+    font-size: 1.5em;
+    padding-bottom: 0.7em;
+    font-family: 'Courier New', Courier, 'Consolas', monospace;
+}
+
+.largura-completa {
+    width: 100%;
+    height: 100%;
+}
+
+
+@media (max-width: 540px) {
+    .conjunto-seleciona-arquivo {
+        flex-direction: column;
+        margin-right: 0em;
+        align-items: flex-start;
+    }
+}

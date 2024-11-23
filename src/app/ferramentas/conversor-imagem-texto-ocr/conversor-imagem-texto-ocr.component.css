@@ -24,7 +24,7 @@
 
 .botao {
   width: 15em;
-  /* Define a largura do botão como 200 pixels */
+
   margin-bottom: 1em;
 }
 
@@ -43,7 +43,6 @@
 
   .botao {
     width: 100%;
-    /* Define a largura do botão como 200 pixels */
   }
 
   .imagemCarregada {
