@@ -128,13 +128,16 @@ export class VisualizadorX509Component {
     //console.log('  Public Key Value:', cert.subjectPublicKeyInfo.subjectPublicKey.valueBlock.valueHex);
 
     let oidChavePublica = `${cert.subjectPublicKeyInfo.algorithm.algorithmId}`;
-    this.chavePublicaAlgoritmo = this.OIDToAlgorithmName[oidChavePublica] + ` (${oidChavePublica})` || "Unknown Algorithm";
+    //this.chavePublicaAlgoritmo = this.OIDToAlgorithmName[oidChavePublica] + ` (${oidChavePublica})` || "Unknown Algorithm";
+    this.chavePublicaAlgoritmo = ` (${oidChavePublica})` || "Unknown Algorithm";
 
     this.chavePublicaValor = this.converteParaHexadecimal(cert.subjectPublicKeyInfo.subjectPublicKey.valueBlock.valueHexView);
 
     if (cert.extensions) {
       cert.extensions.forEach(extension => {
-        this.extensoesId = this.OIDToAlgorithmName[extension.extnID] + ` (${extension.extnID})` || "Unknown Algorithm";
+        //this.extensoesId = this.OIDToAlgorithmName[extension.extnID] + ` (${extension.extnID})` || "Unknown Algorithm";
+        this.extensoesId = ` (${extension.extnID})` || "Unknown Algorithm";
+        
         this.extensoesCritical = `${extension.critical}`;
         this.extensoesValor = this.converteParaHexadecimal(extension.extnValue.valueBlock.valueHexView);
 
@@ -155,7 +158,9 @@ export class VisualizadorX509Component {
     //console.log('  Signature Value:', cert.signatureValue.valueBlock.valueHex);
 
     let oidAssinatura = cert.signatureAlgorithm.algorithmId;
-    this.assinaturaAlgoritmo = this.OIDToAlgorithmName[oidAssinatura] + ` (${oidAssinatura})` || "Unknown Algorithm";
+    //this.assinaturaAlgoritmo = this.OIDToAlgorithmName[oidAssinatura] + ` (${oidAssinatura})` || "Unknown Algorithm";
+    this.assinaturaAlgoritmo = ` (${oidAssinatura})` || "Unknown Algorithm";
+    
     this.assinaturaValor = this.converteParaHexadecimal(cert.signatureValue.valueBlock.valueHexView);
 
     //Gera FingerPrints
@@ -179,47 +184,47 @@ export class VisualizadorX509Component {
       .join(" ");
   }
 
-  OIDToAlgorithmName: { [key: string]: string } = {
-    // Algoritmos de assinatura RSA
-    "1.2.840.113549.1.1.1": "RSA Encryption",          // RSA Encryption (algoritmo de criptografia)
-    "1.2.840.113549.1.1.5": "RSA with SHA-1",           // RSA assinatura com SHA-1
-    "1.2.840.113549.1.1.11": "RSASSA-PKCS1-v1_5",       // RSA Signature Scheme (PKCS #1 v1.5)
-    "1.2.840.113549.1.1.12": "RSASSA-PKCS1-v1_5 (SHA-256)", // RSASSA-PKCS1-v1_5 com SHA-256
-    "1.2.840.113549.1.1.13": "RSASSA-PKCS1-v1_5 (SHA-512)", // RSASSA-PKCS1-v1_5 com SHA-512
-    // Algoritmos de assinatura ECDSA (Elliptic Curve Digital Signature Algorithm)
-    "1.2.840.10045.2.1": "ECDSA",                      // ECDSA (algoritmo de assinatura usando curvas elípticas)
-    "1.2.840.10045.4.3.2": "ECDSA with SHA-256",         // ECDSA com SHA-256
-    "1.2.840.10045.4.3.3": "ECDSA with SHA-512",         // ECDSA com SHA-512
-    // Funções Hash (Hash Functions)
-    "2.16.840.1.101.3.4.2.1": "SHA-256",                // SHA-256
-    "2.16.840.1.101.3.4.2.2": "SHA-384",                // SHA-384
-    "2.16.840.1.101.3.4.2.3": "SHA-512",                // SHA-512
-    "2.16.840.1.101.3.4.3.2": "SHA-512/256",            // SHA-512/256
-    "1.2.840.113549.2.5": "MD5",                        // MD5 (não recomendado para segurança)
-    "1.2.840.113549.2.2": "SHA-1",                       // SHA-1 (não recomendado para segurança)
-    // Algoritmos de troca de chave
-    "1.2.840.113549.1.3.2": "Diffie-Hellman",            // Algoritmo de troca de chave Diffie-Hellman
-    "1.2.840.113549.1.3.1": "Diffie-Hellman (X9.42)",     // Diffie-Hellman com X9.42
-    // Algoritmos de chave pública (curvas elípticas)
-    "1.2.840.10045.3.1.7": "ECDH (Elliptic Curve Diffie-Hellman)",  // ECDH usando curvas elípticas
-    "1.2.840.10045.3.1.8": "ECDH with P-384",             // ECDH usando curva P-384
-    "1.2.840.10045.3.1.9": "ECDH with P-521",             // ECDH usando curva P-521
-    // Algoritmos de criptografia de chave simétrica (AES)
-    "2.16.840.1.101.3.4.1.2": "AES-128",                // AES-128
-    "2.16.840.1.101.3.4.1.22": "AES-256",                // AES-256
-    "2.16.840.1.101.3.4.1.42": "AES-192",                // AES-192
-    // Algoritmos de criptografia RSA
-    "1.2.840.113549.1.1.7": "RSAES-OAEP",                // RSA com OAEP (Optimal Asymmetric Encryption Padding)
-    "1.2.840.113549.1.1.10": "RSAES-OAEP (SHA-1)",        // RSAES-OAEP com SHA-1
-    // Algoritmos de assinatura com ECDSA
-    "1.2.840.10045.4.3.1": "ECDSA with SHA-1",            // ECDSA com SHA-1
-    // Algoritmos de criptografia baseados em curvas elípticas (ECIES)
-    "1.2.840.10045.2.1.3": "ECIES",                      // Elliptic Curve Integrated Encryption Scheme (ECIES)
-    // Outros algoritmos (comuns em formatos de certificados, como X.509)
-    "1.2.840.113549.1.5.12": "PKCS12",                   // PKCS12
-    "1.2.840.113549.1.9.1": "Email",                     // Certificado de e-mail
-    "1.2.840.113549.1.9.3": "OID para o Certificado de Assinatura Digital",
-    "1.2.840.113549.1.9.4": "OID para o Certificado de Criptografia", // PKCS #9 OIDs
-  };
+  // OIDToAlgorithmName: { [key: string]: string } = {
+  //   // Algoritmos de assinatura RSA
+  //   "1.2.840.113549.1.1.1": "RSA Encryption",          // RSA Encryption (algoritmo de criptografia)
+  //   "1.2.840.113549.1.1.5": "RSA with SHA-1",           // RSA assinatura com SHA-1
+  //   "1.2.840.113549.1.1.11": "RSASSA-PKCS1-v1_5",       // RSA Signature Scheme (PKCS #1 v1.5)
+  //   "1.2.840.113549.1.1.12": "RSASSA-PKCS1-v1_5 (SHA-256)", // RSASSA-PKCS1-v1_5 com SHA-256
+  //   "1.2.840.113549.1.1.13": "RSASSA-PKCS1-v1_5 (SHA-512)", // RSASSA-PKCS1-v1_5 com SHA-512
+  //   // Algoritmos de assinatura ECDSA (Elliptic Curve Digital Signature Algorithm)
+  //   "1.2.840.10045.2.1": "ECDSA",                      // ECDSA (algoritmo de assinatura usando curvas elípticas)
+  //   "1.2.840.10045.4.3.2": "ECDSA with SHA-256",         // ECDSA com SHA-256
+  //   "1.2.840.10045.4.3.3": "ECDSA with SHA-512",         // ECDSA com SHA-512
+  //   // Funções Hash (Hash Functions)
+  //   "2.16.840.1.101.3.4.2.1": "SHA-256",                // SHA-256
+  //   "2.16.840.1.101.3.4.2.2": "SHA-384",                // SHA-384
+  //   "2.16.840.1.101.3.4.2.3": "SHA-512",                // SHA-512
+  //   "2.16.840.1.101.3.4.3.2": "SHA-512/256",            // SHA-512/256
+  //   "1.2.840.113549.2.5": "MD5",                        // MD5 (não recomendado para segurança)
+  //   "1.2.840.113549.2.2": "SHA-1",                       // SHA-1 (não recomendado para segurança)
+  //   // Algoritmos de troca de chave
+  //   "1.2.840.113549.1.3.2": "Diffie-Hellman",            // Algoritmo de troca de chave Diffie-Hellman
+  //   "1.2.840.113549.1.3.1": "Diffie-Hellman (X9.42)",     // Diffie-Hellman com X9.42
+  //   // Algoritmos de chave pública (curvas elípticas)
+  //   "1.2.840.10045.3.1.7": "ECDH (Elliptic Curve Diffie-Hellman)",  // ECDH usando curvas elípticas
+  //   "1.2.840.10045.3.1.8": "ECDH with P-384",             // ECDH usando curva P-384
+  //   "1.2.840.10045.3.1.9": "ECDH with P-521",             // ECDH usando curva P-521
+  //   // Algoritmos de criptografia de chave simétrica (AES)
+  //   "2.16.840.1.101.3.4.1.2": "AES-128",                // AES-128
+  //   "2.16.840.1.101.3.4.1.22": "AES-256",                // AES-256
+  //   "2.16.840.1.101.3.4.1.42": "AES-192",                // AES-192
+  //   // Algoritmos de criptografia RSA
+  //   "1.2.840.113549.1.1.7": "RSAES-OAEP",                // RSA com OAEP (Optimal Asymmetric Encryption Padding)
+  //   "1.2.840.113549.1.1.10": "RSAES-OAEP (SHA-1)",        // RSAES-OAEP com SHA-1
+  //   // Algoritmos de assinatura com ECDSA
+  //   "1.2.840.10045.4.3.1": "ECDSA with SHA-1",            // ECDSA com SHA-1
+  //   // Algoritmos de criptografia baseados em curvas elípticas (ECIES)
+  //   "1.2.840.10045.2.1.3": "ECIES",                      // Elliptic Curve Integrated Encryption Scheme (ECIES)
+  //   // Outros algoritmos (comuns em formatos de certificados, como X.509)
+  //   "1.2.840.113549.1.5.12": "PKCS12",                   // PKCS12
+  //   "1.2.840.113549.1.9.1": "Email",                     // Certificado de e-mail
+  //   "1.2.840.113549.1.9.3": "OID para o Certificado de Assinatura Digital",
+  //   "1.2.840.113549.1.9.4": "OID para o Certificado de Criptografia", // PKCS #9 OIDs
+  // };
 
 }
