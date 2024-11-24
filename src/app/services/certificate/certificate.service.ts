@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Certificate } from 'pkijs';
 import * as forge from 'node-forge';
+import * as asn1js from 'asn1js';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +37,101 @@ export class CertificateService {
         return hex.padStart(2, "0");
       }).map(value => value.toUpperCase())
       .join(" ");
+  }
+
+  extraiInformacoesCertificado(pem: string) {
+    const base64 = pem.replace(/(-----(BEGIN|END) CERTIFICATE-----|\n|\r)/g, '');
+    const binary = atob(base64);
+    const binaryArray = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i++) {
+      binaryArray[i] = binary.charCodeAt(i);
+    }
+    
+    const binaryCert = binaryArray.buffer;
+    const asn1 = asn1js.fromBER(binaryCert);
+    if (asn1.offset === -1) {
+      throw new Error('Erro ao decodificar o certificado ASN.1');
+    }
+
+    let blob = base64;
+    const cert = new Certificate({ schema: asn1.result });
+
+    let issuer = '';
+    cert.issuer.typesAndValues.forEach(attr => {
+      issuer = issuer + `${attr.type}: ${attr.value.valueBlock.value}; `;
+    });
+
+    let subject = '';
+    cert.subject.typesAndValues.forEach(attr => {
+      subject = subject + `${attr.type}: ${attr.value.valueBlock.value}`
+    });
+
+    let serial = cert.serialNumber.valueBlock.toString();
+
+    let validadeNotBefore = cert.notBefore.value.toString();
+    let validadeNotAfter = cert.notAfter.value.toString();
+
+    let oidChavePublica = `${cert.subjectPublicKeyInfo.algorithm.algorithmId}`;
+    let chavePublicaAlgoritmo = this.OIDToAlgorithmName[oidChavePublica] + ` (${oidChavePublica})` || "Unknown Algorithm";
+    
+    let chavePublicaValor = this.converteUint8ArrayParaHexadecimal(cert.subjectPublicKeyInfo.subjectPublicKey.valueBlock.valueHexView);
+
+    let extensoesId = '';
+    let extensoesCritical = '';
+    let extensoesValor = '';
+    let nomeAlternativo = '';
+
+    if (cert.extensions) {
+      cert.extensions.forEach(extension => {
+        extensoesId = this.OIDToAlgorithmName[extension.extnID] + ` (${extension.extnID})` || "Unknown Algorithm";
+        
+        extensoesCritical = `${extension.critical}`;
+        extensoesValor = this.converteUint8ArrayParaHexadecimal(extension.extnValue.valueBlock.valueHexView);
+
+        if (extension.extnID === '2.5.29.17') {
+          extension.parsedValue.altNames.forEach((altName: any, index: number) => {
+            nomeAlternativo = nomeAlternativo + `Alt Name [${index}]: ${altName.value}; `;
+          });
+        }
+      });
+    }
+
+    let oidAssinatura = cert.signatureAlgorithm.algorithmId;
+    let assinaturaAlgoritmo = this.OIDToAlgorithmName[oidAssinatura] + ` (${oidAssinatura})` || "Unknown Algorithm";
+    
+    let assinaturaValor = this.converteUint8ArrayParaHexadecimal(cert.signatureValue.valueBlock.valueHexView);
+
+    let fingerprint = this.generateFingerprints(pem);
+
+    let { md5, sha1, sha256, sha384, sha512 } = fingerprint;
+    let fingerPrintMD5 = md5;
+    let fingerPrintSha1 = sha1;
+    let fingerPrintSha256 = sha256;
+    let fingerPrintSha384 = sha384;
+    let fingerPrintSha512 = sha512;
+
+    return {
+      blob,
+      issuer,
+      subject,
+      serial,
+      validadeNotBefore,
+      validadeNotAfter,
+      chavePublicaAlgoritmo,
+      chavePublicaValor,
+      extensoesId,
+      extensoesCritical,
+      extensoesValor,
+      nomeAlternativo,
+      assinaturaAlgoritmo,
+      assinaturaValor,
+      fingerPrintSha1,
+      fingerPrintSha256,
+      fingerPrintSha384,
+      fingerPrintSha512,
+      fingerPrintMD5
+    }
   }
 
   OIDToAlgorithmName: { [key: string]: string } = {
