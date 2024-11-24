@@ -98,16 +98,16 @@ export class VisualizadorX509Component {
     this.validadeNotAfter = cert.notAfter.value.toString();
 
     let oidChavePublica = `${cert.subjectPublicKeyInfo.algorithm.algorithmId}`;
-    this.chavePublicaAlgoritmo = this.OIDToAlgorithmName[oidChavePublica] + ` (${oidChavePublica})` || "Unknown Algorithm";
+    this.chavePublicaAlgoritmo = this.certificateService.OIDToAlgorithmName[oidChavePublica] + ` (${oidChavePublica})` || "Unknown Algorithm";
     
-    this.chavePublicaValor = this.converteUint8ArrayParaHexadecimal(cert.subjectPublicKeyInfo.subjectPublicKey.valueBlock.valueHexView);
+    this.chavePublicaValor = this.certificateService.converteUint8ArrayParaHexadecimal(cert.subjectPublicKeyInfo.subjectPublicKey.valueBlock.valueHexView);
 
     if (cert.extensions) {
       cert.extensions.forEach(extension => {
-        this.extensoesId = this.OIDToAlgorithmName[extension.extnID] + ` (${extension.extnID})` || "Unknown Algorithm";
+        this.extensoesId = this.certificateService.OIDToAlgorithmName[extension.extnID] + ` (${extension.extnID})` || "Unknown Algorithm";
         
         this.extensoesCritical = `${extension.critical}`;
-        this.extensoesValor = this.converteUint8ArrayParaHexadecimal(extension.extnValue.valueBlock.valueHexView);
+        this.extensoesValor = this.certificateService.converteUint8ArrayParaHexadecimal(extension.extnValue.valueBlock.valueHexView);
 
         if (extension.extnID === '2.5.29.17') {
           this.nomeAlternativo = '';
@@ -119,9 +119,9 @@ export class VisualizadorX509Component {
     }
 
     let oidAssinatura = cert.signatureAlgorithm.algorithmId;
-    this.assinaturaAlgoritmo = this.OIDToAlgorithmName[oidAssinatura] + ` (${oidAssinatura})` || "Unknown Algorithm";
+    this.assinaturaAlgoritmo = this.certificateService.OIDToAlgorithmName[oidAssinatura] + ` (${oidAssinatura})` || "Unknown Algorithm";
     
-    this.assinaturaValor = this.converteUint8ArrayParaHexadecimal(cert.signatureValue.valueBlock.valueHexView);
+    this.assinaturaValor = this.certificateService.converteUint8ArrayParaHexadecimal(cert.signatureValue.valueBlock.valueHexView);
 
     let fingerprint = this.certificateService.generateFingerprints(pem);
 
@@ -132,47 +132,5 @@ export class VisualizadorX509Component {
     this.fingerPrintSha384 = sha384;
     this.fingerPrintSha512 = sha512;
   }
-
-  converteUint8ArrayParaHexadecimal(uint8Array: Uint8Array): string {
-    return Array.from(uint8Array).map(value => value.toString())
-      .map(valor => {
-        const hex = parseInt(valor, 10).toString(16);
-        return hex.padStart(2, "0");
-      }).map(value => value.toUpperCase())
-      .join(" ");
-  }
-
-  OIDToAlgorithmName: { [key: string]: string } = {
-    "1.2.840.113549.1.1.1": "RSA Encryption",
-    "1.2.840.113549.1.1.5": "RSA with SHA-1",
-    "1.2.840.113549.1.1.11": "RSASSA-PKCS1-v1_5",
-    "1.2.840.113549.1.1.12": "RSASSA-PKCS1-v1_5 (SHA-256)",
-    "1.2.840.113549.1.1.13": "RSASSA-PKCS1-v1_5 (SHA-512)",
-    "1.2.840.10045.2.1": "ECDSA",
-    "1.2.840.10045.4.3.2": "ECDSA with SHA-256",
-    "1.2.840.10045.4.3.3": "ECDSA with SHA-512",
-    "2.16.840.1.101.3.4.2.1": "SHA-256",
-    "2.16.840.1.101.3.4.2.2": "SHA-384",
-    "2.16.840.1.101.3.4.2.3": "SHA-512",
-    "2.16.840.1.101.3.4.3.2": "SHA-512/256",
-    "1.2.840.113549.2.5": "MD5",
-    "1.2.840.113549.2.2": "SHA-1",
-    "1.2.840.113549.1.3.2": "Diffie-Hellman",
-    "1.2.840.113549.1.3.1": "Diffie-Hellman (X9.42)",
-    "1.2.840.10045.3.1.7": "ECDH (Elliptic Curve Diffie-Hellman)",
-    "1.2.840.10045.3.1.8": "ECDH with P-384",
-    "1.2.840.10045.3.1.9": "ECDH with P-521",
-    "2.16.840.1.101.3.4.1.2": "AES-128",
-    "2.16.840.1.101.3.4.1.22": "AES-256",
-    "2.16.840.1.101.3.4.1.42": "AES-192",
-    "1.2.840.113549.1.1.7": "RSAES-OAEP",
-    "1.2.840.113549.1.1.10": "RSAES-OAEP (SHA-1)",
-    "1.2.840.10045.4.3.1": "ECDSA with SHA-1",
-    "1.2.840.10045.2.1.3": "ECIES",           
-    "1.2.840.113549.1.5.12": "PKCS12",
-    "1.2.840.113549.1.9.1": "Email",
-    "1.2.840.113549.1.9.3": "OID para o Certificado de Assinatura Digital",
-    "1.2.840.113549.1.9.4": "OID para o Certificado de Criptografia",
-  };
 
 }
