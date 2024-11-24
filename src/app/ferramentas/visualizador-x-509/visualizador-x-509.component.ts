@@ -164,14 +164,14 @@ export class VisualizadorX509Component {
     this.assinaturaValor = this.converteParaHexadecimal(cert.signatureValue.valueBlock.valueHexView);
 
     //Gera FingerPrints
-    // let fingerprint = this.certificateService.generateFingerprints(pem);
+    let fingerprint = this.certificateService.generateFingerprints(pem);
 
-    // let { md5, sha1, sha256, sha384, sha512 } = fingerprint;
-    // this.fingerPrintMD5 = md5;
-    // this.fingerPrintSha1 = sha1;
-    // this.fingerPrintSha256 = sha256;
-    // this.fingerPrintSha384 = sha384;
-    // this.fingerPrintSha512 = sha512;
+    let { md5, sha1, sha256, sha384, sha512 } = fingerprint;
+    this.fingerPrintMD5 = md5;
+    this.fingerPrintSha1 = sha1;
+    this.fingerPrintSha256 = sha256;
+    this.fingerPrintSha384 = sha384;
+    this.fingerPrintSha512 = sha512;
   }
 
   converteParaHexadecimal(uint8Array: Uint8Array): string {
