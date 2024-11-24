@@ -70,9 +70,11 @@ export class VisualizadorX509Component {
     const base64 = pem.replace(/(-----(BEGIN|END) CERTIFICATE-----|\n|\r)/g, '');
     const binary = atob(base64);
     const binaryArray = new Uint8Array(binary.length);
+
     for (let i = 0; i < binary.length; i++) {
       binaryArray[i] = binary.charCodeAt(i);
     }
+    
     const binaryCert = binaryArray.buffer;
     const asn1 = asn1js.fromBER(binaryCert);
     if (asn1.offset === -1) {

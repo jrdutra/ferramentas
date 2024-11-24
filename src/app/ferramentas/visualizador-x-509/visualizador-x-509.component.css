@@ -31,6 +31,14 @@
     margin-bottom: 0.5em;
 }
 
+.icon-white {
+    filter: invert(100%);
+}
+
+.sublinhado {
+    text-decoration: underline;
+}
+
 mat-divider {
     height: 1em;
     margin-top: 1em;

@@ -99,3 +99,74 @@
     </div>
 </div>
 <br />
+<div>
+    <img class="icon-white" width="65" height="65" src="./assets/certx509-icon.svg" />
+    <h2>Instruções</h2>
+
+    <p>O certificado deve ser selecionado no botão "Escolher Arquivo".</p>
+
+    <h2>O que é um certificado x.509</h2>
+    <p>O certificado x.509 é um padrão amplamente utilizado para a infraestrutura de chaves públicas (PKI). Ele fornece um meio confiável de associar uma chave pública a uma identidade, garantindo autenticidade, integridade e confidencialidade em comunicações digitais. O certificado contém informações detalhadas, como o emissor, o sujeito, o período de validade, a chave pública, extensões e assinaturas que comprovam sua legitimidade.</p>
+
+    <h2>Explicação dos Campos</h2>
+
+    <h4 class="sublinhado">Nome do arquivo</h4>
+    <p>O nome do arquivo onde o certificado X.509 está armazenado, geralmente com extensões como .crt, .pem ou .cer.</p>
+
+    <h4 class="sublinhado">Blob</h4>
+    <p>Representação binária ou textual (em Base64) do conteúdo completo do certificado, encapsulado entre "BEGIN CERTIFICATE" e "END CERTIFICATE".</p>
+
+    <h4 class="sublinhado">Fingerprint (MD5)</h4>
+    <p>Um hash MD5 calculado a partir do certificado, usado para identificá-lo rapidamente. Atualmente considerado inseguro.</p>
+
+    <h4 class="sublinhado">Fingerprint (Sha1)</h4>
+    <p>Um hash SHA-1 calculado a partir do certificado. Foi amplamente utilizado no passado, mas está depreciado.</p>
+
+    <h4 class="sublinhado">Fingerprint (Sha256)</h4>
+    <p>Hash SHA-256 do certificado, considerado o padrão seguro atualmente para identificação.</p>
+
+    <h4 class="sublinhado">Fingerprint (Sha384)</h4>
+    <p>Uma impressão digital mais robusta usando o algoritmo SHA-384, adequada para sistemas que exigem maior segurança.</p>
+
+    <h4 class="sublinhado">Fingerprint (Sha512)</h4>
+    <p>Hash SHA-512, usado para garantir segurança máxima em identificação.</p>
+
+    <h4 class="sublinhado">Issuer (Emissor)</h4>
+    <p>Identifica a entidade que emitiu o certificado, contendo campos como Nome Comum (CN), Organização (O) e País (C).</p>
+
+    <h4 class="sublinhado">Subject (Sujeito)</h4>
+    <p>Identifica a entidade à qual o certificado foi emitido, usando campos semelhantes ao do emissor.</p>
+
+    <h4 class="sublinhado">Validade (Not Before)</h4>
+    <p>Data e hora em que o certificado começa a ser válido.</p>
+
+    <h4 class="sublinhado">Validade (Not After)</h4>
+    <p>Data e hora em que o certificado expira.</p>
+
+    <h4 class="sublinhado">Serial number</h4>
+    <p>Número único atribuído pelo emissor para identificar o certificado de forma exclusiva.</p>
+
+    <h4 class="sublinhado">Algoritmo da Assinatura</h4>
+    <p>Algoritmo utilizado para gerar a assinatura do certificado, como SHA256WithRSA.</p>
+
+    <h4 class="sublinhado">Assinatura</h4>
+    <p>O valor da assinatura, gerado com a chave privada do emissor, garantindo a autenticidade e integridade do certificado.</p>
+
+    <h4 class="sublinhado">Algoritmo da Chave Pública</h4>
+    <p>Algoritmo usado para a chave pública do certificado, como RSA ou ECDSA.</p>
+
+    <h4 class="sublinhado">Chave Pública (Valor)</h4>
+    <p>A chave pública associada ao sujeito do certificado, usada para verificar assinaturas digitais ou criptografar dados.</p>
+
+    <h4 class="sublinhado">Extensões (Id)</h4>
+    <p>Identificador da extensão, como 2.5.29.19 para restrições de uso de chave.</p>
+
+    <h4 class="sublinhado">Extensões (Critical)</h4>
+    <p>Indica se a extensão é crítica. Extensões críticas que não podem ser interpretadas pelo sistema levam ao rejeitamento do certificado.</p>
+
+    <h4 class="sublinhado">Extensões (Valor)</h4>
+    <p>O valor associado à extensão, como restrições de uso de chave, restrições de caminho ou identificadores de uso estendido.</p>
+
+    <h4 class="sublinhado">Extensões (Nome Alternativo)</h4>
+    <p>Especifica nomes alternativos para o sujeito, como nomes de domínio (DNS), endereços IP ou e-mails.</p>
+</div>
