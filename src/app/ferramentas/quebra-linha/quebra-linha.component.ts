@@ -26,16 +26,11 @@ export class QuebraLinhaComponent {
   constructor(private dataService: DataService, private manipulaStringService: ManipulaStringService) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Quebra Linha");
-  }
-
-  onButtonClick(event: MouseEvent) {
-    console.log('Button clicked');
+    this.dataService.setTituloAplicacao("Editor de Texto");
   }
 
   onInputClick(event: MouseEvent) {
     event.stopPropagation();
-    console.log('Input clicked');
   }
 
   removeQuebraDeLinhaEmStrTexto(){

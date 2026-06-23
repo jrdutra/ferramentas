@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DataService } from '../data.service';
@@ -9,14 +9,15 @@ import { DataService } from '../data.service';
   standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
   gruposFerramentas = [
     {
       titulo: 'Ferramentas de Texto',
       ferramentas: [
-        { titulo: 'Quebra Linha', descricao: 'Limpar, quebrar, substituir e transformar textos.', icone: 'notes', rota: 'quebra-linha' },
+        { titulo: 'Editor de Texto', descricao: 'Limpar, quebrar, substituir e transformar textos.', icone: 'notes', rota: 'quebra-linha' },
         { titulo: 'Template de Texto', descricao: 'Preencher textos usando variaveis reutilizaveis.', icone: 'article', rota: 'template-de-texto' },
         { titulo: 'Texto Global', descricao: 'Compartilhar texto em tempo real pela aplicacao.', icone: 'sync_alt', rota: 'texto-global' },
         { titulo: 'Texto para QRCode', descricao: 'Gerar QRCode a partir de textos e URLs.', icone: 'qr_code_2', rota: 'texto-qrcode' },

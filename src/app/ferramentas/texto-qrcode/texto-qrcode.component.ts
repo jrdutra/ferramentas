@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSliderModule } from '@angular/material/slider';
+import { create as criarQrCode } from 'qrcode';
 import { DataService } from '../../data.service';
 
 interface EstiloQrCode {
@@ -20,11 +21,15 @@ interface EstiloQrCode {
   glow: string;
   glowSecundario: string;
   exibirBorda: boolean;
+  quantidadeBordas: 1 | 2;
   corBorda: string;
   corBordaSecundaria: string;
   corFundoRetangulo: string;
   cantosArredondados: boolean;
+  cantosQrCodeArredondados: boolean;
+  formatoModulo: 'quadrado' | 'redondo';
   textoTitulo: string;
+  iluminarTitulo: boolean;
 }
 
 @Component({
@@ -34,13 +39,19 @@ interface EstiloQrCode {
   templateUrl: './texto-qrcode.component.html',
   styleUrl: './texto-qrcode.component.css'
 })
-export class TextoQrcodeComponent implements AfterViewInit {
+export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
   @ViewChild('previewQrCode') previewQrCode?: ElementRef<HTMLElement>;
   @ViewChild('previewCanvas') previewCanvas?: ElementRef<HTMLCanvasElement>;
 
   texto: string = 'www.google.com.br';
   tituloQrCode: string = 'Meu QRCode';
   tamanho: number = 256;
+  nomeLogotipo: string = '';
+  private logotipo?: HTMLImageElement;
+  private renderizacaoAgendada?: number;
+  private frameRenderizacao?: number;
+  private novaTentativaAgendada?: number;
+  private cacheQrRedondo?: { chave: string; canvas: HTMLCanvasElement };
 
   estilos: EstiloQrCode[] = [
     {
@@ -53,11 +64,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#5b7cff',
       glowSecundario: '#b625ff',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#5b7cff',
       corBordaSecundaria: '#b625ff',
       corFundoRetangulo: '#111827',
       cantosArredondados: true,
-      textoTitulo: '#f8fbff'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#f8fbff',
+      iluminarTitulo: false
     },
     {
       nome: 'Neon da pagina',
@@ -69,11 +84,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#00d0ff',
       glowSecundario: '#ff2db2',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#00d0ff',
       corBordaSecundaria: '#ff2db2',
       corFundoRetangulo: '#08142d',
       cantosArredondados: true,
-      textoTitulo: '#f4fbff'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#f4fbff',
+      iluminarTitulo: false
     },
     {
       nome: 'Fofo pastel',
@@ -85,11 +104,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#ff8bd6',
       glowSecundario: '#8ee8ff',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#ff8bd6',
       corBordaSecundaria: '#8ee8ff',
       corFundoRetangulo: '#fff4fb',
       cantosArredondados: true,
-      textoTitulo: '#4b2767'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#4b2767',
+      iluminarTitulo: false
     },
     {
       nome: 'Dark iluminado',
@@ -101,11 +124,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#8ee8ff',
       glowSecundario: '#b625ff',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#8ee8ff',
       corBordaSecundaria: '#b625ff',
       corFundoRetangulo: '#101125',
       cantosArredondados: true,
-      textoTitulo: '#ffffff'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#ffffff',
+      iluminarTitulo: false
     },
     {
       nome: 'Dark discreto',
@@ -117,11 +144,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#5b7cff',
       glowSecundario: '#7d4cff',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#5b7cff',
       corBordaSecundaria: '#7d4cff',
       corFundoRetangulo: '#111827',
       cantosArredondados: true,
-      textoTitulo: '#e5e7ff'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#e5e7ff',
+      iluminarTitulo: false
     },
     {
       nome: 'Claro limpo',
@@ -133,11 +164,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#5b7cff',
       glowSecundario: '#8ee8ff',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#5b7cff',
       corBordaSecundaria: '#8ee8ff',
       corFundoRetangulo: '#ffffff',
       cantosArredondados: true,
-      textoTitulo: '#111827'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#111827',
+      iluminarTitulo: false
     },
     {
       nome: 'Claro azul',
@@ -149,11 +184,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#0ea5e9',
       glowSecundario: '#7dd3fc',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#0ea5e9',
       corBordaSecundaria: '#7dd3fc',
       corFundoRetangulo: '#eaf7ff',
       cantosArredondados: true,
-      textoTitulo: '#0f3d70'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#0f3d70',
+      iluminarTitulo: false
     },
     {
       nome: 'Rosa eletrico',
@@ -165,11 +204,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#ff2db2',
       glowSecundario: '#8b5cf6',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#ff2db2',
       corBordaSecundaria: '#8b5cf6',
       corFundoRetangulo: '#1a0822',
       cantosArredondados: true,
-      textoTitulo: '#fff4fb'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#fff4fb',
+      iluminarTitulo: false
     },
     {
       nome: 'Aurora fria',
@@ -181,11 +224,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#38bdf8',
       glowSecundario: '#a78bfa',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#38bdf8',
       corBordaSecundaria: '#a78bfa',
       corFundoRetangulo: '#eef7ff',
       cantosArredondados: true,
-      textoTitulo: '#102452'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#102452',
+      iluminarTitulo: false
     },
     {
       nome: 'Luxo violeta',
@@ -197,11 +244,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#b625ff',
       glowSecundario: '#ff2db2',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#b625ff',
       corBordaSecundaria: '#ff2db2',
       corFundoRetangulo: '#190a2d',
       cantosArredondados: true,
-      textoTitulo: '#f5edff'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#f5edff',
+      iluminarTitulo: false
     },
     {
       nome: 'Minimal cinza',
@@ -213,11 +264,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#94a3b8',
       glowSecundario: '#cbd5e1',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#94a3b8',
       corBordaSecundaria: '#cbd5e1',
       corFundoRetangulo: '#f3f4f6',
       cantosArredondados: false,
-      textoTitulo: '#263241'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#263241',
+      iluminarTitulo: false
     },
     {
       nome: 'Terminal neon',
@@ -229,11 +284,15 @@ export class TextoQrcodeComponent implements AfterViewInit {
       glow: '#7cffd9',
       glowSecundario: '#00d0ff',
       exibirBorda: true,
+      quantidadeBordas: 1,
       corBorda: '#7cffd9',
       corBordaSecundaria: '#00d0ff',
       corFundoRetangulo: '#04120f',
       cantosArredondados: false,
-      textoTitulo: '#d9fff5'
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#d9fff5',
+      iluminarTitulo: false
     }
   ];
 
@@ -249,6 +308,22 @@ export class TextoQrcodeComponent implements AfterViewInit {
     this.agendarRenderizacao();
   }
 
+  ngOnDestroy(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (this.renderizacaoAgendada !== undefined) {
+      window.clearTimeout(this.renderizacaoAgendada);
+    }
+    if (this.frameRenderizacao !== undefined) {
+      window.cancelAnimationFrame(this.frameRenderizacao);
+    }
+    if (this.novaTentativaAgendada !== undefined) {
+      window.clearTimeout(this.novaTentativaAgendada);
+    }
+  }
+
   selecionarEstilo(estilo: EstiloQrCode) {
     this.estiloSelecionado = estilo;
     this.agendarRenderizacao();
@@ -259,6 +334,39 @@ export class TextoQrcodeComponent implements AfterViewInit {
       evento.preventDefault();
       this.selecionarEstilo(estilo);
     }
+  }
+
+  selecionarLogotipo(evento: Event) {
+    const input = evento.target as HTMLInputElement;
+    const arquivo = input.files?.[0];
+
+    if (!arquivo || !arquivo.type.startsWith('image/')) {
+      return;
+    }
+
+    const leitor = new FileReader();
+    leitor.onload = () => {
+      const imagem = new Image();
+      imagem.onload = () => {
+        this.logotipo = imagem;
+        this.nomeLogotipo = arquivo.name;
+        this.agendarRenderizacao();
+      };
+      imagem.onerror = () => {
+        input.value = '';
+        this.logotipo = undefined;
+        this.nomeLogotipo = '';
+      };
+      imagem.src = String(leitor.result);
+    };
+    leitor.readAsDataURL(arquivo);
+  }
+
+  removerLogotipo(input: HTMLInputElement) {
+    input.value = '';
+    this.logotipo = undefined;
+    this.nomeLogotipo = '';
+    this.agendarRenderizacao();
   }
 
   baixarPng() {
@@ -280,7 +388,22 @@ export class TextoQrcodeComponent implements AfterViewInit {
       return;
     }
 
-    window.setTimeout(() => this.renderizarPreview(0), 80);
+    if (this.renderizacaoAgendada !== undefined || this.frameRenderizacao !== undefined) {
+      return;
+    }
+
+    if (this.novaTentativaAgendada !== undefined) {
+      window.clearTimeout(this.novaTentativaAgendada);
+      this.novaTentativaAgendada = undefined;
+    }
+
+    this.renderizacaoAgendada = window.setTimeout(() => {
+      this.renderizacaoAgendada = undefined;
+      this.frameRenderizacao = window.requestAnimationFrame(() => {
+        this.frameRenderizacao = undefined;
+        this.renderizarPreview(0);
+      });
+    }, 16);
   }
 
   private renderizarPreview(tentativa: number = 0) {
@@ -289,21 +412,34 @@ export class TextoQrcodeComponent implements AfterViewInit {
 
     if (!origem || !destino) {
       if (typeof window !== 'undefined' && tentativa < 5) {
-        window.setTimeout(() => this.renderizarPreview(tentativa + 1), 80);
+        if (this.novaTentativaAgendada !== undefined) {
+          window.clearTimeout(this.novaTentativaAgendada);
+        }
+        this.novaTentativaAgendada = window.setTimeout(() => {
+          this.novaTentativaAgendada = undefined;
+          this.renderizarPreview(tentativa + 1);
+        }, 40);
       }
       return;
     }
 
     const titulo = this.tituloQrCode.trim();
     const padding = 72;
-    const tituloAltura = titulo ? 46 : 0;
-    const espacoTitulo = titulo ? 22 : 0;
     const larguraQr = origem.width;
     const alturaQr = origem.height;
+    const tituloAltura = titulo ? 46 : 0;
+    const espacoTitulo = titulo ? 18 : 0;
+    const dimensoesLogotipo = this.calcularDimensoesLogotipo(larguraQr);
+    const espacoLogotipo = dimensoesLogotipo ? 22 : 0;
     const largura = larguraQr + padding * 2;
-    const altura = alturaQr + padding * 2 + tituloAltura + espacoTitulo;
-    destino.width = largura;
-    destino.height = altura;
+    const altura = alturaQr + padding * 2 + tituloAltura + espacoTitulo
+      + (dimensoesLogotipo?.altura ?? 0) + espacoLogotipo;
+    if (destino.width !== largura) {
+      destino.width = largura;
+    }
+    if (destino.height !== altura) {
+      destino.height = altura;
+    }
 
     const contexto = destino.getContext('2d');
     if (!contexto) {
@@ -315,19 +451,140 @@ export class TextoQrcodeComponent implements AfterViewInit {
     this.desenharContorno(contexto, largura, altura, padding);
 
     if (titulo) {
+      contexto.save();
       contexto.font = '700 26px Roboto, Arial, sans-serif';
       contexto.fillStyle = this.estiloSelecionado.textoTitulo;
       contexto.textAlign = 'center';
       contexto.textBaseline = 'middle';
-      contexto.shadowColor = this.estiloSelecionado.glow;
-      contexto.shadowBlur = 12;
+      if (this.estiloSelecionado.iluminarTitulo) {
+        contexto.shadowColor = this.estiloSelecionado.glow;
+        contexto.shadowBlur = 12;
+      }
       contexto.fillText(titulo, largura / 2, padding + tituloAltura / 2, largura - padding);
-      contexto.shadowBlur = 0;
+      contexto.restore();
+    }
+
+    let yConteudo = padding + tituloAltura + espacoTitulo;
+    if (this.logotipo && dimensoesLogotipo) {
+      contexto.save();
+      contexto.imageSmoothingEnabled = true;
+      contexto.imageSmoothingQuality = 'high';
+      contexto.drawImage(
+        this.logotipo,
+        (largura - dimensoesLogotipo.largura) / 2,
+        yConteudo,
+        dimensoesLogotipo.largura,
+        dimensoesLogotipo.altura
+      );
+      contexto.restore();
+      yConteudo += dimensoesLogotipo.altura + espacoLogotipo;
     }
 
     const xQr = padding;
-    const yQr = padding + tituloAltura + espacoTitulo;
-    contexto.drawImage(origem, xQr, yQr);
+    this.desenharImagemQrCode(contexto, origem, xQr, yConteudo, larguraQr, alturaQr);
+  }
+
+  private desenharImagemQrCode(
+    contexto: CanvasRenderingContext2D,
+    origem: HTMLCanvasElement,
+    x: number,
+    y: number,
+    largura: number,
+    altura: number
+  ) {
+    const imagemQrCode = this.estiloSelecionado.formatoModulo === 'redondo'
+      ? this.criarImagemQrCodeComModulosRedondos(largura)
+      : origem;
+
+    if (!this.estiloSelecionado.cantosQrCodeArredondados) {
+      contexto.drawImage(imagemQrCode, x, y, largura, altura);
+      return;
+    }
+
+    const raio = Math.min(24, largura * 0.08, altura * 0.08);
+    contexto.save();
+    this.desenharRetanguloArredondado(contexto, x, y, largura, altura, raio);
+    contexto.clip();
+    contexto.drawImage(imagemQrCode, x, y, largura, altura);
+    contexto.restore();
+  }
+
+  private criarImagemQrCodeComModulosRedondos(tamanho: number) {
+    const chaveCache = [
+      this.texto,
+      tamanho,
+      this.estiloSelecionado.colorDark,
+      this.estiloSelecionado.colorLight
+    ].join('|');
+
+    if (this.cacheQrRedondo?.chave === chaveCache) {
+      return this.cacheQrRedondo.canvas;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = tamanho;
+    canvas.height = tamanho;
+
+    const contexto = canvas.getContext('2d');
+    if (!contexto) {
+      return canvas;
+    }
+
+    const qrCode = criarQrCode(this.texto || ' ', { errorCorrectionLevel: 'M' });
+    const margem = 2;
+    const quantidadeModulos = qrCode.modules.size;
+    const escala = tamanho / (quantidadeModulos + margem * 2);
+    const margemEscalada = margem * escala;
+
+    contexto.fillStyle = this.estiloSelecionado.colorLight;
+    contexto.fillRect(0, 0, tamanho, tamanho);
+    contexto.fillStyle = this.estiloSelecionado.colorDark;
+
+    for (let linha = 0; linha < quantidadeModulos; linha++) {
+      for (let coluna = 0; coluna < quantidadeModulos; coluna++) {
+        if (!qrCode.modules.get(linha, coluna)) {
+          continue;
+        }
+
+        const x = margemEscalada + coluna * escala;
+        const y = margemEscalada + linha * escala;
+
+        if (qrCode.modules.isReserved(linha, coluna)) {
+          const xFinal = margemEscalada + (coluna + 1) * escala;
+          const yFinal = margemEscalada + (linha + 1) * escala;
+          contexto.fillRect(Math.floor(x), Math.floor(y), Math.ceil(xFinal) - Math.floor(x), Math.ceil(yFinal) - Math.floor(y));
+          continue;
+        }
+
+        contexto.beginPath();
+        contexto.arc(x + escala / 2, y + escala / 2, escala * 0.42, 0, Math.PI * 2);
+        contexto.fill();
+      }
+    }
+
+    this.cacheQrRedondo = { chave: chaveCache, canvas };
+    return canvas;
+  }
+
+  private calcularDimensoesLogotipo(larguraQr: number) {
+    if (!this.logotipo) {
+      return undefined;
+    }
+
+    const larguraOriginal = this.logotipo.naturalWidth || this.logotipo.width;
+    const alturaOriginal = this.logotipo.naturalHeight || this.logotipo.height;
+    if (!larguraOriginal || !alturaOriginal) {
+      return undefined;
+    }
+
+    const larguraMaxima = Math.min(larguraQr * 0.42, 144);
+    const alturaMaxima = 72;
+    const escala = Math.min(larguraMaxima / larguraOriginal, alturaMaxima / alturaOriginal);
+
+    return {
+      largura: Math.round(larguraOriginal * escala),
+      altura: Math.round(alturaOriginal * escala)
+    };
   }
 
   private desenharContorno(contexto: CanvasRenderingContext2D, largura: number, altura: number, padding: number) {
@@ -348,6 +605,11 @@ export class TextoQrcodeComponent implements AfterViewInit {
     contexto.strokeStyle = this.estiloSelecionado.corBorda;
     this.desenharRetanguloArredondado(contexto, x, y, w, h, raio);
     contexto.stroke();
+
+    if (this.estiloSelecionado.quantidadeBordas === 1) {
+      contexto.restore();
+      return;
+    }
 
     contexto.shadowColor = this.estiloSelecionado.glowSecundario;
     contexto.shadowBlur = 34;

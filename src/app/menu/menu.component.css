@@ -65,6 +65,7 @@
   background:
     linear-gradient(90deg, transparent, rgba(255, 45, 178, 0.14), rgba(91, 124, 255, 0.16), transparent);
   animation: titulo-luz 12s linear infinite;
+  will-change: transform;
   opacity: 0.8;
 }
 

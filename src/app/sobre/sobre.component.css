@@ -62,6 +62,7 @@
     inset: -35%;
     background: conic-gradient(from 0deg, transparent, rgba(91, 124, 255, 0.16), transparent, rgba(255, 45, 178, 0.12), transparent, rgba(182, 37, 255, 0.14), transparent);
     animation: brilho-caixa 18s linear infinite;
+    will-change: transform;
     opacity: 0.75;
     pointer-events: none;
 }

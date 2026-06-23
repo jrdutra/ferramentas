@@ -73,7 +73,7 @@ export class MenuComponent {
     }
     if (tag === 'quebra-linha') {
       this.router.navigate(['/quebra-linha']);
-      this.tituloAplicacao = "Quebra Linha";
+      this.tituloAplicacao = "Editor de Texto";
     }
     if (tag === 'texto-global') {
       this.router.navigate(['/texto-global']);

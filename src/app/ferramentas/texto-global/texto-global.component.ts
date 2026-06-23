@@ -35,7 +35,6 @@ export class TextoGlobalComponent {
     this.strStatusConexao = "Conectando..."
 
     this.socket.on('connect', () => {
-      console.log('Conectado ao servidor Socket.io');
       this.strCaminhoIndicadorConexao = './assets/light-green-icon.png'
       this.strStatusConexao = "Conectado"
     });
@@ -59,7 +58,6 @@ export class TextoGlobalComponent {
 
   ngOnDestroy(): void {
     if (this.socket) {
-      console.log('Desconectado ao servidor Socket.io');
       this.socket.disconnect();
     }
   }

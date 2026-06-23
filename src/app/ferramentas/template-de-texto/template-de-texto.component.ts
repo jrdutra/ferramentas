@@ -60,7 +60,6 @@ export class TemplateDeTextoComponent {
   carregaTemplate(){
     this.strTemplate = this.strTexto
     this.variaveisTemplate = this.extraiVariaveisDoTexto(this.strTemplate)
-    console.log(this.variaveisTemplate);
     this.strTipoTexto = "TEMPLATE DE TEXTO";
   }
 

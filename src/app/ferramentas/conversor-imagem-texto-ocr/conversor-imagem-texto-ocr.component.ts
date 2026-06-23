@@ -41,7 +41,6 @@ export class ConversorImagemTextoOcrComponent {
     
     this.strTextoBotaoExecutarOcr = "PROCESSANDO...";
 
-    console.log('Arquivo selecionado:', this.selectedFile);
     if(this.selectedFile instanceof File){
       this.ocrService.executarOcr(this.selectedFile)
       .then(result => {

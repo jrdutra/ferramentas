@@ -1,1 +1,5 @@
 /* QRCode styles are defined in src/styles.css with the global theme. */
+
+.instrucoes-qrcode .inverte-cor-icone {
+  filter: invert(100%);
+}
