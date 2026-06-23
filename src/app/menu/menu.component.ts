@@ -33,7 +33,11 @@ export class MenuComponent {
   navegaMenu(tag: string) {
     if (tag === 'home') {
       this.router.navigate(['/home']);
-      this.tituloAplicacao = "Início";
+      this.tituloAplicacao = "Inicio";
+    }
+    if (tag === 'sobre') {
+      this.router.navigate(['/sobre']);
+      this.tituloAplicacao = "Sobre";
     }
     if (tag === 'leitor-area-cws') {
       this.router.navigate(['/leitor-area-cws']);

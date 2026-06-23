@@ -32,15 +32,17 @@
 
 .div-topo {
   z-index: 2;
-  /* Valor maior que o da div-rodape */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  /* Exemplo de sombra */
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.38), 0 0 18px rgba(91, 124, 255, 0.12);
+  border-bottom: 1px solid rgba(91, 124, 255, 0.24);
 }
 
 .div-rodape {
-  background-color: #7b1fa2;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(120deg, #061426, #091a34 58%, #110f2d);
   padding: 0.7em 0.7em 0.6em 1.3em;
-  color: white;
+  color: var(--text-main);
   height: 5em;
   font-size: 1.5em;
   /* Seu tamanho de fonte desejado */
@@ -52,6 +54,39 @@
   /* Alinha o conteúdo ao final (fundo) da div */
   z-index: 1;
   /* Valor menor que o da div-topo */
+  border-bottom: 1px solid rgba(182, 37, 255, 0.28);
+  box-shadow: inset 0 -1px 0 rgba(91, 124, 255, 0.22), 0 0 20px rgba(182, 37, 255, 0.1);
+}
+
+.div-rodape::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 45, 178, 0.14), rgba(91, 124, 255, 0.16), transparent);
+  animation: titulo-luz 12s linear infinite;
+  opacity: 0.8;
+}
+
+.div-rodape > * {
+  position: relative;
+}
+
+.mat-toolbar {
+  background:
+    linear-gradient(90deg, rgba(2, 8, 23, 0.99), rgba(5, 18, 38, 0.98) 58%, rgba(12, 9, 31, 0.98)) !important;
+  color: var(--text-main) !important;
+}
+
+.mat-toolbar button {
+  border-radius: 8px;
+  transition: background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.mat-toolbar button:hover {
+  background: rgba(0, 255, 209, 0.12);
+  box-shadow: 0 0 22px rgba(0, 156, 255, 0.24);
+  transform: translateY(-1px);
 }
 
 .example-spacer {
@@ -70,6 +105,15 @@
 .logo-cor-invertida {
   filter: invert(100%);
   margin-right: 10px;
+}
+
+@keyframes titulo-luz {
+  from {
+    transform: translateX(-60%);
+  }
+  to {
+    transform: translateX(60%);
+  }
 }
 
 @media (max-width: 510px) {

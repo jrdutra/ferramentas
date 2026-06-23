@@ -1,11 +1,14 @@
 <div class="div-principal">
     <div class="div-topo menu-fixo">
         <mat-toolbar color="primary" class="mat-elevation-z4">
-            <!-- Menu Tela Grande -->
             <div class="menu-grande">
                 <button mat-button (click)="navegaMenu('home')">
                     <mat-icon>home</mat-icon>
-                    Início
+                    Inicio
+                </button>
+                <button mat-button (click)="navegaMenu('sobre')">
+                    <mat-icon>info</mat-icon>
+                    Sobre
                 </button>
 
                 <button mat-button [matMenuTriggerFor]="menuFerramentas">
@@ -26,13 +29,16 @@
                     <button mat-menu-item (click)="navegaMenu('visualizador-x-509')">Visualizador de x.509</button>
                 </mat-menu>
             </div>
+
             <img src="./assets/logo-corrido.png" class="logo-direita logo-cor-invertida">
-            <!-- Menu Tela Pequena -->
+
             <div class="menu-hamburger">
                 <button [matMenuTriggerFor]="menuHamburger" mat-icon-button class="example-icon">
                     <mat-icon>menu</mat-icon>
                 </button>
                 <mat-menu #menuHamburger="matMenu">
+                    <button mat-menu-item (click)="navegaMenu('home')">Inicio</button>
+                    <button mat-menu-item (click)="navegaMenu('sobre')">Sobre</button>
                     <button mat-menu-item (click)="navegaMenu('codec-de-url')">Codec de URL</button>
                     <button mat-menu-item (click)="navegaMenu('base64')">Conversor de Base64</button>
                     <button mat-menu-item (click)="navegaMenu('conversor-imagem-texto-ocr')">Conversor OCR</button>
@@ -49,7 +55,7 @@
             <span class="menu-hamburger">Ferramentas</span>
             <span class="example-spacer menu-hamburger"></span>
             <button mat-icon-button class="example-icon home-icon menu-hamburger"
-                aria-label="Example icon-button with heart icon" (click)="navegaMenu('home')">
+                aria-label="Ir para a pagina inicial" (click)="navegaMenu('home')">
                 <mat-icon>home</mat-icon>
             </button>
         </mat-toolbar>

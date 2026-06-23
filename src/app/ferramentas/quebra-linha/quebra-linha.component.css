@@ -18,18 +18,19 @@ button {
 }
 
 .texto-vermelho{
-    color: rgb(255, 178, 178);
+    color: #ffea00;
     font-weight: bold;
 }
 
 input {
-    background-color: rgb(75, 75, 75);
-    /* Fundo roxo */
-    border: 0.1em solid #ffffff;
-    /* Bordas roxo escuro */
-    color: white;
-    /* Cor do texto branco */
+    background:
+        linear-gradient(145deg, rgba(6, 24, 50, 0.94), rgba(2, 10, 24, 0.96)) padding-box,
+        conic-gradient(from var(--glow-angle), rgba(0, 156, 255, 0.12), rgba(255, 45, 178, 0.72), rgba(182, 37, 255, 0.62), rgba(0, 208, 255, 0.7), rgba(0, 156, 255, 0.12)) border-box;
+    border: 0.1em solid transparent;
+    color: var(--text-main);
     border-radius: 0.3em;
+    box-shadow: inset 0 0 14px rgba(0, 156, 255, 0.1);
+    animation: border-orbit 14s linear infinite;
 }
 
 .input-pequeno{
@@ -41,12 +42,11 @@ input {
 }
 
 input:focus {
-    background-color: #525252;
-    /* Fundo cinza no foco */
+    background-color: rgba(8, 29, 59, 0.96);
     outline: none;
-    /* Remove a borda padrão ao focar */
-    color: white;
-    /* Cor do texto branco */
+    color: var(--text-main);
+    border-color: transparent;
+    box-shadow: 0 0 18px rgba(255, 45, 178, 0.24);
 }
 
 input[type="number"]::-webkit-inner-spin-button,

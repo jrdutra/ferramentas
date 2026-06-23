@@ -13,10 +13,12 @@ import { TemplateDeTextoComponent } from './ferramentas/template-de-texto/templa
 import { VisualizadorX509Component } from './ferramentas/visualizador-x-509/visualizador-x-509.component'
 
 import { HomeComponent } from './home/home.component'
+import { SobreComponent } from './sobre/sobre.component'
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'home', component: HomeComponent },
+    { path: 'sobre', component: SobreComponent },
     { path: 'base64', component: Base64Component },
     { path: 'editor-json', component: EditorJsonComponent },
     { path: 'visualizador-jwt', component: VisualizadorJwtComponent },

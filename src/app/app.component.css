@@ -1,13 +1,18 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .container-card-principal{
     margin: 20px;
-    /*colocar texto em cor branca*/
-    color: white;
+    color: var(--text-main);
 }
 
 .body-wrapper {
     display: flex; /* Habilita Flexbox */
     flex-direction: column; /* Empilha os filhos verticalmente */
-    min-height: 100%; /* Faz este container flex ter pelo menos a altura da tela */
+    flex: 1; /* Mantém o rodapé no fim da página quando o conteúdo é curto */
 }
 
 .main-content {
@@ -16,11 +21,14 @@
 
 .footer {
     height: 3.5em; /* Define a altura do rodapé */
-    background-color: #505050; /* Define a cor de fundo do rodapé para cinza claro */
-    color: rgb(255, 255, 255); /* Define a cor do texto do rodapé */
+    background:
+        linear-gradient(90deg, rgba(2, 8, 23, 0.99), rgba(6, 18, 37, 0.98));
+    color: var(--text-main);
     text-align: center; /* Centraliza o texto horizontalmente */
     line-height: 3.5em; /* Centraliza o texto verticalmente, deve ser igual à altura */
     width: 100%; /* Garante que o rodapé se estenda por toda a largura da página */
     position: relative; /* Pode ser 'absolute' se precisar fixar no fundo, mas 'relative' é o padrão */
-    bottom: 0; /* Alinha o rodapé na parte inferior da página, útil se usar position absolute */
+    flex: 0 0 auto;
+    border-top: 1px solid rgba(91, 124, 255, 0.28);
+    box-shadow: 0 -12px 35px rgba(0, 0, 0, 0.26), 0 0 18px rgba(182, 37, 255, 0.1);
 }
