@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configurar versão do Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
 
@@ -34,7 +34,7 @@ jobs:
         run: zip -r ferramentas.zip dist/* # Aqui assumimos que seu diretório de build é 'dist', o padrão para aplicações Angular.
 
       - name: Upload de artefato para job de deploy
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ferramentas
           path: ferramentas.zip
@@ -50,7 +50,7 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ferramentas
 
