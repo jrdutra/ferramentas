@@ -103,16 +103,15 @@ a {
   overflow: hidden;
   background:
     linear-gradient(135deg, #071a3a, #12124f 48%, #250947) padding-box,
-    conic-gradient(from var(--glow-angle), rgba(0, 208, 255, 0.1) 0deg, rgba(0, 208, 255, 0.82) 34deg, rgba(182, 37, 255, 0.18) 86deg, rgba(255, 45, 178, 0.86) 132deg, rgba(91, 124, 255, 0.2) 198deg, rgba(0, 208, 255, 0.74) 248deg, rgba(182, 37, 255, 0.72) 307deg, rgba(0, 208, 255, 0.1) 360deg) border-box !important;
+    conic-gradient(from var(--glow-angle), rgba(0, 208, 255, 0.5), rgba(91, 124, 255, 0.5), rgba(182, 37, 255, 0.5), rgba(255, 45, 178, 0.5), rgba(91, 124, 255, 0.5), rgba(0, 208, 255, 0.5)) border-box !important;
   color: var(--text-main) !important;
   border: 1px solid transparent;
-  box-shadow:
-    0 0 12px rgba(0, 208, 255, 0.2),
-    0 0 24px rgba(182, 37, 255, 0.14);
+  box-shadow: none;
   font-weight: 700;
   isolation: isolate;
   transition: box-shadow 220ms ease, filter 220ms ease, transform 220ms ease;
   animation: border-orbit 9.6s linear infinite;
+  filter: saturate(0.85);
 }
 
 .mat-mdc-raised-button.mat-primary::before,
@@ -143,29 +142,31 @@ a {
 
 .mat-mdc-raised-button.mat-primary:hover,
 .mat-mdc-unelevated-button.mat-primary:hover,
+.mat-mdc-fab.mat-primary:hover,
+.mat-mdc-mini-fab.mat-primary:hover {
+  overflow: visible;
+  filter: saturate(1.35) brightness(1.16);
+  box-shadow: none;
+  transform: translateY(-1px);
+  animation: border-orbit 4.8s linear infinite;
+}
+
 .mat-mdc-button:hover,
 .mat-mdc-icon-button:hover {
   filter: saturate(1.35) brightness(1.16);
-  box-shadow:
-    0 0 18px rgba(0, 208, 255, 0.42),
-    0 0 36px rgba(182, 37, 255, 0.34),
-    0 0 52px rgba(255, 45, 178, 0.2);
   transform: translateY(-1px);
-}
-
-.mat-mdc-raised-button.mat-primary:hover,
-.mat-mdc-unelevated-button.mat-primary:hover,
-.mat-mdc-fab.mat-primary:hover,
-.mat-mdc-mini-fab.mat-primary:hover {
-  animation: border-orbit 4.8s linear infinite;
 }
 
 .mat-mdc-raised-button.mat-primary:hover::before,
 .mat-mdc-unelevated-button.mat-primary:hover::before,
 .mat-mdc-fab.mat-primary:hover::before,
 .mat-mdc-mini-fab.mat-primary:hover::before {
-  animation: orbit-light 4.8s linear infinite, pulse-light 2.9s ease-in-out infinite alternate;
-  opacity: 0.82;
+  inset: -2px;
+  filter: blur(4px);
+  animation: border-orbit 7s linear infinite;
+  opacity: 1;
+  background:
+    conic-gradient(from var(--glow-angle), rgba(0, 208, 255, 0.45), rgba(255, 45, 178, 0.45), rgba(182, 37, 255, 0.45), rgba(91, 124, 255, 0.45), rgba(0, 208, 255, 0.45));
 }
 
 .mat-mdc-button,
@@ -445,23 +446,18 @@ input:not([type="hidden"]):not([type="file"]):not([type="range"]) {
   text-align: left;
   color: var(--text-main);
   cursor: pointer;
-  border: 1px solid rgba(91, 124, 255, 0.26);
+  border: 1px solid transparent;
   border-radius: 0.5em;
-  background: linear-gradient(145deg, rgba(9, 28, 59, 0.88), rgba(6, 12, 31, 0.94));
+  background:
+    linear-gradient(145deg, rgba(9, 28, 59, 0.88), rgba(6, 12, 31, 0.94)) padding-box,
+    conic-gradient(from var(--glow-angle), rgba(0, 208, 255, 0.18), rgba(255, 45, 178, 0.5), rgba(182, 37, 255, 0.4), rgba(91, 124, 255, 0.46), rgba(0, 208, 255, 0.18)) border-box;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  animation: border-orbit 12s linear infinite;
 }
 
 .atalho-ferramenta::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 6em;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 45, 178, 0.62));
-  box-shadow: 0 0 10px rgba(255, 45, 178, 0.3);
-  pointer-events: none;
+  display: none;
 }
 
 .atalho-ferramenta:hover,
