@@ -1,0 +1,179 @@
+<div class="gerador-certificado">
+    <div class="gerador-acoes">
+        <button mat-raised-button color="primary" (click)="gerarAleatoriamente()" [disabled]="gerando">
+            <mat-icon>casino</mat-icon>
+            Gerar Aleatoriamente
+        </button>
+        <button mat-raised-button color="primary" (click)="abrirModal()" [disabled]="gerando">
+            <mat-icon>edit_note</mat-icon>
+            Preencher Manualmente
+        </button>
+    </div>
+
+    <div *ngIf="gerando" class="gerador-loading">
+        <mat-spinner diameter="36"></mat-spinner>
+        <span>Gerando certificado e chaves RSA...</span>
+    </div>
+
+    <div *ngIf="certificado && !gerando" class="certificado-resultado">
+        <div class="resultado-layout">
+            <section class="coluna-downloads">
+                <h3>Downloads</h3>
+                <mat-form-field appearance="outline" class="campo-senha-pfx">
+                    <mat-label>Senha do PFX/P12 (opcional)</mat-label>
+                    <input matInput [(ngModel)]="senhaPfx" type="password">
+                </mat-form-field>
+                <div class="downloads-grid">
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarPfx()">
+                        <mat-icon>download</mat-icon>
+                        Certificado .pfx
+                    </button>
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarP12()">
+                        <mat-icon>download</mat-icon>
+                        Certificado .p12
+                    </button>
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarCer()">
+                        <mat-icon>download</mat-icon>
+                        Certificado .cer
+                    </button>
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarCertPem()">
+                        <mat-icon>download</mat-icon>
+                        Certificado .pem
+                    </button>
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePublicaPem()">
+                        <mat-icon>download</mat-icon>
+                        Chave Publica .pem
+                    </button>
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePrivadaPem()">
+                        <mat-icon>download</mat-icon>
+                        Chave Privada RSA .pem
+                    </button>
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePrivadaPkcs8Pem()">
+                        <mat-icon>download</mat-icon>
+                        Chave Privada PKCS8 .pem
+                    </button>
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePublicaJwk()">
+                        <mat-icon>download</mat-icon>
+                        Chave Publica .jwk
+                    </button>
+                    <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePrivadaJwk()">
+                        <mat-icon>download</mat-icon>
+                        Chave Privada .jwk
+                    </button>
+                    <button mat-raised-button color="primary" class="botao-baixar-tudo" (click)="baixarTudo()">
+                        <mat-icon>folder_zip</mat-icon>
+                        Baixar Tudo (.zip)
+                    </button>
+                </div>
+            </section>
+
+            <section class="coluna-info">
+                <h3>Certificado Gerado</h3>
+                <div class="certificado-info-grid">
+                    <div class="certificado-info-item">
+                        <span class="info-label">Common Name (CN)</span>
+                        <span class="info-valor">{{ certificado.dados.commonName }}</span>
+                    </div>
+                    <div class="certificado-info-item" *ngIf="certificado.dados.organization">
+                        <span class="info-label">Organizacao (O)</span>
+                        <span class="info-valor">{{ certificado.dados.organization }}</span>
+                    </div>
+                    <div class="certificado-info-item" *ngIf="certificado.dados.organizationalUnit">
+                        <span class="info-label">Unidade (OU)</span>
+                        <span class="info-valor">{{ certificado.dados.organizationalUnit }}</span>
+                    </div>
+                    <div class="certificado-info-item" *ngIf="certificado.dados.country">
+                        <span class="info-label">Pais (C)</span>
+                        <span class="info-valor">{{ certificado.dados.country }}</span>
+                    </div>
+                    <div class="certificado-info-item" *ngIf="certificado.dados.state">
+                        <span class="info-label">Estado (ST)</span>
+                        <span class="info-valor">{{ certificado.dados.state }}</span>
+                    </div>
+                    <div class="certificado-info-item" *ngIf="certificado.dados.locality">
+                        <span class="info-label">Localidade (L)</span>
+                        <span class="info-valor">{{ certificado.dados.locality }}</span>
+                    </div>
+                    <div class="certificado-info-item" *ngIf="certificado.dados.email">
+                        <span class="info-label">Email</span>
+                        <span class="info-valor">{{ certificado.dados.email }}</span>
+                    </div>
+                    <div class="certificado-info-item">
+                        <span class="info-label">Validade</span>
+                        <span class="info-valor">{{ certificado.dados.validadeDias }} dias</span>
+                    </div>
+                    <div class="certificado-info-item">
+                        <span class="info-label">Tamanho da Chave</span>
+                        <span class="info-valor">{{ certificado.dados.tamanhoBits }} bits</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="modalAberto" class="modal-estilo-fundo" role="presentation" (mousedown)="fecharModalPeloFundo($event)">
+    <section class="modal-estilo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-cert">
+        <header class="modal-estilo-cabecalho">
+            <div>
+                <span class="modal-estilo-etiqueta">Novo certificado</span>
+                <h2 id="titulo-modal-cert">Dados do Certificado</h2>
+                <p>Preencha os campos para gerar o certificado X.509.</p>
+            </div>
+            <button mat-icon-button type="button" (click)="fecharModal()" aria-label="Fechar modal">
+                <mat-icon>close</mat-icon>
+            </button>
+        </header>
+
+        <div class="modal-estilo-conteudo menu-estilo-conteudo modal-cert-conteudo">
+            <label class="campo-cert">
+                Common Name (CN) *
+                <input type="text" [(ngModel)]="dadosManuais.commonName" placeholder="Ex.: meusite.com.br">
+            </label>
+            <label class="campo-cert">
+                Organizacao (O)
+                <input type="text" [(ngModel)]="dadosManuais.organization" placeholder="Ex.: Minha Empresa">
+            </label>
+            <label class="campo-cert">
+                Unidade Organizacional (OU)
+                <input type="text" [(ngModel)]="dadosManuais.organizationalUnit" placeholder="Ex.: TI">
+            </label>
+            <label class="campo-cert">
+                Pais (C)
+                <input type="text" [(ngModel)]="dadosManuais.country" maxlength="2" placeholder="Ex.: BR">
+            </label>
+            <label class="campo-cert">
+                Estado (ST)
+                <input type="text" [(ngModel)]="dadosManuais.state" placeholder="Ex.: Sao Paulo">
+            </label>
+            <label class="campo-cert">
+                Localidade (L)
+                <input type="text" [(ngModel)]="dadosManuais.locality" placeholder="Ex.: Sao Paulo">
+            </label>
+            <label class="campo-cert">
+                Email
+                <input type="text" [(ngModel)]="dadosManuais.email" placeholder="Ex.: admin@empresa.com">
+            </label>
+            <label class="campo-cert">
+                Validade (dias)
+                <input type="number" [(ngModel)]="dadosManuais.validadeDias" min="1" max="7300">
+            </label>
+            <label class="campo-cert">
+                Tamanho da Chave
+                <select [(ngModel)]="dadosManuais.tamanhoBits">
+                    <option [ngValue]="2048">2048 bits</option>
+                    <option [ngValue]="4096">4096 bits</option>
+                </select>
+            </label>
+        </div>
+
+        <footer class="modal-estilo-acoes">
+            <button mat-button type="button" (click)="fecharModal()">Cancelar</button>
+            <button mat-raised-button color="primary" type="button" (click)="gerarManualmente()"
+                [disabled]="!dadosManuais.commonName.trim()">
+                <mat-icon>verified_user</mat-icon>
+                Gerar Certificado
+            </button>
+        </footer>
+    </section>
+</div>

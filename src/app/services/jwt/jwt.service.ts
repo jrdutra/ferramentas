@@ -16,9 +16,7 @@ export class JwtService {
   }
 
   extraiToken(strJwt: string): string {
-    const regex = /^(Bearer\s+|\s+)/;
-    let tokenPuro = strJwt.replace(regex, '');
-    return tokenPuro;
+    return strJwt.trim().replace(/^Bearer\s+/i, '').trim();
   }
 
   separaJWT(jwt: string): { header: string, body: string, signature: string } {

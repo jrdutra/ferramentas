@@ -1,185 +1,232 @@
-<div class="principal">
+<div class="visualizador-cert">
     <div class="seleciona-arquivo">
-        <button class="botao" mat-raised-button type="button" color="primary" (click)="fileInput.click()">Escolher
-            Arquivo</button>
+        <button mat-raised-button type="button" color="primary" (click)="fileInput.click()">
+            <mat-icon>upload_file</mat-icon>
+            Escolher Arquivo
+        </button>
         <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
     </div>
+
     @if(mostraDados){
-    <div class="informacoes-arquivos">
-        <mat-divider></mat-divider>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Nome do arquivo:</mat-label>
-            <mat-label class="valor">{{fileName}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Blob:</mat-label>
-            <mat-label class="valor">{{blob}}</mat-label>
-        </div>
-        <mat-divider></mat-divider>
+    <div class="certificado-resultado">
+        <section class="cert-secao">
+            <h3>Arquivo</h3>
+            <div class="cert-info-grid">
+                <div class="cert-info-item">
+                    <span class="info-label">Nome do arquivo</span>
+                    <span class="info-valor">{{fileName}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">Blob (Base64)</span>
+                    <span class="info-valor info-mono">{{blob}}</span>
+                </div>
+            </div>
+        </section>
 
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Fingerprint (MD5):</mat-label>
-            <mat-label class="valor">{{fingerPrintMD5}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Fingerprint (Sha1):</mat-label>
-            <mat-label class="valor">{{fingerPrintSha1}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Fingerprint (Sha256):</mat-label>
-            <mat-label class="valor">{{fingerPrintSha256}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Fingerprint (Sha384):</mat-label>
-            <mat-label class="valor">{{fingerPrintSha384}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Fingerprint (Sha512):</mat-label>
-            <mat-label class="valor">{{fingerPrintSha512}}</mat-label>
-        </div>
+        <section class="cert-secao">
+            <h3>Identidade</h3>
+            <div class="cert-info-grid">
+                <div class="cert-info-item">
+                    <span class="info-label">Issuer (Emissor)</span>
+                    <span class="info-valor">{{issuer}}</span>
+                </div>
+                <div class="cert-info-item">
+                    <span class="info-label">Subject (Sujeito)</span>
+                    <span class="info-valor">{{subject}}</span>
+                </div>
+                <div class="cert-info-item">
+                    <span class="info-label">Serial Number</span>
+                    <span class="info-valor info-mono">{{serial}}</span>
+                </div>
+            </div>
+        </section>
 
-        <mat-divider></mat-divider>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Issuer (Emissor):</mat-label>
-            <mat-label class="valor">{{issuer}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Subject (Sujeito):</mat-label>
-            <mat-label class="valor">{{subject}}</mat-label>
-        </div>
-        <mat-divider></mat-divider>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Validade (Not Before):</mat-label>
-            <mat-label class="valor">{{validadeNotBefore}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Validade (Not After):</mat-label>
-            <mat-label class="valor">{{validadeNotAfter}}</mat-label>
-        </div>
-        <mat-divider></mat-divider>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Serial number:</mat-label>
-            <mat-label class="valor">{{serial}}</mat-label>
-        </div>
-        <mat-divider></mat-divider>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Algoritmo da Assinatura:</mat-label>
-            <mat-label class="valor">{{assinaturaAlgoritmo}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Assinatura: </mat-label>
-            <mat-label class="valor">{{assinaturaValor}}</mat-label>
-        </div>
-        <mat-divider></mat-divider>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Algoritmo da Chave Pública:</mat-label>
-            <mat-label class="valor">{{chavePublicaAlgoritmo}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Chave Pública (Valor):</mat-label>
-            <mat-label class="valor">{{chavePublicaValor}}</mat-label>
-        </div>
-        <mat-divider></mat-divider>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Extenções (Id):</mat-label>
-            <mat-label class="valor">{{extensoesId}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Extenções (Critical):</mat-label>
-            <mat-label class="valor">{{extensoesCritical}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Extenções (Valor): </mat-label>
-            <mat-label class="valor">{{extensoesValor}}</mat-label>
-        </div>
-        <div class="informacao-arquivo">
-            <mat-label class="descricao">Extenções (Nome Alternativo):</mat-label>
-            <mat-label class="valor">{{nomeAlternativo}}</mat-label>
-        </div>
-        <mat-divider></mat-divider>
+        <section class="cert-secao">
+            <h3>Validade</h3>
+            <div class="cert-info-grid">
+                <div class="cert-info-item">
+                    <span class="info-label">Not Before</span>
+                    <span class="info-valor">{{validadeNotBefore}}</span>
+                </div>
+                <div class="cert-info-item">
+                    <span class="info-label">Not After</span>
+                    <span class="info-valor">{{validadeNotAfter}}</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="cert-secao">
+            <h3>Chave Publica</h3>
+            <div class="cert-info-grid">
+                <div class="cert-info-item">
+                    <span class="info-label">Algoritmo</span>
+                    <span class="info-valor">{{chavePublicaAlgoritmo}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">Valor</span>
+                    <span class="info-valor info-mono">{{chavePublicaValor}}</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="cert-secao">
+            <h3>Assinatura</h3>
+            <div class="cert-info-grid">
+                <div class="cert-info-item">
+                    <span class="info-label">Algoritmo</span>
+                    <span class="info-valor">{{assinaturaAlgoritmo}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">Valor (Hexadecimal)</span>
+                    <span class="info-valor info-mono">{{assinaturaValor}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">Valor (Base64)</span>
+                    <span class="info-valor info-mono">{{assinaturaValorBase64}}</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="cert-secao">
+            <h3>Extensoes</h3>
+            <div class="cert-info-grid">
+                <div class="cert-info-item">
+                    <span class="info-label">Id</span>
+                    <span class="info-valor">{{extensoesId}}</span>
+                </div>
+                <div class="cert-info-item">
+                    <span class="info-label">Critical</span>
+                    <span class="info-valor">{{extensoesCritical}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">Valor</span>
+                    <span class="info-valor info-mono">{{extensoesValor}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">Nome Alternativo</span>
+                    <span class="info-valor">{{nomeAlternativo}}</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="cert-secao">
+            <h3>Fingerprints</h3>
+            <div class="cert-info-grid">
+                <div class="cert-info-item">
+                    <span class="info-label">MD5</span>
+                    <span class="info-valor info-mono">{{fingerPrintMD5}}</span>
+                    <span class="info-label info-label-hex">MD5 (Hex)</span>
+                    <span class="info-valor info-mono">{{fingerPrintMD5Hex}}</span>
+                </div>
+                <div class="cert-info-item">
+                    <span class="info-label">SHA-1</span>
+                    <span class="info-valor info-mono">{{fingerPrintSha1}}</span>
+                    <span class="info-label info-label-hex">SHA-1 (Hex)</span>
+                    <span class="info-valor info-mono">{{fingerPrintSha1Hex}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">SHA-256</span>
+                    <span class="info-valor info-mono">{{fingerPrintSha256}}</span>
+                    <span class="info-label info-label-hex">SHA-256 (Hex)</span>
+                    <span class="info-valor info-mono">{{fingerPrintSha256Hex}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">SHA-384</span>
+                    <span class="info-valor info-mono">{{fingerPrintSha384}}</span>
+                    <span class="info-label info-label-hex">SHA-384 (Hex)</span>
+                    <span class="info-valor info-mono">{{fingerPrintSha384Hex}}</span>
+                </div>
+                <div class="cert-info-item cert-item-largo">
+                    <span class="info-label">SHA-512</span>
+                    <span class="info-valor info-mono">{{fingerPrintSha512}}</span>
+                    <span class="info-label info-label-hex">SHA-512 (Hex)</span>
+                    <span class="info-valor info-mono">{{fingerPrintSha512Hex}}</span>
+                </div>
+            </div>
+        </section>
     </div>
     }
 </div>
 
 <div>
     <img class="icon-white" width="65" height="65" src="./assets/certx509-icon.svg" />
-    <h2>Instruções</h2>
+    <h2>Instrucoes</h2>
 
-    <p>O certificado deve ser selecionado no botão "Escolher Arquivo".</p>
+    <p>O certificado deve ser selecionado no botao "Escolher Arquivo".</p>
 
-    <h2>O que é um certificado x.509</h2>
-    <p>O certificado x.509 é um padrão amplamente utilizado para a infraestrutura de chaves públicas (PKI). Ele fornece
-        um meio confiável de associar uma chave pública a uma identidade, garantindo autenticidade, integridade e
-        confidencialidade em comunicações digitais. O certificado contém informações detalhadas, como o emissor, o
-        sujeito, o período de validade, a chave pública, extensões e assinaturas que comprovam sua legitimidade.</p>
+    <h2>O que e um certificado x.509</h2>
+    <p>O certificado x.509 e um padrao amplamente utilizado para a infraestrutura de chaves publicas (PKI). Ele fornece
+        um meio confiavel de associar uma chave publica a uma identidade, garantindo autenticidade, integridade e
+        confidencialidade em comunicacoes digitais. O certificado contem informacoes detalhadas, como o emissor, o
+        sujeito, o periodo de validade, a chave publica, extensoes e assinaturas que comprovam sua legitimidade.</p>
 
-    <h2>Explicação dos Campos</h2>
+    <h2>Explicacao dos Campos</h2>
 
     <h4 class="sublinhado">Nome do arquivo</h4>
-    <p>O nome do arquivo onde o certificado X.509 está armazenado, geralmente com extensões como .crt, .pem ou .cer.</p>
+    <p>O nome do arquivo onde o certificado X.509 esta armazenado, geralmente com extensoes como .crt, .pem ou .cer.</p>
 
     <h4 class="sublinhado">Blob</h4>
-    <p>Representação binária ou textual (em Base64) do conteúdo completo do certificado, encapsulado entre "BEGIN
+    <p>Representacao binaria ou textual (em Base64) do conteudo completo do certificado, encapsulado entre "BEGIN
         CERTIFICATE" e "END CERTIFICATE".</p>
 
     <h4 class="sublinhado">Fingerprint (MD5)</h4>
-    <p>Um hash MD5 calculado a partir do certificado, usado para identificá-lo rapidamente. Atualmente considerado
+    <p>Um hash MD5 calculado a partir do certificado, usado para identifica-lo rapidamente. Atualmente considerado
         inseguro.</p>
 
     <h4 class="sublinhado">Fingerprint (Sha1)</h4>
-    <p>Um hash SHA-1 calculado a partir do certificado. Foi amplamente utilizado no passado, mas está depreciado.</p>
+    <p>Um hash SHA-1 calculado a partir do certificado. Foi amplamente utilizado no passado, mas esta depreciado.</p>
 
     <h4 class="sublinhado">Fingerprint (Sha256)</h4>
-    <p>Hash SHA-256 do certificado, considerado o padrão seguro atualmente para identificação.</p>
+    <p>Hash SHA-256 do certificado, considerado o padrao seguro atualmente para identificacao.</p>
 
     <h4 class="sublinhado">Fingerprint (Sha384)</h4>
-    <p>Uma impressão digital mais robusta usando o algoritmo SHA-384, adequada para sistemas que exigem maior segurança.
+    <p>Uma impressao digital mais robusta usando o algoritmo SHA-384, adequada para sistemas que exigem maior seguranca.
     </p>
 
     <h4 class="sublinhado">Fingerprint (Sha512)</h4>
-    <p>Hash SHA-512, usado para garantir segurança máxima em identificação.</p>
+    <p>Hash SHA-512, usado para garantir seguranca maxima em identificacao.</p>
 
     <h4 class="sublinhado">Issuer (Emissor)</h4>
-    <p>Identifica a entidade que emitiu o certificado, contendo campos como Nome Comum (CN), Organização (O) e País (C).
+    <p>Identifica a entidade que emitiu o certificado, contendo campos como Nome Comum (CN), Organizacao (O) e Pais (C).
     </p>
 
     <h4 class="sublinhado">Subject (Sujeito)</h4>
-    <p>Identifica a entidade à qual o certificado foi emitido, usando campos semelhantes ao do emissor.</p>
+    <p>Identifica a entidade a qual o certificado foi emitido, usando campos semelhantes ao do emissor.</p>
 
     <h4 class="sublinhado">Validade (Not Before)</h4>
-    <p>Data e hora em que o certificado começa a ser válido.</p>
+    <p>Data e hora em que o certificado comeca a ser valido.</p>
 
     <h4 class="sublinhado">Validade (Not After)</h4>
     <p>Data e hora em que o certificado expira.</p>
 
     <h4 class="sublinhado">Serial number</h4>
-    <p>Número único atribuído pelo emissor para identificar o certificado de forma exclusiva.</p>
+    <p>Numero unico atribuido pelo emissor para identificar o certificado de forma exclusiva.</p>
 
     <h4 class="sublinhado">Algoritmo da Assinatura</h4>
     <p>Algoritmo utilizado para gerar a assinatura do certificado, como SHA256WithRSA.</p>
 
     <h4 class="sublinhado">Assinatura</h4>
     <p>O valor da assinatura, gerado com a chave privada do emissor, garantindo a autenticidade e integridade do
-        certificado.</p>
+        certificado. Exibido em hexadecimal e Base64.</p>
 
-    <h4 class="sublinhado">Algoritmo da Chave Pública</h4>
-    <p>Algoritmo usado para a chave pública do certificado, como RSA ou ECDSA.</p>
+    <h4 class="sublinhado">Algoritmo da Chave Publica</h4>
+    <p>Algoritmo usado para a chave publica do certificado, como RSA ou ECDSA.</p>
 
-    <h4 class="sublinhado">Chave Pública (Valor)</h4>
-    <p>A chave pública associada ao sujeito do certificado, usada para verificar assinaturas digitais ou criptografar
+    <h4 class="sublinhado">Chave Publica (Valor)</h4>
+    <p>A chave publica associada ao sujeito do certificado, usada para verificar assinaturas digitais ou criptografar
         dados.</p>
 
-    <h4 class="sublinhado">Extensões (Id)</h4>
-    <p>Identificador da extensão, como 2.5.29.19 para restrições de uso de chave.</p>
+    <h4 class="sublinhado">Extensoes (Id)</h4>
+    <p>Identificador da extensao, como 2.5.29.19 para restricoes de uso de chave.</p>
 
-    <h4 class="sublinhado">Extensões (Critical)</h4>
-    <p>Indica se a extensão é crítica. Extensões críticas que não podem ser interpretadas pelo sistema levam ao
+    <h4 class="sublinhado">Extensoes (Critical)</h4>
+    <p>Indica se a extensao e critica. Extensoes criticas que nao podem ser interpretadas pelo sistema levam ao
         rejeitamento do certificado.</p>
 
-    <h4 class="sublinhado">Extensões (Valor)</h4>
-    <p>O valor associado à extensão, como restrições de uso de chave, restrições de caminho ou identificadores de uso
+    <h4 class="sublinhado">Extensoes (Valor)</h4>
+    <p>O valor associado a extensao, como restricoes de uso de chave, restricoes de caminho ou identificadores de uso
         estendido.</p>
 
-    <h4 class="sublinhado">Extensões (Nome Alternativo)</h4>
-    <p>Especifica nomes alternativos para o sujeito, como nomes de domínio (DNS), endereços IP ou e-mails.</p>
+    <h4 class="sublinhado">Extensoes (Nome Alternativo)</h4>
+    <p>Especifica nomes alternativos para o sujeito, como nomes de dominio (DNS), enderecos IP ou e-mails.</p>
 </div>

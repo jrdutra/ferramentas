@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { DataService } from '../../data.service';
 import { CertificateService } from '../../services/certificate/certificate.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,8 +8,6 @@ import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import * as asn1js from 'asn1js';
-import { Certificate } from 'pkijs';
 
 @Component({
   selector: 'app-visualizador-x-509',
@@ -39,17 +37,24 @@ export class VisualizadorX509Component {
   nomeAlternativo: string = "-";
   assinaturaAlgoritmo: string = "-";
   assinaturaValor: string = "-";
+  assinaturaValorBase64: string = "-";
   fingerPrintSha1: string = "-";
   fingerPrintSha256: string = "-";
   fingerPrintSha384: string = "-";
   fingerPrintSha512: string = "-";
   fingerPrintMD5: string = "-";
+  fingerPrintMD5Hex: string = "-";
+  fingerPrintSha1Hex: string = "-";
+  fingerPrintSha256Hex: string = "-";
+  fingerPrintSha384Hex: string = "-";
+  fingerPrintSha512Hex: string = "-";
 
   constructor(private dataService: DataService,
-    private certificateService: CertificateService) { }
+    private certificateService: CertificateService,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Visualizador de X.509");
+    this.dataService.setTituloAplicacao("Visualizador de Certificado X.509");
   }
 
   carregaArquivo(event: any): void {
@@ -60,6 +65,7 @@ export class VisualizadorX509Component {
       reader.onload = (e: any) => {
         const stringCertificado = e.target.result;
         this.leCertificado(stringCertificado);
+        this.cdr.detectChanges();
       };
       reader.onerror = (error) => {
         console.error('Erro ao ler o arquivo:', error);
@@ -69,29 +75,44 @@ export class VisualizadorX509Component {
   }
 
   leCertificado(pem: string) {
-    let dadosCertificado = this.certificateService.extraiInformacoesCertificado(pem);
+    try {
+      let dadosCertificado = this.certificateService.extraiInformacoesCertificado(pem);
 
-    this.blob = dadosCertificado.blob;
-    this.issuer = dadosCertificado.issuer;
-    this.subject = dadosCertificado.subject;
-    this.serial = dadosCertificado.serial;
-    this.validadeNotBefore = dadosCertificado.validadeNotBefore;
-    this.validadeNotAfter = dadosCertificado.validadeNotAfter;
-    this.chavePublicaAlgoritmo = dadosCertificado.chavePublicaAlgoritmo;
-    this.chavePublicaValor = dadosCertificado.chavePublicaValor;
-    this.extensoesId = dadosCertificado.extensoesId;
-    this.extensoesCritical = dadosCertificado.extensoesCritical;
-    this.extensoesValor = dadosCertificado.extensoesValor;
-    this.nomeAlternativo = dadosCertificado.nomeAlternativo;
-    this.assinaturaAlgoritmo = dadosCertificado.assinaturaAlgoritmo;
-    this.assinaturaValor = dadosCertificado.assinaturaValor;
-    this.fingerPrintSha1 = dadosCertificado.fingerPrintSha1;
-    this.fingerPrintSha256 = dadosCertificado.fingerPrintSha256;
-    this.fingerPrintSha384 = dadosCertificado.fingerPrintSha384;
-    this.fingerPrintSha512 = dadosCertificado.fingerPrintSha512;
-    this.fingerPrintMD5 = dadosCertificado.fingerPrintMD5;
+      this.blob = dadosCertificado.blob;
+      this.issuer = dadosCertificado.issuer;
+      this.subject = dadosCertificado.subject;
+      this.serial = dadosCertificado.serial;
+      this.validadeNotBefore = dadosCertificado.validadeNotBefore;
+      this.validadeNotAfter = dadosCertificado.validadeNotAfter;
+      this.chavePublicaAlgoritmo = dadosCertificado.chavePublicaAlgoritmo;
+      this.chavePublicaValor = dadosCertificado.chavePublicaValor;
+      this.extensoesId = dadosCertificado.extensoesId;
+      this.extensoesCritical = dadosCertificado.extensoesCritical;
+      this.extensoesValor = dadosCertificado.extensoesValor;
+      this.nomeAlternativo = dadosCertificado.nomeAlternativo;
+      this.assinaturaAlgoritmo = dadosCertificado.assinaturaAlgoritmo;
+      this.assinaturaValor = dadosCertificado.assinaturaValor;
+      this.assinaturaValorBase64 = dadosCertificado.assinaturaValorBase64;
+      this.fingerPrintSha1 = dadosCertificado.fingerPrintSha1;
+      this.fingerPrintSha256 = dadosCertificado.fingerPrintSha256;
+      this.fingerPrintSha384 = dadosCertificado.fingerPrintSha384;
+      this.fingerPrintSha512 = dadosCertificado.fingerPrintSha512;
+      this.fingerPrintMD5 = dadosCertificado.fingerPrintMD5;
 
-    this.mostraDados = true;
+      this.fingerPrintMD5Hex = this.formatarHex(dadosCertificado.fingerPrintMD5);
+      this.fingerPrintSha1Hex = this.formatarHex(dadosCertificado.fingerPrintSha1);
+      this.fingerPrintSha256Hex = this.formatarHex(dadosCertificado.fingerPrintSha256);
+      this.fingerPrintSha384Hex = this.formatarHex(dadosCertificado.fingerPrintSha384);
+      this.fingerPrintSha512Hex = this.formatarHex(dadosCertificado.fingerPrintSha512);
+
+      this.mostraDados = true;
+    } catch (e) {
+      console.error('Erro ao ler certificado:', e);
+    }
+  }
+
+  private formatarHex(hex: string): string {
+    return hex.toUpperCase().match(/.{1,2}/g)?.join(':') || hex;
   }
 
 }

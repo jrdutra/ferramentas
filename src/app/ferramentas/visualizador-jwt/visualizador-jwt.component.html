@@ -1,29 +1,84 @@
 <div class="principal">
     <div class="linha">
         <div class="coluna1">
-            <mat-form-field appearance="fill">
-                <mat-label>JWT <span
-                        [ngClass]="{'texto-vermelho': textoValidadeVermelho}">{{textoValidade}}</span></mat-label>
-                <textarea [(ngModel)]="strJwt" matInput (ngModelChange)="lerTokenJwt()" style="height: 51.8em;">
-                </textarea>
-            </mat-form-field>
+            <div class="jwt-editor">
+                <span class="jwt-label">JWT <span
+                        [ngClass]="{'texto-vermelho': textoValidadeVermelho}">{{textoValidade}}</span></span>
+                <div class="jwt-colorido">
+                    <ng-container *ngIf="jwtPartesColoridas; else textoSimples">
+                        <span class="jwt-part-header">{{jwtPartesColoridas.header}}</span><span class="jwt-dot">.</span><span class="jwt-part-body">{{jwtPartesColoridas.body}}</span><span class="jwt-dot">.</span><span class="jwt-part-signature" [ngClass]="{'sig-valida': assinaturaStatus === 'valida', 'sig-invalida': assinaturaStatus === 'invalida'}">{{jwtPartesColoridas.signature}}</span>
+                    </ng-container>
+                    <ng-template #textoSimples>{{strJwt}}</ng-template>
+                </div>
+                <textarea class="jwt-textarea" [(ngModel)]="strJwt" (ngModelChange)="lerTokenJwt()" (scroll)="sincronizarScroll($event)"></textarea>
+            </div>
         </div>
         <div class="coluna2">
             <mat-form-field appearance="fill">
-                <mat-label>Cabeçalho</mat-label>
-                <textarea [disabled]="true" [(ngModel)]="strJwtCabecalho" matInput style="height: 10em; color: white;">
+                <mat-label>Cabecalho</mat-label>
+                <textarea [readonly]="!strChavePrivada.trim()" [(ngModel)]="strJwtCabecalho" (ngModelChange)="atualizarDePartes()" matInput style="height: 10em; color: white;">
                 </textarea>
             </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Corpo</mat-label>
-                <textarea [disabled]="true" [(ngModel)]="strJwtCorpo" matInput style="height: 25em; color: white;">
+            <mat-form-field appearance="fill" *ngIf="corpoEditando">
+                <mat-label>Corpo (editando)</mat-label>
+                <textarea class="corpo-textarea-edit" [(ngModel)]="strJwtCorpo" (ngModelChange)="atualizarDePartes()" (blur)="finalizarEdicaoCorpo()" matInput style="height: 25em; color: white;">
                 </textarea>
             </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Assinatura</mat-label>
+            <div class="corpo-editor" [class.corpo-editavel]="strChavePrivada.trim()" *ngIf="!corpoEditando" (click)="iniciarEdicaoCorpo($event)">
+                <label class="corpo-label">Corpo <span class="corpo-dica-editar" *ngIf="strChavePrivada.trim()">(clique para editar)</span></label>
+                <div class="corpo-display"><ng-container *ngFor="let seg of corpoSegmentos"><span *ngIf="seg.tipo === 'texto'">{{seg.conteudo}}</span><span *ngIf="seg.tipo === 'claim'" class="corpo-claim-wrap">{{seg.conteudo}}<button class="claim-ajuda" type="button" (click)="toggleClaim(seg.claimChave!, $event)" [class.claim-ajuda-ativa]="claimAberta === seg.claimChave">?</button><div class="claim-balao claim-balao-baixo" *ngIf="claimAberta === seg.claimChave" (click)="$event.stopPropagation()"><strong>{{seg.claimChave}}</strong><p class="claim-descricao">{{seg.descricao}}</p><div class="claim-valor-box"><span class="claim-valor-label">Valor:</span><span class="claim-valor-conteudo">{{seg.valorFormatado}}</span></div></div></span></ng-container></div>
+            </div>
+            <mat-form-field appearance="fill" class="campo-assinatura" subscriptSizing="dynamic"
+                [ngClass]="{'assinatura-valida': assinaturaStatus === 'valida', 'assinatura-invalida': assinaturaStatus === 'invalida'}">
+                <mat-label>Assinatura
+                    <span *ngIf="assinaturaStatus === 'valida'" class="status-valida">- Valida</span>
+                    <span *ngIf="assinaturaStatus === 'invalida'" class="status-invalida">- Invalida</span>
+                    <span *ngIf="assinaturaStatus === 'verificando'" class="status-verificando">- Verificando...</span>
+                </mat-label>
                 <textarea [disabled]="true" [(ngModel)]="strJwtAssinatura" matInput style="height: 10em; color: white;">
                 </textarea>
             </mat-form-field>
+        </div>
+    </div>
+
+    <div class="secao-chaves">
+        <h3>Chaves e Certificados</h3>
+        <div class="chaves-grid">
+            <mat-form-field appearance="fill">
+                <mat-label>Chave Publica (Certificado PEM, Chave Publica PEM ou JWK)</mat-label>
+                <textarea [(ngModel)]="strChavePublica" (ngModelChange)="onChavePublicaChange()" matInput style="height: 8em;">
+                </textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Chave Privada (Chave Privada PEM ou JWK)</mat-label>
+                <textarea [(ngModel)]="strChavePrivada" (ngModelChange)="onChavePrivadaChange()" matInput style="height: 8em;">
+                </textarea>
+            </mat-form-field>
+        </div>
+        <div class="secao-pfx">
+            <div class="pfx-linha">
+                <button mat-raised-button color="primary" type="button"
+                    (click)="pfxInput.click()">
+                    <mat-icon>upload_file</mat-icon>
+                    Carregar PFX / P12
+                </button>
+                <span class="pfx-nome" *ngIf="nomePfx">{{ nomePfx }}</span>
+                <input hidden #pfxInput type="file" accept=".pfx,.p12"
+                    (change)="selecionarPfx($event)">
+            </div>
+            <div class="pfx-senha" *ngIf="pfxSelecionado">
+                <mat-form-field appearance="outline">
+                    <mat-label>Senha do PFX/P12</mat-label>
+                    <input matInput [(ngModel)]="senhaPfx" type="password"
+                        (keydown.enter)="extrairChavesDoPfx()">
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="button"
+                    (click)="extrairChavesDoPfx()">
+                    <mat-icon>lock_open</mat-icon>
+                    Extrair Chaves
+                </button>
+            </div>
+            <span class="pfx-erro" *ngIf="erroPfx">{{ erroPfx }}</span>
         </div>
     </div>
 </div>

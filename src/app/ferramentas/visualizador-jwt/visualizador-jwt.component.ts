@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../data.service';
 import { JsonService } from '../../services/json/json.service'
 import { JwtService } from '../../services/jwt/jwt.service'
-import { Base64Service } from '../../services/base64/base64.service'
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import * as forge from 'node-forge';
 
 @Component({
   selector: 'app-visualizador-jwt',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatCheckboxModule, FormsModule, MatInputModule, MatFormFieldModule],
+  imports: [CommonModule, MatButtonModule, MatCheckboxModule, FormsModule, MatInputModule, MatFormFieldModule, MatIconModule],
   templateUrl: './visualizador-jwt.component.html',
   styleUrl: './visualizador-jwt.component.css'
 })
@@ -23,39 +24,515 @@ export class VisualizadorJwtComponent {
   strJwtCabecalho: string = '';
   strJwtCorpo: string = '';
   strJwtAssinatura: string = '';
+  strChavePublica: string = '';
+  strChavePrivada: string = '';
+
+  pfxSelecionado = false;
+  nomePfx = '';
+  senhaPfx = '';
+  erroPfx = '';
+  private pfxBytes: string = '';
+
+  assinaturaStatus: 'nenhum' | 'verificando' | 'valida' | 'invalida' = 'nenhum';
 
   textoValidade: string = '';
   textoValidadeVermelho: boolean = true;
 
-  constructor(private dataService: DataService, 
-    private jsonService: JsonService, 
-    private base64Service: Base64Service,
-    private jwtService: JwtService) { }
+  jwtPartesColoridas: { header: string; body: string; signature: string } | null = null;
+
+  claimsDetectadas: { chave: string; valor: any; descricao: string; valorFormatado: string }[] = [];
+  claimAberta: string | null = null;
+  corpoSegmentos: { tipo: string; conteudo: string; claimChave?: string; descricao?: string; valorFormatado?: string }[] = [];
+  corpoEditando = false;
+
+  private readonly claimsDocumentadas: { [key: string]: string } = {
+    'iss': 'Issuer — Identifica quem emitiu o token.',
+    'sub': 'Subject — Identifica o sujeito (usuario) do token.',
+    'aud': 'Audience — Identifica o destinatario esperado do token.',
+    'exp': 'Expiration Time — Data/hora em que o token expira.',
+    'nbf': 'Not Before — Data/hora antes da qual o token nao e valido.',
+    'iat': 'Issued At — Data/hora em que o token foi emitido.',
+    'jti': 'JWT ID — Identificador unico do token para evitar reutilizacao.',
+    'name': 'Name — Nome do usuario associado ao token.',
+    'email': 'Email — Endereco de email do usuario.',
+    'scope': 'Scope — Permissoes ou escopos concedidos ao token.',
+    'role': 'Role — Papel ou funcao do usuario no sistema.'
+  };
+
+  private readonly claimsDeTempo = new Set(['exp', 'nbf', 'iat']);
+
+  private atualizandoInterno = false;
+
+  constructor(private dataService: DataService,
+    private jsonService: JsonService,
+    private jwtService: JwtService,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Visualizador de JWT");
+    this.dataService.setTituloAplicacao("Manipulador de JWT");
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    if (this.claimAberta) {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.claim-ajuda') && !target.closest('.claim-balao')) {
+        this.claimAberta = null;
+      }
+    }
   }
 
   lerTokenJwt() {
+    if (this.atualizandoInterno) return;
     this.strJwt = this.jwtService.extraiToken(this.strJwt);
     this.validaJwt(this.strJwt);
+    this.atualizarPartesColoridas();
 
     if (this.jwtService.validaFormatoJwt(this.strJwt)) {
       let { header, body, signature } = this.jwtService.separaJWT(this.strJwt);
-      this.strJwtCabecalho = header;
-      this.strJwtCorpo = body;
-      this.strJwtAssinatura = signature;
 
-      this.strJwtCabecalho = this.base64Service.decodificaTexto(this.strJwtCabecalho);
-      this.strJwtCabecalho = this.jsonService.formataJson(this.strJwtCabecalho);
+      try {
+        this.atualizandoInterno = true;
+        this.strJwtCabecalho = this.decodificarBase64Url(header);
+        this.strJwtCabecalho = this.jsonService.formataJson(this.strJwtCabecalho);
+        this.strJwtCorpo = this.decodificarBase64Url(body);
+        this.strJwtCorpo = this.jsonService.formataJson(this.strJwtCorpo);
+        this.strJwtAssinatura = signature;
+        this.atualizandoInterno = false;
+      } catch (e) {
+        this.atualizandoInterno = false;
+        console.error('Erro ao decodificar JWT:', e);
+        this.strJwtCabecalho = '';
+        this.strJwtCorpo = '';
+        this.strJwtAssinatura = signature || '';
+      }
 
-      this.strJwtCorpo = this.base64Service.decodificaTexto(this.strJwtCorpo);
-      this.strJwtCorpo = this.jsonService.formataJson(this.strJwtCorpo);
+      this.cdr.detectChanges();
+      this.extrairClaims();
+      this.verificarOuAssinar();
     } else {
       this.strJwtCabecalho = '';
       this.strJwtCorpo = '';
       this.strJwtAssinatura = '';
+      this.claimsDetectadas = [];
+      this.assinaturaStatus = 'nenhum';
     }
+  }
+
+  atualizarDePartes() {
+    if (this.atualizandoInterno) return;
+    try {
+      const headerCompact = JSON.stringify(JSON.parse(this.strJwtCabecalho));
+      const bodyCompact = JSON.stringify(JSON.parse(this.strJwtCorpo));
+      const headerB64 = this.textoParaBase64Url(headerCompact);
+      const bodyB64 = this.textoParaBase64Url(bodyCompact);
+
+      this.atualizandoInterno = true;
+      this.strJwt = headerB64 + '.' + bodyB64 + '.' + (this.strJwtAssinatura || '');
+      this.atualizandoInterno = false;
+
+      this.validaJwt(this.strJwt);
+      this.atualizarPartesColoridas();
+      this.extrairClaims();
+      this.verificarOuAssinar();
+    } catch {
+      // JSON inválido durante edição, ignora
+    }
+  }
+
+  async verificarOuAssinar() {
+    if (!this.jwtService.validaFormatoJwt(this.strJwt)) {
+      this.assinaturaStatus = 'nenhum';
+      return;
+    }
+
+    const partes = this.strJwt.split('.');
+    if (partes.length !== 3) {
+      this.assinaturaStatus = 'nenhum';
+      return;
+    }
+
+    let alg = 'RS256';
+    try {
+      const headerJson = JSON.parse(atob(partes[0].replace(/-/g, '+').replace(/_/g, '/')));
+      alg = headerJson.alg || 'RS256';
+    } catch { /* usa RS256 */ }
+
+    if (this.strChavePrivada.trim()) {
+      const assinado = await this.assinarJwt(partes, alg);
+      if (assinado && this.strChavePublica.trim()) {
+        const partesNovas = this.strJwt.split('.');
+        await this.verificarComPublica(partesNovas, alg);
+      }
+    } else if (this.strChavePublica.trim()) {
+      await this.verificarComPublica(partes, alg);
+    } else {
+      this.assinaturaStatus = 'nenhum';
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  private async assinarJwt(partes: string[], alg: string): Promise<boolean> {
+    this.assinaturaStatus = 'verificando';
+    try {
+      const privateKey = await this.importarChavePrivada(this.strChavePrivada.trim(), alg);
+      if (!privateKey) {
+        this.assinaturaStatus = 'invalida';
+        return false;
+      }
+
+      const dadosAssinados = partes[0] + '.' + partes[1];
+      const algParams = this.obterParametrosCrypto(alg);
+      const dadosBytes = new TextEncoder().encode(dadosAssinados);
+      const assinaturaBuffer = await crypto.subtle.sign(algParams, privateKey, dadosBytes);
+      const novaAssinatura = this.arrayBufferParaBase64Url(assinaturaBuffer);
+
+      this.strJwtAssinatura = novaAssinatura;
+      this.atualizandoInterno = true;
+      this.strJwt = partes[0] + '.' + partes[1] + '.' + novaAssinatura;
+      this.atualizandoInterno = false;
+      this.atualizarPartesColoridas();
+      this.assinaturaStatus = 'valida';
+      return true;
+    } catch (e) {
+      console.error('Erro ao assinar JWT:', e);
+      this.assinaturaStatus = 'invalida';
+      return false;
+    }
+  }
+
+  private async verificarComPublica(partes: string[], alg: string) {
+    this.assinaturaStatus = 'verificando';
+    try {
+      const cryptoKey = await this.importarChavePublica(this.strChavePublica.trim(), alg);
+      if (!cryptoKey) {
+        this.assinaturaStatus = 'invalida';
+        return;
+      }
+
+      const dadosAssinados = partes[0] + '.' + partes[1];
+      const algParams = this.obterParametrosCrypto(alg);
+      const assinaturaBytes = this.base64UrlParaArrayBuffer(partes[2]);
+      const dadosBytes = new TextEncoder().encode(dadosAssinados);
+
+      const valido = await crypto.subtle.verify(algParams, cryptoKey, assinaturaBytes, dadosBytes);
+      this.assinaturaStatus = valido ? 'valida' : 'invalida';
+    } catch (e) {
+      console.error('Erro ao verificar assinatura:', e);
+      this.assinaturaStatus = 'invalida';
+    }
+  }
+
+  atualizarPartesColoridas() {
+    const partes = this.strJwt.split('.');
+    if (partes.length === 3 && partes[0] && partes[1] && partes[2]) {
+      this.jwtPartesColoridas = { header: partes[0], body: partes[1], signature: partes[2] };
+    } else {
+      this.jwtPartesColoridas = null;
+    }
+  }
+
+  sincronizarScroll(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    const colorido = textarea.parentElement?.querySelector('.jwt-colorido') as HTMLElement;
+    if (colorido) {
+      colorido.scrollTop = textarea.scrollTop;
+    }
+  }
+
+  extrairClaims() {
+    this.claimsDetectadas = [];
+    this.claimAberta = null;
+    try {
+      const corpo = JSON.parse(this.strJwtCorpo);
+      for (const chave of Object.keys(corpo)) {
+        if (this.claimsDocumentadas[chave]) {
+          const valor = corpo[chave];
+          let valorFormatado = String(valor);
+          if (this.claimsDeTempo.has(chave) && typeof valor === 'number') {
+            const data = new Date(valor * 1000);
+            valorFormatado = `${valor} (${data.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })})`;
+          }
+          this.claimsDetectadas.push({
+            chave,
+            valor,
+            descricao: this.claimsDocumentadas[chave],
+            valorFormatado
+          });
+        }
+      }
+    } catch { /* corpo nao e JSON valido */ }
+    this.gerarCorpoSegmentos();
+  }
+
+  gerarCorpoSegmentos() {
+    this.corpoSegmentos = [];
+    const texto = this.strJwtCorpo;
+    if (!texto) return;
+
+    const presentes = this.claimsDetectadas.map(c => c.chave);
+    if (presentes.length === 0) {
+      this.corpoSegmentos = [{ tipo: 'texto', conteudo: texto }];
+      return;
+    }
+
+    const escaped = presentes.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const pattern = new RegExp(`"(${escaped.join('|')})"(?=\\s*:)`, 'g');
+    let lastIndex = 0;
+    let match;
+
+    while ((match = pattern.exec(texto)) !== null) {
+      if (match.index > lastIndex) {
+        this.corpoSegmentos.push({ tipo: 'texto', conteudo: texto.substring(lastIndex, match.index) });
+      }
+      const chave = match[1];
+      const claim = this.claimsDetectadas.find(c => c.chave === chave);
+      this.corpoSegmentos.push({
+        tipo: 'claim',
+        conteudo: match[0],
+        claimChave: chave,
+        descricao: claim?.descricao || this.claimsDocumentadas[chave],
+        valorFormatado: claim?.valorFormatado || ''
+      });
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < texto.length) {
+      this.corpoSegmentos.push({ tipo: 'texto', conteudo: texto.substring(lastIndex) });
+    }
+  }
+
+  toggleClaim(chave: string, event?: Event) {
+    if (event) event.stopPropagation();
+    this.claimAberta = this.claimAberta === chave ? null : chave;
+  }
+
+  iniciarEdicaoCorpo(event: Event) {
+    if (!this.strChavePrivada.trim()) return;
+    const target = event.target as HTMLElement;
+    if (target.closest('.claim-ajuda') || target.closest('.claim-balao')) return;
+    this.claimAberta = null;
+    this.corpoEditando = true;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      const el = document.querySelector('.corpo-textarea-edit') as HTMLTextAreaElement;
+      if (el) el.focus();
+    });
+  }
+
+  finalizarEdicaoCorpo() {
+    this.corpoEditando = false;
+    this.extrairClaims();
+  }
+
+  onChavePublicaChange() {
+    this.verificarOuAssinar();
+  }
+
+  onChavePrivadaChange() {
+    this.corpoEditando = false;
+    this.extrairClaims();
+    this.verificarOuAssinar();
+  }
+
+  selecionarPfx(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.nomePfx = file.name;
+    this.erroPfx = '';
+    this.senhaPfx = '';
+    this.pfxSelecionado = false;
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const arrayBuffer: ArrayBuffer = e.target.result;
+      const bytes = new Uint8Array(arrayBuffer);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      this.pfxBytes = binary;
+      this.pfxSelecionado = true;
+      this.cdr.detectChanges();
+    };
+    reader.readAsArrayBuffer(file);
+    input.value = '';
+  }
+
+  extrairChavesDoPfx(): void {
+    this.erroPfx = '';
+    try {
+      const p12Asn1 = forge.asn1.fromDer(this.pfxBytes);
+      const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, this.senhaPfx || '');
+
+      const certBagType = forge.pki.oids['certBag'];
+      const certBags = p12.getBags({ bagType: certBagType });
+      const certs = certBags[certBagType];
+      if (certs && certs.length > 0 && certs[0].cert) {
+        this.strChavePublica = forge.pki.certificateToPem(certs[0].cert);
+      }
+
+      const keyBagType = forge.pki.oids['pkcs8ShroudedKeyBag'];
+      const keyBags = p12.getBags({ bagType: keyBagType });
+      const keys = keyBags[keyBagType];
+      if (keys && keys.length > 0 && keys[0].key) {
+        this.strChavePrivada = forge.pki.privateKeyToPem(keys[0].key);
+      }
+
+      this.pfxSelecionado = false;
+      this.corpoEditando = false;
+      this.extrairClaims();
+      this.verificarOuAssinar();
+      this.cdr.detectChanges();
+    } catch (e) {
+      this.erroPfx = 'Erro ao abrir o arquivo. Verifique a senha.';
+      this.cdr.detectChanges();
+      console.error('Erro ao extrair chaves do PFX:', e);
+    }
+  }
+
+  private async importarChavePrivada(input: string, alg: string): Promise<CryptoKey | null> {
+    const algParams = this.obterParametrosImport(alg);
+    try {
+      if (input.startsWith('{')) {
+        const jwk = JSON.parse(input);
+        return await crypto.subtle.importKey('jwk', jwk, algParams, false, ['sign']);
+      }
+
+      if (input.includes('BEGIN PRIVATE KEY')) {
+        return this.importarPkcs8(input, algParams);
+      }
+
+      if (input.includes('BEGIN RSA PRIVATE KEY')) {
+        const privateKey = forge.pki.privateKeyFromPem(input);
+        const asn1Key = forge.pki.privateKeyToAsn1(privateKey);
+        const privateKeyInfo = forge.pki.wrapRsaPrivateKey(asn1Key);
+        const derBytes = forge.asn1.toDer(privateKeyInfo).getBytes();
+        const b64 = forge.util.encode64(derBytes);
+        const lines = b64.match(/.{1,64}/g) || [];
+        const pkcs8Pem = '-----BEGIN PRIVATE KEY-----\n' + lines.join('\n') + '\n-----END PRIVATE KEY-----';
+        return this.importarPkcs8(pkcs8Pem, algParams);
+      }
+
+      return null;
+    } catch (e) {
+      console.error('Erro ao importar chave privada:', e);
+      return null;
+    }
+  }
+
+  private async importarPkcs8(pem: string, algParams: any): Promise<CryptoKey> {
+    const b64 = pem.replace(/(-----BEGIN .*-----|-----END .*-----|\r?\n)/g, '');
+    const binary = atob(b64);
+    const buffer = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      buffer[i] = binary.charCodeAt(i);
+    }
+    return crypto.subtle.importKey('pkcs8', buffer, algParams, false, ['sign']);
+  }
+
+  private async importarChavePublica(input: string, alg: string): Promise<CryptoKey | null> {
+    const algParams = this.obterParametrosImport(alg);
+    try {
+      if (input.startsWith('{')) {
+        const jwk = JSON.parse(input);
+        return await crypto.subtle.importKey('jwk', jwk, algParams, false, ['verify']);
+      }
+
+      if (input.includes('BEGIN CERTIFICATE')) {
+        const cert = forge.pki.certificateFromPem(input);
+        const pubKeyPem = forge.pki.publicKeyToPem(cert.publicKey);
+        return this.importarSpki(pubKeyPem, algParams);
+      }
+
+      if (input.includes('BEGIN PUBLIC KEY')) {
+        return this.importarSpki(input, algParams);
+      }
+
+      return null;
+    } catch (e) {
+      console.error('Erro ao importar chave publica:', e);
+      return null;
+    }
+  }
+
+  private async importarSpki(pem: string, algParams: any): Promise<CryptoKey> {
+    const b64 = pem.replace(/(-----BEGIN .*-----|-----END .*-----|\r?\n)/g, '');
+    const binary = atob(b64);
+    const buffer = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      buffer[i] = binary.charCodeAt(i);
+    }
+    return crypto.subtle.importKey('spki', buffer, algParams, false, ['verify']);
+  }
+
+  private obterParametrosImport(alg: string): any {
+    switch (alg) {
+      case 'RS384': return { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-384' };
+      case 'RS512': return { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-512' };
+      case 'PS256': return { name: 'RSA-PSS', hash: 'SHA-256' };
+      case 'PS384': return { name: 'RSA-PSS', hash: 'SHA-384' };
+      case 'PS512': return { name: 'RSA-PSS', hash: 'SHA-512' };
+      case 'ES256': return { name: 'ECDSA', namedCurve: 'P-256' };
+      case 'ES384': return { name: 'ECDSA', namedCurve: 'P-384' };
+      case 'ES512': return { name: 'ECDSA', namedCurve: 'P-521' };
+      default: return { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' };
+    }
+  }
+
+  private obterParametrosCrypto(alg: string): any {
+    switch (alg) {
+      case 'PS256': return { name: 'RSA-PSS', saltLength: 32 };
+      case 'PS384': return { name: 'RSA-PSS', saltLength: 48 };
+      case 'PS512': return { name: 'RSA-PSS', saltLength: 64 };
+      case 'ES256': return { name: 'ECDSA', hash: 'SHA-256' };
+      case 'ES384': return { name: 'ECDSA', hash: 'SHA-384' };
+      case 'ES512': return { name: 'ECDSA', hash: 'SHA-512' };
+      default: return { name: 'RSASSA-PKCS1-v1_5' };
+    }
+  }
+
+  private base64UrlParaArrayBuffer(b64url: string): ArrayBuffer {
+    const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = b64.length % 4;
+    const padded = pad ? b64 + '='.repeat(4 - pad) : b64;
+    const binary = atob(padded);
+    const buffer = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      buffer[i] = binary.charCodeAt(i);
+    }
+    return buffer.buffer;
+  }
+
+  private decodificarBase64Url(base64url: string): string {
+    let b64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = b64.length % 4;
+    if (pad) b64 += '='.repeat(4 - pad);
+    const binaryString = atob(b64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new TextDecoder().decode(bytes);
+  }
+
+  private textoParaBase64Url(texto: string): string {
+    const bytes = new TextEncoder().encode(texto);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  private arrayBufferParaBase64Url(buffer: ArrayBuffer): string {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 
   validaJwt(strJwt: string): boolean {

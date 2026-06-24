@@ -60,6 +60,11 @@ a {
   text-underline-offset: 0.22em;
 }
 
+.icon-white,
+.inverte-cor-icone {
+  filter: invert(100%);
+}
+
 .mat-mdc-card {
   position: relative;
   overflow: hidden;
@@ -107,6 +112,7 @@ a {
   font-weight: 700;
   isolation: isolate;
   transition: box-shadow 220ms ease, filter 220ms ease, transform 220ms ease;
+  animation: border-orbit 9.6s linear infinite;
 }
 
 .mat-mdc-raised-button.mat-primary::before,
@@ -147,6 +153,13 @@ a {
   transform: translateY(-1px);
 }
 
+.mat-mdc-raised-button.mat-primary:hover,
+.mat-mdc-unelevated-button.mat-primary:hover,
+.mat-mdc-fab.mat-primary:hover,
+.mat-mdc-mini-fab.mat-primary:hover {
+  animation: border-orbit 4.8s linear infinite;
+}
+
 .mat-mdc-raised-button.mat-primary:hover::before,
 .mat-mdc-unelevated-button.mat-primary:hover::before,
 .mat-mdc-fab.mat-primary:hover::before,
@@ -158,6 +171,33 @@ a {
 .mat-mdc-button,
 .mat-mdc-icon-button {
   color: var(--text-main) !important;
+}
+
+.btn-sobrio.mat-mdc-raised-button.mat-primary,
+.btn-sobrio.mat-mdc-unelevated-button.mat-primary {
+  background:
+    linear-gradient(145deg, rgba(6, 18, 40, 0.97), rgba(8, 14, 28, 0.98)) padding-box,
+    linear-gradient(145deg, rgba(91, 124, 255, 0.28), rgba(50, 70, 120, 0.18)) border-box !important;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+}
+
+.btn-sobrio.mat-mdc-raised-button.mat-primary::before,
+.btn-sobrio.mat-mdc-unelevated-button.mat-primary::before {
+  display: none;
+}
+
+.btn-sobrio.mat-mdc-raised-button.mat-primary::after,
+.btn-sobrio.mat-mdc-unelevated-button.mat-primary::after {
+  display: none;
+}
+
+.btn-sobrio.mat-mdc-raised-button.mat-primary:hover,
+.btn-sobrio.mat-mdc-unelevated-button.mat-primary:hover {
+  filter: brightness(1.12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 12px rgba(91, 124, 255, 0.15);
+  transform: translateY(-1px);
 }
 
 .mat-mdc-menu-panel,
@@ -187,7 +227,11 @@ a {
   --mdc-filled-text-field-input-text-color: var(--text-main);
   --mdc-filled-text-field-label-text-color: var(--text-muted);
   --mdc-filled-text-field-focus-label-text-color: var(--text-main);
-  --mdc-filled-text-field-focus-active-indicator-color: #ff2db2;
+  --mdc-filled-text-field-focus-active-indicator-color: transparent;
+  --mdc-filled-text-field-caret-color: #ffffff;
+  --mdc-filled-text-field-error-caret-color: #ffffff;
+  --mdc-outlined-text-field-caret-color: #ffffff;
+  --mdc-outlined-text-field-error-caret-color: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -221,13 +265,14 @@ a {
   box-shadow:
     0 0 20px rgba(91, 124, 255, 0.13),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  animation: border-orbit 12s linear infinite;
 }
 
 .mat-mdc-input-element,
 textarea,
 input {
   color: var(--text-main) !important;
-  caret-color: var(--yellow);
+  caret-color: #ffffff;
 }
 
 input:not([type="hidden"]):not([type="file"]):not([type="range"]) {
@@ -235,6 +280,7 @@ input:not([type="hidden"]):not([type="file"]):not([type="range"]) {
     linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98)) padding-box,
     conic-gradient(from var(--glow-angle), rgba(0, 208, 255, 0.18), rgba(255, 45, 178, 0.78), rgba(182, 37, 255, 0.68), rgba(91, 124, 255, 0.76), rgba(0, 208, 255, 0.18)) border-box;
   border: 1px solid transparent;
+  animation: border-orbit 12s linear infinite;
 }
 
 .mat-expansion-panel {

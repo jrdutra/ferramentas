@@ -27,7 +27,7 @@ export class HomeComponent {
     {
       titulo: 'Codificacao e Dados',
       ferramentas: [
-        { titulo: 'Conversor de Base64', descricao: 'Codificar e decodificar textos em Base64.', icone: 'data_object', rota: 'base64' },
+        { titulo: 'Conversor de Base64 Texto', descricao: 'Codificar e decodificar textos em Base64.', icone: 'data_object', rota: 'base64' },
         { titulo: 'Codec de URL', descricao: 'Codificar e decodificar URLs rapidamente.', icone: 'link', rota: 'codec-de-url' },
         { titulo: 'Editor de Json', descricao: 'Formatar, minificar e stringificar JSON.', icone: 'integration_instructions', rota: 'editor-json' }
       ]
@@ -35,13 +35,14 @@ export class HomeComponent {
     {
       titulo: 'Ferramentas de Tokens',
       ferramentas: [
-        { titulo: 'Visualizador de JWT', descricao: 'Inspecionar cabecalho, corpo e assinatura de tokens JWT.', icone: 'token', rota: 'visualizador-jwt' }
+        { titulo: 'Manipulador de JWT', descricao: 'Inspecionar cabecalho, corpo e assinatura de tokens JWT.', icone: 'token', rota: 'visualizador-jwt' }
       ]
     },
     {
-      titulo: 'Ferramentas de Certificado',
+      titulo: 'Ferramentas de Certificados e Chaves',
       ferramentas: [
-        { titulo: 'Visualizador de X.509', descricao: 'Ler informacoes de certificados digitais X.509.', icone: 'verified_user', rota: 'visualizador-x-509' }
+        { titulo: 'Visualizador de Certificado X.509', descricao: 'Ler informacoes de certificados digitais X.509.', icone: 'verified_user', rota: 'visualizador-x-509' },
+        { titulo: 'Gerador de Chaves e Certificados X.509', descricao: 'Gerar certificados digitais X.509 com chaves RSA.', icone: 'add_moderator', rota: 'gerador-certificado-x509' }
       ]
     },
     {

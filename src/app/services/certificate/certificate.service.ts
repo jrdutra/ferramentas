@@ -30,6 +30,14 @@ export class CertificateService {
     };
   }
 
+  converteUint8ArrayParaBase64(uint8Array: Uint8Array): string {
+    let binary = '';
+    for (let i = 0; i < uint8Array.length; i++) {
+      binary += String.fromCharCode(uint8Array[i]);
+    }
+    return btoa(binary);
+  }
+
   converteUint8ArrayParaHexadecimal(uint8Array: Uint8Array): string {
     return Array.from(uint8Array).map(value => value.toString())
       .map(valor => {
@@ -101,6 +109,7 @@ export class CertificateService {
     let assinaturaAlgoritmo = this.OIDToAlgorithmName[oidAssinatura] + ` (${oidAssinatura})` || "Unknown Algorithm";
     
     let assinaturaValor = this.converteUint8ArrayParaHexadecimal(cert.signatureValue.valueBlock.valueHexView);
+    let assinaturaValorBase64 = this.converteUint8ArrayParaBase64(cert.signatureValue.valueBlock.valueHexView);
 
     let fingerprint = this.generateFingerprints(pem);
 
@@ -126,6 +135,7 @@ export class CertificateService {
       nomeAlternativo,
       assinaturaAlgoritmo,
       assinaturaValor,
+      assinaturaValorBase64,
       fingerPrintSha1,
       fingerPrintSha256,
       fingerPrintSha384,

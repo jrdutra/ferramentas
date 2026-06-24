@@ -1,69 +1,72 @@
-.principal {
-    display: flex;
-    flex-direction: column;
+.visualizador-cert {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  margin-bottom: 2em;
 }
 
 .seleciona-arquivo {
-    flex-direction: row;
-    margin-right: 0.55em;
-    margin-bottom: 1em;
-    align-items: center;
+  display: flex;
 }
 
-.botao {
-    width: 15em;
-    margin-bottom: 1em;
-    margin-right: 1em;
+.certificado-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
 }
 
-.largura-completa {
-    width: 100%;
-    height: 100%;
+.cert-secao h3 {
+  margin: 0 0 0.6em;
 }
 
-.informacoes-arquivos {
-    flex-direction: column;
-    margin-right: 0.55em;
+.cert-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75em;
 }
 
-.informacao-arquivo {
-    flex-direction: row;
-    margin-bottom: 0.5em;
+.cert-item-largo {
+  grid-column: 1 / -1;
 }
 
-.icon-white {
-    filter: invert(100%);
+.cert-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  padding: 0.7em 0.85em;
+  border: 1px solid rgba(91, 124, 255, 0.2);
+  border-radius: 0.4em;
+  background: rgba(5, 18, 39, 0.6);
+}
+
+.info-label {
+  color: var(--text-muted);
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.info-valor {
+  color: var(--text-main);
+  word-break: break-all;
+}
+
+.info-mono {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.88em;
+}
+
+.info-label-hex {
+  margin-top: 0.5em;
+  border-top: 1px solid rgba(91, 124, 255, 0.12);
+  padding-top: 0.4em;
 }
 
 .sublinhado {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-mat-divider {
-    height: 1em;
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-mat-label.descricao{
-    margin-right: 0.5em;
-    font-size: 1.2em;
-    font-weight: bold;
-    font-family: monospace;
-}
-mat-label.valor{
-    font-size: 1.2em;
-    font-family: 'Courier New', Courier, 'Consolas', monospace;
-    word-wrap: break-word; /* Permite quebra de palavra longa */
-    overflow-wrap: break-word; /* Quebra palavras automaticamente */
-    white-space: normal; /* Permite quebra de linha */
-}
-
-
-@media (max-width: 540px) {
-    .seleciona-arquivo {
-        flex-direction: column;
-        margin-right: 0em;
-        align-items: flex-start;
-    }
+@media (max-width: 640px) {
+  .cert-info-grid {
+    grid-template-columns: 1fr;
+  }
 }

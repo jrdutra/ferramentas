@@ -48,7 +48,7 @@ export class MenuComponent {
     }
     if (tag === 'visualizador-jwt') {
       this.router.navigate(['/visualizador-jwt']);
-      this.dataService.setTituloAplicacao('Visualizador de JWT');
+      this.dataService.setTituloAplicacao('Manipulador de JWT');
     }
     if (tag === 'codec-de-url') {
       this.router.navigate(['/codec-de-url']);
@@ -80,7 +80,11 @@ export class MenuComponent {
     }
     if (tag === 'visualizador-x-509') {
       this.router.navigate(['/visualizador-x-509']);
-      this.dataService.setTituloAplicacao('Visualizador de X.509');
+      this.dataService.setTituloAplicacao('Visualizador de Certificado X.509');
+    }
+    if (tag === 'gerador-certificado-x509') {
+      this.router.navigate(['/gerador-certificado-x509']);
+      this.dataService.setTituloAplicacao('Gerador de Chaves e Certificados X.509');
     }
   }
 }

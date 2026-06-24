@@ -19,6 +19,33 @@
 
     </div>
 </div>
+
+<div class="mapeamento-visual" *ngIf="segmentos.length > 0">
+    <p class="mapeamento-legenda">As cores indicam blocos de bytes correspondentes entre o texto original e o Base64.</p>
+    <div class="mapeamento-container">
+        <div class="mapeamento-coluna">
+            <span class="mapeamento-label">Texto</span>
+            <div class="mapeamento-blocos">
+                <span *ngFor="let seg of segmentos; let i = index"
+                    class="mapeamento-bloco"
+                    [style.background-color]="corBloco(i)"
+                    (mouseenter)="destacarBloco(i)"
+                    (mouseleave)="limparDestaque()">{{seg.texto}}</span>
+            </div>
+        </div>
+        <div class="mapeamento-coluna">
+            <span class="mapeamento-label">Base64</span>
+            <div class="mapeamento-blocos">
+                <span *ngFor="let seg of segmentos; let i = index"
+                    class="mapeamento-bloco"
+                    [style.background-color]="corBloco(i)"
+                    (mouseenter)="destacarBloco(i)"
+                    (mouseleave)="limparDestaque()">{{seg.base64}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div>
     <img class="icon-white" width="65" height="65" src="./assets/base64-logo.svg" />
     <h2>Instruções</h2>
