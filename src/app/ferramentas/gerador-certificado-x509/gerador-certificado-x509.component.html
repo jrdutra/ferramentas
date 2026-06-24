@@ -112,6 +112,175 @@
     </div>
 </div>
 
+<div class="instrucoes-certificado">
+    <h2>Instruções</h2>
+
+    <p>
+        Esta ferramenta gera um par de chaves RSA e um certificado X.509 autoassinado diretamente no navegador,
+        sem enviar dados ou chaves para servidores externos. Depois da geração, o certificado e as chaves podem ser
+        baixados nos formatos mais comuns.
+    </p>
+
+    <div class="instrucoes-aviso">
+        <strong>Importante:</strong> o certificado gerado é autoassinado. Ele é indicado para desenvolvimento,
+        testes, redes internas e aprendizado, mas não é reconhecido automaticamente pelos navegadores como um
+        certificado público confiável.
+    </div>
+
+    <h2>Como gerar o certificado</h2>
+
+    <h4 class="sublinhado">Gerar Aleatoriamente</h4>
+    <p>
+        Gera o certificado imediatamente com dados fictícios, validade de 365 dias e chave RSA de 2048 bits.
+        É a opção mais rápida para testes nos quais os dados de identidade não precisam ser personalizados.
+    </p>
+
+    <h4 class="sublinhado">Preencher Manualmente</h4>
+    <p>
+        Abre o formulário de personalização. Preencha os dados desejados e clique em
+        <strong>Gerar Certificado</strong>. O <strong>Common Name (CN)</strong> é obrigatório; os demais dados de
+        identidade são opcionais. Você também pode definir a validade e escolher uma chave RSA de 2048 ou 4096 bits.
+    </p>
+
+    <h2>Campos do formulário manual</h2>
+
+    <h4 class="sublinhado">Common Name (CN) *</h4>
+    <p>
+        Campo obrigatório que identifica o titular do certificado. Para um servidor, normalmente é o domínio ou
+        nome do host, como <em>api.empresa.com.br</em>. Nesta ferramenta, o CN também é incluído como nome DNS
+        alternativo do certificado.
+    </p>
+
+    <h4 class="sublinhado">Organização (O)</h4>
+    <p>
+        Nome da empresa ou organização responsável pelo certificado. Exemplo: <em>Empresa Ltda.</em>
+    </p>
+
+    <h4 class="sublinhado">Unidade Organizacional (OU)</h4>
+    <p>
+        Setor ou departamento dentro da organização. Exemplo: <em>Tecnologia da Informação</em>.
+    </p>
+
+    <h4 class="sublinhado">País (C)</h4>
+    <p>
+        Código de duas letras do país segundo o padrão ISO 3166-1. Exemplo: <em>BR</em> para Brasil,
+        <em>US</em> para Estados Unidos.
+    </p>
+
+    <h4 class="sublinhado">Estado (ST)</h4>
+    <p>
+        Nome do estado ou província. Exemplo: <em>São Paulo</em>.
+    </p>
+
+    <h4 class="sublinhado">Localidade (L)</h4>
+    <p>
+        Cidade onde a organização está localizada. Exemplo: <em>Campinas</em>.
+    </p>
+
+    <h4 class="sublinhado">Email</h4>
+    <p>
+        Endereço de e-mail associado ao titular do certificado. Campo opcional.
+    </p>
+
+    <h4 class="sublinhado">Validade (dias)</h4>
+    <p>
+        Define por quantos dias o certificado será válido a partir da geração. A ferramenta aceita de 1 a 7300 dias,
+        com 365 dias como valor inicial.
+    </p>
+
+    <h4 class="sublinhado">Tamanho da Chave</h4>
+    <p>
+        <strong>2048 bits</strong> oferece boa segurança e geração mais rápida para a maioria dos testes.
+        <strong>4096 bits</strong> cria uma chave maior, mas leva mais tempo para gerar e processar.
+    </p>
+
+    <h2>Botões e formatos de download</h2>
+    <p>
+        Após a geração, os botões de download aparecem junto aos dados do certificado. Cada botão exporta o mesmo
+        certificado ou o mesmo par de chaves em uma representação diferente.
+    </p>
+
+    <h4 class="sublinhado">Certificado .pfx e Certificado .p12</h4>
+    <p>
+        São duas extensões para o formato binário PKCS#12. Cada arquivo reúne o certificado e a chave privada em um
+        único pacote, útil para importação no Windows/IIS, navegadores, Java e outras plataformas. Os dois botões
+        geram o mesmo conteúdo, alterando apenas a extensão do arquivo.
+    </p>
+    <p>
+        Antes de baixar, preencha <strong>Senha do PFX/P12</strong> para proteger esses dois arquivos. Se o campo
+        ficar vazio, eles serão gerados sem senha.
+    </p>
+
+    <h4 class="sublinhado">Certificado .cer</h4>
+    <p>
+        Exporta somente o certificado público em formato binário DER. Não contém a chave privada e pode ser usado
+        para distribuir a identidade e a chave pública a sistemas que precisam validar assinaturas ou confiança.
+    </p>
+
+    <h4 class="sublinhado">Certificado .pem</h4>
+    <p>
+        Exporta somente o certificado em texto Base64, entre os marcadores <em>BEGIN CERTIFICATE</em> e
+        <em>END CERTIFICATE</em>. É muito usado em servidores Linux, como Nginx e Apache, balanceadores e APIs.
+    </p>
+
+    <h4 class="sublinhado">Chave Pública .pem</h4>
+    <p>
+        Exporta a parte pública da chave RSA em texto PEM. Ela pode ser compartilhada para verificar assinaturas ou
+        para criptografar dados destinados ao detentor da chave privada.
+    </p>
+
+    <h4 class="sublinhado">Chave Privada RSA .pem</h4>
+    <p>
+        Exporta a chave privada no formato tradicional PKCS#1, identificado pelo marcador
+        <em>BEGIN RSA PRIVATE KEY</em>. É comum em ferramentas e integrações baseadas em OpenSSL.
+    </p>
+
+    <h4 class="sublinhado">Chave Privada PKCS8 .pem</h4>
+    <p>
+        Exporta a mesma chave privada no formato PKCS#8, identificado pelo marcador <em>BEGIN PRIVATE KEY</em>.
+        É uma representação mais genérica e interoperável, amplamente aceita por Java, Node.js, Python e outras
+        bibliotecas modernas.
+    </p>
+
+    <h4 class="sublinhado">Chave Pública .jwk</h4>
+    <p>
+        Exporta a chave pública como JSON Web Key, formato comum em JWT, OAuth 2.0 e OpenID Connect. Pode ser usada
+        por outros sistemas para validar assinaturas e pode compor um conjunto público JWKS.
+    </p>
+
+    <h4 class="sublinhado">Chave Privada .jwk</h4>
+    <p>
+        Exporta em JSON todos os parâmetros privados da chave RSA. Apesar do formato legível, continua sendo uma
+        chave privada e nunca deve ser publicada ou enviada a terceiros.
+    </p>
+
+    <h4 class="sublinhado">Baixar Tudo (.zip)</h4>
+    <p>
+        Reúne todos os formatos acima em um único arquivo ZIP. A senha informada protege apenas os arquivos PFX e P12:
+        o ZIP, os arquivos PEM privados e a chave privada JWK não são criptografados por essa senha.
+    </p>
+
+    <div class="instrucoes-aviso instrucoes-aviso-seguranca">
+        <strong>Proteja as chaves privadas:</strong> quem obtiver uma chave privada poderá se passar pelo titular,
+        assinar dados ou acessar informações protegidas pelo par de chaves. Guarde os arquivos privados em local
+        seguro e evite compartilhá-los.
+    </div>
+
+    <h2>Sobre o certificado X.509 autoassinado</h2>
+    <p>
+        Um certificado X.509 associa uma identidade a uma chave pública. Nesta ferramenta, o próprio certificado é
+        assinado pela chave privada que acabou de ser gerada, sem validação por uma Autoridade Certificadora externa.
+        Por isso, ele pode ser usado quando os participantes configuram a confiança manualmente, por exemplo em:
+    </p>
+    <ul>
+        <li>ambientes de desenvolvimento e testes internos;</li>
+        <li>comunicação TLS entre serviços de uma rede privada;</li>
+        <li>assinatura e validação de JWTs em APIs internas;</li>
+        <li>autenticação mútua (mTLS) entre serviços controlados;</li>
+        <li>estudo de certificados, criptografia RSA e infraestrutura de chaves públicas.</li>
+    </ul>
+</div>
+
 <div *ngIf="modalAberto" class="modal-estilo-fundo" role="presentation" (mousedown)="fecharModalPeloFundo($event)">
     <section class="modal-estilo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-cert">
         <header class="modal-estilo-cabecalho">

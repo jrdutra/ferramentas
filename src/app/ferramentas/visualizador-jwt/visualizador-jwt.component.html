@@ -1,7 +1,89 @@
 <div class="principal">
-    <div class="linha">
+    <div class="barra-visualizacao" role="toolbar" aria-label="Controles de visualização do JWT">
+        <div class="barra-grupo barra-grupo-zoom">
+            <span class="barra-titulo">Caixa JWT</span>
+            <button class="controle-icone" type="button" (click)="ajustarZoomJwt(-0.1)"
+                [disabled]="zoomJwt <= 0.7" title="Diminuir caixa do JWT" aria-label="Diminuir caixa do JWT">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <span class="zoom-valor">{{ zoomJwt * 100 | number:'1.0-0' }}%</span>
+            <button class="controle-icone" type="button" (click)="ajustarZoomJwt(0.1)"
+                [disabled]="zoomJwt >= 1.6" title="Aumentar caixa do JWT" aria-label="Aumentar caixa do JWT">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+
+        <div class="barra-grupo barra-grupo-zoom">
+            <span class="barra-titulo">Caixas decodificadas</span>
+            <button class="controle-icone" type="button" (click)="ajustarZoomDecodificado(-0.1)"
+                [disabled]="zoomDecodificado <= 0.7" title="Diminuir caixas dos campos decodificados"
+                aria-label="Diminuir caixas dos campos decodificados">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <span class="zoom-valor">{{ zoomDecodificado * 100 | number:'1.0-0' }}%</span>
+            <button class="controle-icone" type="button" (click)="ajustarZoomDecodificado(0.1)"
+                [disabled]="zoomDecodificado >= 1.6" title="Aumentar caixas dos campos decodificados"
+                aria-label="Aumentar caixas dos campos decodificados">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+
+        <div class="barra-grupo barra-grupo-zoom">
+            <span class="barra-titulo">Texto JWT</span>
+            <button class="controle-icone" type="button" (click)="ajustarZoomTextoJwt(-0.1)"
+                [disabled]="zoomTextoJwt <= 0.7" title="Diminuir texto do JWT" aria-label="Diminuir texto do JWT">
+                <mat-icon>text_decrease</mat-icon>
+            </button>
+            <span class="zoom-valor">{{ zoomTextoJwt * 100 | number:'1.0-0' }}%</span>
+            <button class="controle-icone" type="button" (click)="ajustarZoomTextoJwt(0.1)"
+                [disabled]="zoomTextoJwt >= 1.6" title="Aumentar texto do JWT" aria-label="Aumentar texto do JWT">
+                <mat-icon>text_increase</mat-icon>
+            </button>
+        </div>
+
+        <div class="barra-grupo barra-grupo-zoom">
+            <span class="barra-titulo">Texto decodificado</span>
+            <button class="controle-icone" type="button" (click)="ajustarZoomTextoDecodificado(-0.1)"
+                [disabled]="zoomTextoDecodificado <= 0.7" title="Diminuir texto dos campos decodificados"
+                aria-label="Diminuir texto dos campos decodificados">
+                <mat-icon>text_decrease</mat-icon>
+            </button>
+            <span class="zoom-valor">{{ zoomTextoDecodificado * 100 | number:'1.0-0' }}%</span>
+            <button class="controle-icone" type="button" (click)="ajustarZoomTextoDecodificado(0.1)"
+                [disabled]="zoomTextoDecodificado >= 1.6" title="Aumentar texto dos campos decodificados"
+                aria-label="Aumentar texto dos campos decodificados">
+                <mat-icon>text_increase</mat-icon>
+            </button>
+        </div>
+
+        <div class="barra-grupo barra-grupo-layout">
+            <span class="barra-titulo">Disposição</span>
+            <button class="controle-layout" type="button" (click)="definirDisposicao('vertical')"
+                [class.ativo]="disposicao === 'vertical'" [attr.aria-pressed]="disposicao === 'vertical'"
+                title="JWT à esquerda e campos decodificados empilhados à direita">
+                <mat-icon>view_sidebar</mat-icon>
+                Vertical
+            </button>
+            <button class="controle-layout" type="button" (click)="definirDisposicao('horizontal')"
+                [class.ativo]="disposicao === 'horizontal'" [attr.aria-pressed]="disposicao === 'horizontal'"
+                title="JWT acima e campos decodificados lado a lado abaixo">
+                <mat-icon>view_day</mat-icon>
+                Horizontal
+            </button>
+        </div>
+
+        <button class="controle-restaurar" type="button" (click)="restaurarVisualizacao()"
+            title="Restaurar zoom e disposição" aria-label="Restaurar visualização">
+            <mat-icon>restart_alt</mat-icon>
+            Restaurar
+        </button>
+    </div>
+
+    <div class="linha area-editores" [ngClass]="'layout-' + disposicao"
+        [style.--zoom-caixa-jwt]="zoomJwt" [style.--zoom-caixa-decodificado]="zoomDecodificado"
+        [style.--zoom-texto-jwt]="zoomTextoJwt" [style.--zoom-texto-decodificado]="zoomTextoDecodificado">
         <div class="coluna1">
-            <div class="jwt-editor">
+            <div class="jwt-editor" [style.height.em]="alturaJwtHorizontalEm">
                 <span class="jwt-label">JWT <span
                         [ngClass]="{'texto-vermelho': textoValidadeVermelho}">{{textoValidade}}</span></span>
                 <div class="jwt-colorido">
@@ -14,12 +96,42 @@
             </div>
         </div>
         <div class="coluna2">
-            <mat-form-field appearance="fill">
-                <mat-label>Cabecalho</mat-label>
-                <textarea [readonly]="!strChavePrivada.trim()" [(ngModel)]="strJwtCabecalho" (ngModelChange)="atualizarDePartes()" matInput style="height: 10em; color: white;">
-                </textarea>
+            <mat-form-field appearance="fill" class="campo-cabecalho" *ngIf="cabecalhoEditando">
+                <mat-label>Cabeçalho (editando)</mat-label>
+                <textarea class="cabecalho-textarea-edit" [(ngModel)]="strJwtCabecalho"
+                    (ngModelChange)="atualizarDePartes()" (blur)="finalizarEdicaoCabecalho()" matInput
+                    style="height: 10em; color: white;"></textarea>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="corpoEditando">
+            <div class="corpo-editor cabecalho-editor" [class.corpo-editavel]="strChavePrivada.trim()"
+                *ngIf="!cabecalhoEditando" (click)="iniciarEdicaoCabecalho($event)">
+                <label class="corpo-label">Cabeçalho
+                    <span class="corpo-dica-editar" *ngIf="strChavePrivada.trim()">(clique para editar)</span>
+                </label>
+                <div class="corpo-display cabecalho-display">
+                    <ng-container *ngFor="let seg of cabecalhoSegmentos">
+                        <span *ngIf="seg.tipo === 'texto'">{{seg.conteudo}}</span>
+                        <span *ngIf="seg.tipo === 'campo'" class="corpo-claim-wrap cabecalho-campo-wrap">
+                            {{seg.conteudo}}<button class="claim-ajuda" type="button"
+                                (click)="toggleCampoCabecalho(seg.campoChave!, $event)"
+                                [class.claim-ajuda-ativa]="campoCabecalhoAberto === seg.campoChave">?</button>
+                            <div class="claim-balao claim-balao-baixo" *ngIf="campoCabecalhoAberto === seg.campoChave"
+                                (click)="$event.stopPropagation()">
+                                <strong>{{seg.campoChave}}</strong>
+                                <p class="claim-descricao">{{seg.descricao}}</p>
+                                <div class="claim-valor-box">
+                                    <span class="claim-valor-label">Valor atual:</span>
+                                    <span class="claim-valor-conteudo">{{seg.valorFormatado}}</span>
+                                </div>
+                                <div class="claim-valor-box claim-padroes-box">
+                                    <span class="claim-valor-label">Valores padrão ou esperados:</span>
+                                    <span class="claim-padroes-conteudo">{{seg.valoresPadrao}}</span>
+                                </div>
+                            </div>
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
+            <mat-form-field appearance="fill" class="campo-corpo" *ngIf="corpoEditando">
                 <mat-label>Corpo (editando)</mat-label>
                 <textarea class="corpo-textarea-edit" [(ngModel)]="strJwtCorpo" (ngModelChange)="atualizarDePartes()" (blur)="finalizarEdicaoCorpo()" matInput style="height: 25em; color: white;">
                 </textarea>
@@ -83,7 +195,6 @@
     </div>
 </div>
 <div>
-    <img class="inverte-cor-icone" width="65" height="65" src="./assets/key-icon.svg" />
     <h2>Instruções</h2>
 
     <h4 class="sublinhado">Como decodificar o JWT</h4>

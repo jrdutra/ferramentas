@@ -20,6 +20,12 @@ import * as forge from 'node-forge';
 })
 export class VisualizadorJwtComponent {
 
+  disposicao: 'vertical' | 'horizontal' = 'vertical';
+  zoomJwt = 1;
+  zoomDecodificado = 1;
+  zoomTextoJwt = 1;
+  zoomTextoDecodificado = 1;
+
   strJwt: string = '';
   strJwtCabecalho: string = '';
   strJwtCorpo: string = '';
@@ -44,6 +50,10 @@ export class VisualizadorJwtComponent {
   claimAberta: string | null = null;
   corpoSegmentos: { tipo: string; conteudo: string; claimChave?: string; descricao?: string; valorFormatado?: string }[] = [];
   corpoEditando = false;
+  camposCabecalhoDetectados: { chave: string; valorFormatado: string; descricao: string; valoresPadrao: string }[] = [];
+  cabecalhoSegmentos: { tipo: string; conteudo: string; campoChave?: string; descricao?: string; valorFormatado?: string; valoresPadrao?: string }[] = [];
+  campoCabecalhoAberto: string | null = null;
+  cabecalhoEditando = false;
 
   private readonly claimsDocumentadas: { [key: string]: string } = {
     'iss': 'Issuer — Identifica quem emitiu o token.',
@@ -61,6 +71,65 @@ export class VisualizadorJwtComponent {
 
   private readonly claimsDeTempo = new Set(['exp', 'nbf', 'iat']);
 
+  private readonly camposCabecalhoDocumentados: { [key: string]: { descricao: string; valoresPadrao: string } } = {
+    'alg': {
+      descricao: 'Algorithm — Algoritmo usado para assinar ou proteger o token.',
+      valoresPadrao: 'none, HS256, HS384, HS512, RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384, ES512 ou EdDSA.'
+    },
+    'typ': {
+      descricao: 'Type — Declara o tipo do objeto representado pelo token.',
+      valoresPadrao: 'JWT é o valor mais comum. Perfis específicos também usam valores como at+jwt.'
+    },
+    'cty': {
+      descricao: 'Content Type — Informa o tipo do conteúdo transportado pelo token.',
+      valoresPadrao: 'JWT para tokens aninhados; também pode receber outro media type conhecido pela aplicação.'
+    },
+    'kid': {
+      descricao: 'Key ID — Identificador da chave utilizada para assinar ou criptografar.',
+      valoresPadrao: 'String definida pelo emissor; normalmente corresponde ao kid publicado em um JWKS.'
+    },
+    'jku': {
+      descricao: 'JWK Set URL — Endereço do conjunto de chaves usado para validar o token.',
+      valoresPadrao: 'URL HTTPS que aponta para um documento JWKS.'
+    },
+    'jwk': {
+      descricao: 'JSON Web Key — Chave pública incluída diretamente no cabeçalho.',
+      valoresPadrao: 'Objeto JWK válido, com campos como kty, kid, use, alg e os parâmetros da chave.'
+    },
+    'x5u': {
+      descricao: 'X.509 URL — Endereço da cadeia de certificados X.509 associada à chave.',
+      valoresPadrao: 'URL HTTPS que retorna uma cadeia de certificados codificados em PEM.'
+    },
+    'x5c': {
+      descricao: 'X.509 Certificate Chain — Cadeia de certificados usada na assinatura.',
+      valoresPadrao: 'Array de certificados X.509 em Base64 DER, começando pelo certificado do signatário.'
+    },
+    'x5t': {
+      descricao: 'X.509 SHA-1 Thumbprint — Impressão digital SHA-1 do certificado.',
+      valoresPadrao: 'String Base64URL sem preenchimento contendo o hash SHA-1.'
+    },
+    'x5t#S256': {
+      descricao: 'X.509 SHA-256 Thumbprint — Impressão digital SHA-256 do certificado.',
+      valoresPadrao: 'String Base64URL sem preenchimento contendo o hash SHA-256.'
+    },
+    'crit': {
+      descricao: 'Critical — Lista extensões do cabeçalho que precisam ser entendidas pelo destinatário.',
+      valoresPadrao: 'Array de nomes de parâmetros presentes no header. Exemplo: ["b64"].'
+    },
+    'b64': {
+      descricao: 'Base64url-Encode Payload — Define se o payload do JWS foi codificado em Base64URL.',
+      valoresPadrao: 'true (padrão) ou false. Quando false, normalmente deve aparecer também em crit.'
+    },
+    'enc': {
+      descricao: 'Encryption Algorithm — Algoritmo usado para criptografar o conteúdo de um JWE.',
+      valoresPadrao: 'A128GCM, A192GCM, A256GCM, A128CBC-HS256, A192CBC-HS384 ou A256CBC-HS512.'
+    },
+    'zip': {
+      descricao: 'Compression Algorithm — Algoritmo aplicado para comprimir o conteúdo antes da criptografia.',
+      valoresPadrao: 'DEF (DEFLATE) é o valor registrado mais comum.'
+    }
+  };
+
   private atualizandoInterno = false;
 
   constructor(private dataService: DataService,
@@ -72,12 +141,54 @@ export class VisualizadorJwtComponent {
     this.dataService.setTituloAplicacao("Manipulador de JWT");
   }
 
+  definirDisposicao(disposicao: 'vertical' | 'horizontal'): void {
+    this.disposicao = disposicao;
+  }
+
+  ajustarZoomJwt(delta: number): void {
+    this.zoomJwt = this.limitarZoom(this.zoomJwt + delta);
+  }
+
+  ajustarZoomDecodificado(delta: number): void {
+    this.zoomDecodificado = this.limitarZoom(this.zoomDecodificado + delta);
+  }
+
+  ajustarZoomTextoJwt(delta: number): void {
+    this.zoomTextoJwt = this.limitarZoom(this.zoomTextoJwt + delta);
+  }
+
+  ajustarZoomTextoDecodificado(delta: number): void {
+    this.zoomTextoDecodificado = this.limitarZoom(this.zoomTextoDecodificado + delta);
+  }
+
+  restaurarVisualizacao(): void {
+    this.zoomJwt = 1;
+    this.zoomDecodificado = 1;
+    this.zoomTextoJwt = 1;
+    this.zoomTextoDecodificado = 1;
+    this.disposicao = 'vertical';
+  }
+
+  get alturaJwtHorizontalEm(): number | null {
+    if (this.disposicao !== 'horizontal') return null;
+
+    const larguraDisponivel = typeof window === 'undefined' ? 1200 : Math.max(320, window.innerWidth - 96);
+    const caracteresPorLinha = Math.max(32, Math.floor(larguraDisponivel / (12 * this.zoomTextoJwt)));
+    const linhas = Math.max(1, Math.ceil(Math.max(this.strJwt.length, 1) / caracteresPorLinha));
+    return Math.min(30, Math.max(7, 3.8 + linhas * 2) * this.zoomJwt);
+  }
+
+  private limitarZoom(valor: number): number {
+    return Math.round(Math.min(1.6, Math.max(0.7, valor)) * 10) / 10;
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
-    if (this.claimAberta) {
+    if (this.claimAberta || this.campoCabecalhoAberto) {
       const target = event.target as HTMLElement;
       if (!target.closest('.claim-ajuda') && !target.closest('.claim-balao')) {
         this.claimAberta = null;
+        this.campoCabecalhoAberto = null;
       }
     }
   }
@@ -108,12 +219,15 @@ export class VisualizadorJwtComponent {
       }
 
       this.cdr.detectChanges();
+      this.extrairCamposCabecalho();
       this.extrairClaims();
       this.verificarOuAssinar();
     } else {
       this.strJwtCabecalho = '';
       this.strJwtCorpo = '';
       this.strJwtAssinatura = '';
+      this.camposCabecalhoDetectados = [];
+      this.cabecalhoSegmentos = [];
       this.claimsDetectadas = [];
       this.assinaturaStatus = 'nenhum';
     }
@@ -133,6 +247,7 @@ export class VisualizadorJwtComponent {
 
       this.validaJwt(this.strJwt);
       this.atualizarPartesColoridas();
+      this.extrairCamposCabecalho();
       this.extrairClaims();
       this.verificarOuAssinar();
     } catch {
@@ -241,6 +356,88 @@ export class VisualizadorJwtComponent {
     }
   }
 
+  extrairCamposCabecalho() {
+    this.camposCabecalhoDetectados = [];
+    this.campoCabecalhoAberto = null;
+    try {
+      const cabecalho = JSON.parse(this.strJwtCabecalho);
+      for (const chave of Object.keys(cabecalho)) {
+        const documentacao = this.camposCabecalhoDocumentados[chave];
+        if (!documentacao) continue;
+        const valor = cabecalho[chave];
+        this.camposCabecalhoDetectados.push({
+          chave,
+          valorFormatado: typeof valor === 'string' ? valor : JSON.stringify(valor, null, 2),
+          descricao: documentacao.descricao,
+          valoresPadrao: documentacao.valoresPadrao
+        });
+      }
+    } catch { /* cabecalho nao e JSON valido */ }
+    this.gerarCabecalhoSegmentos();
+  }
+
+  gerarCabecalhoSegmentos() {
+    this.cabecalhoSegmentos = [];
+    const texto = this.strJwtCabecalho;
+    if (!texto) return;
+
+    const presentes = this.camposCabecalhoDetectados.map(campo => campo.chave);
+    if (presentes.length === 0) {
+      this.cabecalhoSegmentos = [{ tipo: 'texto', conteudo: texto }];
+      return;
+    }
+
+    const escaped = presentes.map(chave => chave.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const pattern = new RegExp(`"(${escaped.join('|')})"(?=\\s*:)`, 'g');
+    let lastIndex = 0;
+    let match;
+
+    while ((match = pattern.exec(texto)) !== null) {
+      if (match.index > lastIndex) {
+        this.cabecalhoSegmentos.push({ tipo: 'texto', conteudo: texto.substring(lastIndex, match.index) });
+      }
+      const chave = match[1];
+      const campo = this.camposCabecalhoDetectados.find(item => item.chave === chave);
+      this.cabecalhoSegmentos.push({
+        tipo: 'campo',
+        conteudo: match[0],
+        campoChave: chave,
+        descricao: campo?.descricao,
+        valorFormatado: campo?.valorFormatado,
+        valoresPadrao: campo?.valoresPadrao
+      });
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < texto.length) {
+      this.cabecalhoSegmentos.push({ tipo: 'texto', conteudo: texto.substring(lastIndex) });
+    }
+  }
+
+  toggleCampoCabecalho(chave: string, event?: Event) {
+    if (event) event.stopPropagation();
+    this.claimAberta = null;
+    this.campoCabecalhoAberto = this.campoCabecalhoAberto === chave ? null : chave;
+  }
+
+  iniciarEdicaoCabecalho(event: Event) {
+    if (!this.strChavePrivada.trim()) return;
+    const target = event.target as HTMLElement;
+    if (target.closest('.claim-ajuda') || target.closest('.claim-balao')) return;
+    this.campoCabecalhoAberto = null;
+    this.cabecalhoEditando = true;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      const el = document.querySelector('.cabecalho-textarea-edit') as HTMLTextAreaElement;
+      if (el) el.focus();
+    });
+  }
+
+  finalizarEdicaoCabecalho() {
+    this.cabecalhoEditando = false;
+    this.extrairCamposCabecalho();
+  }
+
   extrairClaims() {
     this.claimsDetectadas = [];
     this.claimAberta = null;
@@ -305,6 +502,7 @@ export class VisualizadorJwtComponent {
 
   toggleClaim(chave: string, event?: Event) {
     if (event) event.stopPropagation();
+    this.campoCabecalhoAberto = null;
     this.claimAberta = this.claimAberta === chave ? null : chave;
   }
 
@@ -331,7 +529,9 @@ export class VisualizadorJwtComponent {
   }
 
   onChavePrivadaChange() {
+    this.cabecalhoEditando = false;
     this.corpoEditando = false;
+    this.extrairCamposCabecalho();
     this.extrairClaims();
     this.verificarOuAssinar();
   }

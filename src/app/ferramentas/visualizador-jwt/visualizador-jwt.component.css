@@ -23,10 +23,6 @@
     align-items: stretch;
 }
 
-.texto-vermelho{
-    color: #ffea00;
-}
-
 .jwt-editor {
     position: relative;
     flex: 1;
@@ -60,7 +56,7 @@
     width: 100%;
     height: 100%;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 1.25em;
+    font-size: calc(1.25em * var(--zoom-texto-jwt));
     font-weight: 400;
     line-height: 1.6;
     padding: 1.4em 0.5em 0.5em;
@@ -118,14 +114,6 @@
     color: rgba(255, 255, 255, 0.3);
 }
 
-.inverte-cor-icone {
-    filter: invert(100%);
-}
-
-.sublinhado {
-    text-decoration: underline;
-}
-
 .status-valida {
     color: #00e85c;
     font-weight: 700;
@@ -154,11 +142,28 @@
 
 .corpo-editor {
     position: relative;
-    border-radius: 4px 4px 0 0;
-    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background:
+        linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98)) padding-box,
+        conic-gradient(from 135deg, rgba(0, 208, 255, 0.34), rgba(255, 45, 178, 0.82), rgba(182, 37, 255, 0.74), rgba(91, 124, 255, 0.8), rgba(0, 208, 255, 0.34)) border-box;
+    box-shadow: 0 0 20px rgba(91, 124, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     padding: 0.75em 1em 1em;
-    min-height: 25em;
+    min-height: calc(25em * var(--zoom-caixa-decodificado));
     margin-bottom: 1.13em;
+}
+
+.cabecalho-editor {
+    min-height: calc(10em * var(--zoom-caixa-decodificado));
+    border: 1px solid transparent !important;
+    background:
+        linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98)) padding-box,
+        conic-gradient(from 135deg, #00d0ff, #ff2db2, #b625ff, #5b7cff, #00d0ff) border-box !important;
+    box-shadow: 0 0 20px rgba(91, 124, 255, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.cabecalho-campo-wrap {
+    color: #ffe600;
 }
 
 .corpo-label {
@@ -170,7 +175,7 @@
 
 .corpo-display {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 1.2em;
+    font-size: calc(1.2em * var(--zoom-texto-decodificado));
     color: white;
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -178,13 +183,13 @@
 }
 
 .corpo-editavel {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.42);
     cursor: text;
-    transition: border-bottom-color 200ms;
+    transition: border-color 200ms, box-shadow 200ms;
 }
 
 .corpo-editavel:hover {
-    border-bottom-color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 45, 178, 0.78);
+    box-shadow: 0 0 10px rgba(255, 45, 178, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .corpo-dica-editar {
@@ -282,9 +287,29 @@
     word-break: break-all;
 }
 
+.claim-padroes-box {
+    margin-top: 0.55em;
+    border-color: rgba(255, 45, 178, 0.2);
+}
+
+.claim-padroes-conteudo {
+    color: #f4fbff;
+    font-size: 0.88em;
+    line-height: 1.45;
+}
+
 :host ::ng-deep .coluna2 .mat-mdc-form-field textarea {
-    font-size: 1.2em;
+    font-size: calc(1.2em * var(--zoom-texto-decodificado));
     font-family: 'Courier New', Courier, monospace;
+}
+
+:host ::ng-deep .campo-cabecalho textarea,
+:host ::ng-deep .campo-assinatura textarea {
+    height: calc(10em * var(--zoom-caixa-decodificado)) !important;
+}
+
+:host ::ng-deep .campo-corpo textarea {
+    height: calc(25em * var(--zoom-caixa-decodificado)) !important;
 }
 
 :host ::ng-deep .campo-assinatura.mat-mdc-form-field {
@@ -350,11 +375,11 @@
         flex-direction: column;
     }
     .coluna1{
-        margin-right: 0em;
+        margin-right: 0;
     }
 
     .coluna2{
-        margin-left: 0em;
+        margin-left: 0;
     }
 
     .chaves-grid {
