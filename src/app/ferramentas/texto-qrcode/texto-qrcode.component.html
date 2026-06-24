@@ -109,89 +109,161 @@
                     [class.estilo-selecionado]="estilo === estiloSelecionado"
                     [class.estilo-criado]="estilo.personalizado" (click)="selecionarEstilo(estilo)"
                     (keydown)="selecionarEstiloPorTeclado($event, estilo)">
-                    <button #menuTrigger="matMenuTrigger" mat-icon-button class="botao-menu-estilo" type="button"
-                        [matMenuTriggerFor]="menuEstilo"
-                        (click)="$event.stopPropagation()" aria-label="Personalizar estilo do QRCode">
-                        <mat-icon>tune</mat-icon>
-                    </button>
+                    <div class="botao-estilo-controles">
+                        <button #menuTrigger="matMenuTrigger" mat-icon-button class="botao-menu-estilo" type="button"
+                            [matMenuTriggerFor]="menuEstilo"
+                            (click)="$event.stopPropagation()" aria-label="Personalizar estilo do QRCode">
+                            <mat-icon>tune</mat-icon>
+                        </button>
+                        <button *ngIf="estilo.personalizado" mat-icon-button class="botao-excluir-estilo" type="button"
+                            (click)="excluirEstiloPersonalizado(estilo, $event)" aria-label="Excluir estilo personalizado">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </div>
                     <mat-icon>{{ estilo.icone }}</mat-icon>
                     <strong>{{ estilo.nome }}</strong>
                     <span>{{ estilo.descricao }}</span>
-                    <mat-menu #menuEstilo="matMenu" class="menu-estilo-qrcode">
-                        <div class="menu-estilo-conteudo" (click)="$event.stopPropagation()"
+                    <mat-menu #menuEstilo="matMenu" class="menu-estilo-qrcode" xPosition="before" (opened)="fixarMenuEsquerda()">
+                        <div class="menu-estilo-conteudo menu-estilo-horizontal" (click)="$event.stopPropagation()"
                             (keydown)="$event.stopPropagation()">
-                            <strong>Personalizar</strong>
-                            <label>
-                                Cor escura do QRCode
-                                <input type="color" [(ngModel)]="estilo.colorDark" (ngModelChange)="atualizarEstilo(estilo)">
-                            </label>
-                            <label>
-                                Cor clara do QRCode
-                                <input type="color" [(ngModel)]="estilo.colorLight" (ngModelChange)="atualizarEstilo(estilo)">
-                            </label>
-                            <label>
-                                Fundo do retangulo
-                                <input type="color" [(ngModel)]="estilo.corFundoRetangulo"
-                                    (ngModelChange)="atualizarEstilo(estilo)">
-                            </label>
-                            <label class="controle-checkbox">
-                                Cantos do cartao
-                                <input type="checkbox" [(ngModel)]="estilo.cantosArredondados"
-                                    (ngModelChange)="atualizarEstilo(estilo)">
-                            </label>
-                            <label class="controle-checkbox">
-                                Cantos do QRCode
-                                <input type="checkbox" [(ngModel)]="estilo.cantosQrCodeArredondados"
-                                    (ngModelChange)="atualizarEstilo(estilo)">
-                            </label>
-                            <label>
-                                Formato da informacao
-                                <select [(ngModel)]="estilo.formatoModulo" (ngModelChange)="atualizarEstilo(estilo)">
-                                    <option value="quadrado">Quadrados</option>
-                                    <option value="redondo">Bolinhas</option>
-                                </select>
-                            </label>
-                            <label class="controle-checkbox">
-                                Exibir bordas
-                                <input type="checkbox" [(ngModel)]="estilo.exibirBorda" (ngModelChange)="atualizarEstilo(estilo)">
-                            </label>
-                            <label>
-                                Quantidade de bordas
-                                <select [(ngModel)]="estilo.quantidadeBordas" (ngModelChange)="atualizarEstilo(estilo)"
-                                    [disabled]="!estilo.exibirBorda">
-                                    <option [ngValue]="1">Uma borda</option>
-                                    <option [ngValue]="2">Duas bordas</option>
-                                </select>
-                            </label>
-                            <label>
-                                Cor da borda externa
-                                <input type="color" [(ngModel)]="estilo.corBorda" (ngModelChange)="atualizarEstilo(estilo)"
-                                    [disabled]="!estilo.exibirBorda">
-                            </label>
-                            <label>
-                                Cor da borda interna
-                                <input type="color" [(ngModel)]="estilo.corBordaSecundaria" (ngModelChange)="atualizarEstilo(estilo)"
-                                    [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1">
-                            </label>
-                            <label>
-                                Iluminacao principal
-                                <input type="color" [(ngModel)]="estilo.glow" (ngModelChange)="atualizarEstilo(estilo)"
-                                    [disabled]="!estilo.exibirBorda">
-                            </label>
-                            <label>
-                                Iluminacao secundaria
-                                <input type="color" [(ngModel)]="estilo.glowSecundario" (ngModelChange)="atualizarEstilo(estilo)"
-                                    [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1">
-                            </label>
-                            <label>
-                                Cor do titulo
-                                <input type="color" [(ngModel)]="estilo.textoTitulo" (ngModelChange)="atualizarEstilo(estilo)">
-                            </label>
-                            <label class="controle-checkbox">
-                                Iluminar titulo
-                                <input type="checkbox" [(ngModel)]="estilo.iluminarTitulo"
-                                    (ngModelChange)="atualizarEstilo(estilo)">
-                            </label>
+                            <div class="menu-grupos-linha">
+
+                            <!-- Visibilidade -->
+                            <div class="menu-grupo">
+                                <span class="menu-grupo-titulo">
+                                    <mat-icon>visibility</mat-icon>Visibilidade
+                                </span>
+                                <label class="controle-checkbox">
+                                    Título
+                                    <input type="checkbox" [(ngModel)]="estilo.exibirTitulo" (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                                <label class="controle-checkbox">
+                                    Retângulo
+                                    <input type="checkbox" [(ngModel)]="estilo.exibirRetangulo" (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                                <label class="controle-checkbox">
+                                    Logotipo
+                                    <input type="checkbox" [(ngModel)]="estilo.exibirLogo" (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                            </div>
+
+                            <!-- QR Code -->
+                            <div class="menu-grupo">
+                                <span class="menu-grupo-titulo">
+                                    <mat-icon>qr_code_2</mat-icon>QR Code
+                                </span>
+                                <label>
+                                    Cor dos módulos
+                                    <input type="color" [(ngModel)]="estilo.colorDark" (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                                <label>
+                                    Cor de fundo
+                                    <input type="color" [(ngModel)]="estilo.colorLight" (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                                <label>
+                                    Formato
+                                    <select [(ngModel)]="estilo.formatoModulo" (ngModelChange)="atualizarEstilo(estilo)">
+                                        <option value="quadrado">Quadrados</option>
+                                        <option value="redondo">Bolinhas</option>
+                                    </select>
+                                </label>
+                                <label class="controle-checkbox">
+                                    Cantos arredondados
+                                    <input type="checkbox" [(ngModel)]="estilo.cantosQrCodeArredondados"
+                                        (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                            </div>
+
+                            <!-- Fundo -->
+                            <div class="menu-grupo">
+                                <span class="menu-grupo-titulo">
+                                    <mat-icon>wallpaper</mat-icon>Fundo
+                                </span>
+                                <label>
+                                    Cor de fundo
+                                    <input type="color" [(ngModel)]="estilo.corFundoRetangulo"
+                                        (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                                <label class="controle-checkbox">
+                                    Cantos arredondados
+                                    <input type="checkbox" [(ngModel)]="estilo.cantosArredondados"
+                                        (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                            </div>
+
+                            <!-- Borda -->
+                            <div class="menu-grupo">
+                                <span class="menu-grupo-titulo">
+                                    <mat-icon>border_outer</mat-icon>Borda
+                                </span>
+                                <label class="controle-checkbox">
+                                    Exibir bordas
+                                    <input type="checkbox" [(ngModel)]="estilo.exibirBorda" (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                                <label>
+                                    Quantidade
+                                    <select [(ngModel)]="estilo.quantidadeBordas" (ngModelChange)="atualizarEstilo(estilo)"
+                                        [disabled]="!estilo.exibirBorda">
+                                        <option [ngValue]="1">Uma</option>
+                                        <option [ngValue]="2">Duas</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Cor externa
+                                    <input type="color" [(ngModel)]="estilo.corBorda" (ngModelChange)="atualizarEstilo(estilo)"
+                                        [disabled]="!estilo.exibirBorda">
+                                </label>
+                                <label>
+                                    Cor interna
+                                    <input type="color" [(ngModel)]="estilo.corBordaSecundaria" (ngModelChange)="atualizarEstilo(estilo)"
+                                        [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1">
+                                </label>
+                            </div>
+
+                            <!-- Iluminação -->
+                            <div class="menu-grupo">
+                                <span class="menu-grupo-titulo">
+                                    <mat-icon>flare</mat-icon>Iluminação
+                                </span>
+                                <label class="controle-checkbox">
+                                    Principal
+                                    <input type="checkbox" [(ngModel)]="estilo.iluminarBordaPrincipal" (ngModelChange)="atualizarEstilo(estilo)"
+                                        [disabled]="!estilo.exibirBorda">
+                                </label>
+                                <label>
+                                    Cor principal
+                                    <input type="color" [(ngModel)]="estilo.glow" (ngModelChange)="atualizarEstilo(estilo)"
+                                        [disabled]="!estilo.exibirBorda || !estilo.iluminarBordaPrincipal">
+                                </label>
+                                <label class="controle-checkbox">
+                                    Secundária
+                                    <input type="checkbox" [(ngModel)]="estilo.iluminarBordaSecundaria" (ngModelChange)="atualizarEstilo(estilo)"
+                                        [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1">
+                                </label>
+                                <label>
+                                    Cor secundária
+                                    <input type="color" [(ngModel)]="estilo.glowSecundario" (ngModelChange)="atualizarEstilo(estilo)"
+                                        [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1 || !estilo.iluminarBordaSecundaria">
+                                </label>
+                            </div>
+
+                            <!-- Título -->
+                            <div class="menu-grupo">
+                                <span class="menu-grupo-titulo">
+                                    <mat-icon>title</mat-icon>Título
+                                </span>
+                                <label>
+                                    Cor do texto
+                                    <input type="color" [(ngModel)]="estilo.textoTitulo" (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                                <label class="controle-checkbox">
+                                    Iluminar
+                                    <input type="checkbox" [(ngModel)]="estilo.iluminarTitulo"
+                                        (ngModelChange)="atualizarEstilo(estilo)">
+                                </label>
+                            </div>
+
+                            </div><!-- /menu-grupos-linha -->
                             <footer class="menu-estilo-acoes">
                                 <button mat-raised-button color="primary" type="button"
                                     (click)="abrirModalSalvarEstilo(estilo); menuTrigger.closeMenu()">
@@ -237,88 +309,182 @@
 
 <div *ngIf="modalEstiloAberto" class="modal-estilo-fundo" role="presentation"
     (mousedown)="fecharModalPeloFundo($event)">
-    <section class="modal-estilo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-estilo">
-        <header class="modal-estilo-cabecalho">
-            <div>
-                <span class="modal-estilo-etiqueta">Novo estilo</span>
-                <h2 id="titulo-modal-estilo">Crie seu próprio visual</h2>
-                <p>Personalize cada detalhe e salve no seu navegador.</p>
+    <section class="modal-estilo modal-janela" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-estilo">
+
+        <!-- Barra de título estilo janela -->
+        <header class="modal-barra-titulo">
+            <div class="modal-barra-controles">
+                <span class="janela-dot dot-fechar" (click)="fecharModalEstilo()" title="Fechar"></span>
+                <span class="janela-dot dot-minimizar"></span>
+                <span class="janela-dot dot-expandir"></span>
             </div>
-            <button mat-icon-button type="button" (click)="fecharModalEstilo()" aria-label="Fechar modal">
-                <mat-icon>close</mat-icon>
-            </button>
+            <span id="titulo-modal-estilo" class="modal-barra-nome">Criar estilo personalizado</span>
+            <div class="modal-barra-espaco"></div>
         </header>
 
-        <div class="modal-estilo-conteudo menu-estilo-conteudo">
-            <label class="campo-nome-estilo">
-                Nome do estilo
-                <input type="text" [(ngModel)]="novoEstilo.nome" maxlength="40" placeholder="Ex.: Meu estilo roxo"
-                    (keydown.enter)="salvarNovoEstilo()">
-            </label>
-            <label>
-                Cor escura do QRCode
-                <input type="color" [(ngModel)]="novoEstilo.colorDark">
-            </label>
-            <label>
-                Cor clara do QRCode
-                <input type="color" [(ngModel)]="novoEstilo.colorLight">
-            </label>
-            <label>
-                Fundo do retângulo
-                <input type="color" [(ngModel)]="novoEstilo.corFundoRetangulo">
-            </label>
-            <label class="controle-checkbox">
-                Cantos do cartão
-                <input type="checkbox" [(ngModel)]="novoEstilo.cantosArredondados">
-            </label>
-            <label class="controle-checkbox">
-                Cantos do QRCode
-                <input type="checkbox" [(ngModel)]="novoEstilo.cantosQrCodeArredondados">
-            </label>
-            <label>
-                Formato da informação
-                <select [(ngModel)]="novoEstilo.formatoModulo">
-                    <option value="quadrado">Quadrados</option>
-                    <option value="redondo">Bolinhas</option>
-                </select>
-            </label>
-            <label class="controle-checkbox">
-                Exibir bordas
-                <input type="checkbox" [(ngModel)]="novoEstilo.exibirBorda">
-            </label>
-            <label>
-                Quantidade de bordas
-                <select [(ngModel)]="novoEstilo.quantidadeBordas" [disabled]="!novoEstilo.exibirBorda">
-                    <option [ngValue]="1">Uma borda</option>
-                    <option [ngValue]="2">Duas bordas</option>
-                </select>
-            </label>
-            <label>
-                Cor da borda externa
-                <input type="color" [(ngModel)]="novoEstilo.corBorda" [disabled]="!novoEstilo.exibirBorda">
-            </label>
-            <label>
-                Cor da borda interna
-                <input type="color" [(ngModel)]="novoEstilo.corBordaSecundaria"
-                    [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1">
-            </label>
-            <label>
-                Iluminação principal
-                <input type="color" [(ngModel)]="novoEstilo.glow" [disabled]="!novoEstilo.exibirBorda">
-            </label>
-            <label>
-                Iluminação secundária
-                <input type="color" [(ngModel)]="novoEstilo.glowSecundario"
-                    [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1">
-            </label>
-            <label>
-                Cor do título
-                <input type="color" [(ngModel)]="novoEstilo.textoTitulo">
-            </label>
-            <label class="controle-checkbox">
-                Iluminar título
-                <input type="checkbox" [(ngModel)]="novoEstilo.iluminarTitulo">
-            </label>
+        <!-- Corpo: sidebar + conteúdo -->
+        <div class="modal-janela-corpo">
+
+            <!-- Sidebar de navegação -->
+            <nav class="modal-nav" aria-label="Seções do estilo">
+                <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'geral'"
+                    type="button" (click)="secaoModalAtiva = 'geral'">
+                    <mat-icon>tune</mat-icon>
+                    <span>Geral</span>
+                </button>
+                <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'qrcode'"
+                    type="button" (click)="secaoModalAtiva = 'qrcode'">
+                    <mat-icon>qr_code_2</mat-icon>
+                    <span>QR Code</span>
+                </button>
+                <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'fundo'"
+                    type="button" (click)="secaoModalAtiva = 'fundo'">
+                    <mat-icon>wallpaper</mat-icon>
+                    <span>Fundo</span>
+                </button>
+                <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'borda'"
+                    type="button" (click)="secaoModalAtiva = 'borda'">
+                    <mat-icon>border_outer</mat-icon>
+                    <span>Borda</span>
+                </button>
+                <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'iluminacao'"
+                    type="button" (click)="secaoModalAtiva = 'iluminacao'">
+                    <mat-icon>flare</mat-icon>
+                    <span>Iluminação</span>
+                </button>
+                <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'titulo'"
+                    type="button" (click)="secaoModalAtiva = 'titulo'">
+                    <mat-icon>title</mat-icon>
+                    <span>Título</span>
+                </button>
+            </nav>
+
+            <!-- Área de conteúdo da seção -->
+            <div class="modal-secao">
+
+                <!-- Geral -->
+                <div *ngIf="secaoModalAtiva === 'geral'" class="modal-grupo-campos menu-estilo-conteudo">
+                    <p class="modal-secao-descricao">Configure o nome e o que será exibido no QRCode.</p>
+                    <label class="campo-nome-estilo">
+                        Nome do estilo
+                        <input type="text" [(ngModel)]="novoEstilo.nome" maxlength="40"
+                            placeholder="Ex.: Meu estilo roxo" (keydown.enter)="salvarNovoEstilo()">
+                    </label>
+                    <label class="controle-checkbox">
+                        Exibir título
+                        <input type="checkbox" [(ngModel)]="novoEstilo.exibirTitulo">
+                    </label>
+                    <label class="controle-checkbox">
+                        Exibir retângulo
+                        <input type="checkbox" [(ngModel)]="novoEstilo.exibirRetangulo">
+                    </label>
+                    <label class="controle-checkbox">
+                        Exibir logotipo
+                        <input type="checkbox" [(ngModel)]="novoEstilo.exibirLogo">
+                    </label>
+                </div>
+
+                <!-- QR Code -->
+                <div *ngIf="secaoModalAtiva === 'qrcode'" class="modal-grupo-campos menu-estilo-conteudo">
+                    <p class="modal-secao-descricao">Defina as cores e o formato dos módulos do QRCode.</p>
+                    <label>
+                        Cor dos módulos (escura)
+                        <input type="color" [(ngModel)]="novoEstilo.colorDark">
+                    </label>
+                    <label>
+                        Cor de fundo do QR (clara)
+                        <input type="color" [(ngModel)]="novoEstilo.colorLight">
+                    </label>
+                    <label>
+                        Formato dos módulos
+                        <select [(ngModel)]="novoEstilo.formatoModulo">
+                            <option value="quadrado">Quadrados</option>
+                            <option value="redondo">Bolinhas</option>
+                        </select>
+                    </label>
+                    <label class="controle-checkbox">
+                        Cantos do QRCode arredondados
+                        <input type="checkbox" [(ngModel)]="novoEstilo.cantosQrCodeArredondados">
+                    </label>
+                </div>
+
+                <!-- Fundo -->
+                <div *ngIf="secaoModalAtiva === 'fundo'" class="modal-grupo-campos menu-estilo-conteudo">
+                    <p class="modal-secao-descricao">Configure o retângulo de fundo do cartão.</p>
+                    <label>
+                        Cor de preenchimento
+                        <input type="color" [(ngModel)]="novoEstilo.corFundoRetangulo">
+                    </label>
+                    <label class="controle-checkbox">
+                        Cantos arredondados
+                        <input type="checkbox" [(ngModel)]="novoEstilo.cantosArredondados">
+                    </label>
+                </div>
+
+                <!-- Borda -->
+                <div *ngIf="secaoModalAtiva === 'borda'" class="modal-grupo-campos menu-estilo-conteudo">
+                    <p class="modal-secao-descricao">Adicione uma ou duas bordas ao redor do cartão.</p>
+                    <label class="controle-checkbox">
+                        Exibir bordas
+                        <input type="checkbox" [(ngModel)]="novoEstilo.exibirBorda">
+                    </label>
+                    <label>
+                        Quantidade de bordas
+                        <select [(ngModel)]="novoEstilo.quantidadeBordas" [disabled]="!novoEstilo.exibirBorda">
+                            <option [ngValue]="1">Uma borda</option>
+                            <option [ngValue]="2">Duas bordas</option>
+                        </select>
+                    </label>
+                    <label>
+                        Cor da borda externa
+                        <input type="color" [(ngModel)]="novoEstilo.corBorda" [disabled]="!novoEstilo.exibirBorda">
+                    </label>
+                    <label>
+                        Cor da borda interna
+                        <input type="color" [(ngModel)]="novoEstilo.corBordaSecundaria"
+                            [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1">
+                    </label>
+                </div>
+
+                <!-- Iluminação -->
+                <div *ngIf="secaoModalAtiva === 'iluminacao'" class="modal-grupo-campos menu-estilo-conteudo">
+                    <p class="modal-secao-descricao">Controle o brilho e a cor ao redor das bordas.</p>
+                    <label class="controle-checkbox">
+                        Iluminação principal
+                        <input type="checkbox" [(ngModel)]="novoEstilo.iluminarBordaPrincipal"
+                            [disabled]="!novoEstilo.exibirBorda">
+                    </label>
+                    <label>
+                        Cor da iluminação principal
+                        <input type="color" [(ngModel)]="novoEstilo.glow"
+                            [disabled]="!novoEstilo.exibirBorda || !novoEstilo.iluminarBordaPrincipal">
+                    </label>
+                    <label class="controle-checkbox">
+                        Iluminação secundária
+                        <input type="checkbox" [(ngModel)]="novoEstilo.iluminarBordaSecundaria"
+                            [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1">
+                    </label>
+                    <label>
+                        Cor da iluminação secundária
+                        <input type="color" [(ngModel)]="novoEstilo.glowSecundario"
+                            [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1 || !novoEstilo.iluminarBordaSecundaria">
+                    </label>
+                </div>
+
+                <!-- Título -->
+                <div *ngIf="secaoModalAtiva === 'titulo'" class="modal-grupo-campos menu-estilo-conteudo">
+                    <p class="modal-secao-descricao">Configure a aparência do título do QRCode.</p>
+                    <label>
+                        Cor do texto do título
+                        <input type="color" [(ngModel)]="novoEstilo.textoTitulo">
+                    </label>
+                    <label class="controle-checkbox">
+                        Iluminar título
+                        <input type="checkbox" [(ngModel)]="novoEstilo.iluminarTitulo">
+                    </label>
+                </div>
+
+            </div>
         </div>
 
         <footer class="modal-estilo-acoes">

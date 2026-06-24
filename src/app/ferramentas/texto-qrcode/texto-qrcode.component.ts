@@ -32,6 +32,13 @@ interface EstiloQrCode {
   formatoModulo: 'quadrado' | 'redondo';
   textoTitulo: string;
   iluminarTitulo: boolean;
+  iluminarBordaPrincipal: boolean;
+  iluminarBordaSecundaria: boolean;
+  exibirTitulo: boolean;
+  exibirRetangulo: boolean;
+  exibirLogo: boolean;
+  logotipoDataUrl?: string;
+  nomeLogotipo?: string;
 }
 
 @Component({
@@ -59,6 +66,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
 
   modalEstiloAberto = false;
   modalNomeEstiloAberto = false;
+  secaoModalAtiva = 'geral';
   nomeNovoEstilo = '';
   private estiloBaseParaSalvar?: EstiloQrCode;
   novoEstilo: EstiloQrCode = this.criarEstiloInicial();
@@ -82,7 +90,12 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       cantosQrCodeArredondados: false,
       formatoModulo: 'quadrado',
       textoTitulo: '#000000',
-      iluminarTitulo: false
+      iluminarTitulo: false,
+      iluminarBordaPrincipal: false,
+      iluminarBordaSecundaria: false,
+      exibirTitulo: true,
+      exibirRetangulo: true,
+      exibirLogo: true
     },
     {
       nome: 'Básico Escuro',
@@ -102,251 +115,16 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       cantosQrCodeArredondados: false,
       formatoModulo: 'quadrado',
       textoTitulo: '#ffffff',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Escuro classico',
-      descricao: 'Alto contraste, simples e seguro para leitura.',
-      classe: 'estilo-escuro-classico',
-      colorDark: '#050816',
-      colorLight: '#f8fbff',
-      icone: 'contrast',
-      glow: '#5b7cff',
-      glowSecundario: '#b625ff',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#5b7cff',
-      corBordaSecundaria: '#b625ff',
-      corFundoRetangulo: '#111827',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#f8fbff',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Neon da pagina',
-      descricao: 'Azul, roxo e rosa com energia do tema atual.',
-      classe: 'estilo-neon-pagina',
-      colorDark: '#8ee8ff',
-      colorLight: '#050816',
-      icone: 'auto_awesome',
-      glow: '#00d0ff',
-      glowSecundario: '#ff2db2',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#00d0ff',
-      corBordaSecundaria: '#ff2db2',
-      corFundoRetangulo: '#08142d',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#f4fbff',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Fofo pastel',
-      descricao: 'Visual claro, macio e amigavel.',
-      classe: 'estilo-fofo-pastel',
-      colorDark: '#7d4cff',
-      colorLight: '#fff4fb',
-      icone: 'favorite',
-      glow: '#ff8bd6',
-      glowSecundario: '#8ee8ff',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#ff8bd6',
-      corBordaSecundaria: '#8ee8ff',
-      corFundoRetangulo: '#fff4fb',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#4b2767',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Dark iluminado',
-      descricao: 'Fundo escuro com brilho marcante.',
-      classe: 'estilo-dark-iluminado',
-      colorDark: '#ffffff',
-      colorLight: '#101125',
-      icone: 'flare',
-      glow: '#8ee8ff',
-      glowSecundario: '#b625ff',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#8ee8ff',
-      corBordaSecundaria: '#b625ff',
-      corFundoRetangulo: '#101125',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#ffffff',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Dark discreto',
-      descricao: 'Escuro, elegante e pouco iluminado.',
-      classe: 'estilo-dark-discreto',
-      colorDark: '#d7dcff',
-      colorLight: '#111827',
-      icone: 'nightlight',
-      glow: '#5b7cff',
-      glowSecundario: '#7d4cff',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#5b7cff',
-      corBordaSecundaria: '#7d4cff',
-      corFundoRetangulo: '#111827',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#e5e7ff',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Claro limpo',
-      descricao: 'Fundo claro com leitura objetiva.',
-      classe: 'estilo-claro-limpo',
-      colorDark: '#111827',
-      colorLight: '#ffffff',
-      icone: 'wb_sunny',
-      glow: '#5b7cff',
-      glowSecundario: '#8ee8ff',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#5b7cff',
-      corBordaSecundaria: '#8ee8ff',
-      corFundoRetangulo: '#ffffff',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#111827',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Claro azul',
-      descricao: 'Claro, tecnico e levemente colorido.',
-      classe: 'estilo-claro-azul',
-      colorDark: '#0f3d70',
-      colorLight: '#eaf7ff',
-      icone: 'water_drop',
-      glow: '#0ea5e9',
-      glowSecundario: '#7dd3fc',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#0ea5e9',
-      corBordaSecundaria: '#7dd3fc',
-      corFundoRetangulo: '#eaf7ff',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#0f3d70',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Rosa eletrico',
-      descricao: 'Vivo, moderno e com bastante personalidade.',
-      classe: 'estilo-rosa-eletrico',
-      colorDark: '#ff2db2',
-      colorLight: '#1a0822',
-      icone: 'bolt',
-      glow: '#ff2db2',
-      glowSecundario: '#8b5cf6',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#ff2db2',
-      corBordaSecundaria: '#8b5cf6',
-      corFundoRetangulo: '#1a0822',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#fff4fb',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Aurora fria',
-      descricao: 'Mistura suave de azul, lilas e verde frio.',
-      classe: 'estilo-aurora-fria',
-      colorDark: '#2f5cff',
-      colorLight: '#eef7ff',
-      icone: 'waves',
-      glow: '#38bdf8',
-      glowSecundario: '#a78bfa',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#38bdf8',
-      corBordaSecundaria: '#a78bfa',
-      corFundoRetangulo: '#eef7ff',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#102452',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Luxo violeta',
-      descricao: 'Escuro elegante com violeta profundo.',
-      classe: 'estilo-luxo-violeta',
-      colorDark: '#f5edff',
-      colorLight: '#190a2d',
-      icone: 'diamond',
-      glow: '#b625ff',
-      glowSecundario: '#ff2db2',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#b625ff',
-      corBordaSecundaria: '#ff2db2',
-      corFundoRetangulo: '#190a2d',
-      cantosArredondados: true,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#f5edff',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Minimal cinza',
-      descricao: 'Claro, neutro e profissional.',
-      classe: 'estilo-minimal-cinza',
-      colorDark: '#263241',
-      colorLight: '#f3f4f6',
-      icone: 'crop_square',
-      glow: '#94a3b8',
-      glowSecundario: '#cbd5e1',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#94a3b8',
-      corBordaSecundaria: '#cbd5e1',
-      corFundoRetangulo: '#f3f4f6',
-      cantosArredondados: false,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#263241',
-      iluminarTitulo: false
-    },
-    {
-      nome: 'Terminal neon',
-      descricao: 'Inspirado em terminal, com glow futurista.',
-      classe: 'estilo-terminal-neon',
-      colorDark: '#7cffd9',
-      colorLight: '#04120f',
-      icone: 'terminal',
-      glow: '#7cffd9',
-      glowSecundario: '#00d0ff',
-      exibirBorda: true,
-      quantidadeBordas: 1,
-      corBorda: '#7cffd9',
-      corBordaSecundaria: '#00d0ff',
-      corFundoRetangulo: '#04120f',
-      cantosArredondados: false,
-      cantosQrCodeArredondados: false,
-      formatoModulo: 'quadrado',
-      textoTitulo: '#d9fff5',
-      iluminarTitulo: false
+      iluminarTitulo: false,
+      iluminarBordaPrincipal: true,
+      iluminarBordaSecundaria: true,
+      exibirTitulo: true,
+      exibirRetangulo: true,
+      exibirLogo: true
     }
   ];
 
-  estiloSelecionado: EstiloQrCode = this.estilos[3];
+  estiloSelecionado: EstiloQrCode = this.estilos[0];
   isBrowser: boolean;
 
   constructor(private dataService: DataService, @Inject(PLATFORM_ID) platformId: Object) {
@@ -377,6 +155,21 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
 
   selecionarEstilo(estilo: EstiloQrCode) {
     this.estiloSelecionado = estilo;
+    if (estilo.personalizado) {
+      if (estilo.logotipoDataUrl) {
+        const imagem = new Image();
+        imagem.onload = () => {
+          this.logotipo = imagem;
+          this.nomeLogotipo = estilo.nomeLogotipo || '';
+          this.agendarRenderizacao();
+        };
+        imagem.src = estilo.logotipoDataUrl;
+        return;
+      } else {
+        this.logotipo = undefined;
+        this.nomeLogotipo = '';
+      }
+    }
     this.agendarRenderizacao();
   }
 
@@ -387,8 +180,20 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  fixarMenuEsquerda() {
+    if (typeof window === 'undefined') return;
+    setTimeout(() => {
+      const pane = document.querySelector('.cdk-overlay-pane:has(.menu-estilo-qrcode)') as HTMLElement | null;
+      if (!pane) return;
+      pane.style.left = '0.75rem';
+      pane.style.right = 'auto';
+      pane.style.transform = 'none';
+    }, 0);
+  }
+
   abrirModalEstilo() {
     this.novoEstilo = this.criarEstiloInicial();
+    this.secaoModalAtiva = 'geral';
     this.modalEstiloAberto = true;
   }
 
@@ -442,6 +247,20 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
     this.fecharModalEstilo();
   }
 
+  excluirEstiloPersonalizado(estilo: EstiloQrCode, evento: Event) {
+    evento.stopPropagation();
+    const index = this.estilos.indexOf(estilo);
+    if (index === -1) {
+      return;
+    }
+    this.estilos.splice(index, 1);
+    if (this.estiloSelecionado === estilo) {
+      this.estiloSelecionado = this.estilos[0];
+    }
+    this.persistirEstilosPersonalizados();
+    this.agendarRenderizacao();
+  }
+
   atualizarEstilo(estilo: EstiloQrCode) {
     if (estilo.personalizado) {
       this.persistirEstilosPersonalizados();
@@ -457,7 +276,9 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       descricao: 'Estilo criado por você.',
       classe: 'estilo-personalizado',
       icone: 'palette',
-      personalizado: true
+      personalizado: true,
+      logotipoDataUrl: this.logotipo?.src || undefined,
+      nomeLogotipo: this.nomeLogotipo || undefined
     };
   }
 
@@ -488,6 +309,11 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       formatoModulo: 'quadrado',
       textoTitulo: '#581c87',
       iluminarTitulo: false,
+      iluminarBordaPrincipal: true,
+      iluminarBordaSecundaria: true,
+      exibirTitulo: true,
+      exibirRetangulo: true,
+      exibirLogo: true,
       personalizado: true
     };
   }
@@ -545,6 +371,11 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       imagem.onload = () => {
         this.logotipo = imagem;
         this.nomeLogotipo = arquivo.name;
+        if (this.estiloSelecionado.personalizado) {
+          this.estiloSelecionado.logotipoDataUrl = imagem.src;
+          this.estiloSelecionado.nomeLogotipo = arquivo.name;
+          this.persistirEstilosPersonalizados();
+        }
         this.agendarRenderizacao();
       };
       imagem.onerror = () => {
@@ -561,6 +392,11 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
     input.value = '';
     this.logotipo = undefined;
     this.nomeLogotipo = '';
+    if (this.estiloSelecionado.personalizado) {
+      this.estiloSelecionado.logotipoDataUrl = undefined;
+      this.estiloSelecionado.nomeLogotipo = undefined;
+      this.persistirEstilosPersonalizados();
+    }
     this.agendarRenderizacao();
   }
 
@@ -615,13 +451,13 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const titulo = this.tituloQrCode.trim();
+    const titulo = this.estiloSelecionado.exibirTitulo ? this.tituloQrCode.trim() : '';
     const padding = 72;
     const larguraQr = origem.width;
     const alturaQr = origem.height;
     const tituloAltura = titulo ? Math.ceil(this.tamanhoTexto * 1.75) : 0;
     const espacoTitulo = titulo ? 18 : 0;
-    const dimensoesLogotipo = this.calcularDimensoesLogotipo(larguraQr);
+    const dimensoesLogotipo = this.estiloSelecionado.exibirLogo ? this.calcularDimensoesLogotipo(larguraQr) : undefined;
     const espacoLogotipo = dimensoesLogotipo ? 22 : 0;
     const largura = larguraQr + padding * 2;
     const altura = alturaQr + padding * 2 + tituloAltura + espacoTitulo
@@ -639,8 +475,10 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
     }
 
     contexto.clearRect(0, 0, largura, altura);
-    this.desenharFundoRetangulo(contexto, largura, altura, padding);
-    this.desenharContorno(contexto, largura, altura, padding);
+    if (this.estiloSelecionado.exibirRetangulo) {
+      this.desenharFundoRetangulo(contexto, largura, altura, padding);
+      this.desenharContorno(contexto, largura, altura, padding);
+    }
 
     if (titulo) {
       contexto.save();
@@ -793,8 +631,8 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
 
     contexto.save();
     contexto.lineWidth = 3;
-    contexto.shadowColor = this.estiloSelecionado.glow;
-    contexto.shadowBlur = 26;
+    contexto.shadowColor = this.estiloSelecionado.iluminarBordaPrincipal ? this.estiloSelecionado.glow : 'transparent';
+    contexto.shadowBlur = this.estiloSelecionado.iluminarBordaPrincipal ? 26 : 0;
     contexto.strokeStyle = this.estiloSelecionado.corBorda;
     this.desenharRetanguloArredondado(contexto, x, y, w, h, raio);
     contexto.stroke();
@@ -804,8 +642,8 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    contexto.shadowColor = this.estiloSelecionado.glowSecundario;
-    contexto.shadowBlur = 34;
+    contexto.shadowColor = this.estiloSelecionado.iluminarBordaSecundaria ? this.estiloSelecionado.glowSecundario : 'transparent';
+    contexto.shadowBlur = this.estiloSelecionado.iluminarBordaSecundaria ? 34 : 0;
     contexto.strokeStyle = this.estiloSelecionado.corBordaSecundaria;
     contexto.lineWidth = 1.5;
     this.desenharRetanguloArredondado(contexto, x + 8, y + 8, w - 16, h - 16, Math.max(0, raio - 6));
@@ -837,8 +675,8 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
     contexto.closePath();
   }
 
-  private nomeArquivoDownload() {
-    const nome = this.tituloQrCode.trim() || 'qrcode';
-    return `${nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9-_]+/g, '-').replace(/^-|-$/g, '').toLowerCase() || 'qrcode'}.png`;
+  private nomeArquivoDownload(): string {
+    const titulo = this.tituloQrCode.trim() || 'qrcode';
+    return titulo.toLowerCase().replace(/\s+/g, '-') + '.png';
   }
 }
