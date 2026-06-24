@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, PLATFORM_ID, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatButtonModule } from '@angular/material/button';
@@ -347,8 +347,11 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
   ];
 
   estiloSelecionado: EstiloQrCode = this.estilos[3];
+  isBrowser: boolean;
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, @Inject(PLATFORM_ID) platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
     this.dataService.setTituloAplicacao('Texto para QrCode');

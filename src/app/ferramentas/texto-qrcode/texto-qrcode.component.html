@@ -1,117 +1,97 @@
 <div class="qrcode-layout">
     <section class="painel-controles">
         <div class="campos-qrcode">
-            <div class="coluna-qrcode">
-                <mat-form-field appearance="outline" class="campo-qrcode">
-                    <mat-label>Texto para conversao em QRCode</mat-label>
-                    <input [(ngModel)]="texto" (ngModelChange)="agendarRenderizacao()" matInput
-                        placeholder="URL, texto ou codigo para gerar">
-                    <mat-icon matSuffix>abc</mat-icon>
-                </mat-form-field>
+            <mat-form-field appearance="outline" class="campo-qrcode">
+                <mat-label>Texto para conversao em QRCode</mat-label>
+                <input [(ngModel)]="texto" (ngModelChange)="agendarRenderizacao()" matInput
+                    placeholder="URL, texto ou codigo para gerar">
+                <mat-icon matSuffix>abc</mat-icon>
+            </mat-form-field>
 
-                <div class="controle-tamanho">
-                    <div class="controle-tamanho-cabecalho">
-                        <div class="controle-tamanho-titulo">
-                            <span class="controle-tamanho-icone" aria-hidden="true">
-                                <mat-icon>aspect_ratio</mat-icon>
-                            </span>
-                            <span>
-                                <label id="tamanho-label" for="tamanho-qrcode">Tamanho</label>
-                                <small>Defina a resolução do arquivo final</small>
-                            </span>
-                        </div>
+            <mat-form-field appearance="outline" class="campo-qrcode">
+                <mat-label>Titulo do QRCode</mat-label>
+                <input [(ngModel)]="tituloQrCode" (ngModelChange)="agendarRenderizacao()" matInput
+                    placeholder="Ex.: Cardapio, Pix, Convite">
+                <mat-icon matSuffix>title</mat-icon>
+            </mat-form-field>
+        </div>
 
-                        <output class="controle-tamanho-valor" for="tamanho-qrcode" aria-live="polite">
-                            {{ tamanho }} <small>px</small>
-                        </output>
-                    </div>
-
-                    <div class="controle-tamanho-slider">
-                        <span aria-hidden="true">100</span>
-                        <mat-slider class="slide-container" min="100" max="360" step="1" discrete>
-                            <input id="tamanho-qrcode" matSliderThumb [(ngModel)]="tamanho"
-                                (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-label"
-                                [attr.aria-valuetext]="tamanho + ' pixels'">
-                        </mat-slider>
-                        <span aria-hidden="true">360</span>
-                    </div>
-                </div>
-
-                <div class="controle-logo" [class.logo-selecionado]="nomeLogotipo">
-                    <input #logoInput class="arquivo-logo-input" type="file"
-                        accept="image/png,image/jpeg,image/webp,image/svg+xml" (change)="selecionarLogotipo($event)">
-                    <button mat-stroked-button type="button" class="botao-logo" (click)="logoInput.click()">
-                        <mat-icon>{{ nomeLogotipo ? 'image' : 'add_photo_alternate' }}</mat-icon>
-                        <span>
-                            <strong>{{ nomeLogotipo ? 'Trocar logotipo' : 'Adicionar logotipo' }}</strong>
-                            <small>{{ nomeLogotipo || 'PNG, JPG, WEBP ou SVG' }}</small>
+        <div class="controles-tamanho">
+            <div class="controle-tamanho">
+                <div class="controle-tamanho-cabecalho">
+                    <div class="controle-tamanho-titulo">
+                        <span class="controle-tamanho-icone" aria-hidden="true">
+                            <mat-icon>aspect_ratio</mat-icon>
                         </span>
-                    </button>
-                    <button *ngIf="nomeLogotipo" mat-icon-button type="button" class="botao-remover-logo"
-                        (click)="removerLogotipo(logoInput)" aria-label="Remover logotipo">
-                        <mat-icon>close</mat-icon>
-                    </button>
+                        <span>
+                            <label id="tamanho-label" for="tamanho-qrcode">Tamanho</label>
+                            <small>Resolução do arquivo final</small>
+                        </span>
+                    </div>
+                    <output class="controle-tamanho-valor" for="tamanho-qrcode" aria-live="polite">
+                        {{ tamanho }} <small>px</small>
+                    </output>
+                </div>
+                <div class="controle-tamanho-slider">
+                    <span aria-hidden="true">100</span>
+                    <mat-slider class="slide-container" min="100" max="360" step="1" discrete>
+                        <input id="tamanho-qrcode" matSliderThumb [(ngModel)]="tamanho"
+                            (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-label"
+                            [attr.aria-valuetext]="tamanho + ' pixels'">
+                    </mat-slider>
+                    <span aria-hidden="true">360</span>
                 </div>
             </div>
 
-            <div class="coluna-qrcode">
-                <mat-form-field appearance="outline" class="campo-qrcode">
-                    <mat-label>Titulo do QRCode</mat-label>
-                    <input [(ngModel)]="tituloQrCode" (ngModelChange)="agendarRenderizacao()" matInput
-                        placeholder="Ex.: Cardapio, Pix, Convite">
-                    <mat-icon matSuffix>title</mat-icon>
-                </mat-form-field>
-
-                <div class="controle-tamanho controle-tamanho-secundario">
-                    <div class="controle-tamanho-cabecalho">
-                        <div class="controle-tamanho-titulo">
-                            <span class="controle-tamanho-icone" aria-hidden="true">
-                                <mat-icon>format_size</mat-icon>
-                            </span>
-                            <span>
-                                <label id="tamanho-texto-label" for="tamanho-texto">Tamanho do texto</label>
-                                <small>Ajuste o título do QRCode</small>
-                            </span>
-                        </div>
-                        <output class="controle-tamanho-valor" for="tamanho-texto" aria-live="polite">
-                            {{ tamanhoTexto }} <small>px</small>
-                        </output>
+            <div class="controle-tamanho">
+                <div class="controle-tamanho-cabecalho">
+                    <div class="controle-tamanho-titulo">
+                        <span class="controle-tamanho-icone" aria-hidden="true">
+                            <mat-icon>format_size</mat-icon>
+                        </span>
+                        <span>
+                            <label id="tamanho-texto-label" for="tamanho-texto">Tamanho do texto</label>
+                            <small>Ajuste o título do QRCode</small>
+                        </span>
                     </div>
-                    <div class="controle-tamanho-slider">
-                        <span aria-hidden="true">12</span>
-                        <mat-slider class="slide-container" min="12" max="48" step="1" discrete>
-                            <input id="tamanho-texto" matSliderThumb [(ngModel)]="tamanhoTexto"
-                                (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-texto-label"
-                                [attr.aria-valuetext]="tamanhoTexto + ' pixels'">
-                        </mat-slider>
-                        <span aria-hidden="true">48</span>
-                    </div>
+                    <output class="controle-tamanho-valor" for="tamanho-texto" aria-live="polite">
+                        {{ tamanhoTexto }} <small>px</small>
+                    </output>
                 </div>
+                <div class="controle-tamanho-slider">
+                    <span aria-hidden="true">12</span>
+                    <mat-slider class="slide-container" min="12" max="48" step="1" discrete>
+                        <input id="tamanho-texto" matSliderThumb [(ngModel)]="tamanhoTexto"
+                            (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-texto-label"
+                            [attr.aria-valuetext]="tamanhoTexto + ' pixels'">
+                    </mat-slider>
+                    <span aria-hidden="true">48</span>
+                </div>
+            </div>
 
-                <div class="controle-tamanho controle-tamanho-secundario">
-                    <div class="controle-tamanho-cabecalho">
-                        <div class="controle-tamanho-titulo">
-                            <span class="controle-tamanho-icone" aria-hidden="true">
-                                <mat-icon>photo_size_select_large</mat-icon>
-                            </span>
-                            <span>
-                                <label id="tamanho-logo-label" for="tamanho-logo">Tamanho do logotipo</label>
-                                <small>Redimensione mantendo a proporção</small>
-                            </span>
-                        </div>
-                        <output class="controle-tamanho-valor" for="tamanho-logo" aria-live="polite">
-                            {{ tamanhoLogotipo }} <small>%</small>
-                        </output>
+            <div class="controle-tamanho">
+                <div class="controle-tamanho-cabecalho">
+                    <div class="controle-tamanho-titulo">
+                        <span class="controle-tamanho-icone" aria-hidden="true">
+                            <mat-icon>photo_size_select_large</mat-icon>
+                        </span>
+                        <span>
+                            <label id="tamanho-logo-label" for="tamanho-logo">Tamanho do logotipo</label>
+                            <small>Redimensione a proporção</small>
+                        </span>
                     </div>
-                    <div class="controle-tamanho-slider">
-                        <span aria-hidden="true">25</span>
-                        <mat-slider class="slide-container" min="25" max="200" step="5" discrete>
-                            <input id="tamanho-logo" matSliderThumb [(ngModel)]="tamanhoLogotipo"
-                                (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-logo-label"
-                                [attr.aria-valuetext]="tamanhoLogotipo + ' por cento'">
-                        </mat-slider>
-                        <span aria-hidden="true">200</span>
-                    </div>
+                    <output class="controle-tamanho-valor" for="tamanho-logo" aria-live="polite">
+                        {{ tamanhoLogotipo }} <small>%</small>
+                    </output>
+                </div>
+                <div class="controle-tamanho-slider">
+                    <span aria-hidden="true">25</span>
+                    <mat-slider class="slide-container" min="25" max="200" step="5" discrete>
+                        <input id="tamanho-logo" matSliderThumb [(ngModel)]="tamanhoLogotipo"
+                            (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-logo-label"
+                            [attr.aria-valuetext]="tamanhoLogotipo + ' por cento'">
+                    </mat-slider>
+                    <span aria-hidden="true">200</span>
                 </div>
             </div>
         </div>
@@ -233,15 +213,24 @@
             </div>
 
             <div class="qrcode-source" #previewQrCode>
-                <qrcode [qrdata]="texto" [width]="tamanho" [colorDark]="estiloSelecionado.colorDark"
+                <qrcode *ngIf="isBrowser" [qrdata]="texto" [width]="tamanho" [colorDark]="estiloSelecionado.colorDark"
                     [colorLight]="estiloSelecionado.colorLight" [margin]="2" errorCorrectionLevel="M"
                     (qrCodeURL)="agendarRenderizacao()"></qrcode>
             </div>
 
-            <button mat-raised-button color="primary" type="button" class="botao-download" (click)="baixarPng()">
-                <mat-icon>download</mat-icon>
-                Baixar PNG
-            </button>
+            <input #logoInput class="arquivo-logo-input" type="file"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml" (change)="selecionarLogotipo($event)">
+
+            <div class="botoes-preview">
+                <button mat-raised-button color="primary" type="button" (click)="logoInput.click()">
+                    <mat-icon>upload</mat-icon>
+                    {{ nomeLogotipo ? 'Trocar logotipo' : 'Adicionar logotipo' }}
+                </button>
+                <button mat-raised-button color="primary" type="button" (click)="baixarPng()">
+                    <mat-icon>download</mat-icon>
+                    Baixar PNG
+                </button>
+            </div>
         </div>
     </section>
 </div>
