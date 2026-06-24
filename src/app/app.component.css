@@ -9,6 +9,10 @@
     color: var(--text-main);
 }
 
+.container-card-principal .mat-mdc-card {
+    border-radius: 1em;
+}
+
 .body-wrapper {
     display: flex; /* Habilita Flexbox */
     flex-direction: column; /* Empilha os filhos verticalmente */

@@ -258,26 +258,56 @@ input:not([type="hidden"]):not([type="file"]):not([type="range"]) {
   padding: 0.2em;
 }
 
+.home-intro-container {
+  position: relative;
+}
+
+.home-intro-glow {
+  position: absolute;
+  inset: -4px;
+  z-index: 0;
+  border-radius: calc(0.5em + 4px);
+  overflow: hidden;
+  filter: blur(8px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.home-intro-glow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400%;
+  aspect-ratio: 1;
+  background: conic-gradient(
+    #ff0000 0deg,
+    #ff8000 30deg,
+    #ffff00 60deg,
+    #80ff00 90deg,
+    #00ff00 120deg,
+    #00ff80 150deg,
+    #00ffff 180deg,
+    #0080ff 210deg,
+    #0000ff 240deg,
+    #8000ff 270deg,
+    #ff00ff 300deg,
+    #ff0080 330deg,
+    #ff0000 360deg
+  );
+  transform: translate(-50%, -50%) rotate(0deg);
+  will-change: transform;
+  animation: home-rgb-spin 7s linear infinite;
+}
+
 .home-intro {
   position: relative;
+  z-index: 1;
   isolation: isolate;
-  contain: paint;
   padding: 1.2em 1.4em;
   overflow: hidden;
-  border: 1px solid transparent;
   border-radius: 0.5em;
-  background: conic-gradient(
-    #ff0048 0deg 51deg,
-    #ff00b8 51deg 102deg,
-    #9d00ff 102deg 153deg,
-    #0048ff 153deg 204deg,
-    #00c8ff 204deg 255deg,
-    #00e85c 255deg 306deg,
-    #ff3200 306deg 360deg
-  );
-  box-shadow:
-    0 18px 42px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(182, 37, 255, 0.15);
+  background: transparent;
 }
 
 .home-intro::before {
@@ -286,19 +316,25 @@ input:not([type="hidden"]):not([type="file"]):not([type="range"]) {
   z-index: -2;
   top: 50%;
   left: 50%;
-  width: 110%;
+  width: 400%;
   aspect-ratio: 1;
   pointer-events: none;
   background: conic-gradient(
-    #ff0048 0deg 51deg,
-    #ff00b8 51deg 102deg,
-    #9d00ff 102deg 153deg,
-    #0048ff 153deg 204deg,
-    #00c8ff 204deg 255deg,
-    #00e85c 255deg 306deg,
-    #ff3200 306deg 360deg
+    #ff0000 0deg,
+    #ff8000 30deg,
+    #ffff00 60deg,
+    #80ff00 90deg,
+    #00ff00 120deg,
+    #00ff80 150deg,
+    #00ffff 180deg,
+    #0080ff 210deg,
+    #0000ff 240deg,
+    #8000ff 270deg,
+    #ff00ff 300deg,
+    #ff0080 330deg,
+    #ff0000 360deg
   );
-  transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  transform: translate(-50%, -50%) rotate(0deg);
   will-change: transform;
   animation: home-rgb-spin 7s linear infinite;
 }
@@ -1254,9 +1290,10 @@ input:not([type="hidden"]):not([type="file"]):not([type="range"]) {
 
 @keyframes home-rgb-spin {
   to {
-    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
+
 
 @keyframes orbit-light {
   to {
