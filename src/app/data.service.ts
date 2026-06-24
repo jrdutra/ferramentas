@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  public tituloAplicacao: any;
+  private readonly tituloAplicacaoSubject = new BehaviorSubject<string>('Inicio');
+  readonly tituloAplicacao$ = this.tituloAplicacaoSubject.asObservable();
 
   constructor() { }
 
-  setTituloAplicacao(valor: any) {
-    this.tituloAplicacao = valor;
+  setTituloAplicacao(valor: string) {
+    this.tituloAplicacaoSubject.next(valor);
   }
 
   getTituloAplicacao() {
-    return this.tituloAplicacao;
+    return this.tituloAplicacaoSubject.value;
   }
 }

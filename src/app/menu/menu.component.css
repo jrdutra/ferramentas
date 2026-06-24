@@ -61,16 +61,20 @@
 .div-rodape::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background:
+  inset: 0 auto 0 0;
+  width: 200%;
+  background-image:
     linear-gradient(90deg, transparent, rgba(255, 45, 178, 0.14), rgba(91, 124, 255, 0.16), transparent);
+  background-repeat: repeat-x;
+  background-size: 50% 100%;
   animation: titulo-luz 12s linear infinite;
   will-change: transform;
   opacity: 0.8;
 }
 
-.div-rodape > * {
+.titulo-aplicacao {
   position: relative;
+  z-index: 1;
 }
 
 .mat-toolbar {
@@ -110,10 +114,10 @@
 
 @keyframes titulo-luz {
   from {
-    transform: translateX(-60%);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(60%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 

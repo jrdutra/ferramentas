@@ -12,6 +12,8 @@ import { create as criarQrCode } from 'qrcode';
 import { DataService } from '../../data.service';
 
 interface EstiloQrCode {
+  id?: string;
+  personalizado?: boolean;
   nome: string;
   descricao: string;
   classe: string;
@@ -46,14 +48,62 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
   texto: string = 'www.google.com.br';
   tituloQrCode: string = 'Meu QRCode';
   tamanho: number = 256;
+  tamanhoTexto: number = 26;
+  tamanhoLogotipo: number = 100;
   nomeLogotipo: string = '';
   private logotipo?: HTMLImageElement;
   private renderizacaoAgendada?: number;
-  private frameRenderizacao?: number;
   private novaTentativaAgendada?: number;
   private cacheQrRedondo?: { chave: string; canvas: HTMLCanvasElement };
+  private readonly chaveEstilosPersonalizados = 'qrcode-estilos-personalizados';
+
+  modalEstiloAberto = false;
+  modalNomeEstiloAberto = false;
+  nomeNovoEstilo = '';
+  private estiloBaseParaSalvar?: EstiloQrCode;
+  novoEstilo: EstiloQrCode = this.criarEstiloInicial();
 
   estilos: EstiloQrCode[] = [
+    {
+      nome: 'Básico',
+      descricao: 'Preto no branco, simples e direto.',
+      classe: 'estilo-basico',
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      icone: 'qr_code_2',
+      glow: '#000000',
+      glowSecundario: '#000000',
+      exibirBorda: false,
+      quantidadeBordas: 1,
+      corBorda: '#000000',
+      corBordaSecundaria: '#000000',
+      corFundoRetangulo: '#ffffff',
+      cantosArredondados: false,
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#000000',
+      iluminarTitulo: false
+    },
+    {
+      nome: 'Básico Escuro',
+      descricao: 'Branco sobre azul-marinho, com alto contraste.',
+      classe: 'estilo-basico-escuro',
+      colorDark: '#ffffff',
+      colorLight: '#07152f',
+      icone: 'dark_mode',
+      glow: '#ffffff',
+      glowSecundario: '#ffffff',
+      exibirBorda: false,
+      quantidadeBordas: 1,
+      corBorda: '#ffffff',
+      corBordaSecundaria: '#ffffff',
+      corFundoRetangulo: '#07152f',
+      cantosArredondados: false,
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#ffffff',
+      iluminarTitulo: false
+    },
     {
       nome: 'Escuro classico',
       descricao: 'Alto contraste, simples e seguro para leitura.',
@@ -296,12 +346,13 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
     }
   ];
 
-  estiloSelecionado: EstiloQrCode = this.estilos[1];
+  estiloSelecionado: EstiloQrCode = this.estilos[3];
 
   constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
     this.dataService.setTituloAplicacao('Texto para QrCode');
+    this.carregarEstilosPersonalizados();
   }
 
   ngAfterViewInit(): void {
@@ -315,9 +366,6 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
 
     if (this.renderizacaoAgendada !== undefined) {
       window.clearTimeout(this.renderizacaoAgendada);
-    }
-    if (this.frameRenderizacao !== undefined) {
-      window.cancelAnimationFrame(this.frameRenderizacao);
     }
     if (this.novaTentativaAgendada !== undefined) {
       window.clearTimeout(this.novaTentativaAgendada);
@@ -334,6 +382,150 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       evento.preventDefault();
       this.selecionarEstilo(estilo);
     }
+  }
+
+  abrirModalEstilo() {
+    this.novoEstilo = this.criarEstiloInicial();
+    this.modalEstiloAberto = true;
+  }
+
+  fecharModalEstilo() {
+    this.modalEstiloAberto = false;
+  }
+
+  fecharModalPeloFundo(evento: MouseEvent) {
+    if (evento.target === evento.currentTarget) {
+      this.fecharModalEstilo();
+    }
+  }
+
+  abrirModalSalvarEstilo(estilo: EstiloQrCode) {
+    this.estiloBaseParaSalvar = estilo;
+    this.nomeNovoEstilo = '';
+    this.modalNomeEstiloAberto = true;
+  }
+
+  fecharModalSalvarEstilo() {
+    this.modalNomeEstiloAberto = false;
+    this.nomeNovoEstilo = '';
+    this.estiloBaseParaSalvar = undefined;
+  }
+
+  fecharModalSalvarPeloFundo(evento: MouseEvent) {
+    if (evento.target === evento.currentTarget) {
+      this.fecharModalSalvarEstilo();
+    }
+  }
+
+  salvarCopiaEstilo() {
+    const nome = this.nomeNovoEstilo.trim();
+    if (!nome || !this.estiloBaseParaSalvar) {
+      return;
+    }
+
+    this.adicionarEstiloPersonalizado(
+      this.criarEstiloPersonalizado(this.estiloBaseParaSalvar, nome)
+    );
+    this.fecharModalSalvarEstilo();
+  }
+
+  salvarNovoEstilo() {
+    const nome = this.novoEstilo.nome.trim();
+    if (!nome) {
+      return;
+    }
+
+    this.adicionarEstiloPersonalizado(this.criarEstiloPersonalizado(this.novoEstilo, nome));
+    this.fecharModalEstilo();
+  }
+
+  atualizarEstilo(estilo: EstiloQrCode) {
+    if (estilo.personalizado) {
+      this.persistirEstilosPersonalizados();
+    }
+    this.agendarRenderizacao();
+  }
+
+  private criarEstiloPersonalizado(base: EstiloQrCode, nome: string): EstiloQrCode {
+    return {
+      ...base,
+      id: this.gerarIdEstilo(),
+      nome,
+      descricao: 'Estilo criado por você.',
+      classe: 'estilo-personalizado',
+      icone: 'palette',
+      personalizado: true
+    };
+  }
+
+  private adicionarEstiloPersonalizado(estilo: EstiloQrCode) {
+    const quantidadePersonalizados = this.estilos.filter(item => item.personalizado).length;
+    this.estilos.splice(quantidadePersonalizados, 0, estilo);
+    this.persistirEstilosPersonalizados();
+    this.selecionarEstilo(estilo);
+  }
+
+  private criarEstiloInicial(): EstiloQrCode {
+    return {
+      nome: '',
+      descricao: 'Estilo criado por você.',
+      classe: 'estilo-personalizado',
+      colorDark: '#7c3aed',
+      colorLight: '#fff7ff',
+      icone: 'palette',
+      glow: '#ec4899',
+      glowSecundario: '#a855f7',
+      exibirBorda: true,
+      quantidadeBordas: 1,
+      corBorda: '#ec4899',
+      corBordaSecundaria: '#a855f7',
+      corFundoRetangulo: '#fff7ff',
+      cantosArredondados: true,
+      cantosQrCodeArredondados: false,
+      formatoModulo: 'quadrado',
+      textoTitulo: '#581c87',
+      iluminarTitulo: false,
+      personalizado: true
+    };
+  }
+
+  private carregarEstilosPersonalizados() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    try {
+      const armazenados = JSON.parse(window.localStorage.getItem(this.chaveEstilosPersonalizados) ?? '[]');
+      if (!Array.isArray(armazenados)) {
+        return;
+      }
+
+      const estilosValidos = armazenados
+        .filter(item => item && typeof item === 'object' && typeof item.nome === 'string')
+        .map(item => ({ ...this.criarEstiloInicial(), ...item, classe: 'estilo-personalizado', personalizado: true }));
+      this.estilos.unshift(...estilosValidos);
+    } catch {
+      // Mantém os estilos nativos caso o conteúdo do localStorage esteja inválido.
+    }
+  }
+
+  private persistirEstilosPersonalizados() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    try {
+      const personalizados = this.estilos.filter(estilo => estilo.personalizado);
+      window.localStorage.setItem(this.chaveEstilosPersonalizados, JSON.stringify(personalizados));
+    } catch {
+      // O navegador pode bloquear ou estar sem espaço no armazenamento local.
+    }
+  }
+
+  private gerarIdEstilo() {
+    return typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `estilo-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   }
 
   selecionarLogotipo(evento: Event) {
@@ -388,7 +580,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.renderizacaoAgendada !== undefined || this.frameRenderizacao !== undefined) {
+    if (this.renderizacaoAgendada !== undefined) {
       return;
     }
 
@@ -399,10 +591,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
 
     this.renderizacaoAgendada = window.setTimeout(() => {
       this.renderizacaoAgendada = undefined;
-      this.frameRenderizacao = window.requestAnimationFrame(() => {
-        this.frameRenderizacao = undefined;
-        this.renderizarPreview(0);
-      });
+      this.renderizarPreview(0);
     }, 16);
   }
 
@@ -410,7 +599,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
     const origem = this.previewQrCode?.nativeElement.querySelector('canvas');
     const destino = this.previewCanvas?.nativeElement;
 
-    if (!origem || !destino) {
+    if (!origem || !destino || origem.width !== this.tamanho || origem.height !== this.tamanho) {
       if (typeof window !== 'undefined' && tentativa < 5) {
         if (this.novaTentativaAgendada !== undefined) {
           window.clearTimeout(this.novaTentativaAgendada);
@@ -427,7 +616,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
     const padding = 72;
     const larguraQr = origem.width;
     const alturaQr = origem.height;
-    const tituloAltura = titulo ? 46 : 0;
+    const tituloAltura = titulo ? Math.ceil(this.tamanhoTexto * 1.75) : 0;
     const espacoTitulo = titulo ? 18 : 0;
     const dimensoesLogotipo = this.calcularDimensoesLogotipo(larguraQr);
     const espacoLogotipo = dimensoesLogotipo ? 22 : 0;
@@ -452,7 +641,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
 
     if (titulo) {
       contexto.save();
-      contexto.font = '700 26px Roboto, Arial, sans-serif';
+      contexto.font = `700 ${this.tamanhoTexto}px Roboto, Arial, sans-serif`;
       contexto.fillStyle = this.estiloSelecionado.textoTitulo;
       contexto.textAlign = 'center';
       contexto.textBaseline = 'middle';
@@ -577,8 +766,9 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       return undefined;
     }
 
-    const larguraMaxima = Math.min(larguraQr * 0.42, 144);
-    const alturaMaxima = 72;
+    const fatorTamanho = this.tamanhoLogotipo / 100;
+    const larguraMaxima = Math.min(larguraQr * 0.42, 144) * fatorTamanho;
+    const alturaMaxima = 72 * fatorTamanho;
     const escala = Math.min(larguraMaxima / larguraOriginal, alturaMaxima / alturaOriginal);
 
     return {

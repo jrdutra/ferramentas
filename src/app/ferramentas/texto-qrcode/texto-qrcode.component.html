@@ -36,19 +36,10 @@
                         <span aria-hidden="true">360</span>
                     </div>
                 </div>
-            </div>
-
-            <div class="coluna-qrcode">
-                <mat-form-field appearance="outline" class="campo-qrcode">
-                    <mat-label>Titulo do QRCode</mat-label>
-                    <input [(ngModel)]="tituloQrCode" (ngModelChange)="agendarRenderizacao()" matInput
-                        placeholder="Ex.: Cardapio, Pix, Convite">
-                    <mat-icon matSuffix>title</mat-icon>
-                </mat-form-field>
 
                 <div class="controle-logo" [class.logo-selecionado]="nomeLogotipo">
-                    <input #logoInput class="arquivo-logo-input" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"
-                        (change)="selecionarLogotipo($event)">
+                    <input #logoInput class="arquivo-logo-input" type="file"
+                        accept="image/png,image/jpeg,image/webp,image/svg+xml" (change)="selecionarLogotipo($event)">
                     <button mat-stroked-button type="button" class="botao-logo" (click)="logoInput.click()">
                         <mat-icon>{{ nomeLogotipo ? 'image' : 'add_photo_alternate' }}</mat-icon>
                         <span>
@@ -62,15 +53,84 @@
                     </button>
                 </div>
             </div>
+
+            <div class="coluna-qrcode">
+                <mat-form-field appearance="outline" class="campo-qrcode">
+                    <mat-label>Titulo do QRCode</mat-label>
+                    <input [(ngModel)]="tituloQrCode" (ngModelChange)="agendarRenderizacao()" matInput
+                        placeholder="Ex.: Cardapio, Pix, Convite">
+                    <mat-icon matSuffix>title</mat-icon>
+                </mat-form-field>
+
+                <div class="controle-tamanho controle-tamanho-secundario">
+                    <div class="controle-tamanho-cabecalho">
+                        <div class="controle-tamanho-titulo">
+                            <span class="controle-tamanho-icone" aria-hidden="true">
+                                <mat-icon>format_size</mat-icon>
+                            </span>
+                            <span>
+                                <label id="tamanho-texto-label" for="tamanho-texto">Tamanho do texto</label>
+                                <small>Ajuste o título do QRCode</small>
+                            </span>
+                        </div>
+                        <output class="controle-tamanho-valor" for="tamanho-texto" aria-live="polite">
+                            {{ tamanhoTexto }} <small>px</small>
+                        </output>
+                    </div>
+                    <div class="controle-tamanho-slider">
+                        <span aria-hidden="true">12</span>
+                        <mat-slider class="slide-container" min="12" max="48" step="1" discrete>
+                            <input id="tamanho-texto" matSliderThumb [(ngModel)]="tamanhoTexto"
+                                (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-texto-label"
+                                [attr.aria-valuetext]="tamanhoTexto + ' pixels'">
+                        </mat-slider>
+                        <span aria-hidden="true">48</span>
+                    </div>
+                </div>
+
+                <div class="controle-tamanho controle-tamanho-secundario">
+                    <div class="controle-tamanho-cabecalho">
+                        <div class="controle-tamanho-titulo">
+                            <span class="controle-tamanho-icone" aria-hidden="true">
+                                <mat-icon>photo_size_select_large</mat-icon>
+                            </span>
+                            <span>
+                                <label id="tamanho-logo-label" for="tamanho-logo">Tamanho do logotipo</label>
+                                <small>Redimensione mantendo a proporção</small>
+                            </span>
+                        </div>
+                        <output class="controle-tamanho-valor" for="tamanho-logo" aria-live="polite">
+                            {{ tamanhoLogotipo }} <small>%</small>
+                        </output>
+                    </div>
+                    <div class="controle-tamanho-slider">
+                        <span aria-hidden="true">25</span>
+                        <mat-slider class="slide-container" min="25" max="200" step="5" discrete>
+                            <input id="tamanho-logo" matSliderThumb [(ngModel)]="tamanhoLogotipo"
+                                (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-logo-label"
+                                [attr.aria-valuetext]="tamanhoLogotipo + ' por cento'">
+                        </mat-slider>
+                        <span aria-hidden="true">200</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="secao-estilos">
             <h3>Estilo do QRCode</h3>
             <div class="grade-estilos">
+                <button class="botao-estilo botao-criar-estilo" type="button" (click)="abrirModalEstilo()"
+                    aria-label="Criar um novo estilo de QRCode">
+                    <mat-icon>add</mat-icon>
+                    <strong>Criar estilo</strong>
+                    <span>Monte e salve seu próprio visual.</span>
+                </button>
                 <div class="botao-estilo" role="button" tabindex="0" *ngFor="let estilo of estilos"
-                    [class.estilo-selecionado]="estilo === estiloSelecionado" (click)="selecionarEstilo(estilo)"
+                    [class.estilo-selecionado]="estilo === estiloSelecionado"
+                    [class.estilo-criado]="estilo.personalizado" (click)="selecionarEstilo(estilo)"
                     (keydown)="selecionarEstiloPorTeclado($event, estilo)">
-                    <button mat-icon-button class="botao-menu-estilo" type="button" [matMenuTriggerFor]="menuEstilo"
+                    <button #menuTrigger="matMenuTrigger" mat-icon-button class="botao-menu-estilo" type="button"
+                        [matMenuTriggerFor]="menuEstilo"
                         (click)="$event.stopPropagation()" aria-label="Personalizar estilo do QRCode">
                         <mat-icon>tune</mat-icon>
                     </button>
@@ -83,41 +143,41 @@
                             <strong>Personalizar</strong>
                             <label>
                                 Cor escura do QRCode
-                                <input type="color" [(ngModel)]="estilo.colorDark" (ngModelChange)="agendarRenderizacao()">
+                                <input type="color" [(ngModel)]="estilo.colorDark" (ngModelChange)="atualizarEstilo(estilo)">
                             </label>
                             <label>
                                 Cor clara do QRCode
-                                <input type="color" [(ngModel)]="estilo.colorLight" (ngModelChange)="agendarRenderizacao()">
+                                <input type="color" [(ngModel)]="estilo.colorLight" (ngModelChange)="atualizarEstilo(estilo)">
                             </label>
                             <label>
                                 Fundo do retangulo
                                 <input type="color" [(ngModel)]="estilo.corFundoRetangulo"
-                                    (ngModelChange)="agendarRenderizacao()">
+                                    (ngModelChange)="atualizarEstilo(estilo)">
                             </label>
                             <label class="controle-checkbox">
                                 Cantos do cartao
                                 <input type="checkbox" [(ngModel)]="estilo.cantosArredondados"
-                                    (ngModelChange)="agendarRenderizacao()">
+                                    (ngModelChange)="atualizarEstilo(estilo)">
                             </label>
                             <label class="controle-checkbox">
                                 Cantos do QRCode
                                 <input type="checkbox" [(ngModel)]="estilo.cantosQrCodeArredondados"
-                                    (ngModelChange)="agendarRenderizacao()">
+                                    (ngModelChange)="atualizarEstilo(estilo)">
                             </label>
                             <label>
                                 Formato da informacao
-                                <select [(ngModel)]="estilo.formatoModulo" (ngModelChange)="agendarRenderizacao()">
+                                <select [(ngModel)]="estilo.formatoModulo" (ngModelChange)="atualizarEstilo(estilo)">
                                     <option value="quadrado">Quadrados</option>
                                     <option value="redondo">Bolinhas</option>
                                 </select>
                             </label>
                             <label class="controle-checkbox">
                                 Exibir bordas
-                                <input type="checkbox" [(ngModel)]="estilo.exibirBorda" (ngModelChange)="agendarRenderizacao()">
+                                <input type="checkbox" [(ngModel)]="estilo.exibirBorda" (ngModelChange)="atualizarEstilo(estilo)">
                             </label>
                             <label>
                                 Quantidade de bordas
-                                <select [(ngModel)]="estilo.quantidadeBordas" (ngModelChange)="agendarRenderizacao()"
+                                <select [(ngModel)]="estilo.quantidadeBordas" (ngModelChange)="atualizarEstilo(estilo)"
                                     [disabled]="!estilo.exibirBorda">
                                     <option [ngValue]="1">Uma borda</option>
                                     <option [ngValue]="2">Duas bordas</option>
@@ -125,33 +185,40 @@
                             </label>
                             <label>
                                 Cor da borda externa
-                                <input type="color" [(ngModel)]="estilo.corBorda" (ngModelChange)="agendarRenderizacao()"
+                                <input type="color" [(ngModel)]="estilo.corBorda" (ngModelChange)="atualizarEstilo(estilo)"
                                     [disabled]="!estilo.exibirBorda">
                             </label>
                             <label>
                                 Cor da borda interna
-                                <input type="color" [(ngModel)]="estilo.corBordaSecundaria" (ngModelChange)="agendarRenderizacao()"
+                                <input type="color" [(ngModel)]="estilo.corBordaSecundaria" (ngModelChange)="atualizarEstilo(estilo)"
                                     [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1">
                             </label>
                             <label>
                                 Iluminacao principal
-                                <input type="color" [(ngModel)]="estilo.glow" (ngModelChange)="agendarRenderizacao()"
+                                <input type="color" [(ngModel)]="estilo.glow" (ngModelChange)="atualizarEstilo(estilo)"
                                     [disabled]="!estilo.exibirBorda">
                             </label>
                             <label>
                                 Iluminacao secundaria
-                                <input type="color" [(ngModel)]="estilo.glowSecundario" (ngModelChange)="agendarRenderizacao()"
+                                <input type="color" [(ngModel)]="estilo.glowSecundario" (ngModelChange)="atualizarEstilo(estilo)"
                                     [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1">
                             </label>
                             <label>
                                 Cor do titulo
-                                <input type="color" [(ngModel)]="estilo.textoTitulo" (ngModelChange)="agendarRenderizacao()">
+                                <input type="color" [(ngModel)]="estilo.textoTitulo" (ngModelChange)="atualizarEstilo(estilo)">
                             </label>
                             <label class="controle-checkbox">
                                 Iluminar titulo
                                 <input type="checkbox" [(ngModel)]="estilo.iluminarTitulo"
-                                    (ngModelChange)="agendarRenderizacao()">
+                                    (ngModelChange)="atualizarEstilo(estilo)">
                             </label>
+                            <footer class="menu-estilo-acoes">
+                                <button mat-raised-button color="primary" type="button"
+                                    (click)="abrirModalSalvarEstilo(estilo); menuTrigger.closeMenu()">
+                                    <mat-icon>save</mat-icon>
+                                    Salvar estilo
+                                </button>
+                            </footer>
                         </div>
                     </mat-menu>
                 </div>
@@ -167,7 +234,8 @@
 
             <div class="qrcode-source" #previewQrCode>
                 <qrcode [qrdata]="texto" [width]="tamanho" [colorDark]="estiloSelecionado.colorDark"
-                    [colorLight]="estiloSelecionado.colorLight" [margin]="2" errorCorrectionLevel="M"></qrcode>
+                    [colorLight]="estiloSelecionado.colorLight" [margin]="2" errorCorrectionLevel="M"
+                    (qrCodeURL)="agendarRenderizacao()"></qrcode>
             </div>
 
             <button mat-raised-button color="primary" type="button" class="botao-download" (click)="baixarPng()">
@@ -175,6 +243,137 @@
                 Baixar PNG
             </button>
         </div>
+    </section>
+</div>
+
+<div *ngIf="modalEstiloAberto" class="modal-estilo-fundo" role="presentation"
+    (mousedown)="fecharModalPeloFundo($event)">
+    <section class="modal-estilo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-estilo">
+        <header class="modal-estilo-cabecalho">
+            <div>
+                <span class="modal-estilo-etiqueta">Novo estilo</span>
+                <h2 id="titulo-modal-estilo">Crie seu próprio visual</h2>
+                <p>Personalize cada detalhe e salve no seu navegador.</p>
+            </div>
+            <button mat-icon-button type="button" (click)="fecharModalEstilo()" aria-label="Fechar modal">
+                <mat-icon>close</mat-icon>
+            </button>
+        </header>
+
+        <div class="modal-estilo-conteudo menu-estilo-conteudo">
+            <label class="campo-nome-estilo">
+                Nome do estilo
+                <input type="text" [(ngModel)]="novoEstilo.nome" maxlength="40" placeholder="Ex.: Meu estilo roxo"
+                    (keydown.enter)="salvarNovoEstilo()">
+            </label>
+            <label>
+                Cor escura do QRCode
+                <input type="color" [(ngModel)]="novoEstilo.colorDark">
+            </label>
+            <label>
+                Cor clara do QRCode
+                <input type="color" [(ngModel)]="novoEstilo.colorLight">
+            </label>
+            <label>
+                Fundo do retângulo
+                <input type="color" [(ngModel)]="novoEstilo.corFundoRetangulo">
+            </label>
+            <label class="controle-checkbox">
+                Cantos do cartão
+                <input type="checkbox" [(ngModel)]="novoEstilo.cantosArredondados">
+            </label>
+            <label class="controle-checkbox">
+                Cantos do QRCode
+                <input type="checkbox" [(ngModel)]="novoEstilo.cantosQrCodeArredondados">
+            </label>
+            <label>
+                Formato da informação
+                <select [(ngModel)]="novoEstilo.formatoModulo">
+                    <option value="quadrado">Quadrados</option>
+                    <option value="redondo">Bolinhas</option>
+                </select>
+            </label>
+            <label class="controle-checkbox">
+                Exibir bordas
+                <input type="checkbox" [(ngModel)]="novoEstilo.exibirBorda">
+            </label>
+            <label>
+                Quantidade de bordas
+                <select [(ngModel)]="novoEstilo.quantidadeBordas" [disabled]="!novoEstilo.exibirBorda">
+                    <option [ngValue]="1">Uma borda</option>
+                    <option [ngValue]="2">Duas bordas</option>
+                </select>
+            </label>
+            <label>
+                Cor da borda externa
+                <input type="color" [(ngModel)]="novoEstilo.corBorda" [disabled]="!novoEstilo.exibirBorda">
+            </label>
+            <label>
+                Cor da borda interna
+                <input type="color" [(ngModel)]="novoEstilo.corBordaSecundaria"
+                    [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1">
+            </label>
+            <label>
+                Iluminação principal
+                <input type="color" [(ngModel)]="novoEstilo.glow" [disabled]="!novoEstilo.exibirBorda">
+            </label>
+            <label>
+                Iluminação secundária
+                <input type="color" [(ngModel)]="novoEstilo.glowSecundario"
+                    [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1">
+            </label>
+            <label>
+                Cor do título
+                <input type="color" [(ngModel)]="novoEstilo.textoTitulo">
+            </label>
+            <label class="controle-checkbox">
+                Iluminar título
+                <input type="checkbox" [(ngModel)]="novoEstilo.iluminarTitulo">
+            </label>
+        </div>
+
+        <footer class="modal-estilo-acoes">
+            <button mat-button type="button" (click)="fecharModalEstilo()">Cancelar</button>
+            <button mat-raised-button color="primary" type="button" (click)="salvarNovoEstilo()"
+                [disabled]="!novoEstilo.nome.trim()">
+                <mat-icon>save</mat-icon>
+                Salvar estilo
+            </button>
+        </footer>
+    </section>
+</div>
+
+<div *ngIf="modalNomeEstiloAberto" class="modal-estilo-fundo" role="presentation"
+    (mousedown)="fecharModalSalvarPeloFundo($event)">
+    <section class="modal-estilo modal-nome-estilo" role="dialog" aria-modal="true"
+        aria-labelledby="titulo-modal-salvar-estilo">
+        <header class="modal-estilo-cabecalho">
+            <div>
+                <span class="modal-estilo-etiqueta">Salvar como novo</span>
+                <h2 id="titulo-modal-salvar-estilo">Nome do estilo</h2>
+                <p>A configuração atual será salva como um novo estilo.</p>
+            </div>
+            <button mat-icon-button type="button" (click)="fecharModalSalvarEstilo()" aria-label="Fechar modal">
+                <mat-icon>close</mat-icon>
+            </button>
+        </header>
+
+        <div class="modal-nome-estilo-conteudo menu-estilo-conteudo">
+            <label class="campo-nome-estilo">
+                Nome do estilo
+                <input type="text" [(ngModel)]="nomeNovoEstilo" maxlength="40"
+                    placeholder="Ex.: Minha versão neon" (keydown.enter)="salvarCopiaEstilo()" autofocus>
+            </label>
+        </div>
+
+        <footer class="modal-estilo-acoes">
+            <button mat-button type="button" (click)="fecharModalSalvarEstilo()">Cancelar</button>
+            <button mat-raised-button color="primary" type="button" (click)="salvarCopiaEstilo()"
+                [disabled]="!nomeNovoEstilo.trim()">
+                <mat-icon>save</mat-icon>
+                Salvar
+            </button>
+        </footer>
     </section>
 </div>
 
