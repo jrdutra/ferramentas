@@ -35,7 +35,8 @@ export class HomeComponent {
     {
       titulo: 'Ferramentas de Tokens',
       ferramentas: [
-        { titulo: 'Manipulador de JWT', descricao: 'Inspecionar cabecalho, corpo e assinatura de tokens JWT.', icone: 'token', rota: 'visualizador-jwt' }
+        { titulo: 'Manipulador de JWT', descricao: 'Inspecionar cabecalho, corpo e assinatura de tokens JWT.', icone: 'token', rota: 'visualizador-jwt' },
+        { titulo: 'Manipulador de JWE', descricao: 'Separar header, chave criptografada, IV, ciphertext e tag de tokens JWE.', icone: 'vpn_key', rota: 'visualizador-jwe' }
       ]
     },
     {

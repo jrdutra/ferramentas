@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { Base64Component } from './ferramentas/base64/base64.component';
 import { EditorJsonComponent } from './ferramentas/editor-json/editor-json.component';
 import { VisualizadorJwtComponent } from './ferramentas/visualizador-jwt/visualizador-jwt.component';
+import { VisualizadorJweComponent } from './ferramentas/visualizador-jwe/visualizador-jwe.component';
 import { UrlcodecComponent } from './ferramentas/urlcodec/urlcodec.component';
 import { ConversorImagemTextoOcrComponent } from './ferramentas/conversor-imagem-texto-ocr/conversor-imagem-texto-ocr.component';
 import { UnixTimestampComponent } from './ferramentas/unix-timestamp/unix-timestamp.component';
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'base64', component: Base64Component },
   { path: 'editor-json', component: EditorJsonComponent },
   { path: 'visualizador-jwt', component: VisualizadorJwtComponent },
+  { path: 'visualizador-jwe', component: VisualizadorJweComponent },
   { path: 'codec-de-url', component: UrlcodecComponent },
   { path: 'conversor-imagem-texto-ocr', component: ConversorImagemTextoOcrComponent },
   { path: 'unix-timestamp', component: UnixTimestampComponent },

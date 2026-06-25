@@ -50,6 +50,10 @@ export class MenuComponent {
       this.router.navigate(['/visualizador-jwt']);
       this.dataService.setTituloAplicacao('Manipulador de JWT');
     }
+    if (tag === 'visualizador-jwe') {
+      this.router.navigate(['/visualizador-jwe']);
+      this.dataService.setTituloAplicacao('Manipulador de JWE');
+    }
     if (tag === 'codec-de-url') {
       this.router.navigate(['/codec-de-url']);
       this.dataService.setTituloAplicacao('Codec de URL');

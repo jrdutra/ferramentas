@@ -178,6 +178,45 @@ a {
   color: var(--text-main) !important;
 }
 
+button:disabled,
+button[disabled],
+.mat-mdc-button-disabled,
+.mat-mdc-button[disabled],
+.mat-mdc-raised-button[disabled],
+.mat-mdc-unelevated-button[disabled],
+.mat-mdc-icon-button[disabled],
+.mat-mdc-fab[disabled],
+.mat-mdc-mini-fab[disabled] {
+  color: #cbd5e1 !important;
+  cursor: not-allowed !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+button:disabled *,
+button[disabled] *,
+.mat-mdc-button-disabled *,
+.mat-mdc-button[disabled] *,
+.mat-mdc-raised-button[disabled] *,
+.mat-mdc-unelevated-button[disabled] *,
+.mat-mdc-icon-button[disabled] *,
+.mat-mdc-fab[disabled] *,
+.mat-mdc-mini-fab[disabled] * {
+  color: #cbd5e1 !important;
+}
+
+.mat-mdc-raised-button.mat-primary:disabled::before,
+.mat-mdc-unelevated-button.mat-primary:disabled::before,
+.mat-mdc-fab.mat-primary:disabled::before,
+.mat-mdc-mini-fab.mat-primary:disabled::before,
+.mat-mdc-raised-button.mat-primary[disabled]::before,
+.mat-mdc-unelevated-button.mat-primary[disabled]::before,
+.mat-mdc-fab.mat-primary[disabled]::before,
+.mat-mdc-mini-fab.mat-primary[disabled]::before {
+  opacity: 0.12;
+  filter: none;
+}
+
 .btn-sobrio.mat-mdc-raised-button.mat-primary,
 .btn-sobrio.mat-mdc-unelevated-button.mat-primary {
   background:
