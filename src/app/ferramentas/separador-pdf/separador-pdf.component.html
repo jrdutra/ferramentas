@@ -1,0 +1,82 @@
+<div class="container">
+
+  <div class="upload-area" (click)="fileInput.click()" *ngIf="!arquivo">
+    <mat-icon class="upload-icone">picture_as_pdf</mat-icon>
+    <p class="upload-texto">Clique para selecionar um PDF</p>
+    <p class="upload-hint">Apenas arquivos .pdf</p>
+    <input hidden #fileInput type="file" accept=".pdf" (change)="carregarArquivo($event)">
+  </div>
+
+  <div class="arquivo-selecionado" *ngIf="arquivo && !erro">
+    <div class="arquivo-info">
+      <mat-icon class="icone-pdf">picture_as_pdf</mat-icon>
+      <div class="arquivo-detalhes">
+        <span class="arquivo-nome">{{ arquivo.name }}</span>
+        <span class="arquivo-paginas">{{ numeroPaginas }} página(s)</span>
+      </div>
+      <button mat-icon-button (click)="removerArquivo()" title="Remover arquivo">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="botoes-download">
+      <button mat-raised-button color="primary" (click)="baixarZipPdfs()" [disabled]="processandoPdf || processandoJpg">
+        <mat-spinner *ngIf="processandoPdf" diameter="18" class="spinner-btn"></mat-spinner>
+        <mat-icon *ngIf="!processandoPdf">folder_zip</mat-icon>
+        {{ processandoPdf ? 'Gerando ZIP…' : 'Baixar ZIP com PDFs' }}
+      </button>
+
+      <button mat-raised-button color="primary" (click)="baixarZipJpgs()" [disabled]="processandoPdf || processandoJpg">
+        <mat-spinner *ngIf="processandoJpg" diameter="18" class="spinner-btn"></mat-spinner>
+        <mat-icon *ngIf="!processandoJpg">image</mat-icon>
+        {{ processandoJpg ? 'Convertendo…' : 'Baixar ZIP com JPGs' }}
+      </button>
+    </div>
+
+    <p class="descricao-botoes">
+      <strong>ZIP com PDFs</strong>: cada página vira um arquivo .pdf individual.<br>
+      <strong>ZIP com JPGs</strong>: cada página é renderizada como imagem .jpg (escala 2×).
+    </p>
+  </div>
+
+  <div class="mensagem" *ngIf="mensagem" [class.mensagem-erro]="erro">
+    <mat-icon>{{ erro ? 'error_outline' : 'check_circle_outline' }}</mat-icon>
+    {{ mensagem }}
+  </div>
+
+  <div class="upload-outro" *ngIf="arquivo">
+    <button mat-button (click)="removerArquivo()">
+      <mat-icon>upload_file</mat-icon> Carregar outro PDF
+    </button>
+  </div>
+
+</div>
+
+<div>
+  <h2>Instruções</h2>
+
+  <h4 class="sublinhado">Como separar um PDF em páginas individuais</h4>
+  <p>Clique na área de upload e selecione o arquivo PDF que deseja separar. A ferramenta detecta automaticamente o
+    número de páginas e exibe essa informação na tela. Em seguida, escolha o formato de saída desejado clicando em
+    um dos dois botões de download.</p>
+
+  <h4 class="sublinhado">Baixar ZIP com PDFs</h4>
+  <p>Ao clicar em "Baixar ZIP com PDFs", cada página do documento original é extraída como um arquivo .pdf
+    independente. Os arquivos são nomeados sequencialmente (pagina-001.pdf, pagina-002.pdf, etc.) e compactados em
+    um único arquivo .zip para facilitar o download.</p>
+
+  <h4 class="sublinhado">Baixar ZIP com JPGs</h4>
+  <p>Ao clicar em "Baixar ZIP com JPGs", cada página é renderizada como uma imagem .jpg em escala 2× (alta
+    resolução) usando a biblioteca PDF.js. As imagens são compactadas em um arquivo .zip nomeadas da mesma forma
+    sequencial (pagina-001.jpg, pagina-002.jpg, etc.). Esta opção é útil para usar as páginas em apresentações,
+    editores de imagem ou outros contextos que não suportam PDF.</p>
+
+  <h4 class="sublinhado">Privacidade</h4>
+  <p>Todo o processamento acontece inteiramente no seu navegador. Nenhum arquivo é enviado a servidores externos —
+    o PDF é lido e processado localmente na sua máquina.</p>
+
+  <h2>O que é ZIP</h2>
+  <p>ZIP é um formato de arquivo compactado que agrupa múltiplos arquivos em um único pacote. É amplamente suportado
+    por todos os sistemas operacionais: no Windows basta clicar com o botão direito e escolher "Extrair tudo", no
+    macOS basta dar duplo clique no arquivo .zip para descompactar o conteúdo.</p>
+</div>

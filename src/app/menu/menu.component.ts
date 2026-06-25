@@ -90,5 +90,13 @@ export class MenuComponent {
       this.router.navigate(['/gerador-certificado-x509']);
       this.dataService.setTituloAplicacao('Gerador de Chaves e Certificados X.509');
     }
+    if (tag === 'juntador-pdf') {
+      this.router.navigate(['/juntador-pdf']);
+      this.dataService.setTituloAplicacao('Juntador de PDFs e Imagens');
+    }
+    if (tag === 'separador-pdf') {
+      this.router.navigate(['/separador-pdf']);
+      this.dataService.setTituloAplicacao('Separador de PDFs');
+    }
   }
 }

@@ -15,6 +15,8 @@ import { VisualizadorX509Component } from './ferramentas/visualizador-x-509/visu
 import { GeradorCertificadoX509Component } from './ferramentas/gerador-certificado-x509/gerador-certificado-x509.component';
 import { HomeComponent } from './home/home.component';
 import { SobreComponent } from './sobre/sobre.component';
+import { JuntadorPdfComponent } from './ferramentas/juntador-pdf/juntador-pdf.component';
+import { SeparadorPdfComponent } from './ferramentas/separador-pdf/separador-pdf.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,5 +34,7 @@ export const routes: Routes = [
   { path: 'texto-global', component: TextoGlobalComponent },
   { path: 'template-de-texto', component: TemplateDeTextoComponent },
   { path: 'visualizador-x-509', component: VisualizadorX509Component },
-  { path: 'gerador-certificado-x509', component: GeradorCertificadoX509Component }
+  { path: 'gerador-certificado-x509', component: GeradorCertificadoX509Component },
+  { path: 'juntador-pdf', component: JuntadorPdfComponent },
+  { path: 'separador-pdf', component: SeparadorPdfComponent }
 ];

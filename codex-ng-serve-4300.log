@@ -1,0 +1,35 @@
+
+> ferramentas@0.0.0 start
+> ng serve --port 4300 --host 127.0.0.1
+
+Browser bundles        
+Initial chunk files     | Names               |  Raw size
+main.js                 | main                | 511.75 kB | 
+styles.css              | styles              | 139.78 kB | 
+polyfills.js            | polyfills           |  83.60 kB | 
+
+                        | Initial total       | 735.12 kB
+
+
+Server bundles         
+Initial chunk files     | Names               |  Raw size
+main.server.mjs         | main.server         |   4.29 MB | 
+chunk-CC5WYFWY.mjs      | -                   |   1.10 MB | 
+chunk-WETNW6V2.mjs      | -                   | 638.11 kB | 
+polyfills.server.mjs    | polyfills.server    | 555.05 kB | 
+chunk-OABZAP6A.mjs      | -                   | 309.98 kB | 
+chunk-P3VG54SN.mjs      | -                   |   3.89 kB | 
+render-utils.server.mjs | render-utils.server | 462 bytes | 
+
+Lazy chunk files        | Names               |  Raw size
+chunk-3RLZDS3N.mjs      | index               | 965.92 kB | 
+chunk-CEZNLNQR.mjs      | index               | 245.63 kB | 
+chunk-G6VRGVGO.mjs      | xhr2                |  39.10 kB | 
+chunk-HY5RMGFG.mjs      | browser             |   1.68 kB | 
+chunk-XQKLU5AG.mjs      | index               | 192 bytes | 
+
+Application bundle generation complete. [5.704 seconds]
+Watch mode enabled. Watching for file changes...
+Re-optimizing dependencies because vite config has changed
+  ➜  Local:   http://127.0.0.1:4300/
+  ➜  press h + enter to show help

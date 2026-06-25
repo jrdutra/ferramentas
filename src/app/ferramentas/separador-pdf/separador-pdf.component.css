@@ -1,0 +1,140 @@
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.upload-area {
+  border: 2px dashed var(--line-soft);
+  border-radius: 12px;
+  padding: 3.5rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 200ms ease, background 200ms ease;
+  background: rgba(0, 255, 209, 0.02);
+}
+
+.upload-area:hover {
+  border-color: var(--aqua);
+  background: rgba(0, 255, 209, 0.05);
+}
+
+.upload-icone {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: var(--aqua);
+  margin-bottom: 0.5rem;
+}
+
+.upload-texto {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+  color: var(--text-main);
+}
+
+.upload-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.arquivo-selecionado {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.arquivo-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(11, 35, 68, 0.7);
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+}
+
+.icone-pdf {
+  color: #f44336;
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+}
+
+.arquivo-detalhes {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.arquivo-nome {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-main);
+}
+
+.arquivo-paginas {
+  font-size: 0.8rem;
+  color: var(--aqua);
+  margin-top: 0.2rem;
+}
+
+.botoes-download {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.botoes-download button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 180px;
+}
+
+.descricao-botoes {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.descricao-botoes strong {
+  color: var(--text-main);
+}
+
+.mensagem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: rgba(0, 255, 209, 0.08);
+  border: 1px solid rgba(0, 255, 209, 0.2);
+  color: var(--aqua);
+  font-size: 0.9rem;
+}
+
+.mensagem-erro {
+  background: rgba(244, 67, 54, 0.08);
+  border-color: rgba(244, 67, 54, 0.3);
+  color: #f44336;
+}
+
+.upload-outro {
+  display: flex;
+  justify-content: center;
+}
+
+.spinner-btn {
+  display: inline-block;
+}

@@ -1,70 +1,36 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-interface Word {
-  boundingBox: string;
-  text: string;
-}
-
-interface Line {
-  boundingBox: string;
-  words: Word[];
-}
-
-interface Region {
-  boundingBox: string;
-  lines: Line[];
-}
-
-interface OcrResponse {
-  language: string;
-  textAngle: number;
-  orientation: string;
-  regions: Region[];
-}
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OcrService {
 
-  private apiUrl = 'https://ferramentaocr.cognitiveservices.azure.com/vision/v3.0/ocr';
-  private subscriptionKey = '-';
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
-  constructor(private http: HttpClient) { }
+  async executarOcr(
+    file: File,
+    onProgresso?: (porcentagem: number) => void
+  ): Promise<string> {
+    if (!isPlatformBrowser(this.platformId)) {
+      throw new Error('OCR só pode ser executado no navegador.');
+    }
 
-  executarOcr(selectedFile: File): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-      const headers = new HttpHeaders().append('Ocp-Apim-Subscription-Key', this.subscriptionKey);
-      this.http.post<OcrResponse>(this.apiUrl + '?language=pt&detectOrientation=true', formData, { headers })
-        .subscribe(
-          response => {
-            let stringOcr: string = this.renderizaTexto(response);
-            resolve(stringOcr);
-          },
-          error => {
-            reject("Erro ao executar OCR");
-          }
-        );
-    });
+    const { createWorker } = await import('tesseract.js');
+
+    const worker = await createWorker(['por', 'eng'], 1, {
+      logger: (m: any) => {
+        if (m.status === 'recognizing text' && onProgresso) {
+          onProgresso(Math.round(m.progress * 100));
+        }
+      }
+    } as any);
+
+    try {
+      const resultado = await worker.recognize(file);
+      return resultado.data.text.trim();
+    } finally {
+      await worker.terminate();
+    }
   }
-
-  renderizaTexto(response: OcrResponse): string {
-
-    let textoRenderizado: string = "";
-
-    response.regions.forEach((regiao: any) => {
-      regiao.lines.forEach((linha: any) => {
-        linha.words.forEach((palavra: any) => {
-          textoRenderizado += " " + palavra.text;
-        });
-        textoRenderizado += "\n";
-      });
-    });
-
-    return textoRenderizado;
-  }
-
 }
