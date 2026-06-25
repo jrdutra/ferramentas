@@ -3,25 +3,26 @@
     flex-direction: column;
 }
 
-.coluna1{
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    margin-right: 0.55em;
-}
-
-.coluna2{
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    margin-left: 0.55em;
-}
-
 .linha{
     display: flex;
     flex-direction: row;
     align-items: stretch;
 }
+
+.coluna1,
+.coluna2 {
+    min-width: 0;
+}
+
+.coluna1,
+.coluna2{
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+}
+
+.coluna1{ margin-right: 0.55em; }
+.coluna2{ margin-left: 0.55em; }
 
 .jwt-editor {
     position: relative;
@@ -177,8 +178,8 @@
     font-family: 'Courier New', Courier, monospace;
     font-size: calc(1.2em * var(--zoom-texto-decodificado));
     color: white;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    white-space: pre;
+    overflow-x: auto;
     line-height: 1.7;
 }
 
@@ -301,6 +302,12 @@
 :host ::ng-deep .coluna2 .mat-mdc-form-field textarea {
     font-size: calc(1.2em * var(--zoom-texto-decodificado));
     font-family: 'Courier New', Courier, monospace;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+:host ::ng-deep .coluna2 .mat-mdc-form-field {
+    min-width: 0;
 }
 
 :host ::ng-deep .campo-cabecalho textarea,
