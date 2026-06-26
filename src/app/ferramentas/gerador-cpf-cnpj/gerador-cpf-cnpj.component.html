@@ -14,6 +14,11 @@
         CNPJ
         <span class="tipo-desc">Pessoa Jurídica</span>
       </button>
+      <button class="tipo-btn" [class.tipo-ativo]="tipo === 'cnpj-alfa'" (click)="selecionarTipo('cnpj-alfa')">
+        <mat-icon>badge</mat-icon>
+        CNPJ Alfa
+        <span class="tipo-desc">Alfanumérico</span>
+      </button>
     </div>
   </div>
 
@@ -23,11 +28,11 @@
     <div class="chip-group">
       <button class="chip-qtd" [class.chip-ativo]="formatado" (click)="formatado = true; gerar()">
         Com formatação
-        <span class="chip-exemplo">{{ tipo === 'cpf' ? '000.000.000-00' : '00.000.000/0001-00' }}</span>
+        <span class="chip-exemplo">{{ exemploFormato() }}</span>
       </button>
       <button class="chip-qtd" [class.chip-ativo]="!formatado" (click)="formatado = false; gerar()">
         Sem formatação
-        <span class="chip-exemplo">{{ tipo === 'cpf' ? '00000000000' : '00000000000100' }}</span>
+        <span class="chip-exemplo">{{ exemploSemFormato() }}</span>
       </button>
     </div>
   </div>
@@ -79,7 +84,7 @@
   <p>Selecione o tipo de documento, escolha o formato de saída e a quantidade desejada, depois clique em <strong>Gerar</strong>. Os números são gerados automaticamente ao trocar qualquer opção. Todos os documentos gerados são matematicamente válidos — os dígitos verificadores são calculados seguindo os algoritmos oficiais da Receita Federal.</p>
 
   <h4 class="sublinhado">Formatos de saída</h4>
-  <p><strong>Com formatação</strong> exibe o CPF no padrão <code>000.000.000-00</code> e o CNPJ no padrão <code>00.000.000/0001-00</code>, conforme usados em documentos e sistemas. <strong>Sem formatação</strong> retorna apenas os dígitos, útil para popular bancos de dados ou campos que não aceitam pontuação.</p>
+  <p><strong>Com formatação</strong> exibe o CPF no padrão <code>000.000.000-00</code> e o CNPJ no padrão <code>00.000.000/0001-00</code>, conforme usados em documentos e sistemas. <strong>Sem formatação</strong> retorna apenas os caracteres sem pontuação, útil para popular bancos de dados ou campos que não aceitam máscara.</p>
 
   <h2>Sobre CPF e CNPJ</h2>
 
@@ -87,7 +92,10 @@
   <p>O CPF é composto por 11 dígitos: 9 dígitos base seguidos de 2 dígitos verificadores calculados pelo Módulo 11. O primeiro dígito verificador é obtido a partir dos 9 primeiros dígitos e o segundo a partir dos 10 primeiros. Esse mecanismo permite detectar erros de digitação e impede que qualquer número aleatório de 11 dígitos seja considerado um CPF válido.</p>
 
   <h4 class="sublinhado">CNPJ — Cadastro Nacional da Pessoa Jurídica</h4>
-  <p>O CNPJ é composto por 14 dígitos: 8 dígitos identificam a empresa (raiz), 4 dígitos identificam a filial (normalmente <code>0001</code> para a matriz) e os últimos 2 são dígitos verificadores, também calculados pelo Módulo 11 com pesos distintos. Os CNPJs gerados por esta ferramenta sempre usam <code>0001</code> como número de filial, representando a matriz da empresa.</p>
+  <p>O CNPJ é composto por 14 dígitos: 8 dígitos identificam a empresa (raiz), 4 dígitos identificam a filial (normalmente <code>0001</code> para a matriz) e os últimos 2 são dígitos verificadores calculados pelo Módulo 11. Os CNPJs gerados usam <code>0001</code> como número de filial, representando a matriz da empresa.</p>
+
+  <h4 class="sublinhado">CNPJ Alfanumérico — nova modalidade</h4>
+  <p>A partir de julho de 2026, a Receita Federal passa a emitir CNPJs alfanuméricos conforme a Instrução Normativa RFB nº 2.229/2024. Os 8 primeiros caracteres da raiz podem conter letras maiúsculas (A–Z) além de dígitos (0–9), enquanto o código de filial (<code>0001</code>) e os dois dígitos verificadores continuam numéricos. O cálculo dos dígitos verificadores usa o mesmo Módulo 11, com o valor numérico de cada letra definido pelo seu código ASCII menos 55 (A = 10, B = 11 … Z = 35).</p>
 
   <h4 class="sublinhado">Uso para testes</h4>
   <p>Esta ferramenta destina-se exclusivamente a fins de desenvolvimento e testes de software. Os documentos gerados são matematicamente válidos mas não pertencem a nenhuma pessoa física ou jurídica real. Nunca utilize CPFs ou CNPJs gerados para fins fraudulentos ou ilegais.</p>

@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DataService } from '../../data.service';
 
-type Tipo = 'cpf' | 'cnpj';
+type Tipo = 'cpf' | 'cnpj' | 'cnpj-alfa';
 
 @Component({
   selector: 'app-gerador-cpf-cnpj',
@@ -44,9 +44,11 @@ export class GeradorCpfCnpjComponent implements OnInit {
   }
 
   gerar(): void {
-    this.resultados = Array.from({ length: this.quantidade }, () =>
-      this.tipo === 'cpf' ? this.gerarCpf() : this.gerarCnpj()
-    );
+    this.resultados = Array.from({ length: this.quantidade }, () => {
+      if (this.tipo === 'cpf') return this.gerarCpf();
+      if (this.tipo === 'cnpj-alfa') return this.gerarCnpjAlfa();
+      return this.gerarCnpj();
+    });
     this.copiados.clear();
     this.todosCopiados = false;
   }
@@ -74,6 +76,18 @@ export class GeradorCpfCnpjComponent implements OnInit {
   }
 
   foiCopiado(i: number): boolean { return this.copiados.has(i); }
+
+  exemploFormato(): string {
+    if (this.tipo === 'cpf') return this.formatado ? '000.000.000-00' : '00000000000';
+    if (this.tipo === 'cnpj-alfa') return this.formatado ? 'AB.CDE.FGH/0001-00' : 'ABCDEFGH000100';
+    return this.formatado ? '00.000.000/0001-00' : '00000000000100';
+  }
+
+  exemploSemFormato(): string {
+    if (this.tipo === 'cpf') return '00000000000';
+    if (this.tipo === 'cnpj-alfa') return 'ABCDEFGH000100';
+    return '00000000000100';
+  }
 
   // ─── Geradores ─────────────────────────────────────────────
 
@@ -106,7 +120,7 @@ export class GeradorCpfCnpjComponent implements OnInit {
 
   private gerarCnpj(): string {
     const raiz = this.digitos(8);
-    const ordem = [0, 0, 0, 1]; // filial 0001
+    const ordem = [0, 0, 0, 1];
     const base = [...raiz, ...ordem];
     const pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
     const pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
@@ -115,6 +129,46 @@ export class GeradorCpfCnpjComponent implements OnInit {
     const n = [...base, d1, d2];
     if (!this.formatado) return n.join('');
     const s = n.join('');
+    return `${s.slice(0,2)}.${s.slice(2,5)}.${s.slice(5,8)}/${s.slice(8,12)}-${s.slice(12)}`;
+  }
+
+  // ─── CNPJ Alfanumérico (Manual DV CNPJ — Receita Federal / SERPRO) ─────────
+  // Valor de cada caractere = código ASCII - 48
+  // '0'→0 ... '9'→9, 'A'→17 ... 'Z'→42
+  // Pesos 1º DV: [5,4,3,2,9,8,7,6,5,4,3,2] sobre 12 chars
+  // Pesos 2º DV: [6,5,4,3,2,9,8,7,6,5,4,3,2] sobre 13 chars (12 + 1º DV)
+  // Resto 0 ou 1 → DV = 0; senão DV = 11 - resto
+
+  private charAlfaNum(): string {
+    // 36 possibilidades: 0-9 (ASCII 48-57) e A-Z (ASCII 65-90)
+    const arr = new Uint8Array(1);
+    if (typeof crypto !== 'undefined') crypto.getRandomValues(arr);
+    const n = arr[0] % 36;
+    if (n < 10) return String(n);
+    return String.fromCharCode(65 + (n - 10)); // 'A'=0 offset
+  }
+
+  // ASCII - 48: '0'=0, '9'=9, 'A'=17, 'B'=18 ... 'Z'=42
+  private valorChar(c: string): number {
+    return c.charCodeAt(0) - 48;
+  }
+
+  private digitoVerificadorAlfa(chars: string[], pesos: number[]): number {
+    const soma = chars.reduce((acc, c, i) => acc + this.valorChar(c) * pesos[i], 0);
+    const resto = soma % 11;
+    return resto < 2 ? 0 : 11 - resto;
+  }
+
+  private gerarCnpjAlfa(): string {
+    const raiz = Array.from({ length: 8 }, () => this.charAlfaNum());
+    const ordem = ['0', '0', '0', '1'];
+    const base = [...raiz, ...ordem]; // 12 chars alfanuméricos
+    const pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    const pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    const d1 = this.digitoVerificadorAlfa(base, pesos1);
+    const d2 = this.digitoVerificadorAlfa([...base, String(d1)], pesos2);
+    const s = [...base, String(d1), String(d2)].join('');
+    if (!this.formatado) return s;
     return `${s.slice(0,2)}.${s.slice(2,5)}.${s.slice(5,8)}/${s.slice(8,12)}-${s.slice(12)}`;
   }
 }
