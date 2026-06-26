@@ -76,7 +76,7 @@ export class MenuComponent {
     }
     if (tag === 'texto-global') {
       this.router.navigate(['/texto-global']);
-      this.dataService.setTituloAplicacao('Texto Global');
+      this.dataService.setTituloAplicacao('Compartilhador de Texto');
     }
     if (tag === 'template-de-texto') {
       this.router.navigate(['/template-de-texto']);

@@ -21,3 +21,15 @@
     margin-left: 0.1em;
     font-size: 2em;
 }
+
+.info-canal {
+    margin-left: 0.8em;
+    font-size: 1em;
+    opacity: 0.75;
+}
+
+.div-canal {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5em;
+}

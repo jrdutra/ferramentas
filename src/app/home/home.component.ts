@@ -19,7 +19,7 @@ export class HomeComponent {
       ferramentas: [
         { titulo: 'Editor de Texto', descricao: 'Limpar, quebrar, substituir e transformar textos.', icone: 'notes', rota: 'quebra-linha' },
         { titulo: 'Template de Texto', descricao: 'Preencher textos usando variaveis reutilizaveis.', icone: 'article', rota: 'template-de-texto' },
-        { titulo: 'Texto Global', descricao: 'Compartilhar texto em tempo real pela aplicacao.', icone: 'sync_alt', rota: 'texto-global' },
+        { titulo: 'Compartilhador de Texto', descricao: 'Compartilhar texto em tempo real pela aplicacao.', icone: 'public', rota: 'texto-global' },
         { titulo: 'Texto para QRCode', descricao: 'Gerar QRCode a partir de textos e URLs.', icone: 'qr_code_2', rota: 'texto-qrcode' },
         { titulo: 'Conversor OCR', descricao: 'Extrair texto de imagens usando OCR.', icone: 'document_scanner', rota: 'conversor-imagem-texto-ocr' }
       ]

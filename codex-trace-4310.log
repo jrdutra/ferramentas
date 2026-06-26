@@ -1,6 +1,6 @@
 
 > ferramentas@0.0.0 start
-> ng serve --port 4300 --host 127.0.0.1
+> ng serve --port 4310 --host 127.0.0.1
 
 Browser bundles        
 Initial chunk files     | Names               |  Raw size
@@ -28,22 +28,10 @@ chunk-G6VRGVGO.mjs      | xhr2                |  39.10 kB |
 chunk-HY5RMGFG.mjs      | browser             |   1.68 kB | 
 chunk-XQKLU5AG.mjs      | index               | 192 bytes | 
 
-Application bundle generation complete. [5.704 seconds]
+Application bundle generation complete. [3.755 seconds]
 Watch mode enabled. Watching for file changes...
-Re-optimizing dependencies because vite config has changed
-  ➜  Local:   http://127.0.0.1:4300/
+  ➜  Local:   http://127.0.0.1:4310/
   ➜  press h + enter to show help
-Browser bundles    
-Initial chunk files | Names       |  Raw size
-main.js             | main        | 511.75 kB | 
-
-
-Server bundles     
-Initial chunk files | Names       |  Raw size
-main.server.mjs     | main.server |   4.29 MB | 
-
-Application bundle generation complete. [0.920 seconds]
-Page reload sent to client(s).
 Browser bundles    
 Initial chunk files | Names       |  Raw size
 main.js             | main        | 512.03 kB | 
@@ -53,12 +41,18 @@ Server bundles
 Initial chunk files | Names       |  Raw size
 main.server.mjs     | main.server |   4.29 MB | 
 
-Application bundle generation complete. [0.658 seconds]
+Application bundle generation complete. [1.254 seconds]
 Page reload sent to client(s).
-Initial chunk files | Names |  Raw size
-main.js             | main  | 512.04 kB | 
+Browser bundles    
+Initial chunk files | Names       |  Raw size
+main.js             | main        | 512.04 kB | 
 
-Application bundle generation complete. [0.667 seconds]
+
+Server bundles     
+Initial chunk files | Names       |  Raw size
+main.server.mjs     | main.server |   4.29 MB | 
+
+Application bundle generation complete. [0.918 seconds]
 Page reload sent to client(s).
 Browser bundles    
 Initial chunk files | Names       |  Raw size
@@ -69,12 +63,18 @@ Server bundles
 Initial chunk files | Names       |  Raw size
 main.server.mjs     | main.server |   4.29 MB | 
 
-Application bundle generation complete. [0.894 seconds]
+Application bundle generation complete. [0.867 seconds]
 Page reload sent to client(s).
-Initial chunk files | Names |  Raw size
-main.js             | main  | 512.07 kB | 
+Browser bundles    
+Initial chunk files | Names       |  Raw size
+main.js             | main        | 512.07 kB | 
 
-Application bundle generation complete. [0.745 seconds]
+
+Server bundles     
+Initial chunk files | Names       |  Raw size
+main.server.mjs     | main.server |   4.29 MB | 
+
+Application bundle generation complete. [1.061 seconds]
 Page reload sent to client(s).
 Browser bundles    
 Initial chunk files | Names       |  Raw size
@@ -85,7 +85,7 @@ Server bundles
 Initial chunk files | Names       |  Raw size
 main.server.mjs     | main.server |   4.29 MB | 
 
-Application bundle generation complete. [1.114 seconds]
+Application bundle generation complete. [1.189 seconds]
 Page reload sent to client(s).
 Browser bundles        
 Initial chunk files     | Names               |  Raw size
@@ -102,18 +102,12 @@ render-utils.server.mjs | render-utils.server | 462 bytes |
 Lazy chunk files        | Names               |  Raw size
 chunk-JXVMO6SY.mjs      | browser             |   1.68 kB | 
 
-Application bundle generation complete. [1.162 seconds]
+Application bundle generation complete. [1.120 seconds]
 Page reload sent to client(s).
-Browser bundles    
-Initial chunk files | Names       |  Raw size
-main.js             | main        | 514.74 kB | 
+Initial chunk files | Names |  Raw size
+main.js             | main  | 514.74 kB | 
 
-
-Server bundles     
-Initial chunk files | Names       |  Raw size
-main.server.mjs     | main.server |   4.30 MB | 
-
-Application bundle generation complete. [0.783 seconds]
+Application bundle generation complete. [0.671 seconds]
 Page reload sent to client(s).
 Browser bundles    
 Initial chunk files | Names       |  Raw size
@@ -124,7 +118,7 @@ Server bundles
 Initial chunk files | Names       |  Raw size
 main.server.mjs     | main.server |   4.30 MB | 
 
-Application bundle generation complete. [1.039 seconds]
+Application bundle generation complete. [1.045 seconds]
 Page reload sent to client(s).
 Browser bundles    
 Initial chunk files | Names       |  Raw size
@@ -135,5 +129,5 @@ Server bundles
 Initial chunk files | Names       |  Raw size
 main.server.mjs     | main.server |   4.30 MB | 
 
-Application bundle generation complete. [0.918 seconds]
+Application bundle generation complete. [0.903 seconds]
 Page reload sent to client(s).

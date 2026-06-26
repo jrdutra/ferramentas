@@ -2,6 +2,15 @@
     <div class="div-cabecalho">
         <img class="inverte-cor-icone" width="30" height="30" src="{{strCaminhoIndicadorConexao}}" />
         <label class="texto-cabecalho">{{strStatusConexao}}</label>
+        @if (strCanal.trim() && strStatusCanal) {
+            <span class="info-canal">| {{strCanal.trim()}} | {{strStatusCanal}}</span>
+        }
+    </div>
+    <div class="div-canal">
+        <mat-form-field appearance="fill" style="width: 100%">
+            <mat-label>Canal</mat-label>
+            <input matInput [(ngModel)]="strCanal" (input)="onCanalChange()" placeholder="Digite o nome do canal..." style="border: none; background: transparent;" />
+        </mat-form-field>
     </div>
     <div class="div-caixa-texto">
         <mat-form-field appearance="fill">
