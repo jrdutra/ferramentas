@@ -98,6 +98,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
     this.socket.on('update', (data: string) => this.ngZone.run(() => {
       this.strTexto = data;
+      this.cdr.detectChanges(); // força atualização do DOM mesmo sem foco no textarea
       this.ativarTextoHot();
     }));
 
