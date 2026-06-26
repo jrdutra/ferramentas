@@ -21,13 +21,13 @@
         <span>Nenhuma ferramenta encontrada para <strong>"{{ filtro }}"</strong></span>
     </div>
 
-    <section class="grupo-ferramentas" *ngFor="let grupo of gruposFiltrados">
+    <section class="grupo-ferramentas" *ngFor="let grupo of gruposFiltrados; trackBy: trackByGrupo">
         <div class="grupo-cabecalho">
             <h2>{{ grupo.titulo }}</h2>
         </div>
 
         <div class="grade-ferramentas">
-            <button class="atalho-ferramenta" type="button" *ngFor="let ferramenta of grupo.ferramentas"
+            <button class="atalho-ferramenta" type="button" *ngFor="let ferramenta of grupo.ferramentas; trackBy: trackByFerramenta"
                 (click)="navegaFerramenta(ferramenta.rota)">
                 <span class="faixa-novo" *ngIf="ferramenta.novo" aria-label="Novo">Novo</span>
                 <span class="icone-ferramenta">

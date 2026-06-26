@@ -97,4 +97,12 @@ export class HomeComponent {
   limparFiltro(): void {
     this.filtro = '';
   }
+
+  trackByGrupo(_: number, grupo: { titulo: string }): string {
+    return grupo.titulo;
+  }
+
+  trackByFerramenta(_: number, f: { rota: string }): string {
+    return f.rota;
+  }
 }
