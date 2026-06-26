@@ -1,5 +1,5 @@
 import { isPlatformBrowser, Location } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, NgZone, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../data.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,6 +21,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
   private readonly url = 'https://compartilhadortexto-fuf5efeqfjhybte3.brazilsouth-01.azurewebsites.net';
   private debounceTimer: any;
   private textoHotTimer: any;
+  private glowInterval: any;
 
   strStatusConexao: string = 'Desconectado';
   strCaminhoIndicadorConexao: string = './assets/light-red-icon.png';
@@ -68,6 +69,8 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private route: ActivatedRoute,
     private location: Location,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
     @Inject(PLATFORM_ID) private platformId: object
   ) { }
 
@@ -85,37 +88,39 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     this.socket = io(this.url, { rejectUnauthorized: false });
     this.strStatusConexao = 'Conectando...';
 
-    this.socket.on('connect', () => {
+    this.socket.on('connect', () => this.ngZone.run(() => {
       this.strCaminhoIndicadorConexao = './assets/light-green-icon.png';
       this.strStatusConexao = 'Conectado';
       if (this.strGrupo.trim() && this.strCanal.trim()) {
         this.socket.emit('joinCanal', { grupo: this.strGrupo.trim(), canal: this.strCanal.trim() });
       }
-    });
+    }));
 
-    this.socket.on('update', (data: string) => {
+    this.socket.on('update', (data: string) => this.ngZone.run(() => {
       this.strTexto = data;
       this.ativarTextoHot();
-    });
+    }));
 
-    this.socket.on('canalInfo', (info: { conectados: number }) => {
+    this.socket.on('canalInfo', (info: { conectados: number }) => this.ngZone.run(() => {
       this.numConectados = info.conectados;
       this.strStatusCanal = `${info.conectados} tela(s) conectada(s)`;
-    });
+    }));
 
-    this.socket.on('historicoAtualizado', (hist: string[]) => { this.historico = hist; });
+    this.socket.on('historicoAtualizado', (hist: string[]) => this.ngZone.run(() => {
+      this.historico = hist;
+    }));
 
-    this.socket.on('canalAtualizado', ({ grupo, canal }: { grupo: string; canal: string }) => {
+    this.socket.on('canalAtualizado', ({ grupo, canal }: { grupo: string; canal: string }) => this.ngZone.run(() => {
       const ehAtual = grupo === this.strGrupo.trim() && canal === this.strCanal.trim();
       if (!ehAtual) this.canaisHot = { ...this.canaisHot, [`${grupo}::${canal}`]: true };
-    });
+    }));
 
-    this.socket.on('adminStatus', ({ isAdmin, grupo }: { isAdmin: boolean; grupo: string }) => {
+    this.socket.on('adminStatus', ({ isAdmin, grupo }: { isAdmin: boolean; grupo: string }) => this.ngZone.run(() => {
       if (grupo === this.strGrupo.trim()) this.isAdmin = isAdmin;
-    });
+    }));
 
     // Canal excluído pelo admin
-    this.socket.on('canalExcluido', ({ grupo, canal, canaisRestantes }: { grupo: string; canal: string; canaisRestantes: string[] }) => {
+    this.socket.on('canalExcluido', ({ grupo, canal, canaisRestantes }: { grupo: string; canal: string; canaisRestantes: string[] }) => this.ngZone.run(() => {
       const key = `${grupo}::${canal}`;
 
       // Navegar se estiver neste canal
@@ -130,7 +135,6 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
           this.socket.emit('joinCanal', { grupo, canal: proximo });
           this.atualizarUrl(grupo, proximo);
         } else {
-          // Sem mais canais no grupo
           this.strCanal = '';
           this.strTexto = '';
           this.historico = [];
@@ -141,17 +145,15 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
       // Marcar como excluído (fica vermelho até o usuário clicar)
       this.canaisExcluidos = { ...this.canaisExcluidos, [key]: true };
-      // Remover de hot se estava marcado
       if (this.canaisHot[key]) {
         const next = { ...this.canaisHot };
         delete next[key];
         this.canaisHot = next;
       }
-    });
+    }));
 
     // Grupo excluído pelo admin
-    this.socket.on('grupoExcluido', ({ grupo }: { grupo: string }) => {
-      // Popup apenas para quem não é admin (admin sabe que excluiu)
+    this.socket.on('grupoExcluido', ({ grupo }: { grupo: string }) => this.ngZone.run(() => {
       if (this.strGrupo.trim() === grupo) {
         if (!this.isAdmin) {
           this.grupoExcluidoNome = grupo;
@@ -166,55 +168,59 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
         this.strStatusCanal = '';
         this.location.replaceState('/texto-global');
       }
-      // Limpar entradas de canaisExcluidos do grupo
       const prefix = `${grupo}::`;
       this.canaisExcluidos = Object.fromEntries(
         Object.entries(this.canaisExcluidos).filter(([k]) => !k.startsWith(prefix))
       );
-    });
+    }));
 
-    this.socket.on('diretorioAtualizado', (dir: { [grupo: string]: string[] }) => {
+    this.socket.on('diretorioAtualizado', (dir: { [grupo: string]: string[] }) => this.ngZone.run(() => {
       this.diretorio = dir;
       this.gruposAtivos = Object.keys(dir).sort();
 
-      // Determina qual grupo deve ficar selecionado
       const alvo = this.grupoSelecionado || this.strGrupo.trim();
 
       if (alvo && this.gruposAtivos.includes(alvo)) {
-        // Reseta para '' e reatribui no próximo tick: força o mat-select a
-        // reconhecer o valor depois que as <mat-option> já estão no DOM.
+        // Reset síncrono + detectChanges: garante que mat-select exibe o valor
+        // selecionado mesmo quando as <mat-option> chegam depois do valor.
         this.grupoSelecionado = '';
-        setTimeout(() => {
-          this.grupoSelecionado = alvo;
-          this.canaisDoGrupo = dir[alvo] ?? [];
-        }, 0);
+        this.cdr.detectChanges();   // renderiza opções sem seleção
+        this.grupoSelecionado = alvo;
+        this.canaisDoGrupo = dir[alvo] ?? [];
+        this.cdr.detectChanges();   // força exibição da opção selecionada
       } else if (this.grupoSelecionado && !this.gruposAtivos.includes(this.grupoSelecionado)) {
         this.canaisDoGrupo = [];
       }
-    });
+    }));
 
-    this.socket.on('disconnect', () => {
+    this.socket.on('disconnect', () => this.ngZone.run(() => {
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png';
       this.strStatusConexao = 'Desconectado';
       this.strStatusCanal = '';
       this.numConectados = 0;
-    });
+    }));
 
-    this.socket.on('connect_error', () => {
+    this.socket.on('connect_error', () => this.ngZone.run(() => {
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png';
       this.strStatusConexao = 'Erro na conexão';
       this.strStatusCanal = '';
-    });
+    }));
 
-    this.socket.on('banido', ({ motivo }: { motivo: string }) => {
+    this.socket.on('banido', ({ motivo }: { motivo: string }) => this.ngZone.run(() => {
       this.estaBanido = true;
       this.motivoBan = motivo;
-    });
+    }));
+
+    // Refresh periódico para atualizar glow do histórico
+    this.glowInterval = setInterval(() => this.ngZone.run(() => {
+      this.cdr.detectChanges();
+    }), 30000);
   }
 
   ngOnDestroy(): void {
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
     if (this.textoHotTimer) clearTimeout(this.textoHotTimer);
+    if (this.glowInterval) clearInterval(this.glowInterval);
     if (this.socket) this.socket.disconnect();
   }
 
@@ -226,6 +232,21 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     this.textoHotTimer = setTimeout(() => { this.textoHot = false; }, 10000);
   }
 
+  // ── Glow histórico (verde → branco por faixas de 5 min) ──────────────────
+
+  getGlowClass(iso: string): string {
+    try {
+      const min = (Date.now() - new Date(iso).getTime()) / 60000;
+      if (min < 5)  return 'hist-glow-1';
+      if (min < 10) return 'hist-glow-2';
+      if (min < 15) return 'hist-glow-3';
+      if (min < 20) return 'hist-glow-4';
+      if (min < 25) return 'hist-glow-5';
+      if (min < 30) return 'hist-glow-6';
+      return 'hist-glow-7';
+    } catch { return 'hist-glow-7'; }
+  }
+
   // ── Lógica de canal ───────────────────────────────────────────────────────
 
   onGrupoOuCanalChange(): void {
@@ -233,14 +254,12 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     this.strStatusCanal = '';
     this.numConectados = 0;
 
-    // Sincroniza o painel direito imediatamente ao digitar
     const grupoDigitado = this.strGrupo.trim();
     if (grupoDigitado !== this.grupoSelecionado) {
       this.grupoSelecionado = grupoDigitado;
       this.canaisDoGrupo = this.diretorio[grupoDigitado] ?? [];
       this.filtroBuscaCanal = '';
     }
-    // canal-ativo já é reativo via [(ngModel)]="strCanal" — sem ação extra
 
     this.debounceTimer = setTimeout(() => {
       const grupo = this.strGrupo.trim(), canal = this.strCanal.trim();
@@ -272,7 +291,6 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     return f ? this.canaisDoGrupo.filter(c => c.toLowerCase().includes(f)) : this.canaisDoGrupo;
   }
 
-  // Canais excluídos (não clicados) para o grupo selecionado no painel direito
   get canaisExcluidosDoGrupo(): string[] {
     const prefix = `${this.grupoSelecionado}::`;
     return Object.keys(this.canaisExcluidos)
@@ -309,7 +327,6 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
   // ── Admin ─────────────────────────────────────────────────────────────────
 
-  // Controles de admin só aparecem quando o usuário está vendo o próprio grupo
   get podeAdministrar(): boolean {
     return this.isAdmin && this.grupoSelecionado === this.strGrupo.trim();
   }
@@ -345,7 +362,6 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     const nome = this.nomeNovoCanal.trim();
     if (!nome || !this.grupoSelecionado) return;
     this.fecharModalNovoCanal();
-    // Reutiliza a mesma lógica de navegarParaCanal — une grupo selecionado + canal novo
     this.strGrupo = this.grupoSelecionado;
     this.strCanal = nome;
     this.strStatusCanal = '';

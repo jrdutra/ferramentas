@@ -62,7 +62,7 @@
     } @else {
       <div class="hist-lista">
         @for (entry of historico; track entry) {
-          <div class="hist-item">{{formatarDataHora(entry)}}</div>
+          <div class="hist-item" [ngClass]="getGlowClass(entry)">{{formatarDataHora(entry)}}</div>
         }
       </div>
     }
@@ -72,69 +72,62 @@
 
   <div class="corpo-dir">
 
-    @if (gruposAtivos.length === 0 && !grupoSelecionado) {
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Grupo</mat-label>
+      <mat-select [(ngModel)]="grupoSelecionado" (ngModelChange)="onGrupoSelecionadoChange()">
+        @for (g of gruposAtivos; track g) {
+          <mat-option [value]="g">{{g}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (gruposAtivos.length === 0) {
       <div class="col-vazio">Nenhum grupo ativo no momento.</div>
-    } @else {
+    }
+
+    <!-- Botão excluir grupo (apenas admin do grupo selecionado) -->
+    @if (podeAdministrar) {
+      <button class="btn-excluir-grupo" type="button" (click)="excluirGrupo()">
+        Excluir grupo
+      </button>
+    }
+
+    @if (grupoSelecionado) {
       <mat-form-field appearance="fill" style="width: 100%">
-        <mat-label>Grupo</mat-label>
-        <mat-select [(ngModel)]="grupoSelecionado" (ngModelChange)="onGrupoSelecionadoChange()">
-          @for (g of gruposAtivos; track g) {
-            <mat-option [value]="g">{{g}}</mat-option>
-          }
-        </mat-select>
+        <mat-label>Buscar canal</mat-label>
+        <input matInput [(ngModel)]="filtroBuscaCanal"
+          placeholder="Filtrar..." style="border: none; background: transparent;" />
       </mat-form-field>
 
-      <!-- Botão excluir grupo (apenas admin do grupo selecionado) -->
-      @if (podeAdministrar) {
-        <button class="btn-excluir-grupo" type="button" (click)="excluirGrupo()">
-          Excluir grupo
-        </button>
-      }
-
-      @if (grupoSelecionado) {
-        <mat-form-field appearance="fill" style="width: 100%">
-          <mat-label>Buscar canal</mat-label>
-          <input matInput [(ngModel)]="filtroBuscaCanal"
-            placeholder="Filtrar..." style="border: none; background: transparent;" />
-        </mat-form-field>
-
-        <!-- Canais ativos -->
-        @if (canaisFiltrados.length > 0 || canaisExcluidosDoGrupo.length > 0 || grupoSelecionado) {
-          <div class="canais-lista">
-            <!-- Botão adicionar canal -->
-            <div class="canal-item canal-adicionar" (click)="abrirModalNovoCanal()" title="Adicionar canal">
-              <span class="canal-adicionar-icone">＋</span>
-            </div>
-            @for (c of canaisFiltrados; track c) {
-              <div class="canal-item"
-                [class.canal-ativo]="c === strCanal && grupoSelecionado === strGrupo"
-                [class.canal-hot]="isCanalHot(c)"
-                (click)="navegarParaCanal(c)">
-                <span class="canal-nome"># {{c}}</span>
-                @if (podeAdministrar) {
-                  <button class="btn-excluir-canal" type="button"
-                    title="Excluir canal"
-                    (click)="excluirCanal(c, $event)">✕</button>
-                }
-              </div>
+      <!-- Canais ativos -->
+      <div class="canais-lista">
+        <!-- Botão adicionar canal -->
+        <div class="canal-item canal-adicionar" (click)="abrirModalNovoCanal()" title="Adicionar canal">
+          <span class="canal-adicionar-icone">＋</span>
+        </div>
+        @for (c of canaisFiltrados; track c) {
+          <div class="canal-item"
+            [class.canal-ativo]="c === strCanal && grupoSelecionado === strGrupo"
+            [class.canal-hot]="isCanalHot(c)"
+            [class.canal-admin-mode]="podeAdministrar"
+            (click)="navegarParaCanal(c)">
+            <span class="canal-nome"># {{c}}</span>
+            @if (podeAdministrar) {
+              <button class="btn-excluir-canal" type="button"
+                title="Excluir canal"
+                (click)="excluirCanal(c, $event)">✕</button>
             }
-
-            <!-- Canais excluídos não clicados (vermelho) -->
-            @for (c of canaisExcluidosDoGrupo; track c) {
-              <div class="canal-item canal-excluido" (click)="removerCanalExcluido(c)">
-                <span class="canal-nome"># {{c}}</span>
-                <span class="canal-excluido-label">excluído</span>
-              </div>
-            }
-          </div>
-        } @else {
-          <div class="canais-lista">
-            <div class="canal-item canal-adicionar" (click)="abrirModalNovoCanal()" title="Adicionar canal">
-              <span class="canal-adicionar-icone">＋</span>
-            </div>
           </div>
         }
-      }
+
+        <!-- Canais excluídos não clicados (vermelho) -->
+        @for (c of canaisExcluidosDoGrupo; track c) {
+          <div class="canal-item canal-excluido" (click)="removerCanalExcluido(c)">
+            <span class="canal-nome"># {{c}}</span>
+            <span class="canal-excluido-label">excluído</span>
+          </div>
+        }
+      </div>
     }
 
   </div>
