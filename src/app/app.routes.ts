@@ -17,6 +17,9 @@ import { HomeComponent } from './home/home.component';
 import { SobreComponent } from './sobre/sobre.component';
 import { JuntadorPdfComponent } from './ferramentas/juntador-pdf/juntador-pdf.component';
 import { SeparadorPdfComponent } from './ferramentas/separador-pdf/separador-pdf.component';
+import { GeradorHashComponent } from './ferramentas/gerador-hash/gerador-hash.component';
+import { DiffTextoComponent } from './ferramentas/diff-texto/diff-texto.component';
+import { DiffJsonComponent } from './ferramentas/diff-json/diff-json.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,5 +40,8 @@ export const routes: Routes = [
   { path: 'visualizador-x-509', component: VisualizadorX509Component },
   { path: 'gerador-certificado-x509', component: GeradorCertificadoX509Component },
   { path: 'juntador-pdf', component: JuntadorPdfComponent },
-  { path: 'separador-pdf', component: SeparadorPdfComponent }
+  { path: 'separador-pdf', component: SeparadorPdfComponent },
+  { path: 'gerador-hash', component: GeradorHashComponent },
+  { path: 'diff-texto', component: DiffTextoComponent },
+  { path: 'diff-json', component: DiffJsonComponent }
 ];

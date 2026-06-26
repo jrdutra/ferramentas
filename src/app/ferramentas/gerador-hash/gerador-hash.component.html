@@ -1,0 +1,66 @@
+<div class="hash-layout">
+
+  <!-- Entrada -->
+  <div class="painel-entrada">
+    <mat-form-field appearance="outline" class="campo-texto-completo">
+      <mat-label>Texto de entrada</mat-label>
+      <textarea matInput
+        [(ngModel)]="textoEntrada"
+        (ngModelChange)="calcularHashes()"
+        placeholder="Digite ou cole o texto aqui..."
+        rows="6"
+        class="textarea-mono">
+      </textarea>
+    </mat-form-field>
+
+    <div class="acoes-entrada">
+      <button mat-raised-button color="primary" (click)="alternarMaiusculas()"
+        [class.ativo]="maiusculas"
+        matTooltip="Alternar maiúsculas/minúsculas nos hashes">
+        <mat-icon>text_fields</mat-icon>
+        {{ maiusculas ? 'MAIÚSCULAS' : 'minúsculas' }}
+      </button>
+      <button mat-raised-button color="primary" (click)="limpar()" class="btn-sobrio">
+        <mat-icon>clear</mat-icon>
+        Limpar
+      </button>
+    </div>
+  </div>
+
+  <!-- Resultados -->
+  <div class="painel-resultados">
+    <div *ngFor="let r of resultados" class="card-hash">
+      <div class="hash-cabecalho">
+        <div class="hash-info">
+          <span class="hash-algoritmo">{{ r.algoritmo }}</span>
+          <span class="hash-tamanho">{{ r.tamanho }}</span>
+        </div>
+        <button mat-icon-button
+          (click)="copiar(r.algoritmo, r.valor)"
+          [disabled]="!r.valor"
+          [matTooltip]="copiado === r.algoritmo ? 'Copiado!' : 'Copiar hash'"
+          class="botao-copiar">
+          <mat-icon>{{ copiado === r.algoritmo ? 'check' : 'content_copy' }}</mat-icon>
+        </button>
+      </div>
+      <div class="hash-valor" [class.vazio]="!r.valor">
+        <span *ngIf="r.valor; else placeholder">{{ r.valor }}</span>
+        <ng-template #placeholder>
+          <span class="hash-placeholder">—</span>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="instrucoes">
+  <h2>Como usar</h2>
+  <p>Digite ou cole qualquer texto no campo acima. Os hashes são calculados automaticamente em tempo real usando MD5, SHA-1, SHA-256 e SHA-512.</p>
+
+  <h2>Sobre os algoritmos</h2>
+  <p><strong>MD5</strong> — Produz um hash de 128 bits (32 caracteres hex). Amplamente usado para verificar integridade de arquivos, mas não recomendado para segurança criptográfica.</p>
+  <p><strong>SHA-1</strong> — Produz 160 bits (40 caracteres hex). Historicamente popular, mas considerado fraco para uso criptográfico moderno.</p>
+  <p><strong>SHA-256</strong> — Parte da família SHA-2. Produz 256 bits (64 caracteres hex). Padrão amplamente adotado para segurança em geral.</p>
+  <p><strong>SHA-512</strong> — Também da família SHA-2. Produz 512 bits (128 caracteres hex). Oferece maior margem de segurança que o SHA-256.</p>
+</div>

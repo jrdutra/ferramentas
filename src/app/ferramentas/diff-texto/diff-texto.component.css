@@ -1,0 +1,247 @@
+.diff-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25em;
+}
+
+/* ── Entradas ──────────────────────────────────────────── */
+
+.painel-entradas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+
+.coluna-entrada {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.entrada-cabecalho {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+}
+
+.entrada-titulo { font-weight: 700; font-size: 1em; }
+.removido-label  { color: #ff7070; }
+.adicionado-label { color: #4ade80; }
+.entrada-hint { font-size: 0.8em; color: var(--text-muted); }
+
+.campo-completo { width: 100%; }
+
+.textarea-mono {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85em;
+  resize: vertical;
+}
+
+/* ── Painel de highlight (modo comparação) ─────────────── */
+
+.texto-destacado {
+  width: 100%;
+  min-height: 14em;
+  max-height: 22em;
+  overflow-y: auto;
+  padding: 0.75em 0.85em;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85em;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 209, 0.28);
+  background: linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98));
+  color: var(--text-main);
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .texto-destacado mark.diff-diferente {
+  background: transparent;
+  color: #ff7070;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 112, 112, 0.5);
+  text-underline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ── Aviso de limite ─────────────────────────────────── */
+
+.aviso-limite {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.82em;
+  color: #facc15;
+  opacity: 0.85;
+}
+.aviso-limite mat-icon { font-size: 1em; width: 1em; height: 1em; }
+
+/* ── Ações ──────────────────────────────────────────────── */
+
+.acoes {
+  display: flex;
+  gap: 0.75em;
+  flex-wrap: wrap;
+}
+
+.btn-editar {
+  background: rgba(0, 208, 255, 0.1) !important;
+  color: #8ee8ff !important;
+  border: 1px solid rgba(0, 208, 255, 0.3) !important;
+}
+
+/* ── Estatísticas ───────────────────────────────────────── */
+
+.estatisticas {
+  display: flex;
+  gap: 0.75em;
+  flex-wrap: wrap;
+}
+
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.32em 0.75em;
+  border-radius: 999px;
+  font-size: 0.85em;
+  font-weight: 600;
+  border: 1px solid;
+}
+.stat-chip mat-icon { font-size: 1em; width: 1em; height: 1em; }
+
+.diferenca-chip {
+  color: #facc15;
+  border-color: rgba(250, 204, 21, 0.4);
+  background: rgba(250, 204, 21, 0.08);
+}
+
+/* ── Sem diferenças ─────────────────────────────────────── */
+
+.sem-diferencas {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.9em 1.1em;
+  border-radius: 0.5em;
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  background: rgba(74, 222, 128, 0.06);
+  font-weight: 600;
+}
+.sem-diferencas mat-icon { font-size: 1.3em; width: 1.3em; height: 1.3em; }
+
+/* ── Painel de trechos diferentes ──────────────────────── */
+
+.painel-diff {
+  border: 1px solid transparent;
+  border-radius: 0.6em;
+  background:
+    linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98)) padding-box,
+    conic-gradient(from 135deg,
+      rgba(0, 208, 255, 0.14), rgba(255, 45, 178, 0.42),
+      rgba(182, 37, 255, 0.34), rgba(91, 124, 255, 0.4),
+      rgba(0, 208, 255, 0.14)
+    ) border-box;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+.diff-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.diff-header-col {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.55em 0.85em;
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.diff-header-col mat-icon { font-size: 1em; width: 1em; height: 1em; }
+.removido-header  { color: #ff7070; border-right: 1px solid rgba(255, 255, 255, 0.06); }
+.adicionado-header { color: #4ade80; }
+
+.diff-corpo { max-height: 32em; overflow-y: auto; }
+
+/* ── Chunks ─────────────────────────────────────────────── */
+
+.diff-chunk {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.diff-chunk:last-child { border-bottom: none; }
+
+.chunk-numero {
+  padding: 0.25em 0.85em;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: rgba(185, 200, 219, 0.4);
+  background: rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.chunk-lados {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+}
+
+.chunk-lado {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+  padding: 0.55em 0.75em;
+}
+
+.chunk-a { background: rgba(255, 112, 112, 0.08); }
+.chunk-b { background: rgba(74, 222, 128, 0.08); }
+
+.chunk-divisor { background: rgba(255, 255, 255, 0.05); }
+
+.chunk-marcador {
+  flex: 0 0 1em;
+  font-weight: 800;
+  font-size: 0.9em;
+  user-select: none;
+  padding-top: 0.05em;
+}
+.chunk-a .chunk-marcador { color: #ff7070; }
+.chunk-b .chunk-marcador { color: #4ade80; }
+
+.chunk-texto {
+  flex: 1;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.82em;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-main);
+}
+.chunk-a .chunk-texto { color: #fecaca; }
+.chunk-b .chunk-texto { color: #bbf7d0; }
+
+/* ── Instruções ─────────────────────────────────────────── */
+
+.instrucoes {
+  margin-top: 0.5em;
+  color: var(--text-muted);
+  font-size: 0.95em;
+  line-height: 1.7;
+}
+.instrucoes h2 { color: var(--text-main); font-size: 1.1em; margin: 1.2em 0 0.4em; }
+.instrucoes strong { color: #8ee8ff; }
+.cor-removido { color: #ff7070; font-weight: 600; }
+
+@media (max-width: 700px) {
+  .painel-entradas  { grid-template-columns: 1fr; }
+  .diff-header      { grid-template-columns: 1fr; }
+  .chunk-lados      { grid-template-columns: 1fr; }
+  .chunk-divisor    { display: none; }
+}

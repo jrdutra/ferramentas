@@ -1,0 +1,121 @@
+<div class="diff-layout">
+
+  <!-- Entradas / modo edição -->
+  <div class="painel-entradas" *ngIf="!modoComparacao">
+    <div class="coluna-entrada">
+      <div class="entrada-cabecalho">
+        <span class="entrada-titulo removido-label">Texto A</span>
+        <span class="entrada-hint">Original</span>
+      </div>
+      <mat-form-field appearance="outline" class="campo-completo">
+        <textarea matInput [(ngModel)]="textoA" placeholder="Cole o texto original aqui…"
+          rows="14" class="textarea-mono"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="coluna-entrada">
+      <div class="entrada-cabecalho">
+        <span class="entrada-titulo adicionado-label">Texto B</span>
+        <span class="entrada-hint">Modificado</span>
+      </div>
+      <mat-form-field appearance="outline" class="campo-completo">
+        <textarea matInput [(ngModel)]="textoB" placeholder="Cole o texto modificado aqui…"
+          rows="14" class="textarea-mono"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Painéis com highlight — modo comparação -->
+  <div class="painel-entradas" *ngIf="modoComparacao">
+    <div class="coluna-entrada">
+      <div class="entrada-cabecalho">
+        <span class="entrada-titulo removido-label">Texto A</span>
+        <span class="entrada-hint">Original</span>
+      </div>
+      <div class="texto-destacado" [innerHTML]="htmlA"></div>
+    </div>
+    <div class="coluna-entrada">
+      <div class="entrada-cabecalho">
+        <span class="entrada-titulo adicionado-label">Texto B</span>
+        <span class="entrada-hint">Modificado</span>
+      </div>
+      <div class="texto-destacado" [innerHTML]="htmlB"></div>
+    </div>
+  </div>
+
+  <!-- Aviso de limite -->
+  <div class="aviso-limite" *ngIf="aviso">
+    <mat-icon>info_outline</mat-icon>
+    {{ aviso }}
+  </div>
+
+  <!-- Ações -->
+  <div class="acoes">
+    <button mat-raised-button color="primary" (click)="comparar()" *ngIf="!modoComparacao" [disabled]="!temConteudo()">
+      <mat-icon>compare</mat-icon>
+      Comparar
+    </button>
+    <button mat-raised-button (click)="editar()" *ngIf="modoComparacao" class="btn-editar">
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+    <button mat-raised-button (click)="limpar()" [disabled]="!temConteudo() && !modoComparacao">
+      <mat-icon>clear</mat-icon>
+      Limpar
+    </button>
+  </div>
+
+  <!-- Sem diferenças -->
+  <div class="sem-diferencas" *ngIf="modoComparacao && semDiferencas">
+    <mat-icon>check_circle</mat-icon>
+    <span>Os textos são idênticos.</span>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="estatisticas" *ngIf="modoComparacao && !semDiferencas">
+    <div class="stat-chip diferenca-chip">
+      <mat-icon>difference</mat-icon>
+      {{ chunks.length }} trecho{{ chunks.length !== 1 ? 's' : '' }} com diferença
+    </div>
+  </div>
+
+  <!-- Trechos com diferenças -->
+  <div class="painel-diff" *ngIf="modoComparacao && !semDiferencas && chunks.length > 0">
+
+    <div class="diff-header">
+      <div class="diff-header-col removido-header">
+        <mat-icon>remove_circle_outline</mat-icon> Texto A — Original
+      </div>
+      <div class="diff-header-col adicionado-header">
+        <mat-icon>add_circle_outline</mat-icon> Texto B — Modificado
+      </div>
+    </div>
+
+    <div class="diff-corpo">
+      <div *ngFor="let chunk of chunks; let i = index" class="diff-chunk">
+
+        <div class="chunk-numero">#{{ i + 1 }}</div>
+
+        <div class="chunk-lados">
+          <div class="chunk-lado chunk-a">
+            <span class="chunk-marcador">−</span>
+            <code class="chunk-texto">{{ chunk.trechoA || '(vazio)' }}</code>
+          </div>
+          <div class="chunk-divisor"></div>
+          <div class="chunk-lado chunk-b">
+            <span class="chunk-marcador">+</span>
+            <code class="chunk-texto">{{ chunk.trechoB || '(vazio)' }}</code>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="instrucoes">
+  <h2>Como usar</h2>
+  <p>Cole o texto original em <strong>Texto A</strong> e o modificado em <strong>Texto B</strong>, depois clique em <strong>Comparar</strong>. Os caracteres diferentes ficam marcados em <span class="cor-removido">vermelho</span> diretamente dentro de cada caixa. Abaixo do botão aparecem apenas os trechos com diferenças entre os dois textos.</p>
+</div>

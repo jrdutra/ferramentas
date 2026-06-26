@@ -34,10 +34,6 @@ export class MenuComponent {
       this.router.navigate(['/sobre']);
       this.dataService.setTituloAplicacao('Sobre');
     }
-    if (tag === 'leitor-area-cws') {
-      this.router.navigate(['/leitor-area-cws']);
-      this.dataService.setTituloAplicacao('Leitor de área CWS');
-    }
     if (tag === 'base64') {
       this.router.navigate(['/base64']);
       this.dataService.setTituloAplicacao('Conversor de Base64');
@@ -97,6 +93,18 @@ export class MenuComponent {
     if (tag === 'separador-pdf') {
       this.router.navigate(['/separador-pdf']);
       this.dataService.setTituloAplicacao('Separador de PDFs');
+    }
+    if (tag === 'gerador-hash') {
+      this.router.navigate(['/gerador-hash']);
+      this.dataService.setTituloAplicacao('Gerador de Hash');
+    }
+    if (tag === 'diff-texto') {
+      this.router.navigate(['/diff-texto']);
+      this.dataService.setTituloAplicacao('Diff de Texto');
+    }
+    if (tag === 'diff-json') {
+      this.router.navigate(['/diff-json']);
+      this.dataService.setTituloAplicacao('Diff de JSON');
     }
   }
 }
