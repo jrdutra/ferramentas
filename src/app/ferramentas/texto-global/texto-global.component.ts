@@ -1,12 +1,11 @@
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, Location } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../data.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -18,7 +17,6 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     MatInputModule,
     MatSelectModule,
-    MatListModule
   ],
   templateUrl: './texto-global.component.html',
   styleUrl: './texto-global.component.css'
@@ -46,7 +44,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
   constructor(
     private dataService: DataService,
     private route: ActivatedRoute,
-    private router: Router,
+    private location: Location,
     @Inject(PLATFORM_ID) private platformId: object
   ) { }
 
@@ -57,16 +55,19 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Ler path params
+    // Ler path params e pré-popular campos + combo
     const grupoParam = this.route.snapshot.paramMap.get('grupo');
     const canalParam = this.route.snapshot.paramMap.get('canal');
-    if (grupoParam) this.strGrupo = decodeURIComponent(grupoParam);
-    if (canalParam) this.strCanal = decodeURIComponent(canalParam);
+    if (grupoParam) {
+      this.strGrupo = decodeURIComponent(grupoParam);
+      this.grupoSelecionado = this.strGrupo; // pré-seleciona o combo
+    }
+    if (canalParam) {
+      this.strCanal = decodeURIComponent(canalParam);
+    }
 
     const { io } = await import('socket.io-client');
-    this.socket = io(this.url, {
-      rejectUnauthorized: false
-    });
+    this.socket = io(this.url, { rejectUnauthorized: false });
 
     this.strStatusConexao = "Conectando...";
 
@@ -93,11 +94,17 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     this.socket.on('diretorioAtualizado', (dir: { [grupo: string]: string[] }) => {
       this.diretorio = dir;
       this.gruposAtivos = Object.keys(dir).sort();
-      // Atualiza canais do grupo selecionado no painel direito
+
+      // Se ainda não há grupo selecionado no painel direito mas há um grupo ativo no campo esquerdo, pré-selecionar
+      if (!this.grupoSelecionado && this.strGrupo.trim()) {
+        this.grupoSelecionado = this.strGrupo.trim();
+      }
+
+      // Atualizar lista de canais do grupo selecionado
       if (this.grupoSelecionado) {
         this.canaisDoGrupo = dir[this.grupoSelecionado] ?? [];
+        // Se o grupo sumiu do diretório (sem clientes), limpa apenas a lista de canais
         if (!this.gruposAtivos.includes(this.grupoSelecionado)) {
-          this.grupoSelecionado = '';
           this.canaisDoGrupo = [];
         }
       }
@@ -110,7 +117,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
       this.numConectados = 0;
     });
 
-    this.socket.on('connect_error', (err: Error) => {
+    this.socket.on('connect_error', () => {
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png';
       this.strStatusConexao = "Erro na conexão";
       this.strStatusCanal = '';
@@ -118,12 +125,8 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.debounceTimer) {
-      clearTimeout(this.debounceTimer);
-    }
-    if (this.socket) {
-      this.socket.disconnect();
-    }
+    if (this.debounceTimer) clearTimeout(this.debounceTimer);
+    if (this.socket) this.socket.disconnect();
   }
 
   onGrupoOuCanalChange(): void {
@@ -135,7 +138,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
       const canal = this.strCanal.trim();
       if (grupo && canal && this.socket?.connected) {
         this.socket.emit('joinCanal', { grupo, canal });
-        this.router.navigate(['/texto-global', encodeURIComponent(grupo), encodeURIComponent(canal)], { replaceUrl: true });
+        this.atualizarUrl(grupo, canal);
       }
     }, 600);
   }
@@ -157,14 +160,18 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     this.strCanal = canal;
     this.strStatusCanal = '';
     this.numConectados = 0;
-    this.strTexto = '';
+    // Não limpa strTexto aqui — o servidor enviará o texto via 'update'
     if (this.socket?.connected) {
-      this.socket.emit('joinCanal', { grupo: this.strGrupo, canal: this.strCanal });
-      this.router.navigate(
-        ['/texto-global', encodeURIComponent(this.strGrupo), encodeURIComponent(this.strCanal)],
-        { replaceUrl: true }
-      );
+      this.socket.emit('joinCanal', { grupo: this.strGrupo, canal });
+      // Atualiza URL sem recriar o componente
+      this.atualizarUrl(this.strGrupo, canal);
     }
+  }
+
+  private atualizarUrl(grupo: string, canal: string): void {
+    this.location.replaceState(
+      `/texto-global/${encodeURIComponent(grupo)}/${encodeURIComponent(canal)}`
+    );
   }
 
   get urlCompartilhavel(): string {
