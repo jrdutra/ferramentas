@@ -176,11 +176,20 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     this.socket.on('diretorioAtualizado', (dir: { [grupo: string]: string[] }) => {
       this.diretorio = dir;
       this.gruposAtivos = Object.keys(dir).sort();
-      if (!this.grupoSelecionado && this.strGrupo.trim()) this.grupoSelecionado = this.strGrupo.trim();
-      if (this.grupoSelecionado) {
-        this.canaisDoGrupo = this.gruposAtivos.includes(this.grupoSelecionado)
-          ? (dir[this.grupoSelecionado] ?? [])
-          : [];
+
+      // Determina qual grupo deve ficar selecionado
+      const alvo = this.grupoSelecionado || this.strGrupo.trim();
+
+      if (alvo && this.gruposAtivos.includes(alvo)) {
+        // Reseta para '' e reatribui no próximo tick: força o mat-select a
+        // reconhecer o valor depois que as <mat-option> já estão no DOM.
+        this.grupoSelecionado = '';
+        setTimeout(() => {
+          this.grupoSelecionado = alvo;
+          this.canaisDoGrupo = dir[alvo] ?? [];
+        }, 0);
+      } else if (this.grupoSelecionado && !this.gruposAtivos.includes(this.grupoSelecionado)) {
+        this.canaisDoGrupo = [];
       }
     });
 
@@ -223,6 +232,16 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     clearTimeout(this.debounceTimer);
     this.strStatusCanal = '';
     this.numConectados = 0;
+
+    // Sincroniza o painel direito imediatamente ao digitar
+    const grupoDigitado = this.strGrupo.trim();
+    if (grupoDigitado !== this.grupoSelecionado) {
+      this.grupoSelecionado = grupoDigitado;
+      this.canaisDoGrupo = this.diretorio[grupoDigitado] ?? [];
+      this.filtroBuscaCanal = '';
+    }
+    // canal-ativo já é reativo via [(ngModel)]="strCanal" — sem ação extra
+
     this.debounceTimer = setTimeout(() => {
       const grupo = this.strGrupo.trim(), canal = this.strCanal.trim();
       if (grupo && canal && this.socket?.connected) {
