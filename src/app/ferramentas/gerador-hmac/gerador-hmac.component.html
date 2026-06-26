@@ -1,0 +1,104 @@
+<div class="hmac-layout">
+
+  <!-- Algoritmo -->
+  <div class="secao-opcao">
+    <span class="opcao-label">Algoritmo</span>
+    <div class="chip-group">
+      <button *ngFor="let a of algoritmos"
+        class="chip-algo" [class.chip-ativo]="algoritmo === a"
+        (click)="trocarAlgoritmo(a)">{{ a }}</button>
+    </div>
+  </div>
+
+  <!-- Formato de saída -->
+  <div class="secao-opcao">
+    <span class="opcao-label">Formato</span>
+    <div class="chip-group">
+      <button *ngFor="let f of formatos"
+        class="chip-algo" [class.chip-ativo]="formato === f.id"
+        (click)="trocarFormato(f.id)">{{ f.label }}</button>
+    </div>
+    <button class="toggle-btn" [class.toggle-on]="maiusculas && formato === 'hex'"
+      [disabled]="formato !== 'hex'"
+      (click)="maiusculas = !maiusculas; aoDigitar()"
+      matTooltip="Apenas para formato Hex">
+      MAIÚSCULAS
+    </button>
+  </div>
+
+  <!-- Entradas -->
+  <div class="painel-entradas">
+    <div class="coluna-entrada">
+      <mat-form-field appearance="outline" class="campo-completo">
+        <mat-label>Mensagem</mat-label>
+        <textarea matInput [(ngModel)]="mensagem" (ngModelChange)="aoDigitar()"
+          placeholder="Texto ou dados a assinar…"
+          rows="6" class="textarea-mono"></textarea>
+        <mat-hint>Conteúdo que será assinado com HMAC</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="coluna-entrada">
+      <mat-form-field appearance="outline" class="campo-completo">
+        <mat-label>Chave Secreta</mat-label>
+        <textarea matInput [(ngModel)]="chave" (ngModelChange)="aoDigitar()"
+          placeholder="Chave compartilhada…"
+          rows="6" class="textarea-mono"></textarea>
+        <mat-hint>Mantenha esta chave em segredo</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Ações -->
+  <div class="acoes">
+    <button mat-raised-button color="primary" (click)="calcular()" [disabled]="!mensagem || !chave || calculando">
+      <mat-icon>{{ calculando ? 'hourglass_empty' : 'calculate' }}</mat-icon>
+      {{ calculando ? 'Calculando…' : 'Calcular HMAC' }}
+    </button>
+    <button mat-raised-button class="btn-limpar" [disabled]="!temConteudo" (click)="limpar()">
+      <mat-icon>clear</mat-icon>
+      Limpar
+    </button>
+  </div>
+
+  <!-- Erro -->
+  <div class="mensagem-erro" *ngIf="erro">
+    <mat-icon>error_outline</mat-icon>
+    {{ erro }}
+  </div>
+
+  <!-- Resultado -->
+  <div class="resultado-container" *ngIf="resultado">
+    <div class="resultado-header">
+      <span class="resultado-label">HMAC-{{ algoritmo }}</span>
+      <div class="resultado-acoes">
+        <button mat-icon-button (click)="copiar()" [class.copiado]="copiado"
+          [matTooltip]="copiado ? 'Copiado!' : 'Copiar resultado'">
+          <mat-icon>{{ copiado ? 'check' : 'content_copy' }}</mat-icon>
+        </button>
+      </div>
+    </div>
+    <code class="resultado-valor">{{ resultado }}</code>
+  </div>
+
+</div>
+
+<div class="instrucoes">
+  <h2>Instruções</h2>
+
+  <h4 class="sublinhado">Como calcular um HMAC</h4>
+  <p>Preencha o campo <strong>Mensagem</strong> com o texto ou dado que deseja autenticar, e o campo <strong>Chave Secreta</strong> com a chave compartilhada entre as partes. O HMAC é calculado automaticamente. Selecione o algoritmo de hash e o formato de saída conforme a necessidade da sua aplicação.</p>
+
+  <h4 class="sublinhado">Formatos de saída</h4>
+  <p><strong>Hex</strong> exibe o resultado em hexadecimal — formato mais usado para depuração e comparação manual. <strong>Base64</strong> é compacto e comum em cabeçalhos HTTP como <code>Authorization</code>. <strong>Base64url</strong> é a variante sem caracteres <code>+</code>, <code>/</code> e <code>=</code>, adequada para uso em URLs e tokens JWT.</p>
+
+  <h4 class="sublinhado">Escolha do algoritmo</h4>
+  <p>Para a maioria das aplicações, <strong>HMAC-SHA-256</strong> é o padrão recomendado — amplamente adotado, seguro e interoperável. O <strong>SHA-512</strong> oferece mais segurança e é preferido em contextos de alta sensibilidade. O <strong>SHA-1</strong> deve ser evitado em novos projetos, pois apresenta vulnerabilidades conhecidas.</p>
+
+  <h2>O que é HMAC</h2>
+  <p>HMAC (Hash-based Message Authentication Code) é um mecanismo de autenticação de mensagens que combina uma função de hash criptográfico com uma chave secreta. Diferentemente de um hash simples, o HMAC garante não apenas a integridade da mensagem (que ela não foi alterada), mas também a sua autenticidade (que ela foi gerada por quem possui a chave secreta).</p>
+
+  <p>O HMAC é definido pela RFC 2104 e é amplamente utilizado em protocolos como JWT (JSON Web Token), onde assina o cabeçalho e o payload, em APIs REST para autenticação de requisições (como o AWS Signature), em webhooks para verificar que os eventos foram originados pela plataforma esperada, e em protocolos de troca de chaves como TLS.</p>
+
+  <p>A segurança do HMAC depende diretamente da força da chave secreta utilizada. Recomenda-se usar chaves geradas aleatoriamente com pelo menos 256 bits de entropia, e nunca reutilizá-las entre contextos diferentes. A chave nunca deve trafegar junto com a mensagem — apenas o HMAC resultante é transmitido para verificação.</p>
+</div>

@@ -106,5 +106,22 @@ export class MenuComponent {
       this.router.navigate(['/diff-json']);
       this.dataService.setTituloAplicacao('Diff de JSON');
     }
+    if (tag === 'gerador-uuid') {
+      this.router.navigate(['/gerador-uuid']);
+      this.dataService.setTituloAplicacao('Gerador de UUID');
+    }
+    if (tag === 'gerador-senha') {
+      this.router.navigate(['/gerador-senha']);
+      this.dataService.setTituloAplicacao('Gerador de Senhas');
+    }
+    if (tag === 'gerador-hmac') {
+      this.router.navigate(['/gerador-hmac']);
+      this.dataService.setTituloAplicacao('Gerador de HMAC');
+    }
+    if (tag === 'gerador-cpf-cnpj') {
+      this.router.navigate(['/gerador-cpf-cnpj']);
+      this.dataService.setTituloAplicacao('Gerador de CPF e CNPJ');
+    }
   }
 }
+

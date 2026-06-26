@@ -1,0 +1,191 @@
+.senha-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+}
+
+/* ── Opções genéricas ─────────────────────────────────── */
+.secao-opcao {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  flex-wrap: wrap;
+}
+.opcao-label {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 6em;
+}
+
+/* ── Comprimento ──────────────────────────────────────── */
+.secao-comprimento {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+.comprimento-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+.comprimento-valor {
+  font-size: 1.4em;
+  font-weight: 800;
+  color: var(--aqua);
+  min-width: 2.5em;
+}
+.slider-comprimento {
+  width: 100%;
+}
+.comprimento-marcas {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72em;
+  color: var(--text-muted);
+  padding: 0 0.3em;
+}
+
+/* ── Toggles de caracteres ────────────────────────────── */
+.toggle-group {
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.32em 0.85em;
+  border-radius: 0.4em;
+  border: 1px solid rgba(185, 200, 219, 0.2);
+  background: rgba(5, 18, 39, 0.55);
+  color: var(--text-muted);
+  font-size: 0.83em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+.toggle-btn mat-icon { font-size: 1em; width: 1em; height: 1em; }
+.toggle-btn:hover { border-color: rgba(0, 255, 209, 0.4); color: var(--text-main); }
+.toggle-on {
+  border-color: rgba(0, 255, 209, 0.65) !important;
+  color: var(--aqua) !important;
+  background: rgba(0, 255, 209, 0.07) !important;
+}
+
+/* ── Chips de quantidade ──────────────────────────────── */
+.chip-group { display: flex; gap: 0.4em; flex-wrap: wrap; }
+.chip-qtd {
+  padding: 0.3em 0.85em;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 200, 219, 0.22);
+  background: rgba(5, 18, 39, 0.55);
+  color: var(--text-muted);
+  font-size: 0.88em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+}
+.chip-qtd:hover { border-color: rgba(0, 255, 209, 0.45); color: var(--text-main); }
+.chip-ativo {
+  border-color: rgba(0, 255, 209, 0.7) !important;
+  color: var(--aqua) !important;
+  background: rgba(0, 255, 209, 0.07) !important;
+}
+
+/* ── Força ────────────────────────────────────────────── */
+.forca-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+.forca-label {
+  font-size: 0.82em;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 3em;
+}
+.forca-barra-bg {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(185, 200, 219, 0.12);
+  overflow: hidden;
+}
+.forca-barra {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 300ms ease, background 300ms ease;
+}
+.forca-fraca       { background: #ff7070; color: #ff7070; }
+.forca-media       { background: #facc15; color: #facc15; }
+.forca-forte       { background: #4ade80; color: #4ade80; }
+.forca-muito-forte { background: var(--aqua); color: var(--aqua); }
+.forca-texto {
+  font-size: 0.82em;
+  font-weight: 700;
+  min-width: 6em;
+}
+
+/* ── Ações ────────────────────────────────────────────── */
+.acoes { display: flex; gap: 0.7em; flex-wrap: wrap; }
+.btn-copiar-todos {
+  background: rgba(0, 208, 255, 0.08) !important;
+  color: #8ee8ff !important;
+  border: 1px solid rgba(0, 208, 255, 0.3) !important;
+}
+.btn-copiar-todos.btn-copiado {
+  background: rgba(74, 222, 128, 0.12) !important;
+  color: #4ade80 !important;
+  border-color: rgba(74, 222, 128, 0.4) !important;
+}
+.btn-limpar {
+  background: rgba(255, 112, 112, 0.07) !important;
+  color: #ff9090 !important;
+  border: 1px solid rgba(255, 112, 112, 0.25) !important;
+}
+
+/* ── Lista de senhas ──────────────────────────────────── */
+.lista-senhas {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid transparent;
+  border-radius: 0.6em;
+  background:
+    linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98)) padding-box,
+    conic-gradient(from 135deg,
+      rgba(0, 208, 255, 0.14), rgba(255, 45, 178, 0.38),
+      rgba(182, 37, 255, 0.3), rgba(91, 124, 255, 0.36),
+      rgba(0, 208, 255, 0.14)
+    ) border-box;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  max-height: 28em;
+  overflow-y: auto;
+}
+.senha-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6em 0.85em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 120ms ease;
+}
+.senha-item:last-child { border-bottom: none; }
+.senha-item:hover { background: rgba(0, 255, 209, 0.03); }
+.senha-valor {
+  flex: 1;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.95em;
+  color: var(--text-main);
+  word-break: break-all;
+  user-select: all;
+}
+.btn-copiar-item { color: var(--text-muted) !important; transition: color 140ms ease !important; }
+.btn-copiar-item:hover { color: var(--aqua) !important; }
+.btn-copiar-item.copiado { color: #4ade80 !important; }
+.btn-copiar-item mat-icon { font-size: 1.1em; width: 1.1em; height: 1.1em; }
+
+@media (max-width: 640px) {
+  .secao-opcao { flex-direction: column; align-items: flex-start; }
+}

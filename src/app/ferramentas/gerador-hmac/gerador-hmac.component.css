@@ -1,0 +1,139 @@
+.hmac-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+}
+
+/* ── Opções ───────────────────────────────────────────── */
+.secao-opcao {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  flex-wrap: wrap;
+}
+.opcao-label {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 5em;
+}
+
+/* ── Chips ────────────────────────────────────────────── */
+.chip-group { display: flex; gap: 0.4em; flex-wrap: wrap; }
+.chip-algo {
+  padding: 0.32em 0.9em;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 200, 219, 0.22);
+  background: rgba(5, 18, 39, 0.55);
+  color: var(--text-muted);
+  font-size: 0.84em;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+}
+.chip-algo:hover { border-color: rgba(0, 255, 209, 0.45); color: var(--text-main); }
+.chip-ativo {
+  border-color: rgba(0, 255, 209, 0.7) !important;
+  color: var(--aqua) !important;
+  background: rgba(0, 255, 209, 0.07) !important;
+}
+
+/* ── Toggle maiúsculas ────────────────────────────────── */
+.toggle-btn {
+  padding: 0.32em 0.85em;
+  border-radius: 0.4em;
+  border: 1px solid rgba(185, 200, 219, 0.2);
+  background: rgba(5, 18, 39, 0.55);
+  color: var(--text-muted);
+  font-size: 0.83em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+.toggle-btn:disabled { opacity: 0.35; cursor: default; }
+.toggle-btn:not(:disabled):hover { border-color: rgba(0, 255, 209, 0.4); color: var(--text-main); }
+.toggle-on {
+  border-color: rgba(0, 255, 209, 0.65) !important;
+  color: var(--aqua) !important;
+  background: rgba(0, 255, 209, 0.07) !important;
+}
+
+/* ── Entradas ─────────────────────────────────────────── */
+.painel-entradas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+.coluna-entrada { display: flex; flex-direction: column; }
+.campo-completo { width: 100%; }
+.textarea-mono { font-family: 'Courier New', Courier, monospace; font-size: 0.85em; resize: vertical; }
+
+/* ── Ações ────────────────────────────────────────────── */
+.acoes { display: flex; gap: 0.7em; flex-wrap: wrap; }
+.btn-limpar {
+  background: rgba(255, 112, 112, 0.07) !important;
+  color: #ff9090 !important;
+  border: 1px solid rgba(255, 112, 112, 0.25) !important;
+}
+
+/* ── Erro ─────────────────────────────────────────────── */
+.mensagem-erro {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: #ff7070;
+  font-size: 0.88em;
+  font-weight: 600;
+}
+.mensagem-erro mat-icon { font-size: 1.1em; width: 1.1em; height: 1.1em; }
+
+/* ── Resultado ────────────────────────────────────────── */
+.resultado-container {
+  border: 1px solid transparent;
+  border-radius: 0.6em;
+  background:
+    linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98)) padding-box,
+    conic-gradient(from 135deg,
+      rgba(0, 208, 255, 0.14), rgba(255, 45, 178, 0.38),
+      rgba(182, 37, 255, 0.3),  rgba(91, 124, 255, 0.36),
+      rgba(0, 208, 255, 0.14)
+    ) border-box;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+.resultado-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45em 0.75em 0.45em 0.9em;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.resultado-label {
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--aqua);
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 0.04em;
+}
+.resultado-acoes { display: flex; align-items: center; gap: 0.2em; }
+
+button.copiado { color: #4ade80 !important; }
+
+.resultado-valor {
+  display: block;
+  padding: 0.85em 1em;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.88em;
+  color: var(--text-main);
+  word-break: break-all;
+  line-height: 1.55;
+  user-select: all;
+}
+
+@media (max-width: 640px) {
+  .painel-entradas { grid-template-columns: 1fr; }
+  .secao-opcao { flex-direction: column; align-items: flex-start; }
+}

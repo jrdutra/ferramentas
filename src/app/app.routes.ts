@@ -20,6 +20,10 @@ import { SeparadorPdfComponent } from './ferramentas/separador-pdf/separador-pdf
 import { GeradorHashComponent } from './ferramentas/gerador-hash/gerador-hash.component';
 import { DiffTextoComponent } from './ferramentas/diff-texto/diff-texto.component';
 import { DiffJsonComponent } from './ferramentas/diff-json/diff-json.component';
+import { GeradorUuidComponent } from './ferramentas/gerador-uuid/gerador-uuid.component';
+import { GeradorSenhaComponent } from './ferramentas/gerador-senha/gerador-senha.component';
+import { GeradorHmacComponent } from './ferramentas/gerador-hmac/gerador-hmac.component';
+import { GeradorCpfCnpjComponent } from './ferramentas/gerador-cpf-cnpj/gerador-cpf-cnpj.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -43,5 +47,9 @@ export const routes: Routes = [
   { path: 'separador-pdf', component: SeparadorPdfComponent },
   { path: 'gerador-hash', component: GeradorHashComponent },
   { path: 'diff-texto', component: DiffTextoComponent },
-  { path: 'diff-json', component: DiffJsonComponent }
+  { path: 'diff-json', component: DiffJsonComponent },
+  { path: 'gerador-uuid', component: GeradorUuidComponent },
+  { path: 'gerador-senha', component: GeradorSenhaComponent },
+  { path: 'gerador-hmac', component: GeradorHmacComponent },
+  { path: 'gerador-cpf-cnpj', component: GeradorCpfCnpjComponent },
 ];

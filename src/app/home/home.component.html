@@ -7,7 +7,21 @@
         </div>
     </div>
 
-    <section class="grupo-ferramentas" *ngFor="let grupo of gruposFerramentas">
+    <!-- Filtro de ferramentas -->
+    <mat-form-field appearance="fill" class="home-filtro-field">
+        <input matInput [(ngModel)]="filtro" placeholder="Filtrar ferramentas…" autocomplete="off" spellcheck="false" />
+        <button matSuffix mat-icon-button *ngIf="filtro" (click)="limparFiltro()" aria-label="Limpar filtro">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <!-- Sem resultados -->
+    <div class="home-sem-resultados" *ngIf="semResultados">
+        <mat-icon>search_off</mat-icon>
+        <span>Nenhuma ferramenta encontrada para <strong>"{{ filtro }}"</strong></span>
+    </div>
+
+    <section class="grupo-ferramentas" *ngFor="let grupo of gruposFiltrados">
         <div class="grupo-cabecalho">
             <h2>{{ grupo.titulo }}</h2>
         </div>

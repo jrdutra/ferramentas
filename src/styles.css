@@ -298,6 +298,10 @@ button[disabled] *,
   --mdc-outlined-text-field-outline-color: rgba(0, 255, 209, 0.34);
   --mdc-outlined-text-field-focus-outline-color: #ff2db2;
   --mdc-filled-text-field-container-color: rgba(3, 13, 30, 0.74);
+  --mdc-filled-text-field-focus-container-color: rgba(3, 13, 30, 0.74);
+  --mdc-filled-text-field-hover-container-color: rgba(3, 13, 30, 0.74);
+  --mdc-filled-text-field-hover-state-layer-opacity: 0;
+  --mdc-filled-text-field-focus-state-layer-opacity: 0;
   --mdc-filled-text-field-input-text-color: var(--text-main);
   --mdc-filled-text-field-label-text-color: var(--text-muted);
   --mdc-filled-text-field-focus-label-text-color: var(--text-main);
@@ -483,6 +487,23 @@ app-visualizador-jwt .area-editores.layout-horizontal .coluna2 textarea {
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
+.mat-mdc-text-field-wrapper:has(input:focus),
+.mat-mdc-text-field-wrapper:has(textarea:focus) {
+  background:
+    linear-gradient(145deg, rgba(5, 18, 39, 0.98), rgba(2, 9, 23, 1)) padding-box,
+    conic-gradient(from 135deg, rgba(0, 208, 255, 0.18), rgba(255, 45, 178, 0.8), rgba(182, 37, 255, 0.7), rgba(91, 124, 255, 0.78), rgba(0, 208, 255, 0.18)) border-box !important;
+}
+
+/* Zera o state-layer (ripple de hover/foco) que clarea o fundo nos campos fill */
+.mdc-text-field--filled .mdc-text-field__ripple::before,
+.mdc-text-field--filled .mdc-text-field__ripple::after {
+  background-color: transparent !important;
+  opacity: 0 !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+}
+
 .mat-mdc-input-element,
 textarea,
 input {
@@ -490,7 +511,7 @@ input {
   caret-color: #ffffff;
 }
 
-input:not([type="hidden"]):not([type="file"]):not([type="range"]) {
+input:not([type="hidden"]):not([type="file"]):not([type="range"]):not(.mat-mdc-input-element) {
   background:
     linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98)) padding-box,
     conic-gradient(from 135deg, rgba(0, 208, 255, 0.18), rgba(255, 45, 178, 0.78), rgba(182, 37, 255, 0.68), rgba(91, 124, 255, 0.76), rgba(0, 208, 255, 0.18)) border-box;
@@ -623,6 +644,32 @@ input:not([type="hidden"]):not([type="file"]):not([type="range"]) {
   color: var(--text-muted);
   font-size: 1.05em;
 }
+
+/* ── Filtro da home ────────────────────────────────────────── */
+
+.home-filtro-field {
+  width: 100%;
+}
+
+.home-sem-resultados {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 1.2em 1.4em;
+  border-radius: 0.6em;
+  border: 1px solid rgba(185, 200, 219, 0.12);
+  background: rgba(5, 18, 39, 0.6);
+  color: var(--text-muted);
+  font-size: 0.95em;
+}
+.home-sem-resultados mat-icon {
+  font-size: 1.3em;
+  width: 1.3em;
+  height: 1.3em;
+  opacity: 0.55;
+}
+
+/* ─────────────────────────────────────────────────────────── */
 
 .grupo-ferramentas {
   display: flex;

@@ -1,0 +1,95 @@
+<div class="uuid-layout">
+
+  <!-- Seletor de versão -->
+  <div class="secao-versao">
+    <div class="versao-cards">
+      <button *ngFor="let v of versoes"
+        class="versao-card"
+        [class.versao-ativa]="versao === v.id"
+        (click)="selecionarVersao(v.id)">
+        <span class="versao-nome">{{ v.nome }}</span>
+        <span class="versao-desc">{{ v.desc }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quantidade -->
+  <div class="secao-opcao">
+    <span class="opcao-label">Quantidade</span>
+    <div class="chip-group">
+      <button *ngFor="let n of opcQtd"
+        class="chip-qtd"
+        [class.chip-ativo]="quantidade === n"
+        (click)="selecionarQtd(n)">{{ n }}</button>
+    </div>
+  </div>
+
+  <!-- Formato -->
+  <div class="secao-opcao">
+    <span class="opcao-label">Formato</span>
+    <div class="toggle-group">
+      <button class="toggle-btn" [class.toggle-on]="maiusculas" (click)="maiusculas = !maiusculas; gerar()">
+        <mat-icon>text_fields</mat-icon>
+        MAIÚSCULAS
+      </button>
+      <button class="toggle-btn" [class.toggle-on]="semHifens" (click)="semHifens = !semHifens; gerar()">
+        <mat-icon>remove</mat-icon>
+        Sem hífens
+      </button>
+    </div>
+  </div>
+
+  <!-- Ações -->
+  <div class="acoes">
+    <button mat-raised-button color="primary" (click)="gerar()">
+      <mat-icon>refresh</mat-icon>
+      Gerar
+    </button>
+    <button mat-raised-button (click)="copiarTodos()" [disabled]="uuids.length === 0" class="btn-copiar-todos"
+      [class.btn-copiado]="todosCopiados">
+      <mat-icon>{{ todosCopiados ? 'check' : 'copy_all' }}</mat-icon>
+      {{ todosCopiados ? 'Copiado!' : 'Copiar todos' }}
+    </button>
+    <button mat-raised-button (click)="limpar()" [disabled]="uuids.length === 0" class="btn-limpar">
+      <mat-icon>clear</mat-icon>
+      Limpar
+    </button>
+  </div>
+
+  <!-- Lista de UUIDs -->
+  <div class="lista-uuids" *ngIf="uuids.length > 0">
+    <div class="uuid-item" *ngFor="let uuid of uuids; let i = index">
+      <code class="uuid-valor">{{ uuid }}</code>
+      <button mat-icon-button (click)="copiar(uuid, i)" class="btn-copiar-item"
+        [class.copiado]="foiCopiado(i)"
+        [matTooltip]="foiCopiado(i) ? 'Copiado!' : 'Copiar'">
+        <mat-icon>{{ foiCopiado(i) ? 'check' : 'content_copy' }}</mat-icon>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="instrucoes">
+  <h2>Instruções</h2>
+
+  <h4 class="sublinhado">Como gerar UUIDs</h4>
+  <p>Selecione a versão desejada, escolha a quantidade e clique em <strong>Gerar</strong>. Novos UUIDs são gerados automaticamente ao trocar versão, quantidade ou formato. Use o botão de cópia ao lado de cada UUID para copiar individualmente, ou <strong>Copiar todos</strong> para copiar toda a lista separada por quebras de linha.</p>
+
+  <h4 class="sublinhado">Opções de formato</h4>
+  <p><strong>MAIÚSCULAS</strong> exibe os caracteres hexadecimais em letras maiúsculas — útil para compatibilidade com sistemas que diferenciam maiúsculas de minúsculas. <strong>Sem hífens</strong> remove os separadores, produzindo uma string de 32 caracteres contínuos, formato comum em bancos de dados que armazenam UUIDs como CHAR(32).</p>
+
+  <h2>O que é UUID</h2>
+  <p>UUID (Universally Unique Identifier), também conhecido como GUID (Globally Unique Identifier) no ecossistema Microsoft, é um identificador de 128 bits padronizado pela RFC 4122 e revisado pela RFC 9562 (2024). Sua principal característica é a capacidade de ser gerado de forma descentralizada, sem a necessidade de um servidor central de coordenação, com probabilidade de colisão estatisticamente negligenciável.</p>
+
+  <p>UUIDs são amplamente usados como chaves primárias em bancos de dados, identificadores de sessão, tokens de correlação em logs distribuídos e IDs de recursos em APIs REST. O formato canônico é composto por 32 dígitos hexadecimais separados por hífens em grupos de 8-4-4-4-12, totalizando 36 caracteres.</p>
+
+  <h4 class="sublinhado">UUID v4 — aleatório</h4>
+  <p>O mais utilizado na prática. Gera 122 bits de aleatoriedade criptográfica (os demais 6 bits são reservados para versão e variante). É adequado para a grande maioria dos casos de uso, com uma probabilidade de colisão tão baixa que pode ser ignorada na prática — seriam necessários cerca de 2,7 trilhões de UUIDs para atingir 50% de chance de colisão.</p>
+
+  <h4 class="sublinhado">UUID v7 — ordenável por tempo</h4>
+  <p>Introduzido pela RFC 9562 em 2024, o UUID v7 embute os primeiros 48 bits como o timestamp Unix em milissegundos, tornando-o naturalmente ordenável por tempo de criação. Isso resolve um problema clássico do UUID v4 em bancos de dados: inserções aleatórias causam fragmentação de índices B-tree. Com o v7, os registros inseridos sequencialmente ficam adjacentes no índice, melhorando significativamente a performance de escrita.</p>
+
+  <h4 class="sublinhado">UUID v1 — baseado em timestamp e nó</h4>
+  <p>O UUID v1 utiliza o timestamp com precisão de 100 nanossegundos contados a partir de 15 de outubro de 1582 (data de adoção do calendário gregoriano), combinado com um identificador de nó (originalmente o endereço MAC da máquina). Por não ter acesso ao MAC no navegador, esta ferramenta utiliza bytes aleatórios como nó, mantendo a estrutura temporal do formato.</p>
+</div>
