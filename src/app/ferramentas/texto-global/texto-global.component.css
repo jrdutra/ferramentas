@@ -281,6 +281,40 @@
   flex-shrink: 0;
 }
 
+/* Botão olho — visibilidade do canal (apenas admin) */
+.btn-visibilidade-canal {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35em;
+  height: 1.35em;
+  background: rgba(100, 160, 255, 0.07);
+  border: 1px solid rgba(100, 160, 255, 0.25);
+  cursor: pointer;
+  padding: 0;
+  border-radius: 3px;
+  color: rgba(110, 180, 255, 0.65);
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+.btn-visibilidade-canal:hover {
+  color: rgba(130, 200, 255, 1);
+  background: rgba(100, 160, 255, 0.2);
+  border-color: rgba(100, 160, 255, 0.5);
+}
+
+/* Canal oculto — visível apenas para admin (semi-transparente + itálico) */
+.canal-item.canal-oculto-admin {
+  opacity: 0.45;
+}
+.canal-item.canal-oculto-admin .canal-nome {
+  font-style: italic;
+  color: rgba(170, 170, 170, 0.75);
+  text-decoration: line-through;
+  text-decoration-color: rgba(170, 170, 170, 0.4);
+}
+.canal-item.canal-oculto-admin:hover { opacity: 0.72; }
+
 /* Botão × excluir canal (apenas admin) */
 .btn-excluir-canal {
   flex-shrink: 0;

@@ -50,6 +50,9 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
   // Canais excluídos mas ainda visíveis em vermelho — persiste até clicar
   canaisExcluidos: { [key: string]: boolean } = {};
 
+  // Canais ocultos pelo admin: "grupo::canal" -> true
+  canaisOcultos: { [key: string]: boolean } = {};
+
   // Admin
   isAdmin: boolean = false;
 
@@ -155,24 +158,45 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
     // Grupo excluído pelo admin
     this.socket.on('grupoExcluido', ({ grupo }: { grupo: string }) => this.ngZone.run(() => {
-      if (this.strGrupo.trim() === grupo) {
+      const esteGrupo   = this.strGrupo.trim() === grupo;
+      const painelDirGrupo = this.grupoSelecionado === grupo;
+
+      if (esteGrupo) {
         if (!this.isAdmin) {
           this.grupoExcluidoNome = grupo;
           this.mostrarPopupGrupoExcluido = true;
         }
-        this.strGrupo = '';
-        this.strCanal = '';
-        this.strTexto = '';
-        this.historico = [];
-        this.isAdmin = false;
-        this.textoHot = false;
+        this.strGrupo    = '';
+        this.strCanal    = '';
+        this.strTexto    = '';
+        this.historico   = [];
+        this.isAdmin     = false;
+        this.textoHot    = false;
         this.strStatusCanal = '';
+        this.numConectados  = 0;
         this.location.replaceState('/texto-global');
       }
+
+      // Limpar painel direito se mostrava este grupo
+      if (esteGrupo || painelDirGrupo) {
+        this.grupoSelecionado = '';
+        this.canaisDoGrupo    = [];
+        this.filtroBuscaCanal = '';
+      }
+
+      // Limpar canais hot e excluídos do grupo
       const prefix = `${grupo}::`;
       this.canaisExcluidos = Object.fromEntries(
         Object.entries(this.canaisExcluidos).filter(([k]) => !k.startsWith(prefix))
       );
+      this.canaisHot = Object.fromEntries(
+        Object.entries(this.canaisHot).filter(([k]) => !k.startsWith(prefix))
+      );
+      this.canaisOcultos = Object.fromEntries(
+        Object.entries(this.canaisOcultos).filter(([k]) => !k.startsWith(prefix))
+      );
+
+      this.cdr.detectChanges(); // força reset imediato no DOM
     }));
 
     this.socket.on('diretorioAtualizado', (dir: { [grupo: string]: string[] }) => this.ngZone.run(() => {
@@ -205,6 +229,41 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png';
       this.strStatusConexao = 'Erro na conexão';
       this.strStatusCanal = '';
+    }));
+
+    this.socket.on('visibilidadeCanal', ({ grupo, canal, oculto }: { grupo: string; canal: string; oculto: boolean }) => this.ngZone.run(() => {
+      const key = `${grupo}::${canal}`;
+
+      if (oculto) {
+        this.canaisOcultos = { ...this.canaisOcultos, [key]: true };
+      } else {
+        const next = { ...this.canaisOcultos }; delete next[key]; this.canaisOcultos = next;
+      }
+
+      // Não-admin no canal oculto → navegar para outro canal imediatamente
+      if (oculto && !this.isAdmin &&
+          this.strGrupo.trim() === grupo && this.strCanal.trim() === canal) {
+        const canaisVisiveis = this.canaisDoGrupo.filter(
+          c => c !== canal && !this.canaisOcultos[`${grupo}::${c}`]
+        );
+        const proximo = canaisVisiveis[0] ?? null;
+        if (proximo) {
+          this.strCanal = proximo;
+          this.strTexto = '';
+          this.historico = [];
+          this.textoHot  = false;
+          this.socket.emit('joinCanal', { grupo, canal: proximo });
+          this.atualizarUrl(grupo, proximo);
+        } else {
+          this.strCanal = '';
+          this.strTexto = '';
+          this.historico = [];
+          this.textoHot  = false;
+          this.strStatusCanal = '';
+        }
+      }
+
+      this.cdr.detectChanges();
     }));
 
     this.socket.on('banido', ({ motivo }: { motivo: string }) => this.ngZone.run(() => {
@@ -324,6 +383,16 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
   isCanalHot(canal: string): boolean {
     return !!this.canaisHot[`${this.grupoSelecionado}::${canal}`];
+  }
+
+  isCanalOculto(canal: string): boolean {
+    return !!this.canaisOcultos[`${this.grupoSelecionado}::${canal}`];
+  }
+
+  toggleVisibilidadeCanal(canal: string, evento: Event): void {
+    evento.stopPropagation();
+    if (!this.podeAdministrar) return;
+    this.socket?.emit('toggleVisibilidadeCanal', { grupo: this.strGrupo.trim(), canal });
   }
 
   // ── Admin ─────────────────────────────────────────────────────────────────
