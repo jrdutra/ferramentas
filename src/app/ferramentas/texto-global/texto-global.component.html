@@ -1,21 +1,81 @@
 <div class="div-principal">
-    <div class="div-cabecalho">
-        <img class="inverte-cor-icone" width="30" height="30" src="{{strCaminhoIndicadorConexao}}" />
-        <label class="texto-cabecalho">{{strStatusConexao}}</label>
-        @if (strCanal.trim() && strStatusCanal) {
-            <span class="info-canal">| {{strCanal.trim()}} | {{strStatusCanal}}</span>
-        }
-    </div>
-    <div class="div-canal">
-        <mat-form-field appearance="fill" style="width: 100%">
-            <mat-label>Canal</mat-label>
-            <input matInput [(ngModel)]="strCanal" (input)="onCanalChange()" placeholder="Digite o nome do canal..." style="border: none; background: transparent;" />
-        </mat-form-field>
-    </div>
-    <div class="div-caixa-texto">
+
+  <!-- Cabeçalho de status -->
+  <div class="div-cabecalho">
+    <img class="inverte-cor-icone" width="30" height="30" src="{{strCaminhoIndicadorConexao}}" />
+    <label class="texto-cabecalho">{{strStatusConexao}}</label>
+    @if (strGrupo.trim() && strCanal.trim() && strStatusCanal) {
+      <span class="info-canal">| {{strGrupo.trim()}} / {{strCanal.trim()}} | {{strStatusCanal}}</span>
+    }
+  </div>
+
+  <!-- Corpo em duas colunas -->
+  <div class="div-colunas">
+
+    <!-- Coluna esquerda: controles -->
+    <div class="coluna-esquerda">
+
+      <mat-form-field appearance="fill" style="width: 100%">
+        <mat-label>Grupo</mat-label>
+        <input matInput [(ngModel)]="strGrupo" (input)="onGrupoOuCanalChange()"
+          placeholder="Digite o nome do grupo..." style="border: none; background: transparent;" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="width: 100%">
+        <mat-label>Canal</mat-label>
+        <input matInput [(ngModel)]="strCanal" (input)="onGrupoOuCanalChange()"
+          placeholder="Digite o nome do canal..." style="border: none; background: transparent;" />
+      </mat-form-field>
+
+      @if (urlCompartilhavel) {
+        <div class="div-url-compartilhavel">
+          <span class="url-texto" title="{{urlCompartilhavel}}">{{urlCompartilhavel}}</span>
+          <button class="btn-copiar" (click)="copiarUrl()" title="Copiar URL">📋</button>
+        </div>
+      }
+
+      <div class="div-caixa-texto">
         <mat-form-field appearance="fill">
-            <mat-label>TEXTO</mat-label>
-            <textarea [(ngModel)]="strTexto" (input)="emiteTextoParaServidor()" matInput style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
+          <mat-label>TEXTO</mat-label>
+          <textarea [(ngModel)]="strTexto" (input)="emiteTextoParaServidor()" matInput
+            style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
         </mat-form-field>
+      </div>
     </div>
+
+    <!-- Coluna direita: diretório -->
+    <div class="coluna-direita">
+      <div class="dir-titulo">Grupos e canais ativos</div>
+
+      @if (gruposAtivos.length === 0) {
+        <div class="dir-vazio">Nenhum grupo ativo no momento.</div>
+      } @else {
+        <mat-form-field appearance="fill" style="width: 100%">
+          <mat-label>Grupo</mat-label>
+          <mat-select [(ngModel)]="grupoSelecionado" (ngModelChange)="onGrupoSelecionadoChange()">
+            @for (g of gruposAtivos; track g) {
+              <mat-option [value]="g">{{g}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        @if (grupoSelecionado && canaisDoGrupo.length > 0) {
+          <div class="canais-lista">
+            @for (c of canaisDoGrupo; track c) {
+              <div class="canal-item"
+                [class.canal-ativo]="c === strCanal && grupoSelecionado === strGrupo"
+                (click)="navegarParaCanal(c)">
+                # {{c}}
+              </div>
+            }
+          </div>
+        }
+
+        @if (grupoSelecionado && canaisDoGrupo.length === 0) {
+          <div class="dir-vazio">Nenhum canal ativo neste grupo.</div>
+        }
+      }
+    </div>
+
+  </div>
 </div>

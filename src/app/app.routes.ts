@@ -32,6 +32,7 @@ export const routes: Routes = [
   { path: 'texto-qrcode', component: TextoQrcodeComponent },
   { path: 'quebra-linha', component: QuebraLinhaComponent },
   { path: 'texto-global', component: TextoGlobalComponent },
+  { path: 'texto-global/:grupo/:canal', component: TextoGlobalComponent },
   { path: 'template-de-texto', component: TemplateDeTextoComponent },
   { path: 'visualizador-x-509', component: VisualizadorX509Component },
   { path: 'gerador-certificado-x509', component: GeradorCertificadoX509Component },
