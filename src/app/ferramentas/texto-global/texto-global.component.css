@@ -1,23 +1,59 @@
+/* ── Grid principal: 3 colunas × 2 linhas ───────────────────────────────── */
 .div-principal {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 170px 260px;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "cabecalho   hist-cab   dir-cab"
+    "corpo-esq   corpo-hist corpo-dir";
+  column-gap: 0;
   height: 100%;
 }
 
+/* ── Cabeçalhos ─────────────────────────────────────────────────────────── */
+
 .div-cabecalho {
+  grid-area: cabecalho;
   display: flex;
   flex-direction: row;
-  justify-content: left;
   align-items: center;
-  text-align: center;
-  padding-bottom: 1em;
   flex-wrap: wrap;
   gap: 0.4em;
+  padding-bottom: 1em;
+  padding-right: 1.5em;
+}
+
+.hist-cabecalho {
+  grid-area: hist-cab;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 1em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dir-cabecalho {
+  grid-area: dir-cab;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 1em;
+  padding-left: 1.5em;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.col-titulo {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+  font-weight: 600;
 }
 
 .texto-cabecalho {
   margin-left: 0.1em;
   font-size: 2em;
+  line-height: 1;
 }
 
 .info-canal {
@@ -26,43 +62,56 @@
   opacity: 0.75;
 }
 
-/* Layout duas colunas */
-.div-colunas {
+.badge-admin {
+  margin-left: 0.6em;
+  font-size: 0.65em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffd060;
+  background: rgba(255, 200, 50, 0.12);
+  border: 1px solid rgba(255, 200, 50, 0.35);
+  border-radius: 4px;
+  padding: 0.15em 0.45em;
+  vertical-align: middle;
+}
+
+/* ── Corpo esquerdo ─────────────────────────────────────────────────────── */
+
+.corpo-esquerdo {
+  grid-area: corpo-esq;
   display: flex;
-  flex-direction: row;
-  gap: 2em;
-  flex: 1;
+  flex-direction: column;
   min-height: 0;
+  padding-right: 1.5em;
 }
 
-.coluna-esquerda {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 55%;
-  min-width: 0;
+/* ── Glow verde no textarea ─────────────────────────────────────────────── */
+
+@keyframes pulsar-verde {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(60, 220, 110, 0.15), 0 0 8px rgba(60, 220, 110, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(60, 220, 110, 0.4), 0 0 20px rgba(60, 220, 110, 0.2);
+  }
 }
 
-.coluna-direita {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 280px;
-  min-width: 200px;
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
-  padding-left: 1.5em;
-}
-
-/* Caixa de texto ocupa o espaço restante */
 .div-caixa-texto {
   display: flex;
   flex-direction: column;
   flex: 1;
+  border-radius: 6px;
+  transition: box-shadow 0.4s ease;
 }
 
-.div-caixa-texto mat-form-field {
-  width: 100%;
+.div-caixa-texto.caixa-ativa {
+  animation: pulsar-verde 2s ease-in-out infinite;
 }
 
-/* URL compartilhável */
+.div-caixa-texto mat-form-field { width: 100%; }
+
+/* ── URL compartilhável ─────────────────────────────────────────────────── */
+
 .div-url-compartilhavel {
   display: flex;
   align-items: center;
@@ -94,36 +143,75 @@
   opacity: 0.8;
   transition: opacity 0.2s;
 }
+.btn-copiar:hover { opacity: 1; }
 
-.btn-copiar:hover {
-  opacity: 1;
-}
+/* ── Corpo histórico ────────────────────────────────────────────────────── */
 
-/* Diretório */
-.dir-titulo {
-  font-size: 0.85em;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.55;
-  margin-bottom: 0.75em;
-  font-weight: 600;
-}
-
-.dir-vazio {
-  font-size: 0.85em;
-  opacity: 0.45;
-  font-style: italic;
-}
-
-.canais-lista {
+.corpo-hist {
+  grid-area: corpo-hist;
   display: flex;
   flex-direction: column;
-  gap: 0.2em;
-  margin-top: 0.5em;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  overflow-y: auto;
+  min-height: 0;
 }
 
+.hist-lista { display: flex; flex-direction: column; gap: 0.15em; }
+
+.hist-item {
+  font-size: 0.78em;
+  font-family: 'Courier New', monospace;
+  opacity: 0.75;
+  padding: 0.3em 0.5em;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+  white-space: nowrap;
+}
+
+/* ── Corpo diretório ────────────────────────────────────────────────────── */
+
+.corpo-dir {
+  grid-area: corpo-dir;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 1.5em;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.col-vazio { font-size: 0.85em; opacity: 0.4; font-style: italic; }
+
+/* Botão excluir grupo */
+.btn-excluir-grupo {
+  margin-bottom: 0.75em;
+  padding: 0.35em 0.9em;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border: 1px solid rgba(255, 70, 70, 0.45);
+  border-radius: 4px;
+  background: rgba(255, 60, 60, 0.08);
+  color: rgba(255, 100, 100, 0.9);
+  transition: background 0.2s, border-color 0.2s;
+  align-self: flex-start;
+}
+.btn-excluir-grupo:hover {
+  background: rgba(255, 60, 60, 0.18);
+  border-color: rgba(255, 70, 70, 0.7);
+}
+
+/* Lista de canais */
+.canais-lista { display: flex; flex-direction: column; gap: 0.2em; margin-top: 0.25em; }
+
 .canal-item {
-  padding: 0.45em 0.75em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.45em 0.55em;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9em;
@@ -131,11 +219,9 @@
   opacity: 0.8;
   transition: background 0.15s, opacity 0.15s;
 }
+.canal-item:hover { background: rgba(255, 255, 255, 0.08); opacity: 1; }
 
-.canal-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  opacity: 1;
-}
+.canal-nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .canal-item.canal-ativo {
   background: rgba(100, 200, 255, 0.15);
@@ -143,17 +229,180 @@
   color: var(--aqua, #64ffda);
 }
 
-/* Responsividade */
-@media (max-width: 700px) {
-  .div-colunas {
-    flex-direction: column;
-  }
+/* Canal com atualização não vista */
+.canal-item.canal-hot {
+  color: rgba(80, 220, 130, 0.95);
+  text-shadow: 0 0 6px rgba(60, 220, 110, 0.5);
+  background: rgba(60, 220, 110, 0.06);
+  opacity: 1;
+}
+.canal-item.canal-hot:hover { background: rgba(60, 220, 110, 0.12); }
+.canal-item.canal-ativo.canal-hot { color: var(--aqua, #64ffda); text-shadow: none; background: rgba(100, 200, 255, 0.15); }
 
-  .coluna-direita {
-    flex: none;
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    padding-left: 0;
-    padding-top: 1em;
+/* Canal excluído (vermelho pulsante, até clicar) */
+@keyframes pulsar-vermelho {
+  0%, 100% { box-shadow: 0 0 4px rgba(255, 60, 60, 0.2); }
+  50%       { box-shadow: 0 0 12px rgba(255, 60, 60, 0.55); }
+}
+
+.canal-item.canal-excluido {
+  color: rgba(255, 90, 90, 0.9);
+  text-shadow: 0 0 5px rgba(255, 60, 60, 0.45);
+  background: rgba(255, 60, 60, 0.07);
+  border: 1px solid rgba(255, 60, 60, 0.2);
+  opacity: 1;
+  animation: pulsar-vermelho 1.8s ease-in-out infinite;
+}
+.canal-item.canal-excluido:hover { background: rgba(255, 60, 60, 0.14); }
+
+.canal-excluido-label {
+  font-size: 0.7em;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* Botão X excluir canal (apenas admin) */
+.btn-excluir-canal {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75em;
+  color: rgba(255, 90, 90, 0.6);
+  padding: 0.1em 0.25em;
+  border-radius: 3px;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+  opacity: 0;
+}
+.canal-item:hover .btn-excluir-canal { opacity: 1; }
+.btn-excluir-canal:hover {
+  color: rgba(255, 90, 90, 1);
+  background: rgba(255, 60, 60, 0.15);
+  opacity: 1;
+}
+
+/* ── Botão adicionar canal ───────────────────────────────────────────────── */
+
+.canal-adicionar {
+  justify-content: center;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.25em;
+}
+.canal-adicionar:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
+  opacity: 1;
+}
+.canal-adicionar-icone {
+  font-size: 1.15em;
+  line-height: 1;
+  font-weight: 300;
+}
+
+/* ── Popup: grupo excluído ───────────────────────────────────────────────── */
+
+.popup-fundo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.popup-caixa {
+  background: linear-gradient(145deg, rgba(8, 20, 45, 0.98), rgba(3, 10, 28, 0.99));
+  border: 1px solid rgba(255, 80, 80, 0.35);
+  border-radius: 10px;
+  padding: 2em 2.5em;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(255, 60, 60, 0.15), 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.popup-icone { font-size: 2.5em; margin-bottom: 0.4em; }
+
+.popup-titulo {
+  margin: 0 0 0.5em;
+  font-size: 1.25em;
+  color: rgba(255, 110, 110, 0.95);
+}
+
+.popup-msg { opacity: 0.85; line-height: 1.6; margin: 0 0 1.5em; }
+
+.popup-btn {
+  padding: 0.5em 1.8em;
+  border: 1px solid rgba(255, 80, 80, 0.5);
+  border-radius: 5px;
+  background: rgba(255, 60, 60, 0.1);
+  color: rgba(255, 110, 110, 0.95);
+  font-size: 0.95em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.popup-btn:hover { background: rgba(255, 60, 60, 0.22); }
+
+/* ── Instruções ─────────────────────────────────────────────────────────── */
+
+.instrucoes-compartilhador {
+  margin-top: 1.5em;
+  padding: 1.5em;
+  border: 1px solid transparent;
+  border-radius: 0.5em;
+  background: linear-gradient(145deg, rgba(5, 18, 39, 0.94), rgba(2, 9, 23, 0.97)) padding-box,
+    conic-gradient(from 135deg, rgba(0, 208, 255, 0.16), rgba(182, 37, 255, 0.48), rgba(255, 45, 178, 0.36), rgba(91, 124, 255, 0.46), rgba(0, 208, 255, 0.16)) border-box;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3), 0 0 20px rgba(91, 124, 255, 0.1);
+}
+.instrucoes-compartilhador h2:not(:first-child) { margin-top: 1.5em; }
+.instrucoes-compartilhador p { line-height: 1.65; }
+
+.sublinhado { text-decoration: underline; }
+
+.instrucoes-aviso {
+  margin: 1.25em 0;
+  padding: 1em 1.1em;
+  border: 1px solid rgba(182, 37, 255, 0.38);
+  border-left: 4px solid #b625ff;
+  border-radius: 0.5em;
+  background: rgba(182, 37, 255, 0.09);
+  line-height: 1.6;
+}
+.instrucoes-aviso strong { color: #e3a6ff; }
+
+/* ── Responsividade ─────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .div-principal {
+    grid-template-columns: 1fr 260px;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "cabecalho   dir-cab"
+      "corpo-esq   corpo-dir"
+      "hist-cab    hist-cab"
+      "corpo-hist  corpo-hist";
   }
+  .hist-cabecalho { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); padding-left: 0; padding-top: 0.75em; }
+  .corpo-hist { border-left: none; padding-left: 0; overflow-y: visible; }
+}
+
+@media (max-width: 600px) {
+  .div-principal {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "cabecalho"
+      "corpo-esq"
+      "hist-cab"
+      "corpo-hist"
+      "dir-cab"
+      "corpo-dir";
+  }
+  .dir-cabecalho { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); padding-left: 0; padding-top: 0.75em; }
+  .corpo-dir { border-left: none; padding-left: 0; }
 }

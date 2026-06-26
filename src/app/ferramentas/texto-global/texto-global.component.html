@@ -1,81 +1,256 @@
 <div class="div-principal">
 
-  <!-- Cabeçalho de status -->
+  <!-- ── Cabeçalhos (linha 1 do grid) ── -->
+
   <div class="div-cabecalho">
     <img class="inverte-cor-icone" width="30" height="30" src="{{strCaminhoIndicadorConexao}}" />
     <label class="texto-cabecalho">{{strStatusConexao}}</label>
     @if (strGrupo.trim() && strCanal.trim() && strStatusCanal) {
       <span class="info-canal">| {{strGrupo.trim()}} / {{strCanal.trim()}} | {{strStatusCanal}}</span>
     }
+    @if (isAdmin && strGrupo.trim() && strCanal.trim()) {
+      <span class="badge-admin">ADM</span>
+    }
   </div>
 
-  <!-- Corpo em duas colunas -->
-  <div class="div-colunas">
+  <div class="hist-cabecalho">
+    <span class="col-titulo">Histórico</span>
+  </div>
 
-    <!-- Coluna esquerda: controles -->
-    <div class="coluna-esquerda">
+  <div class="dir-cabecalho">
+    <span class="col-titulo">Grupos e Canais ativos</span>
+  </div>
 
-      <mat-form-field appearance="fill" style="width: 100%">
-        <mat-label>Grupo</mat-label>
-        <input matInput [(ngModel)]="strGrupo" (input)="onGrupoOuCanalChange()"
-          placeholder="Digite o nome do grupo..." style="border: none; background: transparent;" />
-      </mat-form-field>
+  <!-- ── Corpo esquerdo: inputs + textarea (linha 2, col 1) ── -->
 
-      <mat-form-field appearance="fill" style="width: 100%">
-        <mat-label>Canal</mat-label>
-        <input matInput [(ngModel)]="strCanal" (input)="onGrupoOuCanalChange()"
-          placeholder="Digite o nome do canal..." style="border: none; background: transparent;" />
-      </mat-form-field>
+  <div class="corpo-esquerdo">
 
-      @if (urlCompartilhavel) {
-        <div class="div-url-compartilhavel">
-          <span class="url-texto" title="{{urlCompartilhavel}}">{{urlCompartilhavel}}</span>
-          <button class="btn-copiar" (click)="copiarUrl()" title="Copiar URL">📋</button>
-        </div>
-      }
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Grupo</mat-label>
+      <input matInput [(ngModel)]="strGrupo" (input)="onGrupoOuCanalChange()"
+        placeholder="Digite o nome do grupo..." style="border: none; background: transparent;" />
+    </mat-form-field>
 
-      <div class="div-caixa-texto">
-        <mat-form-field appearance="fill">
-          <mat-label>TEXTO</mat-label>
-          <textarea [(ngModel)]="strTexto" (input)="emiteTextoParaServidor()" matInput
-            style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
-        </mat-form-field>
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Canal</mat-label>
+      <input matInput [(ngModel)]="strCanal" (input)="onGrupoOuCanalChange()"
+        placeholder="Digite o nome do canal..." style="border: none; background: transparent;" />
+    </mat-form-field>
+
+    @if (urlCompartilhavel) {
+      <div class="div-url-compartilhavel">
+        <span class="url-texto" title="{{urlCompartilhavel}}">{{urlCompartilhavel}}</span>
+        <button class="btn-copiar" type="button" (click)="copiarUrl()" title="Copiar URL">📋</button>
       </div>
+    }
+
+    <div class="div-caixa-texto" [class.caixa-ativa]="textoHot">
+      <mat-form-field appearance="fill">
+        <mat-label>TEXTO</mat-label>
+        <textarea [(ngModel)]="strTexto" (input)="emiteTextoParaServidor()" matInput
+          style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
+      </mat-form-field>
     </div>
 
-    <!-- Coluna direita: diretório -->
-    <div class="coluna-direita">
-      <div class="dir-titulo">Grupos e canais ativos</div>
+  </div>
 
-      @if (gruposAtivos.length === 0) {
-        <div class="dir-vazio">Nenhum grupo ativo no momento.</div>
-      } @else {
+  <!-- ── Corpo do histórico (linha 2, col 2) ── -->
+
+  <div class="corpo-hist">
+    @if (historico.length === 0) {
+      <div class="col-vazio">Sem alterações ainda.</div>
+    } @else {
+      <div class="hist-lista">
+        @for (entry of historico; track entry) {
+          <div class="hist-item">{{formatarDataHora(entry)}}</div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ── Corpo do diretório (linha 2, col 3) ── -->
+
+  <div class="corpo-dir">
+
+    @if (gruposAtivos.length === 0 && !grupoSelecionado) {
+      <div class="col-vazio">Nenhum grupo ativo no momento.</div>
+    } @else {
+      <mat-form-field appearance="fill" style="width: 100%">
+        <mat-label>Grupo</mat-label>
+        <mat-select [(ngModel)]="grupoSelecionado" (ngModelChange)="onGrupoSelecionadoChange()">
+          @for (g of gruposAtivos; track g) {
+            <mat-option [value]="g">{{g}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Botão excluir grupo (apenas admin do grupo selecionado) -->
+      @if (podeAdministrar) {
+        <button class="btn-excluir-grupo" type="button" (click)="excluirGrupo()">
+          Excluir grupo
+        </button>
+      }
+
+      @if (grupoSelecionado) {
         <mat-form-field appearance="fill" style="width: 100%">
-          <mat-label>Grupo</mat-label>
-          <mat-select [(ngModel)]="grupoSelecionado" (ngModelChange)="onGrupoSelecionadoChange()">
-            @for (g of gruposAtivos; track g) {
-              <mat-option [value]="g">{{g}}</mat-option>
-            }
-          </mat-select>
+          <mat-label>Buscar canal</mat-label>
+          <input matInput [(ngModel)]="filtroBuscaCanal"
+            placeholder="Filtrar..." style="border: none; background: transparent;" />
         </mat-form-field>
 
-        @if (grupoSelecionado && canaisDoGrupo.length > 0) {
+        <!-- Canais ativos -->
+        @if (canaisFiltrados.length > 0 || canaisExcluidosDoGrupo.length > 0 || grupoSelecionado) {
           <div class="canais-lista">
-            @for (c of canaisDoGrupo; track c) {
+            <!-- Botão adicionar canal -->
+            <div class="canal-item canal-adicionar" (click)="abrirModalNovoCanal()" title="Adicionar canal">
+              <span class="canal-adicionar-icone">＋</span>
+            </div>
+            @for (c of canaisFiltrados; track c) {
               <div class="canal-item"
                 [class.canal-ativo]="c === strCanal && grupoSelecionado === strGrupo"
+                [class.canal-hot]="isCanalHot(c)"
                 (click)="navegarParaCanal(c)">
-                # {{c}}
+                <span class="canal-nome"># {{c}}</span>
+                @if (podeAdministrar) {
+                  <button class="btn-excluir-canal" type="button"
+                    title="Excluir canal"
+                    (click)="excluirCanal(c, $event)">✕</button>
+                }
+              </div>
+            }
+
+            <!-- Canais excluídos não clicados (vermelho) -->
+            @for (c of canaisExcluidosDoGrupo; track c) {
+              <div class="canal-item canal-excluido" (click)="removerCanalExcluido(c)">
+                <span class="canal-nome"># {{c}}</span>
+                <span class="canal-excluido-label">excluído</span>
               </div>
             }
           </div>
-        }
-
-        @if (grupoSelecionado && canaisDoGrupo.length === 0) {
-          <div class="dir-vazio">Nenhum canal ativo neste grupo.</div>
+        } @else {
+          <div class="canais-lista">
+            <div class="canal-item canal-adicionar" (click)="abrirModalNovoCanal()" title="Adicionar canal">
+              <span class="canal-adicionar-icone">＋</span>
+            </div>
+          </div>
         }
       }
-    </div>
+    }
 
   </div>
+
+</div>
+
+<!-- ── Popup: grupo excluído ── -->
+@if (mostrarPopupGrupoExcluido) {
+  <div class="popup-fundo" (click)="fecharPopupGrupoExcluido()">
+    <div class="popup-caixa" (click)="$event.stopPropagation()">
+      <div class="popup-icone">⚠️</div>
+      <h3 class="popup-titulo">Grupo excluído</h3>
+      <p class="popup-msg">
+        O grupo <strong>{{grupoExcluidoNome}}</strong> foi excluído pelo administrador.
+      </p>
+      <button class="popup-btn" type="button" (click)="fecharPopupGrupoExcluido()">Entendido</button>
+    </div>
+  </div>
+}
+
+<!-- ── Modal: novo canal ── -->
+@if (mostrarModalNovoCanal) {
+  <div class="popup-fundo" (click)="fecharModalNovoCanal()">
+    <div class="popup-caixa modal-novo-canal" (click)="$event.stopPropagation()">
+      <h3 class="popup-titulo modal-titulo">Novo canal</h3>
+      <p class="popup-msg">Digite o nome do canal a ser criado no grupo <strong>{{grupoSelecionado}}</strong>.</p>
+      <input
+        class="modal-input"
+        type="text"
+        [(ngModel)]="nomeNovoCanal"
+        placeholder="Nome do canal..."
+        (keydown.enter)="confirmarNovoCanal()"
+        (keydown.escape)="fecharModalNovoCanal()"
+        autofocus />
+      <div class="modal-acoes">
+        <button class="popup-btn popup-btn-secundario" type="button" (click)="fecharModalNovoCanal()">Cancelar</button>
+        <button class="popup-btn" type="button" (click)="confirmarNovoCanal()" [disabled]="!nomeNovoCanal.trim()">Entrar no canal</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ── Overlay: banido ── -->
+@if (estaBanido) {
+  <div class="ban-overlay">
+    <div class="ban-caixa">
+      <div class="ban-icone">🚫</div>
+      <h3 class="ban-titulo">Sessão bloqueada</h3>
+      <p class="ban-msg">{{motivoBan}}</p>
+      <p class="ban-dica">Feche e reabra a aba para obter uma nova sessão.</p>
+    </div>
+  </div>
+}
+
+<!-- ── Seção de instruções ── -->
+<div class="instrucoes-compartilhador">
+  <h2>Instruções</h2>
+
+  <p>
+    O Compartilhador de Texto permite sincronizar texto em tempo real entre múltiplas telas, sem cadastro ou login.
+    Basta definir um <strong>Grupo</strong> e um <strong>Canal</strong> e qualquer pessoa com o mesmo par verá
+    as alterações instantaneamente.
+  </p>
+
+  <h2>Como usar</h2>
+
+  <h4 class="sublinhado">Definir Grupo e Canal</h4>
+  <p>
+    Digite um nome de grupo e um nome de canal nos campos à esquerda. Assim que ambos estiverem preenchidos,
+    você entra automaticamente naquele canal. Qualquer texto digitado na caixa é transmitido em tempo real para
+    todas as outras telas conectadas ao mesmo grupo e canal.
+  </p>
+
+  <h4 class="sublinhado">Compartilhar a URL</h4>
+  <p>
+    Quando grupo e canal estão preenchidos, uma URL compartilhável aparece abaixo dos campos. Clique no ícone 📋
+    para copiá-la. Ao abrir essa URL em outro dispositivo ou aba, o grupo e o canal já chegam preenchidos e a
+    conexão é estabelecida automaticamente.
+  </p>
+
+  <h4 class="sublinhado">Navegar pelo Diretório</h4>
+  <p>
+    A coluna da direita exibe todos os grupos e canais com conexões ativas no momento. Selecione um grupo no
+    combobox e use o campo de busca para filtrar os canais. Clique em qualquer canal para entrar nele e carregar
+    o texto atual.
+  </p>
+
+  <h4 class="sublinhado">Histórico de Alterações</h4>
+  <p>
+    A coluna central registra o horário de cada alteração significativa no texto do canal. Um novo registro é
+    criado após <strong>10 segundos</strong> sem edições, marcando o momento em que aquela versão foi considerada
+    estável. O histórico é mantido apenas enquanto o canal estiver ativo.
+  </p>
+
+  <h4 class="sublinhado">Administrador do Grupo</h4>
+  <p>
+    A primeira tela a entrar em um grupo torna-se automaticamente o administrador (<strong>ADM</strong>).
+    O administrador pode excluir canais individualmente — as outras telas naquele canal migram automaticamente
+    para o canal adjacente — e também pode excluir o grupo inteiro, o que notifica todas as telas conectadas.
+    Se o administrador sair, o próximo membro mais antigo herda o papel.
+  </p>
+
+  <div class="instrucoes-aviso">
+    <strong>Atenção:</strong> o texto e o histórico de um canal são mantidos em memória por até
+    <strong>5 minutos</strong> após a última tela se desconectar. Depois disso, o canal é encerrado e os dados
+    são descartados permanentemente. Não há persistência em banco de dados.
+  </div>
+
+  <h2>Grupos e Canais</h2>
+  <p>
+    Um <strong>grupo</strong> é um espaço de trabalho que agrupa vários canais. Use grupos para separar projetos,
+    times ou contextos diferentes. Um <strong>canal</strong> é a unidade de compartilhamento: cada canal tem seu
+    próprio texto e histórico independentes.
+  </p>
+  <p>
+    Qualquer combinação de grupo e canal é válida — não há cadastro prévio. O canal passa a existir assim que
+    a primeira tela entra nele e deixa de existir 5 minutos depois que a última tela sai.
+  </p>
 </div>
