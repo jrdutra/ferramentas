@@ -443,6 +443,18 @@
 
 .popup-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
+/* Confirmação excluir grupo */
+.popup-confirmar { border-color: rgba(255, 150, 50, 0.4); }
+.popup-titulo-aviso { color: rgba(255, 160, 60, 0.95) !important; }
+.popup-aviso-detalhe { font-size: 0.85em; opacity: 0.65; }
+
+.popup-btn-perigo {
+  border-color: rgba(255, 70, 70, 0.6);
+  color: rgba(255, 100, 100, 0.95);
+  background: rgba(255, 60, 60, 0.12);
+}
+.popup-btn-perigo:hover { background: rgba(255, 60, 60, 0.28); border-color: rgba(255, 70, 70, 0.85); }
+
 /* ── Overlay de ban ──────────────────────────────────────────────────────── */
 
 .ban-overlay {

@@ -186,6 +186,24 @@
   </div>
 }
 
+<!-- ── Modal: confirmação excluir grupo ── -->
+@if (mostrarConfirmacaoExcluirGrupo) {
+  <div class="popup-fundo" (click)="cancelarExcluirGrupo()">
+    <div class="popup-caixa popup-confirmar" (click)="$event.stopPropagation()">
+      <div class="popup-icone">⚠️</div>
+      <h3 class="popup-titulo popup-titulo-aviso">Excluir grupo</h3>
+      <p class="popup-msg">
+        Tem certeza que deseja excluir o grupo <strong>{{strGrupo.trim()}}</strong>?<br>
+        <span class="popup-aviso-detalhe">Todos os canais e textos serão perdidos permanentemente.</span>
+      </p>
+      <div class="modal-acoes">
+        <button class="popup-btn popup-btn-secundario" type="button" (click)="cancelarExcluirGrupo()">Cancelar</button>
+        <button class="popup-btn popup-btn-perigo" type="button" (click)="confirmarExcluirGrupo()">Excluir</button>
+      </div>
+    </div>
+  </div>
+}
+
 <!-- ── Overlay: banido ── -->
 @if (estaBanido) {
   <div class="ban-overlay">

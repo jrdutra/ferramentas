@@ -60,6 +60,9 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
   mostrarPopupGrupoExcluido: boolean = false;
   grupoExcluidoNome: string = '';
 
+  // Modal de confirmação para excluir grupo
+  mostrarConfirmacaoExcluirGrupo: boolean = false;
+
   // Modal novo canal
   mostrarModalNovoCanal: boolean = false;
   nomeNovoCanal: string = '';
@@ -330,7 +333,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
         this.socket.emit('joinCanal', { grupo, canal });
         this.atualizarUrl(grupo, canal);
       }
-    }, 600);
+    }, 5000);
   }
 
   emiteTextoParaServidor(): void {
@@ -409,7 +412,17 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
   excluirGrupo(): void {
     if (!this.podeAdministrar) return;
+    this.mostrarConfirmacaoExcluirGrupo = true;
+  }
+
+  confirmarExcluirGrupo(): void {
+    this.mostrarConfirmacaoExcluirGrupo = false;
+    if (!this.podeAdministrar) return;
     this.socket?.emit('excluirGrupo', { grupo: this.strGrupo.trim() });
+  }
+
+  cancelarExcluirGrupo(): void {
+    this.mostrarConfirmacaoExcluirGrupo = false;
   }
 
   fecharPopupGrupoExcluido(): void {
