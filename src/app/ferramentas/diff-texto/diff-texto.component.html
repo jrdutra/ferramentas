@@ -116,6 +116,19 @@
 </div>
 
 <div class="instrucoes">
-  <h2>Como usar</h2>
-  <p>Cole o texto original em <strong>Texto A</strong> e o modificado em <strong>Texto B</strong>, depois clique em <strong>Comparar</strong>. Os caracteres diferentes ficam marcados em <span class="cor-removido">vermelho</span> diretamente dentro de cada caixa. Abaixo do botão aparecem apenas os trechos com diferenças entre os dois textos.</p>
+  <h2>Instruções</h2>
+
+  <h4 class="sublinhado">Como comparar dois textos</h4>
+  <p>Cole o texto original no campo <strong>Texto A</strong> e o texto modificado no campo <strong>Texto B</strong>, depois clique em <strong>Comparar</strong>. A ferramenta analisa os dois textos caractere a caractere e exibe o resultado diretamente nas caixas de texto, marcando em vermelho os trechos que diferem. Para editar os textos novamente, clique no botão <strong>Editar</strong>.</p>
+
+  <h4 class="sublinhado">Interpretando o resultado</h4>
+  <p>Os caracteres em vermelho no <strong>Texto A</strong> representam o que foi removido ou alterado em relação ao Texto B. Os marcados em vermelho no <strong>Texto B</strong> representam o que foi adicionado ou substituído. Sequências iguais de pelo menos três caracteres consecutivos voltam à cor normal, facilitando a identificação de onde as diferenças efetivamente começam e terminam.</p>
+
+  <h4 class="sublinhado">Seção de diferenças</h4>
+  <p>Abaixo do botão <strong>Comparar</strong> é exibida apenas a lista de trechos que diferem, com o conteúdo de A em vermelho e o de B em verde. Trechos idênticos não aparecem nessa seção, tornando mais fácil focar nas mudanças quando os textos são longos.</p>
+
+  <h2>O que é um Diff de Texto</h2>
+  <p>Um diff é a representação das diferenças entre duas versões de um mesmo conteúdo. O nome vem do comando <code>diff</code> do Unix, criado na década de 1970, que compara dois arquivos linha a linha e exibe o que foi adicionado, removido ou mantido. Essa saída ficou conhecida como "unified diff" e é o formato usado até hoje por sistemas de controle de versão como o Git.</p>
+
+  <p>Esta ferramenta usa o algoritmo LCS (Longest Common Subsequence — Maior Subsequência Comum) para encontrar a maior sequência de caracteres que aparece na mesma ordem nos dois textos. Tudo que não faz parte dessa sequência é considerado uma diferença. Para evitar falsos positivos causados por coincidências curtas, apenas sequências de três ou mais caracteres consecutivos iguais são tratadas como trecho em comum.</p>
 </div>

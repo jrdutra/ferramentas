@@ -142,11 +142,24 @@
 </div>
 
 <div class="instrucoes">
-  <h2>Como usar</h2>
-  <p>Cole o JSON original em <strong>JSON A</strong> e o modificado em <strong>JSON B</strong>, depois clique em <strong>Comparar</strong>. Use o botao <mat-icon class="icone-inline">auto_fix_high</mat-icon> para formatar o JSON antes de comparar.</p>
+  <h2>Instruções</h2>
+
+  <h4 class="sublinhado">Como comparar dois JSONs</h4>
+  <p>Cole o JSON original no campo <strong>JSON A</strong> e o JSON modificado no campo <strong>JSON B</strong>, depois clique em <strong>Comparar</strong>. A ferramenta percorre recursivamente a estrutura dos dois objetos e exibe as diferenças lado a lado, campo a campo.</p>
+
+  <h4 class="sublinhado">Formatar o JSON antes de comparar</h4>
+  <p>Caso o JSON esteja minificado ou stringficado, use o botão <mat-icon class="icone-inline">auto_fix_high</mat-icon> em cada campo para formatá-lo antes de comparar. Isso facilita a leitura e garante que diferenças de formatação não sejam interpretadas como mudanças de conteúdo.</p>
+
+  <h4 class="sublinhado">Interpretando o resultado</h4>
   <p>
-    Campos em <span class="cor-adicionado">verde</span> foram adicionados no JSON B.
-    Em <span class="cor-removido">vermelho</span> foram removidos.
-    Em <span class="cor-modificado">amarelo</span> tiveram o valor alterado.
+    Campos em <span class="cor-adicionado">verde</span> existem apenas no JSON B — foram adicionados.
+    Campos em <span class="cor-removido">vermelho</span> existem apenas no JSON A — foram removidos.
+    Campos em <span class="cor-modificado">amarelo</span> existem nos dois JSONs, mas com valores diferentes — foram modificados.
+    Campos sem destaque são idênticos nos dois lados.
   </p>
+
+  <h2>O que é JSON</h2>
+  <p>JSON (JavaScript Object Notation) é um formato leve de troca de dados, fácil de ler por humanos e simples de interpretar por máquinas. Ele é baseado em um subconjunto da linguagem JavaScript, mas é completamente independente de linguagem. JSON é amplamente utilizado para transmitir dados estruturados entre servidores e clientes na web, bem como em arquivos de configuração, APIs REST e armazenamento de dados.</p>
+
+  <p>Foi formalizado por Douglas Crockford na especificação RFC 4627 em 2006 e, desde então, tornou-se um dos formatos de dados mais adotados no desenvolvimento de software. Um objeto JSON é composto por pares chave/valor, onde os valores podem ser strings, números, booleanos, arrays, outros objetos ou null — o que o torna extremamente flexível para representar praticamente qualquer estrutura de dados.</p>
 </div>

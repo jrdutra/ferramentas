@@ -55,12 +55,25 @@
 </div>
 
 <div class="instrucoes">
-  <h2>Como usar</h2>
-  <p>Digite ou cole qualquer texto no campo acima. Os hashes são calculados automaticamente em tempo real usando MD5, SHA-1, SHA-256 e SHA-512.</p>
+  <h2>Instruções</h2>
 
-  <h2>Sobre os algoritmos</h2>
-  <p><strong>MD5</strong> — Produz um hash de 128 bits (32 caracteres hex). Amplamente usado para verificar integridade de arquivos, mas não recomendado para segurança criptográfica.</p>
-  <p><strong>SHA-1</strong> — Produz 160 bits (40 caracteres hex). Historicamente popular, mas considerado fraco para uso criptográfico moderno.</p>
-  <p><strong>SHA-256</strong> — Parte da família SHA-2. Produz 256 bits (64 caracteres hex). Padrão amplamente adotado para segurança em geral.</p>
-  <p><strong>SHA-512</strong> — Também da família SHA-2. Produz 512 bits (128 caracteres hex). Oferece maior margem de segurança que o SHA-256.</p>
+  <h4 class="sublinhado">Como gerar o hash de um texto</h4>
+  <p>Basta digitar ou colar o texto no campo acima. Os quatro hashes são calculados automaticamente em tempo real, sem necessidade de clicar em nenhum botão. Use o ícone de cópia ao lado de cada resultado para copiar o valor para a área de transferência.</p>
+
+  <h4 class="sublinhado">Alternar entre maiúsculas e minúsculas</h4>
+  <p>Por padrão os hashes são exibidos em letras minúsculas. Clique no botão de alternância no canto superior direito do painel para exibir os valores em letras maiúsculas, que é o formato exigido por algumas APIs e sistemas legados.</p>
+
+  <h2>O que é uma Função de Hash Criptográfico</h2>
+  <p>Uma função de hash criptográfico é um algoritmo matemático que transforma qualquer quantidade de dados em uma sequência de tamanho fixo, chamada de hash ou digest. A mesma entrada sempre produz o mesmo hash, mas qualquer alteração mínima na entrada — mesmo um único caractere — resulta em um hash completamente diferente. Essa propriedade é conhecida como efeito avalanche.</p>
+
+  <p>Funções de hash são amplamente usadas para verificar a integridade de arquivos, armazenar senhas de forma segura, assinar digitalmente documentos e garantir a autenticidade de mensagens. É importante diferenciar hash de criptografia: o hash é uma operação unidirecional, ou seja, não é possível recuperar o texto original a partir do hash.</p>
+
+  <h4 class="sublinhado">MD5</h4>
+  <p>Criado em 1991 por Ronald Rivest, o MD5 produz um hash de 128 bits, representado por 32 caracteres hexadecimais. Apesar de ainda ser usado para verificação de integridade de arquivos, não é recomendado para fins de segurança, pois vulnerabilidades conhecidas permitem criar colisões — entradas diferentes que geram o mesmo hash.</p>
+
+  <h4 class="sublinhado">SHA-1</h4>
+  <p>Desenvolvido pela NSA e publicado em 1995, o SHA-1 produz um hash de 160 bits (40 caracteres hex). Foi o padrão dominante por anos em certificados SSL e assinaturas digitais, mas em 2017 pesquisadores demonstraram a primeira colisão prática, tornando-o obsoleto para uso criptográfico. Ainda é encontrado em sistemas legados.</p>
+
+  <h4 class="sublinhado">SHA-256 e SHA-512</h4>
+  <p>Ambos pertencem à família SHA-2, publicada pela NSA em 2001. O SHA-256 produz 256 bits (64 caracteres hex) e é o padrão recomendado para a maioria das aplicações de segurança, sendo usado em certificados TLS, Bitcoin e assinaturas de código. O SHA-512 produz 512 bits (128 caracteres hex) e oferece maior margem de segurança, sendo preferido em contextos que exigem resistência extra a ataques de força bruta.</p>
 </div>

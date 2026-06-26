@@ -219,18 +219,6 @@
 
 /* ── Instruções ──────────────────────────────────────────── */
 
-.instrucoes {
-  margin-top: 0.5em;
-  color: var(--text-muted);
-  font-size: 0.95em;
-  line-height: 1.7;
-}
-.instrucoes h2 {
-  color: var(--text-main);
-  font-size: 1.1em;
-  margin: 1.2em 0 0.4em;
-}
-.instrucoes strong { color: #8ee8ff; }
 .icone-inline { font-size: 1em; width: 1em; height: 1em; vertical-align: middle; }
 .ex-adicionado { color: #4ade80; font-weight: 600; }
 .ex-removido   { color: #ff7070; font-weight: 600; }
