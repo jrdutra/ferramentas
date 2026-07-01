@@ -32,6 +32,26 @@
                 "glob": "pdf.min.js",
                 "input": "node_modules/pdfjs-dist/build/",
                 "output": "assets/"
+              },
+              {
+                "glob": "worker.min.js",
+                "input": "node_modules/tesseract.js/dist/",
+                "output": "assets/tesseract/"
+              },
+              {
+                "glob": "tesseract-core-lstm.wasm.js",
+                "input": "node_modules/tesseract.js-core/",
+                "output": "assets/tesseract/"
+              },
+              {
+                "glob": "tesseract-core-simd-lstm.wasm.js",
+                "input": "node_modules/tesseract.js-core/",
+                "output": "assets/tesseract/"
+              },
+              {
+                "glob": "tesseract-core-relaxedsimd-lstm.wasm.js",
+                "input": "node_modules/tesseract.js-core/",
+                "output": "assets/tesseract/"
               }
             ],
             "styles": [
