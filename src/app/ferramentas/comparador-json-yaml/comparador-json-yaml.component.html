@@ -1,0 +1,124 @@
+<div class="cmp-layout">
+
+  <!-- ─── Modo edição ─── -->
+  <ng-container *ngIf="!comparado">
+    <div class="cmp-topo">
+      <div class="cmp-formato">
+        <span class="cmp-formato-label">Formato</span>
+        <div class="seg-group">
+          <button *ngFor="let f of formatos" class="seg-btn" [class.seg-ativo]="formato === f.id"
+            (click)="formato = f.id">{{ f.nome }}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmp-entradas">
+      <div class="cmp-coluna">
+        <div class="cmp-cabecalho"><span class="rot rot-a">Objeto A</span><span class="rot-hint">esquerda</span></div>
+        <textarea class="cmp-textarea" [(ngModel)]="textoA" spellcheck="false"
+          placeholder="Cole aqui o primeiro JSON ou YAML…" rows="16"></textarea>
+      </div>
+      <div class="cmp-coluna">
+        <div class="cmp-cabecalho"><span class="rot rot-b">Objeto B</span><span class="rot-hint">direita</span></div>
+        <textarea class="cmp-textarea" [(ngModel)]="textoB" spellcheck="false"
+          placeholder="Cole aqui o segundo JSON ou YAML…" rows="16"></textarea>
+      </div>
+    </div>
+
+    <div class="cmp-acoes">
+      <button mat-raised-button color="primary" (click)="comparar()" [disabled]="!temConteudo()">
+        <mat-icon>compare_arrows</mat-icon> Comparar
+      </button>
+      <button mat-raised-button (click)="exemplo()" class="btn-neutro"><mat-icon>lightbulb</mat-icon> Exemplo</button>
+      <button mat-raised-button (click)="limpar()" class="btn-limpar"><mat-icon>clear</mat-icon> Limpar</button>
+    </div>
+  </ng-container>
+
+  <!-- ─── Modo resultado ─── -->
+  <ng-container *ngIf="comparado && resultado as r">
+
+    <div class="cmp-acoes">
+      <button mat-raised-button (click)="editar()" class="btn-neutro"><mat-icon>edit</mat-icon> Editar</button>
+      <button mat-raised-button (click)="limpar()" class="btn-limpar"><mat-icon>clear</mat-icon> Limpar</button>
+    </div>
+
+    <!-- Erros de parse -->
+    <div class="cmp-erro" *ngIf="!r.okA"><mat-icon>error_outline</mat-icon> Objeto A: {{ r.erroA }}</div>
+    <div class="cmp-erro" *ngIf="!r.okB"><mat-icon>error_outline</mat-icon> Objeto B: {{ r.erroB }}</div>
+
+    <ng-container *ngIf="r.okA && r.okB">
+      <!-- Resumo -->
+      <div class="cmp-resumo">
+        <span class="chip chip-ok" *ngIf="r.iguais"><mat-icon>check_circle</mat-icon> Objetos equivalentes</span>
+        <span class="chip chip-rem" *ngIf="!r.iguais"><b>{{ r.faltamNaDireita.length }}</b> só na esquerda</span>
+        <span class="chip chip-add" *ngIf="!r.iguais"><b>{{ r.faltamNaEsquerda.length }}</b> só na direita</span>
+        <span class="chip chip-mod" *ngIf="!r.iguais"><b>{{ r.diferentes.length }}</b> valores diferentes</span>
+      </div>
+
+      <!-- Painéis lado a lado com destaque por linha -->
+      <div class="cmp-paineis">
+        <div class="cmp-painel">
+          <div class="cmp-cabecalho"><span class="rot rot-a">Objeto A</span></div>
+          <pre class="cmp-codigo"><code><span class="cod-linha" *ngFor="let l of r.linhasA" [ngClass]="classeLinha(l)"><span class="cod-num">{{ l.n }}</span><span class="cod-txt">{{ l.texto }}</span></span></code></pre>
+        </div>
+        <div class="cmp-painel">
+          <div class="cmp-cabecalho"><span class="rot rot-b">Objeto B</span></div>
+          <pre class="cmp-codigo"><code><span class="cod-linha" *ngFor="let l of r.linhasB" [ngClass]="classeLinha(l)"><span class="cod-num">{{ l.n }}</span><span class="cod-txt">{{ l.texto }}</span></span></code></pre>
+        </div>
+      </div>
+
+      <!-- Listas -->
+      <div class="cmp-listas">
+        <div class="cmp-lista lista-rem">
+          <h3><mat-icon>remove_circle</mat-icon> Faltam na esquerda (existem só em B)</h3>
+          <p class="cmp-vazio" *ngIf="!r.faltamNaEsquerda.length">Nenhum.</p>
+          <ul>
+            <li *ngFor="let c of r.faltamNaEsquerda">
+              <code class="cmp-caminho">{{ c.caminho }}</code>
+              <span class="cmp-linharef" *ngIf="c.linhaB">linha B {{ c.linhaB }}</span>
+              <span class="cmp-valor">{{ c.valorB }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="cmp-lista lista-add">
+          <h3><mat-icon>add_circle</mat-icon> Faltam na direita (existem só em A)</h3>
+          <p class="cmp-vazio" *ngIf="!r.faltamNaDireita.length">Nenhum.</p>
+          <ul>
+            <li *ngFor="let c of r.faltamNaDireita">
+              <code class="cmp-caminho">{{ c.caminho }}</code>
+              <span class="cmp-linharef" *ngIf="c.linhaA">linha A {{ c.linhaA }}</span>
+              <span class="cmp-valor">{{ c.valorA }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="cmp-lista lista-mod">
+          <h3><mat-icon>compare_arrows</mat-icon> Mesmo campo, valores diferentes</h3>
+          <p class="cmp-vazio" *ngIf="!r.diferentes.length">Nenhum.</p>
+          <ul>
+            <li *ngFor="let c of r.diferentes">
+              <code class="cmp-caminho">{{ c.caminho }}</code>
+              <span class="cmp-linharef" *ngIf="c.linhaA || c.linhaB">linhas A {{ c.linhaA }} · B {{ c.linhaB }}</span>
+              <span class="cmp-dois"><span class="v-a">A: {{ c.valorA }}</span><span class="v-b">B: {{ c.valorB }}</span></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<div class="instrucoes">
+  <h2>Comparador de JSON e YAML</h2>
+  <p>Compara dois objetos nos formatos <strong>JSON</strong> ou <strong>YAML</strong> a partir dos seus campos, indicando o que existe em um e não no outro e os campos que existem em ambos mas com valores diferentes. Nada é enviado a servidores — a comparação acontece localmente no navegador.</p>
+
+  <h4 class="sublinhado">Como usar</h4>
+  <p>Cole um objeto em cada lado (A e B). Você pode misturar os formatos: no modo <strong>Automático</strong> cada lado é interpretado como JSON e, se falhar, como YAML. Clique em <strong>Comparar</strong>. O resultado aparece abaixo com os dois objetos normalizados (JSON com numeração de linhas), destacando as linhas diferentes, e três listas.</p>
+
+  <h4 class="sublinhado">O que é comparado</h4>
+  <p>A comparação é <em>estrutural</em>, campo a campo, pelo caminho completo (ex.: <code>banco.porta</code> ou <code>tags[1]</code>). São listados: os campos que faltam na esquerda, os que faltam na direita e os campos de mesmo caminho (mesmo nível e nome) que possuem valores diferentes. Objetos e listas aninhados são percorridos recursivamente.</p>
+
+  <h4 class="sublinhado">Observação sobre YAML</h4>
+  <p>O interpretador de YAML cobre o subconjunto mais comum: mapeamentos, listas, escalares (texto, número, booleano, nulo), comentários e estilo de fluxo (semelhante a JSON). Recursos avançados como âncoras/aliases e blocos multilinha (<code>|</code> e <code>&gt;</code>) podem não ser suportados.</p>
+</div>

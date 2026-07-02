@@ -39,7 +39,7 @@ export class HomeComponent {
         { titulo: 'Codec de URL', descricao: 'Codificar e decodificar URLs rapidamente.', icone: 'link', rota: 'codec-de-url', novo: false },
         { titulo: 'Editor de Json', descricao: 'Formatar, minificar e stringificar JSON.', icone: 'integration_instructions', rota: 'editor-json', novo: false },
         { titulo: 'Gerador de Hash', descricao: 'Gerar hashes MD5, SHA-1, SHA-256 e SHA-512.', icone: 'tag', rota: 'gerador-hash', novo: true },
-        { titulo: 'Diff de JSON', descricao: 'Comparar dois JSONs lado a lado e destacar diferencas.', icone: 'compare', rota: 'diff-json', novo: true },
+        { titulo: 'Comparador de JSON e YAML', descricao: 'Comparar campos de dois JSON ou YAML: faltantes em cada lado e valores diferentes.', icone: 'compare_arrows', rota: 'comparador-json-yaml', novo: true },
         { titulo: 'Gerador de UUID', descricao: 'Gerar UUIDs v4, v7 e v1 com opcoes de formato.', icone: 'fingerprint', rota: 'gerador-uuid', novo: true },
         { titulo: 'Unix Timestamp', descricao: 'Converter datas e horarios para timestamp Unix.', icone: 'schedule', rota: 'unix-timestamp', novo: false },
         { titulo: 'Manipulador de JWT', descricao: 'Inspecionar cabecalho, corpo e assinatura de tokens JWT.', icone: 'token', rota: 'visualizador-jwt', novo: false },

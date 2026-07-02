@@ -19,12 +19,12 @@ import { JuntadorPdfComponent } from './ferramentas/juntador-pdf/juntador-pdf.co
 import { SeparadorPdfComponent } from './ferramentas/separador-pdf/separador-pdf.component';
 import { GeradorHashComponent } from './ferramentas/gerador-hash/gerador-hash.component';
 import { DiffTextoComponent } from './ferramentas/diff-texto/diff-texto.component';
-import { DiffJsonComponent } from './ferramentas/diff-json/diff-json.component';
 import { GeradorUuidComponent } from './ferramentas/gerador-uuid/gerador-uuid.component';
 import { GeradorSenhaComponent } from './ferramentas/gerador-senha/gerador-senha.component';
 import { GeradorHmacComponent } from './ferramentas/gerador-hmac/gerador-hmac.component';
 import { GeradorCpfCnpjComponent } from './ferramentas/gerador-cpf-cnpj/gerador-cpf-cnpj.component';
 import { EditorFluxogramaComponent } from './ferramentas/editor-fluxograma/editor-fluxograma.component';
+import { ComparadorJsonYamlComponent } from './ferramentas/comparador-json-yaml/comparador-json-yaml.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -48,10 +48,10 @@ export const routes: Routes = [
   { path: 'separador-pdf', component: SeparadorPdfComponent },
   { path: 'gerador-hash', component: GeradorHashComponent },
   { path: 'diff-texto', component: DiffTextoComponent },
-  { path: 'diff-json', component: DiffJsonComponent },
   { path: 'gerador-uuid', component: GeradorUuidComponent },
   { path: 'gerador-senha', component: GeradorSenhaComponent },
   { path: 'gerador-hmac', component: GeradorHmacComponent },
   { path: 'gerador-cpf-cnpj', component: GeradorCpfCnpjComponent },
   { path: 'editor-fluxograma', component: EditorFluxogramaComponent },
+  { path: 'comparador-json-yaml', component: ComparadorJsonYamlComponent },
 ];

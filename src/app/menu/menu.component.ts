@@ -102,10 +102,6 @@ export class MenuComponent {
       this.router.navigate(['/diff-texto']);
       this.dataService.setTituloAplicacao('Diff de Texto');
     }
-    if (tag === 'diff-json') {
-      this.router.navigate(['/diff-json']);
-      this.dataService.setTituloAplicacao('Diff de JSON');
-    }
     if (tag === 'gerador-uuid') {
       this.router.navigate(['/gerador-uuid']);
       this.dataService.setTituloAplicacao('Gerador de UUID');
@@ -125,6 +121,10 @@ export class MenuComponent {
     if (tag === 'editor-fluxograma') {
       this.router.navigate(['/editor-fluxograma']);
       this.dataService.setTituloAplicacao('Editor de Fluxograma');
+    }
+    if (tag === 'comparador-json-yaml') {
+      this.router.navigate(['/comparador-json-yaml']);
+      this.dataService.setTituloAplicacao('Comparador de JSON e YAML');
     }
   }
 }
