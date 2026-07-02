@@ -121,14 +121,18 @@
             <path d="M 24 0 L 0 0 0 24" fill="none"
               [attr.stroke]="temaClaro ? 'rgba(0,0,0,0.07)' : 'rgba(185,200,219,0.09)'" stroke-width="1" />
           </pattern>
-          <marker id="seta-fim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
-            orient="auto-start-reverse" markerUnits="userSpaceOnUse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
-          </marker>
-          <marker id="seta-inicio" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7"
-            orient="auto-start-reverse" markerUnits="userSpaceOnUse">
-            <path d="M 10 0 L 0 5 L 10 10 z" fill="context-stroke" />
-          </marker>
+          <ng-container *ngFor="let c of conexoes; trackBy: trackConexao">
+            <marker [attr.id]="marcadorSetaId(c, 'fim')" viewBox="0 0 10 10" refX="9" refY="5"
+              [attr.markerWidth]="tamanhoSetaConexao(c)" [attr.markerHeight]="tamanhoSetaConexao(c)"
+              orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
+            </marker>
+            <marker [attr.id]="marcadorSetaId(c, 'inicio')" viewBox="0 0 10 10" refX="1" refY="5"
+              [attr.markerWidth]="tamanhoSetaConexao(c)" [attr.markerHeight]="tamanhoSetaConexao(c)"
+              orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 5 L 10 10 z" fill="context-stroke" />
+            </marker>
+          </ng-container>
           <!-- Traço risco de giz -->
           <filter id="traco-giz" x="-20%" y="-20%" width="140%" height="140%">
             <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="ruido" />
@@ -205,8 +209,9 @@
                 [attr.stroke]="c.cor" [attr.stroke-width]="c.espessura"
                 [attr.stroke-dasharray]="c.tracejada ? '7 5' : null"
                 [attr.filter]="filtroTraco(c.tipoTraco)"
-                [attr.marker-end]="c.setaFim ? 'url(#seta-fim)' : null"
-                [attr.marker-start]="c.setaInicio ? 'url(#seta-inicio)' : null"
+                [attr.data-tamanho-seta]="tamanhoSetaConexao(c)"
+                [attr.marker-end]="c.setaFim ? 'url(#' + marcadorSetaId(c, 'fim') + ')' : null"
+                [attr.marker-start]="c.setaInicio ? 'url(#' + marcadorSetaId(c, 'inicio') + ')' : null"
                 (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
               <g *ngIf="c.texto" [attr.transform]="'translate(' + meioConexao(c).x + ',' + meioConexao(c).y + ')'"
                 (dblclick)="editarTextoConexao($event, c)">
@@ -403,6 +408,12 @@
           </select>
         </label>
 
+        <label class="campo">
+          <span>Tamanho da ponta <b>{{ tamanhoSetaConexao(c) }}px</b></span>
+          <input type="range" min="3" max="24" step="1" [value]="tamanhoSetaConexao(c)"
+            (input)="setTamanhoSeta(c, $any($event.target).value)" />
+        </label>
+
         <label class="campo-check"><input type="checkbox" [(ngModel)]="c.tracejada" /> <span>Tracejada</span></label>
         <label class="campo-check"><input type="checkbox" [(ngModel)]="c.setaFim" /> <span>Seta no fim</span></label>
         <label class="campo-check"><input type="checkbox" [(ngModel)]="c.setaInicio" /> <span>Seta no início</span></label>
@@ -426,6 +437,11 @@
         <label class="campo">
           <span>Espessura da linha <b>{{ padrao.espessuraLinha }}px</b></span>
           <input type="range" min="0.5" max="10" step="0.5" [(ngModel)]="padrao.espessuraLinha" />
+        </label>
+        <label class="campo">
+          <span>Tamanho da ponta <b>{{ padrao.tamanhoSeta }}px</b></span>
+          <input type="range" min="3" max="24" step="1" [value]="padrao.tamanhoSeta"
+            (input)="setTamanhoSetaPadrao($any($event.target).value)" />
         </label>
         <label class="campo">
           <span>Tipo do traço</span>

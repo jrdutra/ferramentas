@@ -7,7 +7,14 @@ import {
   ShapeClassification,
   ShapeMetrics,
 } from '../../models/detected-flowchart.model';
-import { ConexaoFluxograma, Fluxograma, FormaTipo, NoFluxograma, TipoTraco } from '../fluxograma.service';
+import {
+  ConexaoFluxograma,
+  Fluxograma,
+  FormaTipo,
+  NoFluxograma,
+  TAMANHO_SETA_PADRAO,
+  TipoTraco,
+} from '../fluxograma.service';
 
 interface Rect {
   x: number;
@@ -30,6 +37,7 @@ export interface FlowchartAdapterOptions {
   corBorda?: string;
   corTexto?: string;
   corLinha?: string;
+  tamanhoSeta?: number;
   tipoTraco?: TipoTraco;
 }
 
@@ -38,6 +46,7 @@ const DEFAULT_ADAPTER_OPTIONS: Required<FlowchartAdapterOptions> = {
   corBorda: '#00ffd1',
   corTexto: '#f4fbff',
   corLinha: '#5b7cff',
+  tamanhoSeta: TAMANHO_SETA_PADRAO,
   tipoTraco: 'solido',
 };
 
@@ -225,6 +234,7 @@ export function detectedFlowchartToFluxograma(
       tracejada: false,
       setaInicio: false,
       setaFim: true,
+      tamanhoSeta: style.tamanhoSeta,
       tipoTraco: style.tipoTraco,
     }));
 

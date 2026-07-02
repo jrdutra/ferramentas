@@ -12,6 +12,7 @@ import {
   FluxogramaService,
   FormaTipo,
   NoFluxograma,
+  TAMANHO_SETA_PADRAO,
   TipoTraco,
 } from '../../services/fluxograma.service';
 import { FluxogramaImagemImportService } from '../../services/fluxograma-imagem-import/fluxograma-imagem-import.service';
@@ -112,6 +113,7 @@ export class EditorFluxogramaComponent implements OnInit {
     corTexto: '#f4fbff',
     corLinha: '#5b7cff',
     espessuraLinha: 2,
+    tamanhoSeta: TAMANHO_SETA_PADRAO,
     tipoTraco: 'solido' as TipoTraco,
   };
 
@@ -526,6 +528,7 @@ export class EditorFluxogramaComponent implements OnInit {
       tracejada: false,
       setaInicio: false,
       setaFim: true,
+      tamanhoSeta: this.padrao.tamanhoSeta,
       tipoTraco: this.padrao.tipoTraco,
     };
     this.conexoes.push(c);
@@ -573,7 +576,8 @@ export class EditorFluxogramaComponent implements OnInit {
   private limparSelecao(): void {
     this.nosSelecionados.clear();
     this.conexoesSelecionadas.clear();
-    this.limparSelecao();
+    this.selecionadoId = null;
+    this.selecionadoTipo = null;
   }
 
   isNoSelecionado(no: NoFluxograma): boolean {
@@ -625,7 +629,7 @@ export class EditorFluxogramaComponent implements OnInit {
     }
 
     this.nos.forEach((n) => {
-      if (this.retanguloContem(r, n.x, n.y, n.largura, n.altura)) {
+      if (this.retangulosIntersectam(r, n.x, n.y, n.largura, n.altura)) {
         this.nosSelecionados.add(n.id);
       }
     });
@@ -634,8 +638,10 @@ export class EditorFluxogramaComponent implements OnInit {
       const p = this.pontosConexao(c);
       if (!p) return;
       const meio = { x: (p.x1 + p.x2) / 2, y: (p.y1 + p.y2) / 2 };
-      const endpointsDentro = this.pontoDentroRetangulo(r, p.x1, p.y1) && this.pontoDentroRetangulo(r, p.x2, p.y2);
-      if (endpointsDentro || this.pontoDentroRetangulo(r, meio.x, meio.y)) {
+      if (
+        this.segmentoIntersectaRetangulo(r, p.x1, p.y1, p.x2, p.y2) ||
+        this.pontoDentroRetangulo(r, meio.x, meio.y)
+      ) {
         this.conexoesSelecionadas.add(c.id);
       }
     });
@@ -644,12 +650,72 @@ export class EditorFluxogramaComponent implements OnInit {
     return this.temSelecao;
   }
 
-  private retanguloContem(r: RetanguloCanvas, x: number, y: number, largura: number, altura: number): boolean {
-    return x >= r.x && y >= r.y && x + largura <= r.x + r.largura && y + altura <= r.y + r.altura;
+  private retangulosIntersectam(r: RetanguloCanvas, x: number, y: number, largura: number, altura: number): boolean {
+    return x <= r.x + r.largura && x + largura >= r.x && y <= r.y + r.altura && y + altura >= r.y;
   }
 
   private pontoDentroRetangulo(r: RetanguloCanvas, x: number, y: number): boolean {
     return x >= r.x && x <= r.x + r.largura && y >= r.y && y <= r.y + r.altura;
+  }
+
+  private segmentoIntersectaRetangulo(r: RetanguloCanvas, x1: number, y1: number, x2: number, y2: number): boolean {
+    if (this.pontoDentroRetangulo(r, x1, y1) || this.pontoDentroRetangulo(r, x2, y2)) return true;
+
+    const minX = Math.min(x1, x2);
+    const minY = Math.min(y1, y2);
+    const largura = Math.abs(x2 - x1);
+    const altura = Math.abs(y2 - y1);
+    if (!this.retangulosIntersectam(r, minX, minY, largura, altura)) return false;
+
+    const rx1 = r.x;
+    const ry1 = r.y;
+    const rx2 = r.x + r.largura;
+    const ry2 = r.y + r.altura;
+
+    return (
+      this.segmentosIntersectam(x1, y1, x2, y2, rx1, ry1, rx2, ry1) ||
+      this.segmentosIntersectam(x1, y1, x2, y2, rx2, ry1, rx2, ry2) ||
+      this.segmentosIntersectam(x1, y1, x2, y2, rx2, ry2, rx1, ry2) ||
+      this.segmentosIntersectam(x1, y1, x2, y2, rx1, ry2, rx1, ry1)
+    );
+  }
+
+  private segmentosIntersectam(
+    ax: number,
+    ay: number,
+    bx: number,
+    by: number,
+    cx: number,
+    cy: number,
+    dx: number,
+    dy: number,
+  ): boolean {
+    const o1 = this.orientacao(ax, ay, bx, by, cx, cy);
+    const o2 = this.orientacao(ax, ay, bx, by, dx, dy);
+    const o3 = this.orientacao(cx, cy, dx, dy, ax, ay);
+    const o4 = this.orientacao(cx, cy, dx, dy, bx, by);
+
+    if (o1 !== o2 && o3 !== o4) return true;
+    if (o1 === 0 && this.pontoNoSegmento(ax, ay, cx, cy, bx, by)) return true;
+    if (o2 === 0 && this.pontoNoSegmento(ax, ay, dx, dy, bx, by)) return true;
+    if (o3 === 0 && this.pontoNoSegmento(cx, cy, ax, ay, dx, dy)) return true;
+    return o4 === 0 && this.pontoNoSegmento(cx, cy, bx, by, dx, dy);
+  }
+
+  private orientacao(ax: number, ay: number, bx: number, by: number, cx: number, cy: number): number {
+    const valor = (by - ay) * (cx - bx) - (bx - ax) * (cy - by);
+    if (Math.abs(valor) < 0.0001) return 0;
+    return valor > 0 ? 1 : 2;
+  }
+
+  private pontoNoSegmento(ax: number, ay: number, px: number, py: number, bx: number, by: number): boolean {
+    const margem = 0.0001;
+    return (
+      px <= Math.max(ax, bx) + margem &&
+      px + margem >= Math.min(ax, bx) &&
+      py <= Math.max(ay, by) + margem &&
+      py + margem >= Math.min(ay, by)
+    );
   }
 
   aplicarZoom(fator: number): void {
@@ -775,6 +841,26 @@ export class EditorFluxogramaComponent implements OnInit {
     const p = this.pontosConexao(c);
     if (!p) return { x: 0, y: 0 };
     return { x: (p.x1 + p.x2) / 2, y: (p.y1 + p.y2) / 2 };
+  }
+
+  marcadorSetaId(c: ConexaoFluxograma, lado: 'inicio' | 'fim'): string {
+    return `seta-${lado}-${String(c.id).replace(/[^A-Za-z0-9_-]/g, '_')}`;
+  }
+
+  tamanhoSetaConexao(c: ConexaoFluxograma): number {
+    return this.normalizarTamanhoSeta(c.tamanhoSeta);
+  }
+
+  private normalizarTamanhoSeta(valor: unknown): number {
+    const n = Number(valor);
+    if (!Number.isFinite(n)) return TAMANHO_SETA_PADRAO;
+    return Math.min(24, Math.max(3, n));
+  }
+
+  private normalizarTamanhoSetas(): void {
+    this.conexoes.forEach((c) => {
+      c.tamanhoSeta = this.normalizarTamanhoSeta(c.tamanhoSeta);
+    });
   }
 
   /** Pontos do polígono (losango, paralelogramo, hexágono) em coordenadas absolutas. */
@@ -1026,6 +1112,7 @@ export class EditorFluxogramaComponent implements OnInit {
   private carregar(fluxo: Fluxograma): void {
     this.nos = fluxo.nos;
     this.conexoes = fluxo.conexoes;
+    this.normalizarTamanhoSetas();
     this.limparSelecao();
     // Ajusta o contador para evitar colisão de ids.
     const nums = [...this.nos, ...this.conexoes]
@@ -1100,6 +1187,7 @@ export class EditorFluxogramaComponent implements OnInit {
         corBorda: this.padrao.corBorda,
         corTexto: this.padrao.corTexto,
         corLinha: this.padrao.corLinha,
+        tamanhoSeta: this.padrao.tamanhoSeta,
         tipoTraco: this.padrao.tipoTraco,
       });
       this.painelRevisaoImagem = true;
@@ -1208,16 +1296,18 @@ export class EditorFluxogramaComponent implements OnInit {
       let i = 0;
       clone.querySelectorAll('.conexao-linha').forEach((linha) => {
         const cor = linha.getAttribute('stroke') || '#5b7cff';
+        const tamanho = this.normalizarTamanhoSeta(linha.getAttribute('data-tamanho-seta'));
         if (linha.getAttribute('marker-end')) {
           const id = `exp-fim-${i}`;
-          defs.appendChild(this.criarMarcador(ns, id, cor, true));
+          defs.appendChild(this.criarMarcador(ns, id, cor, true, tamanho));
           linha.setAttribute('marker-end', `url(#${id})`);
         }
         if (linha.getAttribute('marker-start')) {
           const id = `exp-ini-${i}`;
-          defs.appendChild(this.criarMarcador(ns, id, cor, false));
+          defs.appendChild(this.criarMarcador(ns, id, cor, false, tamanho));
           linha.setAttribute('marker-start', `url(#${id})`);
         }
+        linha.removeAttribute('data-tamanho-seta');
         i += 1;
       });
     }
@@ -1246,14 +1336,15 @@ export class EditorFluxogramaComponent implements OnInit {
     return { svg, largura: lim.largura, altura: lim.altura };
   }
 
-  private criarMarcador(ns: string, id: string, cor: string, fim: boolean): SVGMarkerElement {
+  private criarMarcador(ns: string, id: string, cor: string, fim: boolean, tamanho = TAMANHO_SETA_PADRAO): SVGMarkerElement {
     const marker = document.createElementNS(ns, 'marker') as SVGMarkerElement;
+    const tamanhoSeguro = this.normalizarTamanhoSeta(tamanho);
     marker.setAttribute('id', id);
     marker.setAttribute('viewBox', '0 0 10 10');
     marker.setAttribute('refX', fim ? '9' : '1');
     marker.setAttribute('refY', '5');
-    marker.setAttribute('markerWidth', '7');
-    marker.setAttribute('markerHeight', '7');
+    marker.setAttribute('markerWidth', String(tamanhoSeguro));
+    marker.setAttribute('markerHeight', String(tamanhoSeguro));
     marker.setAttribute('orient', 'auto-start-reverse');
     marker.setAttribute('markerUnits', 'userSpaceOnUse');
     const path = document.createElementNS(ns, 'path');
@@ -1393,7 +1484,9 @@ export class EditorFluxogramaComponent implements OnInit {
       this.panX = d.panX ?? 40;
       this.panY = d.panY ?? 40;
       this.temaClaro = !!d.temaClaro;
-      if (d.padrao) this.padrao = d.padrao;
+      if (d.padrao) this.padrao = { ...this.padrao, ...d.padrao };
+      this.padrao.tamanhoSeta = this.normalizarTamanhoSeta(this.padrao.tamanhoSeta);
+      this.normalizarTamanhoSetas();
       this.contador = d.contador ?? 0;
       return true;
     } catch {
@@ -1454,6 +1547,16 @@ export class EditorFluxogramaComponent implements OnInit {
   }
   setEspessuraLinha(c: ConexaoFluxograma, v: string): void {
     c.espessura = +v;
+    this.salvar();
+  }
+
+  setTamanhoSeta(c: ConexaoFluxograma, v: string): void {
+    c.tamanhoSeta = this.normalizarTamanhoSeta(v);
+    this.salvar();
+  }
+
+  setTamanhoSetaPadrao(v: string): void {
+    this.padrao.tamanhoSeta = this.normalizarTamanhoSeta(v);
     this.salvar();
   }
 

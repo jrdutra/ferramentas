@@ -21,6 +21,8 @@ export type FormaTipo =
 /** Estilo do traço das bordas e linhas. */
 export type TipoTraco = 'solido' | 'giz' | 'lapis';
 
+export const TAMANHO_SETA_PADRAO = 7;
+
 export interface NoFluxograma {
   id: string;
   tipo: FormaTipo;
@@ -48,6 +50,7 @@ export interface ConexaoFluxograma {
   tracejada: boolean;
   setaInicio: boolean;
   setaFim: boolean;
+  tamanhoSeta: number;
   tipoTraco: TipoTraco;
 }
 
@@ -218,6 +221,7 @@ export class FluxogramaService {
               tracejada: seta.includes('.'),
               setaInicio: seta.startsWith('<'),
               setaFim: seta.endsWith('>'),
+              tamanhoSeta: TAMANHO_SETA_PADRAO,
               tipoTraco: 'solido',
             });
             continue;
@@ -256,6 +260,7 @@ export class FluxogramaService {
       linhas.push(
         `    <conexao id="${esc(c.id)}" de="${esc(c.de)}" para="${esc(c.para)}" cor="${esc(c.cor)}"` +
           ` espessura="${c.espessura}" tracejada="${c.tracejada}" setaInicio="${c.setaInicio}" setaFim="${c.setaFim}"` +
+          ` tamanhoSeta="${this.normalizaTamanhoSeta(c.tamanhoSeta)}"` +
           ` tipoTraco="${c.tipoTraco}">${esc(c.texto)}</conexao>`,
       );
     }
@@ -304,6 +309,7 @@ export class FluxogramaService {
         tracejada: el.getAttribute('tracejada') === 'true',
         setaInicio: el.getAttribute('setaInicio') === 'true',
         setaFim: el.getAttribute('setaFim') !== 'false',
+        tamanhoSeta: this.normalizaTamanhoSeta(el.getAttribute('tamanhoSeta')),
         tipoTraco: (el.getAttribute('tipoTraco') as TipoTraco) || 'solido',
       });
     });
@@ -361,8 +367,15 @@ export class FluxogramaService {
     });
     fluxo.conexoes.forEach((c) => {
       c.tipoTraco = c.tipoTraco || 'solido';
+      c.tamanhoSeta = this.normalizaTamanhoSeta(c.tamanhoSeta);
     });
     return fluxo;
+  }
+
+  private normalizaTamanhoSeta(v: unknown): number {
+    const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
+    if (!Number.isFinite(n)) return TAMANHO_SETA_PADRAO;
+    return Math.min(24, Math.max(3, n));
   }
 
   private num(v: string | null, padrao: number): number {
