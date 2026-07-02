@@ -1,0 +1,462 @@
+<div class="fluxo-layout">
+
+  <!-- ═══════════════ Barra de ferramentas ═══════════════ -->
+  <div class="fluxo-barra">
+    <div class="barra-grupo-f">
+      <button class="ferr-btn" [class.ativo]="ferramenta === 'selecionar'"
+        (click)="selecionarFerramenta('selecionar')" matTooltip="Selecionar / mover (arraste o fundo para navegar)">
+        <mat-icon>near_me</mat-icon>
+      </button>
+      <button class="ferr-btn" [class.ativo]="ferramenta === 'conectar'"
+        (click)="selecionarFerramenta('conectar')" matTooltip="Conectar: clique na origem e depois no destino">
+        <mat-icon>timeline</mat-icon>
+      </button>
+    </div>
+
+    <span class="barra-sep"></span>
+
+    <div class="barra-grupo-f formas-grupo">
+      <button *ngFor="let f of formas" class="ferr-btn" [class.ativo]="ferramenta === f.tipo"
+        (click)="selecionarFerramenta(f.tipo)" [matTooltip]="f.nome">
+        <mat-icon>{{ f.icone }}</mat-icon>
+      </button>
+    </div>
+
+    <span class="barra-sep"></span>
+
+    <div class="barra-grupo-f formas-grupo">
+      <button *ngFor="let f of containers" class="ferr-btn" [class.ativo]="ferramenta === f.tipo"
+        (click)="selecionarFerramenta(f.tipo)" [matTooltip]="f.nome">
+        <mat-icon>{{ f.icone }}</mat-icon>
+      </button>
+    </div>
+
+    <span class="barra-sep"></span>
+
+    <div class="barra-grupo-f">
+      <button class="ferr-btn" (click)="inputImagem.click()" matTooltip="Adicionar imagem">
+        <mat-icon>add_photo_alternate</mat-icon>
+      </button>
+      <input #inputImagem type="file" accept="image/*" hidden (change)="adicionarImagem($event)" />
+    </div>
+
+    <span class="barra-sep"></span>
+
+    <div class="barra-grupo-f">
+      <button class="ferr-btn perigo" (click)="excluirSelecionado()" [disabled]="!selecionadoId"
+        matTooltip="Excluir selecionado (Delete)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button class="ferr-btn perigo" (click)="limparTudo()" matTooltip="Limpar tudo">
+        <mat-icon>layers_clear</mat-icon>
+      </button>
+    </div>
+
+    <span class="barra-sep"></span>
+
+    <div class="barra-grupo-f">
+      <button class="ferr-btn" (click)="aplicarZoom(0.9)" matTooltip="Reduzir zoom"><mat-icon>zoom_out</mat-icon></button>
+      <span class="zoom-label">{{ (zoom * 100) | number:'1.0-0' }}%</span>
+      <button class="ferr-btn" (click)="aplicarZoom(1.1)" matTooltip="Aumentar zoom"><mat-icon>zoom_in</mat-icon></button>
+      <button class="ferr-btn" (click)="resetarView()" matTooltip="Restaurar visão"><mat-icon>center_focus_strong</mat-icon></button>
+      <button class="ferr-btn" [class.ativo]="temaClaro" (click)="alternarTema()"
+        [matTooltip]="temaClaro ? 'Tema claro (clique para escuro)' : 'Tema escuro (clique para claro)'">
+        <mat-icon>{{ temaClaro ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+    </div>
+
+    <span class="barra-sep barra-flex"></span>
+
+    <div class="barra-grupo-f">
+      <button class="ferr-btn texto-btn" (click)="inputArquivo.click()" matTooltip="Abrir arquivo .mmd ou .xml exportado">
+        <mat-icon>folder_open</mat-icon> Abrir
+      </button>
+      <input #inputArquivo type="file" accept=".mmd,.txt,.xml" hidden (change)="carregarArquivo($event)" />
+      <button class="ferr-btn texto-btn" (click)="abrirPainelDados('mermaid')" matTooltip="Importar / exportar Mermaid">
+        <mat-icon>account_tree</mat-icon> Mermaid
+      </button>
+      <button class="ferr-btn texto-btn" (click)="abrirPainelDados('xml')" matTooltip="Importar / exportar XML">
+        <mat-icon>code</mat-icon> XML
+      </button>
+    </div>
+
+    <span class="barra-sep"></span>
+
+    <div class="barra-grupo-f">
+      <button class="ferr-btn texto-btn destaque-offline" (click)="baixarOffline()" matTooltip="Baixar a versão HTML que roda 100% offline">
+        <mat-icon>download</mat-icon> Executar Offline
+      </button>
+    </div>
+
+    <span class="barra-sep"></span>
+
+    <div class="barra-grupo-f">
+      <button class="ferr-btn texto-btn" (click)="baixarPng()" matTooltip="Baixar PNG"><mat-icon>image</mat-icon> PNG</button>
+      <button class="ferr-btn texto-btn" (click)="baixarPngTransparente()" matTooltip="Baixar PNG com fundo e formas transparentes">
+        <mat-icon>gradient</mat-icon> PNG&nbsp;transp.
+      </button>
+      <button class="ferr-btn texto-btn" (click)="baixarJpg()" matTooltip="Baixar JPG"><mat-icon>photo</mat-icon> JPG</button>
+      <button class="ferr-btn texto-btn" (click)="baixarPdf()" matTooltip="Baixar PDF"><mat-icon>picture_as_pdf</mat-icon> PDF</button>
+      <button class="ferr-btn texto-btn" (click)="baixarSvg()" matTooltip="Baixar SVG"><mat-icon>polyline</mat-icon> SVG</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Área principal ═══════════════ -->
+  <div class="fluxo-corpo">
+
+    <!-- Canvas -->
+    <div class="fluxo-canvas-wrap" [class.tema-claro]="temaClaro"
+      [class.modo-criar]="ferramenta !== 'selecionar' && ferramenta !== 'conectar'"
+      [class.modo-conectar]="ferramenta === 'conectar'" (wheel)="aoRolar($event)">
+      <svg #svgCanvas class="fluxo-canvas" (mousedown)="aoPressionarFundo($event)" (click)="aoClicarCanvas($event)">
+        <defs>
+          <pattern id="grade-fluxo" width="24" height="24" patternUnits="userSpaceOnUse"
+            [attr.patternTransform]="'translate(' + panX + ',' + panY + ') scale(' + zoom + ')'">
+            <path d="M 24 0 L 0 0 0 24" fill="none"
+              [attr.stroke]="temaClaro ? 'rgba(0,0,0,0.07)' : 'rgba(185,200,219,0.09)'" stroke-width="1" />
+          </pattern>
+          <marker id="seta-fim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
+          </marker>
+          <marker id="seta-inicio" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 5 L 10 10 z" fill="context-stroke" />
+          </marker>
+          <!-- Traço risco de giz -->
+          <filter id="traco-giz" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="ruido" />
+            <feDisplacementMap in="SourceGraphic" in2="ruido" scale="3" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+          <!-- Traço risco de lápis -->
+          <filter id="traco-lapis" x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="3" seed="7" result="ruido" />
+            <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.4" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+
+        <rect class="fundo-grade" x="0" y="0" width="100%" height="100%" fill="url(#grade-fluxo)" />
+
+        <g [attr.transform]="'translate(' + panX + ',' + panY + ') scale(' + zoom + ')'">
+
+          <!-- Contêineres (atrás de tudo) -->
+          <g *ngFor="let no of nosContainer; trackBy: trackNo" class="no-grupo container-grupo"
+            [class.selecionado]="selecionadoId === no.id && selecionadoTipo === 'no'"
+            (mousedown)="aoPressionarNo($event, no)" (click)="$event.stopPropagation()">
+
+            <!-- Contêiner: corpo + barra de título -->
+            <ng-container *ngIf="no.tipo === 'container'">
+              <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura" rx="8"
+                [attr.fill]="no.corFundo" fill-opacity="0.16" [attr.stroke]="no.corBorda"
+                [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
+              <path [attr.d]="'M ' + no.x + ' ' + (no.y + 8) + ' q 0 -8 8 -8 l ' + (no.largura - 16) + ' 0 q 8 0 8 8 l 0 20 l ' + (-no.largura) + ' 0 Z'"
+                [attr.fill]="no.corBorda" fill-opacity="0.85" />
+              <text class="container-titulo" [attr.x]="no.x + 12" [attr.y]="no.y + 19" [attr.fill]="no.corTexto">{{ no.texto }}</text>
+            </ng-container>
+
+            <!-- Moldura (frame): corpo + aba no canto superior esquerdo -->
+            <ng-container *ngIf="no.tipo === 'frame'">
+              <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
+                [attr.fill]="no.corFundo" fill-opacity="0.1" [attr.stroke]="no.corBorda"
+                [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
+              <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="larguraRotulo(no.texto, no.largura)" height="22"
+                [attr.fill]="no.corBorda" fill-opacity="0.85" />
+              <text class="container-titulo" [attr.x]="no.x + 8" [attr.y]="no.y + 15" [attr.fill]="no.corTexto">{{ no.texto }}</text>
+            </ng-container>
+
+            <!-- Grupo: retângulo tracejado + rótulo -->
+            <ng-container *ngIf="no.tipo === 'grupo'">
+              <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura" rx="6"
+                [attr.fill]="no.corFundo" fill-opacity="0.06" [attr.stroke]="no.corBorda"
+                [attr.stroke-width]="no.espessuraBorda" stroke-dasharray="8 5"
+                [attr.filter]="filtroTraco(no.tipoTraco)" />
+              <text class="container-titulo" [attr.x]="no.x + 10" [attr.y]="no.y + 18" [attr.fill]="no.corTexto">{{ no.texto }}</text>
+            </ng-container>
+
+            <!-- Raia (swimlane): faixa lateral com título vertical -->
+            <ng-container *ngIf="no.tipo === 'swimlane'">
+              <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
+                [attr.fill]="no.corFundo" fill-opacity="0.1" [attr.stroke]="no.corBorda"
+                [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
+              <rect [attr.x]="no.x" [attr.y]="no.y" width="30" [attr.height]="no.altura"
+                [attr.fill]="no.corBorda" fill-opacity="0.85" />
+              <text class="container-titulo" [attr.x]="no.x + 15" [attr.y]="cy(no)" [attr.fill]="no.corTexto"
+                text-anchor="middle" [attr.transform]="'rotate(-90 ' + (no.x + 15) + ' ' + cy(no) + ')'">{{ no.texto }}</text>
+            </ng-container>
+
+            <rect *ngIf="selecionadoId === no.id && selecionadoTipo === 'no'" class="contorno-selecao"
+              [attr.x]="no.x - 6" [attr.y]="no.y - 6" [attr.width]="no.largura + 12" [attr.height]="no.altura + 12" rx="6" />
+          </g>
+
+          <!-- Conexões -->
+          <g *ngFor="let c of conexoes; trackBy: trackConexao">
+            <ng-container *ngIf="pontosConexao(c) as p">
+              <line class="conexao-hit" [attr.x1]="p.x1" [attr.y1]="p.y1" [attr.x2]="p.x2" [attr.y2]="p.y2"
+                (click)="aoClicarConexao($event, c)" />
+              <line class="conexao-linha" [class.selecionada]="selecionadoId === c.id && selecionadoTipo === 'conexao'"
+                [attr.x1]="p.x1" [attr.y1]="p.y1" [attr.x2]="p.x2" [attr.y2]="p.y2"
+                [attr.stroke]="c.cor" [attr.stroke-width]="c.espessura"
+                [attr.stroke-dasharray]="c.tracejada ? '7 5' : null"
+                [attr.filter]="filtroTraco(c.tipoTraco)"
+                [attr.marker-end]="c.setaFim ? 'url(#seta-fim)' : null"
+                [attr.marker-start]="c.setaInicio ? 'url(#seta-inicio)' : null"
+                (click)="aoClicarConexao($event, c)" />
+              <g *ngIf="c.texto" [attr.transform]="'translate(' + meioConexao(c).x + ',' + meioConexao(c).y + ')'">
+                <rect class="conexao-rotulo-bg" [attr.x]="-(c.texto.length * 3.6 + 6)" y="-9"
+                  [attr.width]="c.texto.length * 7.2 + 12" height="18" rx="4" />
+                <text class="conexao-rotulo" x="0" y="0" text-anchor="middle" dominant-baseline="middle"
+                  [attr.fill]="temaClaro ? '#111827' : '#f4fbff'">{{ c.texto }}</text>
+              </g>
+            </ng-container>
+          </g>
+
+          <!-- Nós normais -->
+          <g *ngFor="let no of nosNormais; trackBy: trackNo" class="no-grupo"
+            [class.selecionado]="selecionadoId === no.id && selecionadoTipo === 'no'"
+            (mousedown)="aoPressionarNo($event, no)" (click)="$event.stopPropagation()">
+
+            <!-- Imagem -->
+            <image *ngIf="no.tipo === 'imagem'" [attr.href]="no.src" [attr.x]="no.x" [attr.y]="no.y"
+              [attr.width]="no.largura" [attr.height]="no.altura" preserveAspectRatio="none" />
+            <rect *ngIf="no.tipo === 'imagem' && no.espessuraBorda > 0" [attr.x]="no.x" [attr.y]="no.y"
+              [attr.width]="no.largura" [attr.height]="no.altura" fill="none" [attr.stroke]="no.corBorda"
+              [attr.stroke-width]="no.espessuraBorda" />
+
+            <!-- Retângulo / arredondado / terminador -->
+            <rect *ngIf="no.tipo === 'retangulo' || no.tipo === 'arredondado' || no.tipo === 'terminador'"
+              [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
+              [attr.rx]="raioArredondado(no)" [attr.fill]="no.corFundo" [attr.stroke]="no.corBorda"
+              [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
+
+            <!-- Subprocesso (processo predefinido): retângulo com barras laterais -->
+            <ng-container *ngIf="no.tipo === 'subprocesso'">
+              <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
+                [attr.fill]="no.corFundo" [attr.stroke]="no.corBorda" [attr.stroke-width]="no.espessuraBorda"
+                [attr.filter]="filtroTraco(no.tipoTraco)" />
+              <line [attr.x1]="no.x + 8" [attr.y1]="no.y" [attr.x2]="no.x + 8" [attr.y2]="no.y + no.altura"
+                [attr.stroke]="no.corBorda" [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
+              <line [attr.x1]="no.x + no.largura - 8" [attr.y1]="no.y" [attr.x2]="no.x + no.largura - 8" [attr.y2]="no.y + no.altura"
+                [attr.stroke]="no.corBorda" [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
+            </ng-container>
+
+            <!-- Círculo / elipse -->
+            <ellipse *ngIf="no.tipo === 'circulo' || no.tipo === 'elipse'"
+              [attr.cx]="cx(no)" [attr.cy]="cy(no)" [attr.rx]="no.largura / 2" [attr.ry]="no.altura / 2"
+              [attr.fill]="no.corFundo" [attr.stroke]="no.corBorda" [attr.stroke-width]="no.espessuraBorda"
+              [attr.filter]="filtroTraco(no.tipoTraco)" />
+
+            <!-- Losango / paralelogramo / hexágono -->
+            <polygon *ngIf="no.tipo === 'losango' || no.tipo === 'paralelogramo' || no.tipo === 'hexagono'"
+              [attr.points]="pontosPoligono(no)" [attr.fill]="no.corFundo" [attr.stroke]="no.corBorda"
+              [attr.stroke-width]="no.espessuraBorda" stroke-linejoin="round" [attr.filter]="filtroTraco(no.tipoTraco)" />
+
+            <!-- Cilindro (dados) -->
+            <ng-container *ngIf="no.tipo === 'cilindro'">
+              <path [attr.d]="caminhoCilindro(no)" [attr.fill]="no.corFundo" [attr.stroke]="no.corBorda"
+                [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
+              <path [attr.d]="caminhoTopoCilindro(no)" fill="none" [attr.stroke]="no.corBorda"
+                [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
+            </ng-container>
+
+            <!-- Texto -->
+            <text *ngIf="no.tipo !== 'imagem'" class="no-texto" [attr.x]="cx(no)" [attr.y]="cy(no)" text-anchor="middle" [attr.fill]="no.corTexto">
+              <tspan *ngFor="let linha of linhasTexto(no); let i = index; let total = count"
+                [attr.x]="cx(no)" [attr.dy]="i === 0 ? -(total - 1) * 8 : 16">{{ linha }}</tspan>
+            </text>
+
+            <!-- Contorno de seleção -->
+            <rect *ngIf="selecionadoId === no.id && selecionadoTipo === 'no'" class="contorno-selecao"
+              [attr.x]="no.x - 6" [attr.y]="no.y - 6" [attr.width]="no.largura + 12" [attr.height]="no.altura + 12"
+              rx="6" />
+          </g>
+
+          <!-- Alças de redimensionamento -->
+          <g *ngIf="noSelecionado as sel">
+            <rect *ngFor="let h of alcas(sel)" class="alca"
+              [attr.x]="h.x - tamAlca() / 2" [attr.y]="h.y - tamAlca() / 2"
+              [attr.width]="tamAlca()" [attr.height]="tamAlca()" rx="1.5"
+              [style.cursor]="h.cursor" (mousedown)="iniciarResize($event, sel, h.canto)"
+              (click)="$event.stopPropagation()" />
+          </g>
+        </g>
+      </svg>
+
+      <div class="dica-canvas" *ngIf="ferramenta === 'conectar'">
+        <mat-icon>timeline</mat-icon>
+        {{ conexaoOrigemId ? 'Agora clique na forma de destino' : 'Clique na forma de origem' }}
+      </div>
+
+      <div class="toast-canvas" *ngIf="aviso">
+        <mat-icon>info</mat-icon> {{ aviso }}
+      </div>
+    </div>
+
+    <!-- Painel de propriedades -->
+    <aside class="fluxo-painel" (change)="salvar()">
+
+      <!-- Propriedades do nó -->
+      <ng-container *ngIf="noSelecionado as no">
+        <h3><mat-icon>category</mat-icon> Forma</h3>
+
+        <label class="campo">
+          <span>Texto</span>
+          <textarea rows="2" [(ngModel)]="no.texto"></textarea>
+        </label>
+
+        <label class="campo">
+          <span>Tipo</span>
+          <select [(ngModel)]="no.tipo">
+            <option *ngFor="let f of todasFormas" [value]="f.tipo">{{ f.nome }}</option>
+            <option value="imagem">Imagem</option>
+          </select>
+        </label>
+
+        <button *ngIf="no.tipo === 'imagem'" class="painel-troca-img" (click)="trocarImagem(); inputImagem.click()">
+          <mat-icon>image</mat-icon> Trocar imagem
+        </button>
+
+        <label class="campo cor">
+          <span>Cor de fundo</span>
+          <input type="color" [(ngModel)]="no.corFundo" />
+        </label>
+        <label class="campo cor">
+          <span>Cor da borda</span>
+          <input type="color" [(ngModel)]="no.corBorda" />
+        </label>
+        <label class="campo cor">
+          <span>Cor do texto</span>
+          <input type="color" [(ngModel)]="no.corTexto" />
+        </label>
+
+        <label class="campo">
+          <span>Espessura da borda <b>{{ no.espessuraBorda }}px</b></span>
+          <input type="range" min="0" max="10" step="0.5" [value]="no.espessuraBorda"
+            (input)="setEspessuraBorda(no, $any($event.target).value)" />
+        </label>
+
+        <label class="campo">
+          <span>Tipo do traço</span>
+          <select [(ngModel)]="no.tipoTraco">
+            <option *ngFor="let t of tracos" [value]="t.id">{{ t.nome }}</option>
+          </select>
+        </label>
+
+        <div class="campo-duplo">
+          <label class="campo"><span>Largura</span><input type="number" min="30" [(ngModel)]="no.largura" /></label>
+          <label class="campo"><span>Altura</span><input type="number" min="30" [(ngModel)]="no.altura" /></label>
+        </div>
+
+        <button class="painel-excluir" (click)="excluirSelecionado()"><mat-icon>delete</mat-icon> Excluir forma</button>
+      </ng-container>
+
+      <!-- Propriedades da conexão -->
+      <ng-container *ngIf="conexaoSelecionada as c">
+        <h3><mat-icon>timeline</mat-icon> Conexão</h3>
+
+        <label class="campo">
+          <span>Rótulo</span>
+          <input type="text" [(ngModel)]="c.texto" placeholder="Ex.: Sim / Não" />
+        </label>
+
+        <label class="campo cor">
+          <span>Cor da linha</span>
+          <input type="color" [(ngModel)]="c.cor" />
+        </label>
+
+        <label class="campo">
+          <span>Espessura <b>{{ c.espessura }}px</b></span>
+          <input type="range" min="0.5" max="10" step="0.5" [value]="c.espessura"
+            (input)="setEspessuraLinha(c, $any($event.target).value)" />
+        </label>
+
+        <label class="campo">
+          <span>Tipo do traço</span>
+          <select [(ngModel)]="c.tipoTraco">
+            <option *ngFor="let t of tracos" [value]="t.id">{{ t.nome }}</option>
+          </select>
+        </label>
+
+        <label class="campo-check"><input type="checkbox" [(ngModel)]="c.tracejada" /> <span>Tracejada</span></label>
+        <label class="campo-check"><input type="checkbox" [(ngModel)]="c.setaFim" /> <span>Seta no fim</span></label>
+        <label class="campo-check"><input type="checkbox" [(ngModel)]="c.setaInicio" /> <span>Seta no início</span></label>
+
+        <button class="painel-excluir" (click)="excluirSelecionado()"><mat-icon>delete</mat-icon> Excluir conexão</button>
+      </ng-container>
+
+      <!-- Estilos padrão (sem seleção) -->
+      <ng-container *ngIf="!selecionadoId">
+        <h3><mat-icon>palette</mat-icon> Estilos padrão</h3>
+        <p class="painel-dica">Aplicados às próximas formas e conexões criadas.</p>
+
+        <label class="campo cor"><span>Fundo da forma</span><input type="color" [(ngModel)]="padrao.corFundo" /></label>
+        <label class="campo cor"><span>Borda da forma</span><input type="color" [(ngModel)]="padrao.corBorda" /></label>
+        <label class="campo cor"><span>Texto da forma</span><input type="color" [(ngModel)]="padrao.corTexto" /></label>
+        <label class="campo">
+          <span>Espessura da borda <b>{{ padrao.espessuraBorda }}px</b></span>
+          <input type="range" min="0" max="10" step="0.5" [(ngModel)]="padrao.espessuraBorda" />
+        </label>
+        <label class="campo cor"><span>Cor da linha</span><input type="color" [(ngModel)]="padrao.corLinha" /></label>
+        <label class="campo">
+          <span>Espessura da linha <b>{{ padrao.espessuraLinha }}px</b></span>
+          <input type="range" min="0.5" max="10" step="0.5" [(ngModel)]="padrao.espessuraLinha" />
+        </label>
+        <label class="campo">
+          <span>Tipo do traço</span>
+          <select [(ngModel)]="padrao.tipoTraco">
+            <option *ngFor="let t of tracos" [value]="t.id">{{ t.nome }}</option>
+          </select>
+        </label>
+      </ng-container>
+    </aside>
+  </div>
+
+  <!-- ═══════════════ Painel Import/Export ═══════════════ -->
+  <div class="modal-dados-fundo" *ngIf="painelDados" (click)="painelDados = false">
+    <div class="modal-dados" (click)="$event.stopPropagation()">
+      <div class="modal-dados-topo">
+        <div class="modal-dados-abas">
+          <button [class.aba-ativa]="formato === 'mermaid'" (click)="formato = 'mermaid'; gerar()">Mermaid</button>
+          <button [class.aba-ativa]="formato === 'xml'" (click)="formato = 'xml'; gerar()">XML</button>
+        </div>
+        <button class="modal-fechar" (click)="painelDados = false"><mat-icon>close</mat-icon></button>
+      </div>
+
+      <textarea class="modal-dados-texto" [(ngModel)]="textoDados" spellcheck="false"
+        placeholder="Cole aqui o {{ formato === 'mermaid' ? 'Mermaid' : 'XML' }} para importar…"></textarea>
+
+      <div class="modal-dados-msg" *ngIf="mensagem">{{ mensagem }}</div>
+
+      <div class="modal-dados-acoes">
+        <button class="acao-btn" (click)="gerar()"><mat-icon>sync</mat-icon> Gerar do diagrama</button>
+        <button class="acao-btn destaque" (click)="aplicar()"><mat-icon>download_for_offline</mat-icon> Aplicar ao diagrama</button>
+        <button class="acao-btn" (click)="copiar()"><mat-icon>{{ copiado ? 'check' : 'content_copy' }}</mat-icon> {{ copiado ? 'Copiado!' : 'Copiar' }}</button>
+        <button class="acao-btn" (click)="baixar()"><mat-icon>save_alt</mat-icon> Baixar</button>
+        <label class="acao-btn arquivo-label">
+          <mat-icon>upload_file</mat-icon> Carregar arquivo
+          <input type="file" accept=".mmd,.txt,.xml" (change)="carregarArquivo($event)" hidden />
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ Instruções ═══════════════ -->
+<div class="instrucoes">
+  <h2>Editor de Fluxograma</h2>
+  <p>Ferramenta visual para desenhar fluxogramas diretamente no navegador, com importação e exportação nos formatos <strong>Mermaid</strong> e <strong>XML</strong> e download como <strong>PNG</strong>, <strong>PNG transparente</strong>, <strong>JPG</strong>, <strong>PDF</strong> e <strong>SVG</strong>. Nenhum dado é enviado a servidores — tudo acontece localmente.</p>
+
+  <h4 class="sublinhado">Como usar</h4>
+  <p>Escolha uma forma na barra superior e clique na área de desenho para inseri-la. No modo <strong>Selecionar</strong>, arraste as formas para reposicioná-las e arraste o fundo para navegar pelo canvas. Para ligar duas formas, ative o modo <strong>Conectar</strong>, clique na forma de origem e depois na de destino. Selecione qualquer forma ou conexão para editar suas propriedades no painel à direita.</p>
+
+  <h4 class="sublinhado">Formas e elementos</h4>
+  <p>Formas de fluxo: processo (retângulo), retângulo arredondado, início/fim (terminador), decisão (losango), círculo, elipse, entrada/saída (paralelogramo), preparação (hexágono), dados (cilindro) e subprocesso (processo predefinido). Elementos de organização: <strong>contêiner</strong> e <strong>moldura</strong> (agrupamento visual com título), <strong>grupo</strong> (área tracejada) e <strong>raia</strong> (swimlane) para separar responsáveis, departamentos ou sistemas. Contêineres, molduras, grupos e raias ficam atrás das demais formas. Também é possível inserir <strong>imagens</strong> pelo botão de imagem na barra, redimensioná-las pelo painel e trocá-las a qualquer momento.</p>
+
+  <h4 class="sublinhado">Cores, traços e tema</h4>
+  <p>Cada forma permite personalizar cor de fundo, cor da borda, cor do texto e espessura da borda; cada conexão permite cor, espessura, estilo tracejado e setas nas pontas. O <strong>tipo do traço</strong> pode ser sólido, risco de giz ou risco de lápis, dando um aspecto desenhado à mão. O botão de <strong>tema</strong> alterna o gráfico entre escuro e claro — no modo claro o fundo fica branco e as bordas, linhas e setas ficam escuras.</p>
+
+  <h4 class="sublinhado">Exportação</h4>
+  <p>O <strong>PNG transparente</strong> gera uma imagem sem fundo e com as formas sem preenchimento (apenas contornos, texto e linhas), ideal para sobrepor a outros materiais. O botão <strong>Mermaid</strong> gera um diagrama <em>flowchart</em> compatível com editores como o mermaid.live, com diretivas de estilo e um comentário de metadados que preserva posições e tipos exatos para reimportação sem perdas. O formato <strong>XML</strong> guarda todos os atributos de cada forma e conexão.</p>
+
+  <h4 class="sublinhado">Atalhos</h4>
+  <p><strong>Delete</strong> remove o elemento selecionado, <strong>Esc</strong> cancela a seleção e o modo atual, e <strong>Ctrl + roda do mouse</strong> aplica zoom.</p>
+</div>

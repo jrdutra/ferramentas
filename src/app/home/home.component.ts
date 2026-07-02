@@ -57,8 +57,9 @@ export class HomeComponent {
       ]
     },
     {
-      titulo: 'Ferramentas de Imagens e PDF',
+      titulo: 'Ferramentas de Imagens, Gráficas e PDF',
       ferramentas: [
+        { titulo: 'Editor de Fluxograma', descricao: 'Desenhar fluxogramas com formas, setas e cores; importar e exportar em Mermaid e XML.', icone: 'account_tree', rota: 'editor-fluxograma', novo: true },
         { titulo: 'Juntador de PDFs e Imagens', descricao: 'Juntar varios PDFs e imagens em um unico arquivo PDF ou imagem, com reordenacao.', icone: 'merge_type', rota: 'juntador-pdf', novo: false },
         { titulo: 'Separador de PDFs', descricao: 'Separar um PDF em paginas individuais, baixar como ZIP de PDFs ou JPGs.', icone: 'call_split', rota: 'separador-pdf', novo: false },
         { titulo: 'Conversor OCR', descricao: 'Extrair texto de imagens usando OCR local com Tesseract.js.', icone: 'document_scanner', rota: 'conversor-imagem-texto-ocr', novo: false }

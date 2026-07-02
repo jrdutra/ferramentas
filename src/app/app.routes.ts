@@ -24,6 +24,7 @@ import { GeradorUuidComponent } from './ferramentas/gerador-uuid/gerador-uuid.co
 import { GeradorSenhaComponent } from './ferramentas/gerador-senha/gerador-senha.component';
 import { GeradorHmacComponent } from './ferramentas/gerador-hmac/gerador-hmac.component';
 import { GeradorCpfCnpjComponent } from './ferramentas/gerador-cpf-cnpj/gerador-cpf-cnpj.component';
+import { EditorFluxogramaComponent } from './ferramentas/editor-fluxograma/editor-fluxograma.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -52,4 +53,5 @@ export const routes: Routes = [
   { path: 'gerador-senha', component: GeradorSenhaComponent },
   { path: 'gerador-hmac', component: GeradorHmacComponent },
   { path: 'gerador-cpf-cnpj', component: GeradorCpfCnpjComponent },
+  { path: 'editor-fluxograma', component: EditorFluxogramaComponent },
 ];
