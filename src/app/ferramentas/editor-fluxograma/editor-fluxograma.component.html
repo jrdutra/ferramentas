@@ -4,7 +4,7 @@
   <div class="fluxo-barra">
     <div class="barra-grupo-f">
       <button class="ferr-btn" [class.ativo]="ferramenta === 'selecionar'"
-        (click)="selecionarFerramenta('selecionar')" matTooltip="Selecionar / mover (arraste o fundo para navegar)">
+        (click)="selecionarFerramenta('selecionar')" matTooltip="Selecionar / mover; arraste o fundo para selecionar por área">
         <mat-icon>near_me</mat-icon>
       </button>
       <button class="ferr-btn" [class.ativo]="ferramenta === 'conectar'"
@@ -43,7 +43,7 @@
     <span class="barra-sep"></span>
 
     <div class="barra-grupo-f">
-      <button class="ferr-btn perigo" (click)="excluirSelecionado()" [disabled]="!selecionadoId"
+      <button class="ferr-btn perigo" (click)="excluirSelecionado()" [disabled]="!temSelecao"
         matTooltip="Excluir selecionado (Delete)">
         <mat-icon>delete</mat-icon>
       </button>
@@ -147,8 +147,9 @@
 
           <!-- Contêineres (atrás de tudo) -->
           <g *ngFor="let no of nosContainer; trackBy: trackNo" class="no-grupo container-grupo"
-            [class.selecionado]="selecionadoId === no.id && selecionadoTipo === 'no'"
-            (mousedown)="aoPressionarNo($event, no)" (click)="$event.stopPropagation()">
+            [class.selecionado]="isNoSelecionado(no)"
+            (mousedown)="aoPressionarNo($event, no)" (click)="$event.stopPropagation()"
+            (dblclick)="editarTextoNo($event, no)">
 
             <!-- Contêiner: corpo + barra de título -->
             <ng-container *ngIf="no.tipo === 'container'">
@@ -190,7 +191,7 @@
                 text-anchor="middle" [attr.transform]="'rotate(-90 ' + (no.x + 15) + ' ' + cy(no) + ')'">{{ no.texto }}</text>
             </ng-container>
 
-            <rect *ngIf="selecionadoId === no.id && selecionadoTipo === 'no'" class="contorno-selecao"
+            <rect *ngIf="isNoSelecionado(no)" class="contorno-selecao"
               [attr.x]="no.x - 6" [attr.y]="no.y - 6" [attr.width]="no.largura + 12" [attr.height]="no.altura + 12" rx="6" />
           </g>
 
@@ -198,16 +199,17 @@
           <g *ngFor="let c of conexoes; trackBy: trackConexao">
             <ng-container *ngIf="pontosConexao(c) as p">
               <line class="conexao-hit" [attr.x1]="p.x1" [attr.y1]="p.y1" [attr.x2]="p.x2" [attr.y2]="p.y2"
-                (click)="aoClicarConexao($event, c)" />
-              <line class="conexao-linha" [class.selecionada]="selecionadoId === c.id && selecionadoTipo === 'conexao'"
+                (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
+              <line class="conexao-linha" [class.selecionada]="isConexaoSelecionada(c)"
                 [attr.x1]="p.x1" [attr.y1]="p.y1" [attr.x2]="p.x2" [attr.y2]="p.y2"
                 [attr.stroke]="c.cor" [attr.stroke-width]="c.espessura"
                 [attr.stroke-dasharray]="c.tracejada ? '7 5' : null"
                 [attr.filter]="filtroTraco(c.tipoTraco)"
                 [attr.marker-end]="c.setaFim ? 'url(#seta-fim)' : null"
                 [attr.marker-start]="c.setaInicio ? 'url(#seta-inicio)' : null"
-                (click)="aoClicarConexao($event, c)" />
-              <g *ngIf="c.texto" [attr.transform]="'translate(' + meioConexao(c).x + ',' + meioConexao(c).y + ')'">
+                (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
+              <g *ngIf="c.texto" [attr.transform]="'translate(' + meioConexao(c).x + ',' + meioConexao(c).y + ')'"
+                (dblclick)="editarTextoConexao($event, c)">
                 <rect class="conexao-rotulo-bg" [attr.x]="-(c.texto.length * 3.6 + 6)" y="-9"
                   [attr.width]="c.texto.length * 7.2 + 12" height="18" rx="4" />
                 <text class="conexao-rotulo" x="0" y="0" text-anchor="middle" dominant-baseline="middle"
@@ -218,8 +220,9 @@
 
           <!-- Nós normais -->
           <g *ngFor="let no of nosNormais; trackBy: trackNo" class="no-grupo"
-            [class.selecionado]="selecionadoId === no.id && selecionadoTipo === 'no'"
-            (mousedown)="aoPressionarNo($event, no)" (click)="$event.stopPropagation()">
+            [class.selecionado]="isNoSelecionado(no)"
+            (mousedown)="aoPressionarNo($event, no)" (click)="$event.stopPropagation()"
+            (dblclick)="editarTextoNo($event, no)">
 
             <!-- Imagem -->
             <image *ngIf="no.tipo === 'imagem'" [attr.href]="no.src" [attr.x]="no.x" [attr.y]="no.y"
@@ -271,7 +274,7 @@
             </text>
 
             <!-- Contorno de seleção -->
-            <rect *ngIf="selecionadoId === no.id && selecionadoTipo === 'no'" class="contorno-selecao"
+            <rect *ngIf="isNoSelecionado(no)" class="contorno-selecao"
               [attr.x]="no.x - 6" [attr.y]="no.y - 6" [attr.width]="no.largura + 12" [attr.height]="no.altura + 12"
               rx="6" />
           </g>
@@ -284,8 +287,18 @@
               [style.cursor]="h.cursor" (mousedown)="iniciarResize($event, sel, h.canto)"
               (click)="$event.stopPropagation()" />
           </g>
+
+          <rect *ngIf="retanguloSelecao as r" class="retangulo-selecao-area"
+            [attr.x]="r.x" [attr.y]="r.y" [attr.width]="r.largura" [attr.height]="r.altura" />
         </g>
       </svg>
+
+      <textarea *ngIf="editorTextoInline as ed" #editorTextoInline class="editor-texto-inline"
+        [(ngModel)]="ed.texto"
+        [style.left.px]="ed.left" [style.top.px]="ed.top"
+        [style.width.px]="ed.width" [style.height.px]="ed.height"
+        (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()"
+        (keydown)="aoTeclarEditorInline($event)" (blur)="confirmarEdicaoTextoInline()"></textarea>
 
       <div class="dica-canvas" *ngIf="ferramenta === 'conectar'">
         <mat-icon>timeline</mat-icon>
@@ -299,6 +312,14 @@
 
     <!-- Painel de propriedades -->
     <aside class="fluxo-painel" (change)="salvar()">
+
+      <ng-container *ngIf="selecaoMultipla">
+        <h3><mat-icon>select_all</mat-icon> Selecao</h3>
+        <p class="painel-dica">
+          {{ nosSelecionados.size }} forma(s) e {{ conexoesSelecionadas.size }} conexao(oes) selecionada(s).
+        </p>
+        <button class="painel-excluir" (click)="excluirSelecionado()"><mat-icon>delete</mat-icon> Excluir selecionados</button>
+      </ng-container>
 
       <!-- Propriedades do nó -->
       <ng-container *ngIf="noSelecionado as no">
@@ -390,7 +411,7 @@
       </ng-container>
 
       <!-- Estilos padrão (sem seleção) -->
-      <ng-container *ngIf="!selecionadoId">
+      <ng-container *ngIf="!temSelecao">
         <h3><mat-icon>palette</mat-icon> Estilos padrão</h3>
         <p class="painel-dica">Aplicados às próximas formas e conexões criadas.</p>
 
@@ -522,7 +543,7 @@
   <p>Ferramenta visual para desenhar fluxogramas diretamente no navegador, com importação e exportação nos formatos <strong>Mermaid</strong> e <strong>XML</strong> e download como <strong>PNG</strong>, <strong>PNG transparente</strong>, <strong>JPG</strong>, <strong>PDF</strong> e <strong>SVG</strong>. Nenhum dado é enviado a servidores — tudo acontece localmente.</p>
 
   <h4 class="sublinhado">Como usar</h4>
-  <p>Escolha uma forma na barra superior e clique na área de desenho para inseri-la. No modo <strong>Selecionar</strong>, arraste as formas para reposicioná-las e arraste o fundo para navegar pelo canvas. Para ligar duas formas, ative o modo <strong>Conectar</strong>, clique na forma de origem e depois na de destino. Selecione qualquer forma ou conexão para editar suas propriedades no painel à direita.</p>
+  <p>Escolha uma forma na barra superior e clique na área de desenho para inseri-la. No modo <strong>Selecionar</strong>, arraste formas para reposicioná-las, use <strong>Ctrl/Shift + clique</strong> para selecionar vários itens e arraste uma área vazia para selecionar tudo que ficar dentro do retângulo. Use <strong>Alt + arrastar</strong> para navegar pelo canvas. Para ligar duas formas, ative o modo <strong>Conectar</strong>, clique na forma de origem e depois na de destino. Dê duplo clique em uma forma ou conexão para editar o texto diretamente no fluxograma.</p>
 
   <h4 class="sublinhado">Formas e elementos</h4>
   <p>Formas de fluxo: processo (retângulo), retângulo arredondado, início/fim (terminador), decisão (losango), círculo, elipse, entrada/saída (paralelogramo), preparação (hexágono), dados (cilindro) e subprocesso (processo predefinido). Elementos de organização: <strong>contêiner</strong> e <strong>moldura</strong> (agrupamento visual com título), <strong>grupo</strong> (área tracejada) e <strong>raia</strong> (swimlane) para separar responsáveis, departamentos ou sistemas. Contêineres, molduras, grupos e raias ficam atrás das demais formas. Também é possível inserir <strong>imagens</strong> pelo botão de imagem na barra, redimensioná-las pelo painel e trocá-las a qualquer momento.</p>

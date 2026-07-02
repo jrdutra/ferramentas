@@ -31,6 +31,23 @@ interface BackupTema {
   padrao: { corFundo: string; corBorda: string; corTexto: string; corLinha: string };
 }
 
+interface RetanguloCanvas {
+  x: number;
+  y: number;
+  largura: number;
+  altura: number;
+}
+
+interface EditorTextoInline {
+  tipo: 'no' | 'conexao';
+  id: string;
+  texto: string;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
 @Component({
   selector: 'app-editor-fluxograma',
   standalone: true,
@@ -41,6 +58,7 @@ interface BackupTema {
 export class EditorFluxogramaComponent implements OnInit {
 
   @ViewChild('svgCanvas') svgCanvas?: ElementRef<SVGSVGElement>;
+  @ViewChild('editorTextoInline') editorTextoInlineEl?: ElementRef<HTMLTextAreaElement>;
 
   readonly formas: OpcaoForma[] = [
     { tipo: 'retangulo', nome: 'Processo', icone: 'crop_16_9' },
@@ -78,6 +96,10 @@ export class EditorFluxogramaComponent implements OnInit {
   ferramenta: Ferramenta = 'selecionar';
   selecionadoId: string | null = null;
   selecionadoTipo: 'no' | 'conexao' | null = null;
+  nosSelecionados = new Set<string>();
+  conexoesSelecionadas = new Set<string>();
+  retanguloSelecao: RetanguloCanvas | null = null;
+  editorTextoInline: EditorTextoInline | null = null;
 
   // Origem temporária ao criar conexões.
   conexaoOrigemId: string | null = null;
@@ -124,9 +146,18 @@ export class EditorFluxogramaComponent implements OnInit {
   private arrastando: NoFluxograma | null = null;
   private arrasteDx = 0;
   private arrasteDy = 0;
+  private arrasteInicioX = 0;
+  private arrasteInicioY = 0;
+  private arrasteGrupo = false;
+  private posicoesInicioArraste = new Map<string, { x: number; y: number }>();
   private panning = false;
   private panIniX = 0;
   private panIniY = 0;
+  private selecionandoArea = false;
+  private selecaoAreaAdicionar = false;
+  private selecaoIniX = 0;
+  private selecaoIniY = 0;
+  private ignorarCliqueCanvas = false;
 
   // Estado de redimensionamento.
   private redimensionando: NoFluxograma | null = null;
@@ -152,13 +183,27 @@ export class EditorFluxogramaComponent implements OnInit {
   // ─────────────────────────── Getters ───────────────────────────
 
   get noSelecionado(): NoFluxograma | null {
-    return this.selecionadoTipo === 'no' ? this.nos.find((n) => n.id === this.selecionadoId) ?? null : null;
+    return this.totalSelecionados === 1 && this.selecionadoTipo === 'no'
+      ? this.nos.find((n) => n.id === this.selecionadoId) ?? null
+      : null;
   }
 
   get conexaoSelecionada(): ConexaoFluxograma | null {
-    return this.selecionadoTipo === 'conexao'
+    return this.totalSelecionados === 1 && this.selecionadoTipo === 'conexao'
       ? this.conexoes.find((c) => c.id === this.selecionadoId) ?? null
       : null;
+  }
+
+  get totalSelecionados(): number {
+    return this.nosSelecionados.size + this.conexoesSelecionadas.size;
+  }
+
+  get selecaoMultipla(): boolean {
+    return this.totalSelecionados > 1;
+  }
+
+  get temSelecao(): boolean {
+    return this.totalSelecionados > 0;
   }
 
   // ─────────────────────── Ferramentas / criação ───────────────────────
@@ -167,8 +212,7 @@ export class EditorFluxogramaComponent implements OnInit {
     this.ferramenta = f;
     this.conexaoOrigemId = null;
     if (f !== 'selecionar') {
-      this.selecionadoId = null;
-      this.selecionadoTipo = null;
+      this.limparSelecao();
     }
   }
 
@@ -324,6 +368,10 @@ export class EditorFluxogramaComponent implements OnInit {
   // ─────────────────────── Eventos do canvas ───────────────────────
 
   aoClicarCanvas(evento: MouseEvent): void {
+    if (this.ignorarCliqueCanvas) {
+      this.ignorarCliqueCanvas = false;
+      return;
+    }
     // Clique em área vazia.
     if (this.ferramenta !== 'selecionar' && this.ferramenta !== 'conectar') {
       const p = this.pontoCanvas(evento);
@@ -334,8 +382,7 @@ export class EditorFluxogramaComponent implements OnInit {
       return;
     }
     // Modo selecionar: clicar no vazio limpa a seleção.
-    this.selecionadoId = null;
-    this.selecionadoTipo = null;
+    this.limparSelecao();
     this.conexaoOrigemId = null;
   }
 
@@ -355,24 +402,52 @@ export class EditorFluxogramaComponent implements OnInit {
     }
 
     // Modo selecionar → inicia arraste.
-    this.selecionar(no.id, 'no');
+    const multisselecao = evento.ctrlKey || evento.metaKey || evento.shiftKey;
+    if (multisselecao) {
+      this.alternarSelecao(no.id, 'no');
+      if (!this.isNoSelecionado(no)) return;
+    } else if (!this.isNoSelecionado(no)) {
+      this.selecionar(no.id, 'no');
+    } else {
+      this.selecionadoId = no.id;
+      this.selecionadoTipo = 'no';
+    }
     const p = this.pontoCanvas(evento);
     this.arrastando = no;
     this.arrasteDx = p.x - no.x;
     this.arrasteDy = p.y - no.y;
+    this.arrasteInicioX = p.x;
+    this.arrasteInicioY = p.y;
+    this.arrasteGrupo = this.nosSelecionados.size > 1 && this.isNoSelecionado(no);
+    this.posicoesInicioArraste = new Map(
+      this.nos.filter((n) => this.nosSelecionados.has(n.id)).map((n) => [n.id, { x: n.x, y: n.y }]),
+    );
   }
 
   aoClicarConexao(evento: MouseEvent, c: ConexaoFluxograma): void {
     evento.stopPropagation();
     if (this.ferramenta === 'conectar') return;
-    this.selecionar(c.id, 'conexao');
+    if (evento.ctrlKey || evento.metaKey || evento.shiftKey) {
+      this.alternarSelecao(c.id, 'conexao');
+    } else {
+      this.selecionar(c.id, 'conexao');
+    }
   }
 
   aoPressionarFundo(evento: MouseEvent): void {
     if (this.ferramenta === 'selecionar') {
-      this.panning = true;
-      this.panIniX = evento.clientX - this.panX;
-      this.panIniY = evento.clientY - this.panY;
+      if (evento.button === 1 || evento.altKey) {
+        this.panning = true;
+        this.panIniX = evento.clientX - this.panX;
+        this.panIniY = evento.clientY - this.panY;
+        return;
+      }
+      const p = this.pontoCanvas(evento);
+      this.selecionandoArea = true;
+      this.selecaoAreaAdicionar = evento.ctrlKey || evento.metaKey || evento.shiftKey;
+      this.selecaoIniX = p.x;
+      this.selecaoIniY = p.y;
+      this.retanguloSelecao = { x: p.x, y: p.y, largura: 0, altura: 0 };
     }
   }
 
@@ -384,20 +459,43 @@ export class EditorFluxogramaComponent implements OnInit {
     }
     if (this.arrastando) {
       const p = this.pontoCanvas(evento);
-      this.arrastando.x = Math.round(p.x - this.arrasteDx);
-      this.arrastando.y = Math.round(p.y - this.arrasteDy);
+      if (this.arrasteGrupo) {
+        const dx = p.x - this.arrasteInicioX;
+        const dy = p.y - this.arrasteInicioY;
+        this.nos.forEach((n) => {
+          const pos = this.posicoesInicioArraste.get(n.id);
+          if (pos) {
+            n.x = Math.round(pos.x + dx);
+            n.y = Math.round(pos.y + dy);
+          }
+        });
+      } else {
+        this.arrastando.x = Math.round(p.x - this.arrasteDx);
+        this.arrastando.y = Math.round(p.y - this.arrasteDy);
+      }
     } else if (this.panning) {
       this.panX = evento.clientX - this.panIniX;
       this.panY = evento.clientY - this.panIniY;
+    } else if (this.selecionandoArea) {
+      const p = this.pontoCanvas(evento);
+      this.retanguloSelecao = this.normalizarRetangulo(this.selecaoIniX, this.selecaoIniY, p.x, p.y);
     }
   }
 
   @HostListener('window:mouseup')
   aoSoltar(): void {
     const mudou = !!(this.arrastando || this.redimensionando || this.panning);
+    if (this.selecionandoArea) {
+      const selecionou = this.aplicarSelecaoArea();
+      this.ignorarCliqueCanvas = selecionou;
+    }
     this.arrastando = null;
+    this.arrasteGrupo = false;
+    this.posicoesInicioArraste.clear();
     this.panning = false;
     this.redimensionando = null;
+    this.selecionandoArea = false;
+    this.retanguloSelecao = null;
     if (mudou) this.salvar();
   }
 
@@ -405,13 +503,13 @@ export class EditorFluxogramaComponent implements OnInit {
   aoTeclar(evento: KeyboardEvent): void {
     const alvo = evento.target as HTMLElement | null;
     if (alvo && ['INPUT', 'TEXTAREA', 'SELECT'].includes(alvo.tagName)) return;
-    if ((evento.key === 'Delete' || evento.key === 'Backspace') && this.selecionadoId) {
+    if ((evento.key === 'Delete' || evento.key === 'Backspace') && this.temSelecao) {
       evento.preventDefault();
       this.excluirSelecionado();
     }
     if (evento.key === 'Escape') {
-      this.selecionadoId = null;
-      this.selecionadoTipo = null;
+      this.cancelarEdicaoTextoInline();
+      this.limparSelecao();
       this.conexaoOrigemId = null;
       this.ferramenta = 'selecionar';
     }
@@ -436,21 +534,65 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   private selecionar(id: string, tipo: 'no' | 'conexao'): void {
+    this.nosSelecionados.clear();
+    this.conexoesSelecionadas.clear();
+    this.selecionadoId = id;
+    this.selecionadoTipo = tipo;
+    if (tipo === 'no') this.nosSelecionados.add(id);
+    else this.conexoesSelecionadas.add(id);
+  }
+
+  private alternarSelecao(id: string, tipo: 'no' | 'conexao'): void {
+    const set = tipo === 'no' ? this.nosSelecionados : this.conexoesSelecionadas;
+    if (set.has(id)) {
+      set.delete(id);
+      if (this.selecionadoId === id && this.selecionadoTipo === tipo) this.definirAtivoDaSelecao();
+      return;
+    }
+    set.add(id);
     this.selecionadoId = id;
     this.selecionadoTipo = tipo;
   }
 
-  excluirSelecionado(): void {
-    if (!this.selecionadoId) return;
-    if (this.selecionadoTipo === 'no') {
-      const id = this.selecionadoId;
-      this.nos = this.nos.filter((n) => n.id !== id);
-      this.conexoes = this.conexoes.filter((c) => c.de !== id && c.para !== id);
-    } else {
-      this.conexoes = this.conexoes.filter((c) => c.id !== this.selecionadoId);
+  private definirAtivoDaSelecao(): void {
+    const no = this.nosSelecionados.values().next().value as string | undefined;
+    if (no) {
+      this.selecionadoId = no;
+      this.selecionadoTipo = 'no';
+      return;
     }
-    this.selecionadoId = null;
-    this.selecionadoTipo = null;
+    const conexao = this.conexoesSelecionadas.values().next().value as string | undefined;
+    if (conexao) {
+      this.selecionadoId = conexao;
+      this.selecionadoTipo = 'conexao';
+      return;
+    }
+    this.limparSelecao();
+  }
+
+  private limparSelecao(): void {
+    this.nosSelecionados.clear();
+    this.conexoesSelecionadas.clear();
+    this.limparSelecao();
+  }
+
+  isNoSelecionado(no: NoFluxograma): boolean {
+    return this.nosSelecionados.has(no.id);
+  }
+
+  isConexaoSelecionada(c: ConexaoFluxograma): boolean {
+    return this.conexoesSelecionadas.has(c.id);
+  }
+
+  excluirSelecionado(): void {
+    if (!this.temSelecao) return;
+    const nosExcluidos = new Set(this.nosSelecionados);
+    const conexoesExcluidas = new Set(this.conexoesSelecionadas);
+    this.nos = this.nos.filter((n) => !nosExcluidos.has(n.id));
+    this.conexoes = this.conexoes.filter(
+      (c) => !conexoesExcluidas.has(c.id) && !nosExcluidos.has(c.de) && !nosExcluidos.has(c.para),
+    );
+    this.limparSelecao();
     this.salvar();
   }
 
@@ -464,6 +606,50 @@ export class EditorFluxogramaComponent implements OnInit {
       x: (evento.clientX - rect.left - this.panX) / this.zoom,
       y: (evento.clientY - rect.top - this.panY) / this.zoom,
     };
+  }
+
+  private normalizarRetangulo(x1: number, y1: number, x2: number, y2: number): RetanguloCanvas {
+    return {
+      x: Math.min(x1, x2),
+      y: Math.min(y1, y2),
+      largura: Math.abs(x2 - x1),
+      altura: Math.abs(y2 - y1),
+    };
+  }
+
+  private aplicarSelecaoArea(): boolean {
+    const r = this.retanguloSelecao;
+    if (!r || (r.largura < 4 && r.altura < 4)) return false;
+    if (!this.selecaoAreaAdicionar) {
+      this.limparSelecao();
+    }
+
+    this.nos.forEach((n) => {
+      if (this.retanguloContem(r, n.x, n.y, n.largura, n.altura)) {
+        this.nosSelecionados.add(n.id);
+      }
+    });
+
+    this.conexoes.forEach((c) => {
+      const p = this.pontosConexao(c);
+      if (!p) return;
+      const meio = { x: (p.x1 + p.x2) / 2, y: (p.y1 + p.y2) / 2 };
+      const endpointsDentro = this.pontoDentroRetangulo(r, p.x1, p.y1) && this.pontoDentroRetangulo(r, p.x2, p.y2);
+      if (endpointsDentro || this.pontoDentroRetangulo(r, meio.x, meio.y)) {
+        this.conexoesSelecionadas.add(c.id);
+      }
+    });
+
+    this.definirAtivoDaSelecao();
+    return this.temSelecao;
+  }
+
+  private retanguloContem(r: RetanguloCanvas, x: number, y: number, largura: number, altura: number): boolean {
+    return x >= r.x && y >= r.y && x + largura <= r.x + r.largura && y + altura <= r.y + r.altura;
+  }
+
+  private pontoDentroRetangulo(r: RetanguloCanvas, x: number, y: number): boolean {
+    return x >= r.x && x <= r.x + r.largura && y >= r.y && y <= r.y + r.altura;
   }
 
   aplicarZoom(fator: number): void {
@@ -730,6 +916,80 @@ export class EditorFluxogramaComponent implements OnInit {
     return linhas.length ? linhas : [''];
   }
 
+  editarTextoNo(evento: MouseEvent, no: NoFluxograma): void {
+    evento.stopPropagation();
+    evento.preventDefault();
+    if (no.tipo === 'imagem') return;
+    this.selecionar(no.id, 'no');
+    this.editorTextoInline = {
+      tipo: 'no',
+      id: no.id,
+      texto: no.texto,
+      left: this.panX + no.x * this.zoom + 8,
+      top: this.panY + no.y * this.zoom + 8,
+      width: Math.max(90, no.largura * this.zoom - 16),
+      height: Math.max(34, no.altura * this.zoom - 16),
+    };
+    this.focarEditorInline();
+  }
+
+  editarTextoConexao(evento: MouseEvent, c: ConexaoFluxograma): void {
+    evento.stopPropagation();
+    evento.preventDefault();
+    this.selecionar(c.id, 'conexao');
+    const meio = this.meioConexao(c);
+    const largura = Math.max(120, Math.min(260, (c.texto || 'Rotulo').length * 8 + 48));
+    this.editorTextoInline = {
+      tipo: 'conexao',
+      id: c.id,
+      texto: c.texto,
+      left: this.panX + meio.x * this.zoom - largura / 2,
+      top: this.panY + meio.y * this.zoom - 18,
+      width: largura,
+      height: 36,
+    };
+    this.focarEditorInline();
+  }
+
+  confirmarEdicaoTextoInline(): void {
+    const ed = this.editorTextoInline;
+    if (!ed) return;
+    const texto = ed.texto.trim();
+    if (ed.tipo === 'no') {
+      const no = this.nos.find((n) => n.id === ed.id);
+      if (no) no.texto = texto;
+    } else {
+      const conexao = this.conexoes.find((c) => c.id === ed.id);
+      if (conexao) conexao.texto = texto;
+    }
+    this.editorTextoInline = null;
+    this.salvar();
+  }
+
+  cancelarEdicaoTextoInline(): void {
+    this.editorTextoInline = null;
+  }
+
+  aoTeclarEditorInline(evento: KeyboardEvent): void {
+    if (evento.key === 'Escape') {
+      evento.preventDefault();
+      this.cancelarEdicaoTextoInline();
+      return;
+    }
+    if (evento.key === 'Enter' && (evento.ctrlKey || evento.metaKey)) {
+      evento.preventDefault();
+      this.confirmarEdicaoTextoInline();
+    }
+  }
+
+  private focarEditorInline(): void {
+    setTimeout(() => {
+      const el = this.editorTextoInlineEl?.nativeElement;
+      el?.focus();
+      el?.select();
+    });
+  }
+
   // ─────────────────────── Import / Export ───────────────────────
 
   get fluxograma(): Fluxograma {
@@ -766,8 +1026,7 @@ export class EditorFluxogramaComponent implements OnInit {
   private carregar(fluxo: Fluxograma): void {
     this.nos = fluxo.nos;
     this.conexoes = fluxo.conexoes;
-    this.selecionadoId = null;
-    this.selecionadoTipo = null;
+    this.limparSelecao();
     // Ajusta o contador para evitar colisão de ids.
     const nums = [...this.nos, ...this.conexoes]
       .map((x) => parseInt(x.id.replace(/^\D+/, ''), 10))
