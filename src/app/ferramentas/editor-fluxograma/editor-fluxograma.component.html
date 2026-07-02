@@ -72,6 +72,12 @@
         <mat-icon>folder_open</mat-icon> Abrir
       </button>
       <input #inputArquivo type="file" accept=".mmd,.txt,.xml" hidden (change)="carregarArquivo($event)" />
+      <button class="ferr-btn texto-btn" (click)="inputFluxogramaImagem.click()" [disabled]="importandoImagem"
+        matTooltip="Importar fluxograma a partir de JPG ou PNG">
+        <mat-icon>image_search</mat-icon> Imagem
+      </button>
+      <input #inputFluxogramaImagem type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" hidden
+        (change)="importarImagemFluxograma($event)" />
       <button class="ferr-btn texto-btn" (click)="abrirPainelDados('mermaid')" matTooltip="Importar / exportar Mermaid">
         <mat-icon>account_tree</mat-icon> Mermaid
       </button>
@@ -408,6 +414,76 @@
         </label>
       </ng-container>
     </aside>
+  </div>
+
+  <div class="modal-dados-fundo" *ngIf="importandoImagem">
+    <div class="modal-dados modal-importacao-imagem">
+      <div class="modal-dados-topo">
+        <h3><mat-icon>image_search</mat-icon> Reconhecendo fluxograma</h3>
+      </div>
+      <p class="importacao-status">{{ etapaImportacaoImagem || 'Processando imagem localmente' }}</p>
+      <div class="barra-progresso-importacao">
+        <span [style.width.%]="progressoImportacaoImagem"></span>
+      </div>
+      <p class="painel-dica">A imagem e processada no navegador. Nenhum arquivo e enviado para servidores externos.</p>
+    </div>
+  </div>
+
+  <div class="modal-dados-fundo" *ngIf="painelRevisaoImagem && fluxogramaDetectado as detectado" (click)="cancelarImportacaoImagem()">
+    <div class="modal-dados modal-revisao-imagem" (click)="$event.stopPropagation()">
+      <div class="modal-dados-topo">
+        <h3><mat-icon>fact_check</mat-icon> Revisar importacao da imagem</h3>
+        <button class="modal-fechar" (click)="cancelarImportacaoImagem()"><mat-icon>close</mat-icon></button>
+      </div>
+
+      <div class="resumo-importacao">
+        <div><strong>{{ detectado.nodes.length }}</strong><span>nos detectados</span></div>
+        <div><strong>{{ detectado.edges.length }}</strong><span>conexoes detectadas</span></div>
+        <div><strong>{{ detectado.warnings.length }}</strong><span>avisos</span></div>
+      </div>
+
+      <div class="avisos-importacao" *ngIf="detectado.warnings.length">
+        <div *ngFor="let aviso of detectado.warnings"><mat-icon>warning</mat-icon> {{ aviso }}</div>
+      </div>
+
+      <div class="revisao-colunas">
+        <section>
+          <h4>Nos</h4>
+          <div class="revisao-lista">
+            <div *ngFor="let no of detectado.nodes" class="revisao-item" [class.baixa-confianca]="no.confidence < 0.55">
+              <div>
+                <strong>{{ no.text || '(sem texto)' }}</strong>
+                <span>{{ rotuloTipoDetectado(no.type) }} - {{ no.width | number:'1.0-0' }}x{{ no.height | number:'1.0-0' }}</span>
+              </div>
+              <em [class]="classeConfianca(no.confidence)">{{ (no.confidence * 100) | number:'1.0-0' }}%</em>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4>Conexoes</h4>
+          <div class="revisao-lista" *ngIf="detectado.edges.length; else semConexoesImagem">
+            <div *ngFor="let edge of detectado.edges" class="revisao-item" [class.baixa-confianca]="edge.confidence < 0.55">
+              <div>
+                <strong>{{ edge.sourceNodeId }} -> {{ edge.targetNodeId }}</strong>
+                <span>{{ edge.points.length }} pontos detectados</span>
+              </div>
+              <em [class]="classeConfianca(edge.confidence)">{{ (edge.confidence * 100) | number:'1.0-0' }}%</em>
+            </div>
+          </div>
+          <ng-template #semConexoesImagem>
+            <p class="painel-dica">Nenhuma conexao foi detectada com seguranca.</p>
+          </ng-template>
+        </section>
+      </div>
+
+      <div class="modal-dados-acoes">
+        <button class="acao-btn" (click)="cancelarImportacaoImagem()"><mat-icon>close</mat-icon> Cancelar</button>
+        <button class="acao-btn destaque" (click)="confirmarImportacaoImagem()">
+          <mat-icon>download_for_offline</mat-icon> Importar para o editor
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- ═══════════════ Painel Import/Export ═══════════════ -->

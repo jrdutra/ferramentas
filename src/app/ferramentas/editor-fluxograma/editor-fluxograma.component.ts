@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { PDFDocument } from 'pdf-lib';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DataService } from '../../data.service';
+import { DetectedFlowchart, FlowchartImageImportProgress } from '../../models/detected-flowchart.model';
 import {
   ConexaoFluxograma,
   Fluxograma,
@@ -13,6 +14,7 @@ import {
   NoFluxograma,
   TipoTraco,
 } from '../../services/fluxograma.service';
+import { FluxogramaImagemImportService } from '../../services/fluxograma-imagem-import/fluxograma-imagem-import.service';
 
 type Ferramenta = 'selecionar' | 'conectar' | FormaTipo;
 type Formato = 'mermaid' | 'xml';
@@ -109,6 +111,15 @@ export class EditorFluxogramaComponent implements OnInit {
   mensagem = '';
   copiado = false;
 
+  // Importacao por imagem
+  importandoImagem = false;
+  progressoImportacaoImagem = 0;
+  etapaImportacaoImagem = '';
+  erroImportacaoImagem = '';
+  painelRevisaoImagem = false;
+  fluxogramaDetectado: DetectedFlowchart | null = null;
+  fluxogramaImportacao: Fluxograma | null = null;
+
   // Estado de arraste / pan (apenas em memória durante o gesto).
   private arrastando: NoFluxograma | null = null;
   private arrasteDx = 0;
@@ -126,7 +137,12 @@ export class EditorFluxogramaComponent implements OnInit {
 
   private contador = 0;
 
-  constructor(private dataService: DataService, private fluxogramaService: FluxogramaService) {}
+  constructor(
+    private dataService: DataService,
+    private fluxogramaService: FluxogramaService,
+    private importadorImagem: FluxogramaImagemImportService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.dataService.setTituloAplicacao('Editor de Fluxograma');
@@ -799,6 +815,81 @@ export class EditorFluxogramaComponent implements OnInit {
     leitor.readAsText(arquivo);
   }
 
+  async importarImagemFluxograma(evento: Event): Promise<void> {
+    const input = evento.target as HTMLInputElement;
+    const arquivo = input.files?.[0];
+    input.value = '';
+    if (!arquivo) return;
+
+    this.importandoImagem = true;
+    this.progressoImportacaoImagem = 0;
+    this.etapaImportacaoImagem = 'Preparando imagem';
+    this.erroImportacaoImagem = '';
+    this.fluxogramaDetectado = null;
+    this.fluxogramaImportacao = null;
+    this.painelRevisaoImagem = false;
+
+    try {
+      const detectado = await this.importadorImagem.importarImagem(arquivo, (p: FlowchartImageImportProgress) => {
+        this.progressoImportacaoImagem = p.progress;
+        this.etapaImportacaoImagem = p.message;
+        this.cdr.detectChanges();
+      });
+      this.fluxogramaDetectado = detectado;
+      this.fluxogramaImportacao = this.importadorImagem.converterParaFluxograma(detectado, {
+        corFundo: this.padrao.corFundo,
+        corBorda: this.padrao.corBorda,
+        corTexto: this.padrao.corTexto,
+        corLinha: this.padrao.corLinha,
+        tipoTraco: this.padrao.tipoTraco,
+      });
+      this.painelRevisaoImagem = true;
+    } catch (e) {
+      this.erroImportacaoImagem = e instanceof Error ? e.message : 'Nao foi possivel importar a imagem.';
+      this.avisar(this.erroImportacaoImagem);
+    } finally {
+      this.importandoImagem = false;
+      this.progressoImportacaoImagem = 0;
+      this.etapaImportacaoImagem = '';
+      this.cdr.detectChanges();
+    }
+  }
+
+  confirmarImportacaoImagem(): void {
+    if (!this.fluxogramaImportacao) return;
+    this.carregar(this.fluxogramaImportacao);
+    this.painelRevisaoImagem = false;
+    this.fluxogramaDetectado = null;
+    this.fluxogramaImportacao = null;
+  }
+
+  cancelarImportacaoImagem(): void {
+    this.painelRevisaoImagem = false;
+    this.fluxogramaDetectado = null;
+    this.fluxogramaImportacao = null;
+  }
+
+  classeConfianca(valor: number): string {
+    if (valor < 0.45) return 'baixa';
+    if (valor < 0.65) return 'media';
+    return 'alta';
+  }
+
+  rotuloTipoDetectado(tipo: DetectedFlowchart['nodes'][number]['type']): string {
+    switch (tipo) {
+      case 'process':
+        return 'Processo';
+      case 'decision':
+        return 'Decisao';
+      case 'terminator':
+        return 'Terminador';
+      case 'inputOutput':
+        return 'Entrada/Saida';
+      default:
+        return 'Desconhecido';
+    }
+  }
+
   private get fundoExport(): string {
     return this.temaClaro ? '#ffffff' : '#061326';
   }
@@ -1119,4 +1210,3 @@ export class EditorFluxogramaComponent implements OnInit {
     return c.id;
   }
 }
-
