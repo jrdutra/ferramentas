@@ -92,7 +92,7 @@ export class FluxogramaImagemImportService {
     }
 
     progress('ocr', 60, 'Executando OCR nos nos detectados');
-    nodes = await this.aplicarOcr(canvas, nodes, warnings, (p) => {
+    nodes = await this.aplicarOcr(canvas, pre, nodes, warnings, (p) => {
       progress('ocr', 60 + p * 0.32, 'Lendo textos com OCR local');
     });
 
@@ -522,8 +522,8 @@ export class FluxogramaImagemImportService {
 
     for (const comp of comps) {
       const density = comp.area / Math.max(1, comp.width * comp.height);
-      if (comp.area < 12 || density > 0.48) continue;
-      if (Math.max(comp.width, comp.height) < 28) continue;
+      if (comp.area < 8 || density > 0.62) continue;
+      if (Math.max(comp.width, comp.height) < 18) continue;
 
       const pair = this.farthestPair(comp.pixels, pre.width);
       if (!pair) continue;
@@ -706,6 +706,7 @@ export class FluxogramaImagemImportService {
 
   private async aplicarOcr(
     canvas: HTMLCanvasElement,
+    pre: PreprocessedImage,
     nodes: DetectedNode[],
     warnings: string[],
     onProgress: (progress: number) => void,
@@ -714,10 +715,10 @@ export class FluxogramaImagemImportService {
     let worker: any;
     try {
       const { createWorker } = await import('tesseract.js');
+      // Usa os caminhos padrao (CDN) do tesseract.js. Os assets locais estavam
+      // incompletos (faltavam os binarios .wasm e os traineddata dos idiomas),
+      // por isso o worker falhava ao iniciar e nenhum texto era extraido.
       worker = await createWorker(['por', 'eng'], 1, {
-        workerPath: '/assets/tesseract/worker.min.js',
-        corePath: '/assets/tesseract',
-        workerBlobURL: false,
         logger: (m: any) => {
           if (m.status === 'recognizing text' && typeof m.progress === 'number') {
             onProgress(m.progress);
@@ -726,15 +727,26 @@ export class FluxogramaImagemImportService {
         errorHandler: (err: any) => console.error('Erro interno do OCR do importador:', err),
       } as any);
     } catch (e) {
-      warnings.push('OCR local indisponivel. Os nos foram importados sem texto.');
+      warnings.push(
+        'OCR indisponivel (' +
+          (e instanceof Error ? e.message : 'falha ao iniciar o Tesseract') +
+          '). Os nos foram importados sem texto.',
+      );
       return nodes;
+    }
+
+    try {
+      // Trata cada recorte como um bloco unico de texto.
+      await worker.setParameters({ tessedit_pageseg_mode: '6' } as any);
+    } catch {
+      /* ignora se a versao do tesseract nao aceitar */
     }
 
     const result: DetectedNode[] = [];
     try {
       for (let i = 0; i < nodes.length; i += 1) {
         const node = nodes[i];
-        const crop = this.cropNode(canvas, node);
+        const crop = this.cropTextoNo(pre, node) ?? this.cropNode(canvas, node);
         try {
           const ocr = await worker.recognize(crop as any);
           const text = this.limparTextoOcr(String(ocr.data?.text ?? ''));
@@ -754,6 +766,67 @@ export class FluxogramaImagemImportService {
       await worker.terminate();
     }
     return result;
+  }
+
+  /**
+   * Recorta apenas a regiao com texto dentro do no (excluindo a borda da forma),
+   * gerando uma imagem binaria limpa (texto preto sobre branco) e ampliada para o OCR.
+   */
+  private cropTextoNo(pre: PreprocessedImage, node: DetectedNode): HTMLCanvasElement | null {
+    const W = pre.width;
+    const H = pre.height;
+    const mx = Math.round(Math.min(node.width * 0.16, 12));
+    const my = Math.round(Math.min(node.height * 0.18, 10));
+    const ix0 = Math.max(0, Math.round(node.x + mx));
+    const iy0 = Math.max(0, Math.round(node.y + my));
+    const ix1 = Math.min(W - 1, Math.round(node.x + node.width - mx));
+    const iy1 = Math.min(H - 1, Math.round(node.y + node.height - my));
+    if (ix1 <= ix0 || iy1 <= iy0) return null;
+
+    let minx = ix1;
+    let miny = iy1;
+    let maxx = ix0;
+    let maxy = iy0;
+    let count = 0;
+    for (let y = iy0; y <= iy1; y += 1) {
+      const row = y * W;
+      for (let x = ix0; x <= ix1; x += 1) {
+        if (pre.binary[row + x]) {
+          count += 1;
+          if (x < minx) minx = x;
+          if (x > maxx) maxx = x;
+          if (y < miny) miny = y;
+          if (y > maxy) maxy = y;
+        }
+      }
+    }
+    if (count < 6 || maxx < minx || maxy < miny) return null;
+
+    const pad = 3;
+    minx = Math.max(ix0, minx - pad);
+    miny = Math.max(iy0, miny - pad);
+    maxx = Math.min(ix1, maxx + pad);
+    maxy = Math.min(iy1, maxy + pad);
+    const w = maxx - minx + 1;
+    const h = maxy - miny + 1;
+    const escala = Math.max(2, Math.min(8, Math.round(56 / Math.max(1, h))));
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w * escala;
+    canvas.height = h * escala;
+    const ctx = this.contexto2d(canvas);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#000000';
+    for (let y = miny; y <= maxy; y += 1) {
+      const row = y * W;
+      for (let x = minx; x <= maxx; x += 1) {
+        if (pre.binary[row + x]) {
+          ctx.fillRect((x - minx) * escala, (y - miny) * escala, escala, escala);
+        }
+      }
+    }
+    return canvas;
   }
 
   private cropNode(source: HTMLCanvasElement, node: DetectedNode): HTMLCanvasElement {

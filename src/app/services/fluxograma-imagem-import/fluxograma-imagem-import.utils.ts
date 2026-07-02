@@ -68,6 +68,11 @@ export function classifyShape(metrics: ShapeMetrics): ShapeClassification {
     return { type: 'decision', confidence: clamp01(confidence) };
   }
 
+  // Circulo: quase quadrado, largo no meio e arredondado (mais estreito no topo/base que um retangulo).
+  if (mid > 0.85 && top > 0.5 && top < 0.82 && bottom > 0.5 && bottom < 0.82 && aspect >= 0.8 && aspect <= 1.28) {
+    return { type: 'circle', confidence: clamp01(0.58 + (0.82 - Math.max(top, bottom)) * 0.4) };
+  }
+
   if (mid > 0.72 && top > 0.58 && bottom > 0.58 && skew > 0.08 && aspect >= 1.05) {
     return { type: 'inputOutput', confidence: clamp01(0.58 + skew * 1.5) };
   }
@@ -138,7 +143,7 @@ export function inferEdgesFromConnectors(
   connectors: DetectedConnectorCandidate[],
   options: EdgeInferenceOptions = {},
 ): EdgeInferenceResult {
-  const maxEndpointDistance = options.maxEndpointDistance ?? 54;
+  const maxEndpointDistance = options.maxEndpointDistance ?? 82;
   const warnings: string[] = [];
   const byPair = new Map<string, DetectedEdge>();
 
@@ -206,13 +211,18 @@ export function detectedFlowchartToFluxograma(
   const style = { ...DEFAULT_ADAPTER_OPTIONS, ...options };
   const ids = new Set(detected.nodes.map((n) => n.id));
 
+  // Escala global para dimensoes compactas (o suficiente para o texto), preservando o layout.
+  const alturas = detected.nodes.map((n) => n.height).filter((h) => h > 0).sort((a, b) => a - b);
+  const medianaAltura = alturas.length ? alturas[Math.floor(alturas.length / 2)] : 60;
+  const escala = Math.min(1, Math.max(0.12, 58 / Math.max(1, medianaAltura)));
+
   const nos: NoFluxograma[] = detected.nodes.map((node, i) => ({
     id: sanitizeId(node.id, 'n', i + 1),
     tipo: detectedTypeToFormaTipo(node.type),
-    x: Math.round(node.x),
-    y: Math.round(node.y),
-    largura: Math.max(40, Math.round(node.width)),
-    altura: Math.max(30, Math.round(node.height)),
+    x: Math.round(node.x * escala),
+    y: Math.round(node.y * escala),
+    largura: Math.max(64, Math.round(node.width * escala)),
+    altura: Math.max(40, Math.round(node.height * escala)),
     texto: node.text || fallbackNodeText(node.type),
     corFundo: style.corFundo,
     corBorda: node.confidence < 0.55 ? '#ffb020' : style.corBorda,
@@ -249,6 +259,8 @@ export function detectedTypeToFormaTipo(type: DetectedNode['type']): FormaTipo {
       return 'terminador';
     case 'inputOutput':
       return 'paralelogramo';
+    case 'circle':
+      return 'circulo';
     case 'process':
     case 'unknown':
     default:

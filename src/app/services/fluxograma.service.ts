@@ -21,7 +21,7 @@ export type FormaTipo =
 /** Estilo do traço das bordas e linhas. */
 export type TipoTraco = 'solido' | 'giz' | 'lapis';
 
-export const TAMANHO_SETA_PADRAO = 7;
+export const TAMANHO_SETA_PADRAO = 14;
 
 export interface NoFluxograma {
   id: string;
@@ -51,6 +51,10 @@ export interface ConexaoFluxograma {
   setaInicio: boolean;
   setaFim: boolean;
   tamanhoSeta: number;
+  curvatura?: number;
+  pontos?: { x: number; y: number }[];
+  estilo?: 'reto' | 'arredondado' | 'curvo';
+  raioCanto?: number;
   tipoTraco: TipoTraco;
 }
 
@@ -222,6 +226,7 @@ export class FluxogramaService {
               setaInicio: seta.startsWith('<'),
               setaFim: seta.endsWith('>'),
               tamanhoSeta: TAMANHO_SETA_PADRAO,
+              curvatura: 0,
               tipoTraco: 'solido',
             });
             continue;
@@ -261,6 +266,10 @@ export class FluxogramaService {
         `    <conexao id="${esc(c.id)}" de="${esc(c.de)}" para="${esc(c.para)}" cor="${esc(c.cor)}"` +
           ` espessura="${c.espessura}" tracejada="${c.tracejada}" setaInicio="${c.setaInicio}" setaFim="${c.setaFim}"` +
           ` tamanhoSeta="${this.normalizaTamanhoSeta(c.tamanhoSeta)}"` +
+          ` curvatura="${c.curvatura ?? 0}"` +
+          (c.pontos && c.pontos.length ? ` pontos="${c.pontos.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`).join(' ')}"` : '') +
+          (c.estilo ? ` estilo="${c.estilo}"` : '') +
+          (c.raioCanto != null ? ` raioCanto="${c.raioCanto}"` : '') +
           ` tipoTraco="${c.tipoTraco}">${esc(c.texto)}</conexao>`,
       );
     }
@@ -310,6 +319,10 @@ export class FluxogramaService {
         setaInicio: el.getAttribute('setaInicio') === 'true',
         setaFim: el.getAttribute('setaFim') !== 'false',
         tamanhoSeta: this.normalizaTamanhoSeta(el.getAttribute('tamanhoSeta')),
+        curvatura: this.num(el.getAttribute('curvatura'), 0),
+        pontos: this.parsePontos(el.getAttribute('pontos')),
+        estilo: (el.getAttribute('estilo') as 'reto' | 'arredondado' | 'curvo') || undefined,
+        raioCanto: el.getAttribute('raioCanto') != null ? this.num(el.getAttribute('raioCanto'), 10) : undefined,
         tipoTraco: (el.getAttribute('tipoTraco') as TipoTraco) || 'solido',
       });
     });
@@ -368,6 +381,7 @@ export class FluxogramaService {
     fluxo.conexoes.forEach((c) => {
       c.tipoTraco = c.tipoTraco || 'solido';
       c.tamanhoSeta = this.normalizaTamanhoSeta(c.tamanhoSeta);
+      c.curvatura = Number.isFinite(c.curvatura as number) ? (c.curvatura as number) : 0;
     });
     return fluxo;
   }
@@ -376,6 +390,19 @@ export class FluxogramaService {
     const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
     if (!Number.isFinite(n)) return TAMANHO_SETA_PADRAO;
     return Math.min(24, Math.max(3, n));
+  }
+
+  private parsePontos(v: string | null): { x: number; y: number }[] | undefined {
+    if (!v) return undefined;
+    const pts = v
+      .trim()
+      .split(/\s+/)
+      .map((par) => {
+        const [x, y] = par.split(',').map((n) => parseFloat(n));
+        return { x, y };
+      })
+      .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y));
+    return pts.length ? pts : undefined;
   }
 
   private num(v: string | null, padrao: number): number {

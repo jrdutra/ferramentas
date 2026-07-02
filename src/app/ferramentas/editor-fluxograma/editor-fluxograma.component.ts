@@ -145,6 +145,10 @@ export class EditorFluxogramaComponent implements OnInit {
   fluxogramaImportacao: Fluxograma | null = null;
 
   // Estado de arraste / pan (apenas em memória durante o gesto).
+  private curvando: ConexaoFluxograma | null = null;
+  private curvouMovimento = false;
+  private arrastePontoIndice = -1;
+  private pendenteLinha: { c: ConexaoFluxograma; x: number; y: number } | null = null;
   private arrastando: NoFluxograma | null = null;
   private arrasteDx = 0;
   private arrasteDy = 0;
@@ -455,6 +459,23 @@ export class EditorFluxogramaComponent implements OnInit {
 
   @HostListener('window:mousemove', ['$event'])
   aoMover(evento: MouseEvent): void {
+    if (this.curvando) {
+      this.moverPonto(evento);
+      return;
+    }
+    if (this.pendenteLinha) {
+      const pp = this.pontoCanvas(evento);
+      if (Math.hypot(pp.x - this.pendenteLinha.x, pp.y - this.pendenteLinha.y) > 4) {
+        const cc = this.pendenteLinha.c;
+        const idx = this.inserirPonto(cc, { x: this.pendenteLinha.x, y: this.pendenteLinha.y });
+        this.curvando = cc;
+        this.arrastePontoIndice = idx;
+        this.curvouMovimento = false;
+        this.pendenteLinha = null;
+        this.moverPonto(evento);
+      }
+      return;
+    }
     if (this.redimensionando) {
       this.redimensionar(evento);
       return;
@@ -498,6 +519,13 @@ export class EditorFluxogramaComponent implements OnInit {
     this.redimensionando = null;
     this.selecionandoArea = false;
     this.retanguloSelecao = null;
+    if (this.curvando) {
+      this.curvando = null;
+      this.arrastePontoIndice = -1;
+      if (this.curvouMovimento) this.salvar();
+      this.curvouMovimento = false;
+    }
+    this.pendenteLinha = null;
     if (mudou) this.salvar();
   }
 
@@ -529,6 +557,7 @@ export class EditorFluxogramaComponent implements OnInit {
       setaInicio: false,
       setaFim: true,
       tamanhoSeta: this.padrao.tamanhoSeta,
+      curvatura: 0,
       tipoTraco: this.padrao.tipoTraco,
     };
     this.conexoes.push(c);
@@ -732,6 +761,26 @@ export class EditorFluxogramaComponent implements OnInit {
     this.panY = 40;
   }
 
+  /** Ajusta zoom e pan para enquadrar todo o conteúdo na área visível (sem ultrapassar 100%). */
+  ajustarZoomParaConteudo(margem = 28): void {
+    const lim = this.limitesConteudo();
+    if (!lim) {
+      this.resetarView();
+      return;
+    }
+    const svg = this.svgCanvas?.nativeElement;
+    const rect = svg ? svg.getBoundingClientRect() : null;
+    const larguraView = rect && rect.width ? rect.width : 900;
+    const alturaView = rect && rect.height ? rect.height : 600;
+    const escala = Math.min(
+      (larguraView - margem * 2) / lim.largura,
+      (alturaView - margem * 2) / lim.altura,
+    );
+    this.zoom = Math.min(1, Math.max(0.15, +escala.toFixed(3)));
+    this.panX = Math.round(larguraView / 2 - (lim.minX + lim.largura / 2) * this.zoom);
+    this.panY = Math.round(alturaView / 2 - (lim.minY + lim.altura / 2) * this.zoom);
+  }
+
   /** Alterna o tema do gráfico entre escuro (atual) e claro (fundo branco, traços escuros). */
   alternarTema(): void {
     this.temaClaro = !this.temaClaro;
@@ -828,19 +877,212 @@ export class EditorFluxogramaComponent implements OnInit {
     return { x: cx + dx * escala, y: cy + dy * escala };
   }
 
-  pontosConexao(c: ConexaoFluxograma): { x1: number; y1: number; x2: number; y2: number } | null {
+  private controleConexao(a: NoFluxograma, b: NoFluxograma, curv: number): { x: number; y: number } {
+    const mx = (this.cx(a) + this.cx(b)) / 2;
+    const my = (this.cy(a) + this.cy(b)) / 2;
+    if (!curv) return { x: mx, y: my };
+    const dx = this.cx(b) - this.cx(a);
+    const dy = this.cy(b) - this.cy(a);
+    const len = Math.hypot(dx, dy) || 1;
+    return { x: mx + (-dy / len) * curv, y: my + (dx / len) * curv };
+  }
+
+  pontosConexao(c: ConexaoFluxograma): { x1: number; y1: number; x2: number; y2: number; cx: number; cy: number } | null {
     const a = this.nos.find((n) => n.id === c.de);
     const b = this.nos.find((n) => n.id === c.para);
     if (!a || !b) return null;
-    const p1 = this.pontoBorda(a, this.cx(b), this.cy(b));
-    const p2 = this.pontoBorda(b, this.cx(a), this.cy(a));
-    return { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y };
+    const ctrl = this.controleConexao(a, b, c.curvatura || 0);
+    const p1 = this.pontoBorda(a, ctrl.x, ctrl.y);
+    const p2 = this.pontoBorda(b, ctrl.x, ctrl.y);
+    return { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, cx: ctrl.x, cy: ctrl.y };
+  }
+
+  /** Sequencia de ancoras [origem, ...pontos, destino] considerando os waypoints. */
+  private anchorsConexao(c: ConexaoFluxograma): { x: number; y: number }[] | null {
+    const a = this.nos.find((n) => n.id === c.de);
+    const b = this.nos.find((n) => n.id === c.para);
+    if (!a || !b) return null;
+    const wp = c.pontos && c.pontos.length ? c.pontos : [];
+    const primeiro = wp.length ? wp[0] : { x: this.cx(b), y: this.cy(b) };
+    const ultimo = wp.length ? wp[wp.length - 1] : { x: this.cx(a), y: this.cy(a) };
+    const start = this.pontoBorda(a, primeiro.x, primeiro.y);
+    const end = this.pontoBorda(b, ultimo.x, ultimo.y);
+    return [start, ...wp.map((p) => ({ x: p.x, y: p.y })), end];
+  }
+
+  /** Caminho SVG da conexao: reta/curva simples (sem pontos) ou tracado pelos waypoints. */
+  caminhoConexao(c: ConexaoFluxograma): string | null {
+    const a = this.nos.find((n) => n.id === c.de);
+    const b = this.nos.find((n) => n.id === c.para);
+    if (!a || !b) return null;
+    const wp = c.pontos || [];
+    if (!wp.length) {
+      const ctrl = this.controleConexao(a, b, c.curvatura || 0);
+      const p1 = this.pontoBorda(a, ctrl.x, ctrl.y);
+      const p2 = this.pontoBorda(b, ctrl.x, ctrl.y);
+      if (!c.curvatura) return `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
+      return `M ${p1.x} ${p1.y} Q ${ctrl.x} ${ctrl.y} ${p2.x} ${p2.y}`;
+    }
+    const P = this.anchorsConexao(c);
+    if (!P) return null;
+    const estilo = c.estilo || 'arredondado';
+    if (estilo === 'curvo') return this.caminhoSpline(P);
+    if (estilo === 'reto') return this.caminhoReto(P);
+    return this.caminhoArredondado(P, c.raioCanto ?? 50);
+  }
+
+  private caminhoReto(P: { x: number; y: number }[]): string {
+    return `M ${P[0].x} ${P[0].y}` + P.slice(1).map((p) => ` L ${p.x} ${p.y}`).join('');
+  }
+
+  private caminhoArredondado(P: { x: number; y: number }[], raio: number): string {
+    if (P.length < 3 || raio <= 0) return this.caminhoReto(P);
+    let d = `M ${P[0].x} ${P[0].y}`;
+    for (let i = 1; i < P.length - 1; i += 1) {
+      const prev = P[i - 1];
+      const cur = P[i];
+      const next = P[i + 1];
+      const r1 = Math.min(raio, this.distancia(prev, cur) / 2);
+      const r2 = Math.min(raio, this.distancia(cur, next) / 2);
+      const ent = this.pontoNaDirecao(cur, prev, r1);
+      const sai = this.pontoNaDirecao(cur, next, r2);
+      d += ` L ${ent.x} ${ent.y} Q ${cur.x} ${cur.y} ${sai.x} ${sai.y}`;
+    }
+    const f = P[P.length - 1];
+    return d + ` L ${f.x} ${f.y}`;
+  }
+
+  private caminhoSpline(P: { x: number; y: number }[]): string {
+    if (P.length < 3) return this.caminhoReto(P);
+    let d = `M ${P[0].x} ${P[0].y}`;
+    for (let i = 0; i < P.length - 1; i += 1) {
+      const p0 = P[i - 1] || P[i];
+      const p1 = P[i];
+      const p2 = P[i + 1];
+      const p3 = P[i + 2] || P[i + 1];
+      const c1x = p1.x + (p2.x - p0.x) / 6;
+      const c1y = p1.y + (p2.y - p0.y) / 6;
+      const c2x = p2.x - (p3.x - p1.x) / 6;
+      const c2y = p2.y - (p3.y - p1.y) / 6;
+      d += ` C ${c1x} ${c1y} ${c2x} ${c2y} ${p2.x} ${p2.y}`;
+    }
+    return d;
+  }
+
+  private distancia(a: { x: number; y: number }, b: { x: number; y: number }): number {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  private pontoNaDirecao(
+    de: { x: number; y: number },
+    para: { x: number; y: number },
+    dist: number,
+  ): { x: number; y: number } {
+    const l = this.distancia(de, para) || 1;
+    return { x: de.x + ((para.x - de.x) / l) * dist, y: de.y + ((para.y - de.y) / l) * dist };
+  }
+
+  private distPontoSegmento(
+    p: { x: number; y: number },
+    a: { x: number; y: number },
+    b: { x: number; y: number },
+  ): number {
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const l2 = dx * dx + dy * dy;
+    if (l2 === 0) return this.distancia(p, a);
+    let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / l2;
+    t = Math.max(0, Math.min(1, t));
+    return this.distancia(p, { x: a.x + t * dx, y: a.y + t * dy });
   }
 
   meioConexao(c: ConexaoFluxograma): { x: number; y: number } {
-    const p = this.pontosConexao(c);
-    if (!p) return { x: 0, y: 0 };
-    return { x: (p.x1 + p.x2) / 2, y: (p.y1 + p.y2) / 2 };
+    const wp = c.pontos || [];
+    if (!wp.length) {
+      const p = this.pontosConexao(c);
+      if (!p) return { x: 0, y: 0 };
+      if (!c.curvatura) return { x: (p.x1 + p.x2) / 2, y: (p.y1 + p.y2) / 2 };
+      return {
+        x: 0.25 * p.x1 + 0.5 * p.cx + 0.25 * p.x2,
+        y: 0.25 * p.y1 + 0.5 * p.cy + 0.25 * p.y2,
+      };
+    }
+    const P = this.anchorsConexao(c);
+    if (!P) return { x: 0, y: 0 };
+    const mid = Math.floor(P.length / 2);
+    if (P.length % 2 === 0) {
+      return { x: (P[mid - 1].x + P[mid].x) / 2, y: (P[mid - 1].y + P[mid].y) / 2 };
+    }
+    return { x: P[mid].x, y: P[mid].y };
+  }
+
+  /** Pressionar a linha: prepara para criar um ponto se houver arraste. */
+  aoPressionarLinha(evento: MouseEvent, c: ConexaoFluxograma): void {
+    if (this.ferramenta !== 'selecionar') return;
+    evento.stopPropagation();
+    this.selecionar(c.id, 'conexao');
+    const p = this.pontoCanvas(evento);
+    this.pendenteLinha = { c, x: p.x, y: p.y };
+  }
+
+  /** Pressionar um ponto (waypoint) existente para arrasta-lo. */
+  aoPressionarPonto(evento: MouseEvent, c: ConexaoFluxograma, indice: number): void {
+    if (this.ferramenta !== 'selecionar') return;
+    evento.stopPropagation();
+    this.selecionar(c.id, 'conexao');
+    this.curvando = c;
+    this.arrastePontoIndice = indice;
+    this.curvouMovimento = false;
+  }
+
+  removerPonto(evento: MouseEvent, c: ConexaoFluxograma, indice: number): void {
+    evento.stopPropagation();
+    evento.preventDefault();
+    if (!c.pontos) return;
+    c.pontos.splice(indice, 1);
+    if (!c.pontos.length) c.pontos = undefined;
+    this.salvar();
+  }
+
+  private inserirPonto(c: ConexaoFluxograma, p: { x: number; y: number }): number {
+    if (!c.estilo) c.estilo = 'arredondado';
+    const anc = this.anchorsConexao(c);
+    let idx = 0;
+    if (anc && anc.length >= 2) {
+      let dist = Infinity;
+      for (let k = 0; k < anc.length - 1; k += 1) {
+        const d = this.distPontoSegmento(p, anc[k], anc[k + 1]);
+        if (d < dist) {
+          dist = d;
+          idx = k;
+        }
+      }
+    }
+    if (!c.pontos) c.pontos = [];
+    c.pontos.splice(idx, 0, { x: Math.round(p.x), y: Math.round(p.y) });
+    return idx;
+  }
+
+  private moverPonto(evento: MouseEvent): void {
+    const c = this.curvando;
+    if (!c || !c.pontos || this.arrastePontoIndice < 0) return;
+    const pt = c.pontos[this.arrastePontoIndice];
+    if (!pt) return;
+    const p = this.pontoCanvas(evento);
+    pt.x = Math.round(p.x);
+    pt.y = Math.round(p.y);
+    this.curvouMovimento = true;
+  }
+
+  setRaioCanto(c: ConexaoFluxograma, v: string): void {
+    c.raioCanto = Math.max(0, Math.round(+v));
+    this.salvar();
+  }
+
+  limparPontos(c: ConexaoFluxograma): void {
+    c.pontos = undefined;
+    c.curvatura = 0;
+    this.salvar();
   }
 
   marcadorSetaId(c: ConexaoFluxograma, lado: 'inicio' | 'fim'): string {
@@ -1205,6 +1447,8 @@ export class EditorFluxogramaComponent implements OnInit {
   confirmarImportacaoImagem(): void {
     if (!this.fluxogramaImportacao) return;
     this.carregar(this.fluxogramaImportacao);
+    this.ajustarZoomParaConteudo();
+    this.salvar();
     this.painelRevisaoImagem = false;
     this.fluxogramaDetectado = null;
     this.fluxogramaImportacao = null;
@@ -1232,6 +1476,8 @@ export class EditorFluxogramaComponent implements OnInit {
         return 'Terminador';
       case 'inputOutput':
         return 'Entrada/Saida';
+      case 'circle':
+        return 'Circulo';
       default:
         return 'Desconhecido';
     }
@@ -1279,7 +1525,7 @@ export class EditorFluxogramaComponent implements OnInit {
     });
 
     clone.querySelector('.fundo-grade')?.remove();
-    clone.querySelectorAll('.conexao-hit, .contorno-selecao, .alca').forEach((el) => el.remove());
+    clone.querySelectorAll('.conexao-hit, .contorno-selecao, .alca, .ponto-ligacao').forEach((el) => el.remove());
 
     // Estilos essenciais embutidos (o SVG exportado não carrega o CSS do componente).
     const estilo = document.createElementNS(ns, 'style');
@@ -1336,19 +1582,19 @@ export class EditorFluxogramaComponent implements OnInit {
     return { svg, largura: lim.largura, altura: lim.altura };
   }
 
-  private criarMarcador(ns: string, id: string, cor: string, fim: boolean, tamanho = TAMANHO_SETA_PADRAO): SVGMarkerElement {
+  private criarMarcador(ns: string, id: string, cor: string, _fim: boolean, tamanho = TAMANHO_SETA_PADRAO): SVGMarkerElement {
     const marker = document.createElementNS(ns, 'marker') as SVGMarkerElement;
     const tamanhoSeguro = this.normalizarTamanhoSeta(tamanho);
     marker.setAttribute('id', id);
     marker.setAttribute('viewBox', '0 0 10 10');
-    marker.setAttribute('refX', fim ? '9' : '1');
+    marker.setAttribute('refX', '9');
     marker.setAttribute('refY', '5');
     marker.setAttribute('markerWidth', String(tamanhoSeguro));
     marker.setAttribute('markerHeight', String(tamanhoSeguro));
     marker.setAttribute('orient', 'auto-start-reverse');
     marker.setAttribute('markerUnits', 'userSpaceOnUse');
     const path = document.createElementNS(ns, 'path');
-    path.setAttribute('d', fim ? 'M 0 0 L 10 5 L 0 10 z' : 'M 10 0 L 0 5 L 10 10 z');
+    path.setAttribute('d', 'M 0 0 L 10 5 L 0 10 z');
     path.setAttribute('fill', cor);
     marker.appendChild(path);
     return marker;
@@ -1557,6 +1803,16 @@ export class EditorFluxogramaComponent implements OnInit {
 
   setTamanhoSetaPadrao(v: string): void {
     this.padrao.tamanhoSeta = this.normalizarTamanhoSeta(v);
+    this.salvar();
+  }
+
+  setCurvatura(c: ConexaoFluxograma, v: string): void {
+    c.curvatura = Math.round(+v);
+    this.salvar();
+  }
+
+  endireitarConexao(c: ConexaoFluxograma): void {
+    c.curvatura = 0;
     this.salvar();
   }
 

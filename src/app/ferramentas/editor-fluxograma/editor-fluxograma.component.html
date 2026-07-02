@@ -127,10 +127,10 @@
               orient="auto-start-reverse" markerUnits="userSpaceOnUse">
               <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
             </marker>
-            <marker [attr.id]="marcadorSetaId(c, 'inicio')" viewBox="0 0 10 10" refX="1" refY="5"
+            <marker [attr.id]="marcadorSetaId(c, 'inicio')" viewBox="0 0 10 10" refX="9" refY="5"
               [attr.markerWidth]="tamanhoSetaConexao(c)" [attr.markerHeight]="tamanhoSetaConexao(c)"
               orient="auto-start-reverse" markerUnits="userSpaceOnUse">
-              <path d="M 10 0 L 0 5 L 10 10 z" fill="context-stroke" />
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
             </marker>
           </ng-container>
           <!-- Traço risco de giz -->
@@ -202,17 +202,17 @@
           <!-- Conexões -->
           <g *ngFor="let c of conexoes; trackBy: trackConexao">
             <ng-container *ngIf="pontosConexao(c) as p">
-              <line class="conexao-hit" [attr.x1]="p.x1" [attr.y1]="p.y1" [attr.x2]="p.x2" [attr.y2]="p.y2"
-                (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
-              <line class="conexao-linha" [class.selecionada]="isConexaoSelecionada(c)"
-                [attr.x1]="p.x1" [attr.y1]="p.y1" [attr.x2]="p.x2" [attr.y2]="p.y2"
+              <path class="conexao-hit" fill="none" [attr.d]="caminhoConexao(c)"
+                (mousedown)="aoPressionarLinha($event, c)" (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
+              <path class="conexao-linha" fill="none" [class.selecionada]="isConexaoSelecionada(c)"
+                [attr.d]="caminhoConexao(c)"
                 [attr.stroke]="c.cor" [attr.stroke-width]="c.espessura"
                 [attr.stroke-dasharray]="c.tracejada ? '7 5' : null"
                 [attr.filter]="filtroTraco(c.tipoTraco)"
                 [attr.data-tamanho-seta]="tamanhoSetaConexao(c)"
                 [attr.marker-end]="c.setaFim ? 'url(#' + marcadorSetaId(c, 'fim') + ')' : null"
                 [attr.marker-start]="c.setaInicio ? 'url(#' + marcadorSetaId(c, 'inicio') + ')' : null"
-                (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
+                (mousedown)="aoPressionarLinha($event, c)" (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
               <g *ngIf="c.texto" [attr.transform]="'translate(' + meioConexao(c).x + ',' + meioConexao(c).y + ')'"
                 (dblclick)="editarTextoConexao($event, c)">
                 <rect class="conexao-rotulo-bg" [attr.x]="-(c.texto.length * 3.6 + 6)" y="-9"
@@ -291,6 +291,14 @@
               [attr.width]="tamAlca()" [attr.height]="tamAlca()" rx="1.5"
               [style.cursor]="h.cursor" (mousedown)="iniciarResize($event, sel, h.canto)"
               (click)="$event.stopPropagation()" />
+          </g>
+
+          <!-- Pontos (waypoints) da conexão selecionada -->
+          <g *ngIf="conexaoSelecionada as csel">
+            <circle *ngFor="let pt of (csel.pontos || []); let i = index" class="ponto-ligacao"
+              [attr.cx]="pt.x" [attr.cy]="pt.y" [attr.r]="6 / zoom"
+              (mousedown)="aoPressionarPonto($event, csel, i)"
+              (dblclick)="removerPonto($event, csel, i)" (click)="$event.stopPropagation()" />
           </g>
 
           <rect *ngIf="retanguloSelecao as r" class="retangulo-selecao-area"
@@ -413,6 +421,30 @@
           <input type="range" min="3" max="24" step="1" [value]="tamanhoSetaConexao(c)"
             (input)="setTamanhoSeta(c, $any($event.target).value)" />
         </label>
+
+        <label class="campo">
+          <span>Formato da linha</span>
+          <select [ngModel]="c.estilo || 'arredondado'" (ngModelChange)="c.estilo = $event; salvar()">
+            <option value="reto">Reto (cantos vivos)</option>
+            <option value="arredondado">Cantos arredondados</option>
+            <option value="curvo">Curva suave</option>
+          </select>
+        </label>
+
+        <label class="campo" *ngIf="(c.pontos?.length || 0) > 0 && (c.estilo || 'arredondado') === 'arredondado'">
+          <span>Raio dos cantos <b>{{ c.raioCanto ?? 50 }}px</b></span>
+          <input type="range" min="0" max="120" step="1" [value]="c.raioCanto ?? 50"
+            (input)="setRaioCanto(c, $any($event.target).value)" />
+        </label>
+
+        <label class="campo" *ngIf="(c.pontos?.length || 0) === 0">
+          <span>Curvatura <b>{{ c.curvatura || 0 }}</b></span>
+          <input type="range" min="-300" max="300" step="5" [value]="c.curvatura || 0"
+            (input)="setCurvatura(c, $any($event.target).value)" />
+        </label>
+
+        <p class="painel-dica">Arraste a linha para criar pontos, arraste os pontos para moldar e dê duplo clique num ponto para removê-lo.</p>
+        <button class="troca-img" (click)="limparPontos(c)">Endireitar (limpar pontos)</button>
 
         <label class="campo-check"><input type="checkbox" [(ngModel)]="c.tracejada" /> <span>Tracejada</span></label>
         <label class="campo-check"><input type="checkbox" [(ngModel)]="c.setaFim" /> <span>Seta no fim</span></label>

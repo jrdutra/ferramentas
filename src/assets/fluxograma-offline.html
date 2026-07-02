@@ -34,6 +34,7 @@
   .btn.perigo{color:#ff9090;border-color:rgba(255,112,112,.28);}
   .btn.perigo:hover:not(:disabled){background:rgba(255,112,112,.14);border-color:#ff7070;}
   .btn:disabled{opacity:.35;cursor:not-allowed;}
+  .btn svg{width:15px;height:15px;flex:0 0 auto;}
   .zoomlbl{min-width:3em;text-align:center;font-size:.78em;font-weight:800;color:#8ee8ff;}
   /* Corpo */
   .corpo{display:grid;grid-template-columns:minmax(0,1fr) 16em;gap:.6em;flex:1;min-height:0;}
@@ -145,7 +146,8 @@ var CONTAINERS = [
 ];
 var TRACOS = [["solido","Traço sólido"],["giz","Risco de giz"],["lapis","Risco de lápis"]];
 
-var TAMANHO_SETA_PADRAO = 7;
+var TAMANHO_SETA_PADRAO = 14;
+var curvando=null, curvouMov=false;
 
 var S = {
   nos:[], conexoes:[], ferramenta:"selecionar", sel:null,
@@ -207,12 +209,17 @@ function pontoBorda(n,px,py){
   if(n.tipo==="losango"){var t=1/(Math.abs(dx)/rx+Math.abs(dy)/ry);return{x:Cx+dx*t,y:Cy+dy*t};}
   var e=1/Math.max(Math.abs(dx)/rx,Math.abs(dy)/ry);return{x:Cx+dx*e,y:Cy+dy*e};
 }
+function controleConexao(a,b,curv){var mx=(cx(a)+cx(b))/2,my=(cy(a)+cy(b))/2;if(!curv)return{x:mx,y:my};var dx=cx(b)-cx(a),dy=cy(b)-cy(a),len=Math.hypot(dx,dy)||1;return{x:mx+(-dy/len)*curv,y:my+(dx/len)*curv};}
 function pontosConexao(c){
   var a=acharNo(c.de),b=acharNo(c.para); if(!a||!b)return null;
-  var p1=pontoBorda(a,cx(b),cy(b)),p2=pontoBorda(b,cx(a),cy(a));
-  return{x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y};
+  var ctrl=controleConexao(a,b,c.curvatura||0);
+  var p1=pontoBorda(a,ctrl.x,ctrl.y),p2=pontoBorda(b,ctrl.x,ctrl.y);
+  return{x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y,cx:ctrl.x,cy:ctrl.y};
 }
-function meioConexao(c){var p=pontosConexao(c);return p?{x:(p.x1+p.x2)/2,y:(p.y1+p.y2)/2}:{x:0,y:0};}
+function caminhoConexao(c){var p=pontosConexao(c);if(!p)return null;if(!c.curvatura)return "M "+p.x1+" "+p.y1+" L "+p.x2+" "+p.y2;return "M "+p.x1+" "+p.y1+" Q "+p.cx+" "+p.cy+" "+p.x2+" "+p.y2;}
+function meioConexao(c){var p=pontosConexao(c);if(!p)return{x:0,y:0};if(!c.curvatura)return{x:(p.x1+p.x2)/2,y:(p.y1+p.y2)/2};return{x:0.25*p.x1+0.5*p.cx+0.25*p.x2,y:0.25*p.y1+0.5*p.cy+0.25*p.y2};}
+function ajustarCurva(e){var c=curvando;if(!c)return;var a=acharNo(c.de),b=acharNo(c.para);if(!a||!b)return;var p=pt(e),mx=(cx(a)+cx(b))/2,my=(cy(a)+cy(b))/2,dx=cx(b)-cx(a),dy=cy(b)-cy(a),len=Math.hypot(dx,dy)||1;var perp=(p.x-mx)*(-dy/len)+(p.y-my)*(dx/len);c.curvatura=Math.round(perp*2);curvouMov=true;render2();}
+function endireitarCon(){var c=conSel();if(c){c.curvatura=0;render();save();}}
 function pontosPoligono(n){
   var x=n.x,y=n.y,w=n.largura,h=n.altura;
   if(n.tipo==="losango")return (x+w/2)+","+y+" "+(x+w)+","+(y+h/2)+" "+(x+w/2)+","+(y+h)+" "+x+","+(y+h/2);
@@ -257,7 +264,7 @@ function criarNo(tipo,x,y){
 }
 function criarConexao(de,para){
   var c={id:novoId("e"),de:de,para:para,texto:"",cor:S.padrao.corLinha,espessura:S.padrao.espessuraLinha,
-    tracejada:false,setaInicio:false,setaFim:true,tamanhoSeta:S.padrao.tamanhoSeta,tipoTraco:S.padrao.tipoTraco};
+    tracejada:false,setaInicio:false,setaFim:true,tamanhoSeta:S.padrao.tamanhoSeta,curvatura:0,tipoTraco:S.padrao.tipoTraco};
   S.conexoes.push(c);return c;
 }
 function selecionar(id,tipo){S.sel={id:id,tipo:tipo};}
@@ -337,7 +344,7 @@ function defsSVG(){
   S.conexoes.forEach(function(c){
     var t=tamSeta(c.tamanhoSeta);
     markers+='<marker id="'+markerId(c,'fim')+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="'+t+'" markerHeight="'+t+'" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker>'+
-      '<marker id="'+markerId(c,'inicio')+'" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="'+t+'" markerHeight="'+t+'" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M 10 0 L 0 5 L 10 10 z" fill="context-stroke"/></marker>';
+      '<marker id="'+markerId(c,'inicio')+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="'+t+'" markerHeight="'+t+'" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker>';
   });
   return '<defs>'+
     '<pattern id="grade" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="translate('+S.panX+','+S.panY+') scale('+S.zoom+')">'+
@@ -400,8 +407,9 @@ function buildConexao(c){
   var ts=tamSeta(c.tamanhoSeta);
   var f=filtro(c), dash=c.tracejada?' stroke-dasharray="7 5"':'',
     me=c.setaFim?' marker-end="url(#'+markerId(c,'fim')+')"':'', mi=c.setaInicio?' marker-start="url(#'+markerId(c,'inicio')+')"':'';
-  var s='<line class="conexao-hit" data-cid="'+c.id+'" x1="'+p.x1+'" y1="'+p.y1+'" x2="'+p.x2+'" y2="'+p.y2+'"/>'+
-    '<line class="conexao-linha" data-cid="'+c.id+'" data-tamanho-seta="'+ts+'" x1="'+p.x1+'" y1="'+p.y1+'" x2="'+p.x2+'" y2="'+p.y2+'" stroke="'+esc(c.cor)+'" stroke-width="'+c.espessura+'"'+dash+f+me+mi+'/>';
+  var dd=caminhoConexao(c)||"";
+  var s='<path class="conexao-hit" fill="none" data-cid="'+c.id+'" d="'+dd+'"/>'+
+    '<path class="conexao-linha" fill="none" data-cid="'+c.id+'" data-tamanho-seta="'+ts+'" d="'+dd+'" stroke="'+esc(c.cor)+'" stroke-width="'+c.espessura+'"'+dash+f+me+mi+'/>';
   if(c.texto){var m=meioConexao(c);
     s+='<g transform="translate('+m.x+','+m.y+')"><rect class="conexao-rotulo-bg" x="'+(-(c.texto.length*3.6+6))+'" y="-9" width="'+(c.texto.length*7.2+12)+'" height="18" rx="4"/>'+
       '<text class="conexao-rotulo" x="0" y="0" text-anchor="middle" dominant-baseline="middle" fill="'+(S.temaClaro?"#111827":"#f4fbff")+'">'+esc(c.texto)+'</text></g>';}
@@ -428,23 +436,27 @@ function render(){
 }
 
 /* ================= Barra e painel ================= */
-function tBtn(f,label,active){return '<button class="btn'+(active?" on":"")+'" title="'+label+'" onclick="setFerramenta(\''+f+'\')">'+label+'</button>';}
+function svgIco(i){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">'+i+'</svg>';}
+var IC={selecionar:'<path d="M4 3l7 17 2.5-7 7-2.5z"/>',conectar:'<circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 11l10-4M7 13l10 4"/>',imagem:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L4 20"/>',excluir:'<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>',limpar:'<path d="M12 2l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/>',zoomout:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M8 11h6"/>',zoomin:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/>',centrar:'<path d="M3 8V5a2 2 0 012-2h3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M21 16v3a2 2 0 01-2 2h-3"/><circle cx="12" cy="12" r="2"/>',escuro:'<path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/>',claro:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5.5 5.5L7 7M17 17l1.5 1.5M5.5 18.5L7 17M17 7l1.5-1.5"/>',abrir:'<path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>',mermaid:'<circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 6h4a3 3 0 013 3v1M8 18h4a3 3 0 003-3v-1"/>',xml:'<path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/>',png:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L4 20"/>',jpg:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M6 16l3-3 3 3 2-2 4 4"/>',pdf:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/>',svg:'<polyline points="3,16 9,10 13,14 21,6"/>',dev:'<path d="M14 3h7v7M21 3l-9 9M10 5H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5"/>'};
+function ic(n){return IC[n]?svgIco(IC[n]):'';}
+function icForma(t){var d={retangulo:'<rect x="3" y="7" width="18" height="10" rx="1"/>',arredondado:'<rect x="3" y="7" width="18" height="10" rx="4"/>',terminador:'<rect x="3" y="7" width="18" height="10" rx="5"/>',losango:'<path d="M12 4l8 8-8 8-8-8z"/>',circulo:'<circle cx="12" cy="12" r="8"/>',elipse:'<ellipse cx="12" cy="12" rx="9" ry="6"/>',paralelogramo:'<path d="M7 6h14l-4 12H3z"/>',hexagono:'<path d="M8 5h8l4 7-4 7H8l-4-7z"/>',cilindro:'<path d="M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3v10c0 1.7-3.6 3-8 3s-8-1.3-8-3z"/><path d="M4 7c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',subprocesso:'<rect x="3" y="7" width="18" height="10"/><path d="M6 7v10M18 7v10"/>',container:'<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9h18"/>',frame:'<rect x="3" y="5" width="18" height="14"/><rect x="3" y="5" width="9" height="4"/>',grupo:'<rect x="3" y="5" width="18" height="14" rx="1" stroke-dasharray="3 2"/>',swimlane:'<rect x="3" y="5" width="18" height="14"/><path d="M8 5v14"/>'};return d[t]?svgIco(d[t]):'';}
+function tBtn(f,label,active){var g=(f==="selecionar"||f==="conectar")?ic(f):icForma(f);return '<button class="btn'+(active?" on":"")+'" title="'+label+'" onclick="setFerramenta(\''+f+'\')">'+g+label+'</button>';}
 function renderBarra(){
   var b='';
   b+='<div class="grp">'+tBtn("selecionar","Selecionar",S.ferramenta==="selecionar")+tBtn("conectar","Conectar",S.ferramenta==="conectar")+'</div><span class="sep"></span>';
   b+='<div class="grp">'; FORMAS.forEach(function(x){b+=tBtn(x[0],x[1],S.ferramenta===x[0]);}); b+='</div><span class="sep"></span>';
   b+='<div class="grp">'; CONTAINERS.forEach(function(x){b+=tBtn(x[0],x[1],S.ferramenta===x[0]);}); b+='</div><span class="sep"></span>';
-  b+='<div class="grp"><button class="btn" title="Adicionar imagem" onclick="document.getElementById(\'inpImg\').click()">Imagem</button></div><span class="sep"></span>';
-  b+='<div class="grp"><button class="btn perigo" title="Excluir" onclick="excluirSel()"'+(S.sel?"":" disabled")+'>Excluir</button>'+
-     '<button class="btn perigo" title="Limpar tudo" onclick="limparTudo()">Limpar</button></div><span class="sep"></span>';
-  b+='<div class="grp"><button class="btn" onclick="aplicarZoom(0.9)">−</button><span class="zoomlbl">'+Math.round(S.zoom*100)+'%</span>'+
-     '<button class="btn" onclick="aplicarZoom(1.1)">+</button><button class="btn" onclick="resetarView()">Centrar</button>'+
-     '<button class="btn'+(S.temaClaro?" on":"")+'" onclick="alternarTema()">'+(S.temaClaro?"Claro":"Escuro")+'</button></div>';
+  b+='<div class="grp"><button class="btn" title="Adicionar imagem" onclick="document.getElementById(\'inpImg\').click()">'+ic("imagem")+'Imagem</button></div><span class="sep"></span>';
+  b+='<div class="grp"><button class="btn perigo" title="Excluir" onclick="excluirSel()"'+(S.sel?"":" disabled")+'>'+ic("excluir")+'Excluir</button>'+
+     '<button class="btn perigo" title="Limpar tudo" onclick="limparTudo()">'+ic("limpar")+'Limpar</button></div><span class="sep"></span>';
+  b+='<div class="grp"><button class="btn" onclick="aplicarZoom(0.9)" title="Reduzir zoom">'+ic("zoomout")+'</button><span class="zoomlbl">'+Math.round(S.zoom*100)+'%</span>'+
+     '<button class="btn" onclick="aplicarZoom(1.1)" title="Aumentar zoom">'+ic("zoomin")+'</button><button class="btn" onclick="resetarView()" title="Centrar">'+ic("centrar")+'Centrar</button>'+
+     '<button class="btn'+(S.temaClaro?" on":"")+'" onclick="alternarTema()">'+ic(S.temaClaro?"claro":"escuro")+(S.temaClaro?"Claro":"Escuro")+'</button></div>';
   b+='<span class="sep flex"></span>';
-  b+='<div class="grp"><button class="btn" title="Abrir .mmd/.xml" onclick="document.getElementById(\'inpArq\').click()">Abrir</button>'+
-     '<button class="btn" onclick="abrirModal(\'mermaid\')">Mermaid</button><button class="btn" onclick="abrirModal(\'xml\')">XML</button></div><span class="sep"></span>';
-  b+='<div class="grp"><button class="btn" onclick="baixarPng()">PNG</button><button class="btn" onclick="baixarPngT()">PNG transp.</button>'+
-     '<button class="btn" onclick="baixarJpg()">JPG</button><button class="btn" onclick="baixarPdf()">PDF</button><button class="btn" onclick="baixarSvg()">SVG</button><button class="btn destaque-dev" title="Abrir o site ferramenta.dev" onclick="irFerramentaDev()">ferramenta.dev</button></div>';
+  b+='<div class="grp"><button class="btn" title="Abrir .mmd/.xml" onclick="document.getElementById(\'inpArq\').click()">'+ic("abrir")+'Abrir</button>'+
+     '<button class="btn" onclick="abrirModal(\'mermaid\')">'+ic("mermaid")+'Mermaid</button><button class="btn" onclick="abrirModal(\'xml\')">'+ic("xml")+'XML</button></div><span class="sep"></span>';
+  b+='<div class="grp"><button class="btn" onclick="baixarPng()">'+ic("png")+'PNG</button><button class="btn" onclick="baixarPngT()">'+ic("png")+'PNG transp.</button>'+
+     '<button class="btn" onclick="baixarJpg()">'+ic("jpg")+'JPG</button><button class="btn" onclick="baixarPdf()">'+ic("pdf")+'PDF</button><button class="btn" onclick="baixarSvg()">'+ic("svg")+'SVG</button><button class="btn destaque-dev" title="Abrir o site ferramenta.dev" onclick="irFerramentaDev()">'+ic("dev")+'ferramenta.dev</button></div>';
   document.getElementById("barra").innerHTML=b;
 }
 function corCampo(f,label,obj){return '<label class="campo cor"><span>'+label+'</span><input type="color" data-f="'+f+'" data-k="cor" data-o="'+obj+'" value="'+esc(valObj(obj)[f])+'"></label>';}
@@ -471,6 +483,7 @@ function renderPainel(){
     h+='<h3>Conexão</h3>';
     h+='<label class="campo"><span>Rótulo</span><input type="text" value="'+esc(c.texto)+'" data-f="texto" data-k="text" data-o="con" placeholder="Ex.: Sim / Não"></label>';
     h+=corCampo("cor","Cor da linha","con")+rangeCampo("espessura","Espessura","con",0.5,10,0.5)+rangeCampo("tamanhoSeta","Tamanho da ponta","con",3,24,1)+tracoCampo("con");
+    h+='<label class="campo"><span>Curvatura <b id="lbl_con_curvatura">'+(conSel()?(conSel().curvatura||0):0)+'</b></span><input type="range" min="-300" max="300" step="5" value="'+(conSel()?(conSel().curvatura||0):0)+'" data-f="curvatura" data-k="range" data-o="con"></label><button class="troca-img" onclick="endireitarCon()">Endireitar linha</button>';
     h+='<label class="campocheck"><input type="checkbox" data-f="tracejada" data-k="check" data-o="con"'+(c.tracejada?" checked":"")+'> <span>Tracejada</span></label>';
     h+='<label class="campocheck"><input type="checkbox" data-f="setaFim" data-k="check" data-o="con"'+(c.setaFim?" checked":"")+'> <span>Seta no fim</span></label>';
     h+='<label class="campocheck"><input type="checkbox" data-f="setaInicio" data-k="check" data-o="con"'+(c.setaInicio?" checked":"")+'> <span>Seta no início</span></label>';
@@ -487,7 +500,7 @@ document.getElementById("painel").addEventListener("input",function(e){
   var el=e.target,f=el.getAttribute("data-f"),k=el.getAttribute("data-k"),o=el.getAttribute("data-o");
   if(!f)return; var obj=valObj(o); if(!obj)return;
   if(k==="num"||k==="range")obj[f]=f==="tamanhoSeta"?tamSeta(el.value):+el.value; else if(k==="check")obj[f]=el.checked; else obj[f]=el.value;
-  if(k==="range"){var lbl=document.getElementById("lbl_"+o+"_"+f);if(lbl)lbl.textContent=el.value+"px";}
+  if(k==="range"){var lbl=document.getElementById("lbl_"+o+"_"+f);if(lbl)lbl.textContent=el.value+(f==="curvatura"?"":"px");}
   if(k==="sel"&&f==="tipo"){renderPainel();}
   render2(); save();
 });
@@ -513,6 +526,8 @@ cv.addEventListener("mousedown",function(e){
   if(al){var n=noSel();if(n){iniciarResize(e,n,al.getAttribute("data-canto"));}return;}
   var g=e.target.closest&&e.target.closest("[data-id]");
   if(g){noDown(e,g.getAttribute("data-id"));return;}
+  var cn=e.target.closest&&e.target.closest("[data-cid]");
+  if(cn&&S.ferramenta==="selecionar"){var cc=acharCon(cn.getAttribute("data-cid"));if(cc){curvando=cc;curvouMov=false;selecionar(cc.id,"conexao");render();return;}}
   if(S.ferramenta==="selecionar"){panning=true;panIX=e.clientX-S.panX;panIY=e.clientY-S.panY;}
 });
 cv.addEventListener("click",function(e){
@@ -533,11 +548,12 @@ function noDown(e,id){
 }
 function iniciarResize(e,n,canto){e.preventDefault();selecionar(n.id,"no");resizing=n;rCanto=canto;var p=pt(e);rIX=p.x;rIY=p.y;rB={x:n.x,y:n.y,largura:n.largura,altura:n.altura};render();}
 window.addEventListener("mousemove",function(e){
+  if(curvando){ajustarCurva(e);return;}
   if(resizing){redimensionar(e);return;}
   if(dragging){var p=pt(e);dragging.x=Math.round(p.x-dragDx);dragging.y=Math.round(p.y-dragDy);render2();}
   else if(panning){S.panX=e.clientX-panIX;S.panY=e.clientY-panIY;render2();}
 });
-window.addEventListener("mouseup",function(){if(dragging||resizing||panning)save();dragging=null;resizing=null;panning=false;});
+window.addEventListener("mouseup",function(){if(dragging||resizing||panning)save();if(curvando){if(curvouMov)save();curvando=null;curvouMov=false;}dragging=null;resizing=null;panning=false;});
 window.addEventListener("keydown",function(e){
   var tg=e.target;if(tg&&/(INPUT|TEXTAREA|SELECT)/.test(tg.tagName))return;
   if((e.key==="Delete"||e.key==="Backspace")&&S.sel){e.preventDefault();excluirSel();}
@@ -602,7 +618,7 @@ function paraXml(){
   var L=['<?xml version="1.0" encoding="UTF-8"?>','<fluxograma>','  <nos>'];
   S.nos.forEach(function(n){L.push('    <no id="'+esc(n.id)+'" tipo="'+n.tipo+'" x="'+n.x+'" y="'+n.y+'" largura="'+n.largura+'" altura="'+n.altura+'" corFundo="'+esc(n.corFundo)+'" corBorda="'+esc(n.corBorda)+'" espessuraBorda="'+n.espessuraBorda+'" corTexto="'+esc(n.corTexto)+'" tipoTraco="'+n.tipoTraco+'"'+(n.src?' src="'+esc(n.src)+'"':"")+'>'+esc(n.texto)+'</no>');});
   L.push('  </nos>','  <conexoes>');
-  S.conexoes.forEach(function(c){L.push('    <conexao id="'+esc(c.id)+'" de="'+esc(c.de)+'" para="'+esc(c.para)+'" cor="'+esc(c.cor)+'" espessura="'+c.espessura+'" tracejada="'+c.tracejada+'" setaInicio="'+c.setaInicio+'" setaFim="'+c.setaFim+'" tamanhoSeta="'+tamSeta(c.tamanhoSeta)+'" tipoTraco="'+c.tipoTraco+'">'+esc(c.texto)+'</conexao>');});
+  S.conexoes.forEach(function(c){L.push('    <conexao id="'+esc(c.id)+'" de="'+esc(c.de)+'" para="'+esc(c.para)+'" cor="'+esc(c.cor)+'" espessura="'+c.espessura+'" tracejada="'+c.tracejada+'" setaInicio="'+c.setaInicio+'" setaFim="'+c.setaFim+'" tamanhoSeta="'+tamSeta(c.tamanhoSeta)+'" curvatura="'+(c.curvatura||0)+'" tipoTraco="'+c.tipoTraco+'">'+esc(c.texto)+'</conexao>');});
   L.push('  </conexoes>','</fluxograma>');return L.join("\n");
 }
 function deXml(txt){
@@ -617,7 +633,7 @@ function deXml(txt){
       tipoTraco:el.getAttribute("tipoTraco")||"solido",src:el.getAttribute("src")||undefined});});
   doc.querySelectorAll("conexao").forEach(function(el){cons.push({id:el.getAttribute("id")||novoId("e"),de:el.getAttribute("de")||"",para:el.getAttribute("para")||"",
     texto:el.textContent||"",cor:el.getAttribute("cor")||"#5b7cff",espessura:num(el.getAttribute("espessura"),2),
-    tracejada:el.getAttribute("tracejada")==="true",setaInicio:el.getAttribute("setaInicio")==="true",setaFim:el.getAttribute("setaFim")!=="false",tamanhoSeta:tamSeta(el.getAttribute("tamanhoSeta")),tipoTraco:el.getAttribute("tipoTraco")||"solido"});});
+    tracejada:el.getAttribute("tracejada")==="true",setaInicio:el.getAttribute("setaInicio")==="true",setaFim:el.getAttribute("setaFim")!=="false",tamanhoSeta:tamSeta(el.getAttribute("tamanhoSeta")),curvatura:parseFloat(el.getAttribute("curvatura"))||0,tipoTraco:el.getAttribute("tipoTraco")||"solido"});});
   var fx={nos:nos,conexoes:cons};if(nos.every(function(n){return n.x===0&&n.y===0;}))autoLayout(fx);return normaliza(fx);
 }
 
@@ -629,7 +645,7 @@ function autoLayout(fx){var sp=fx.nos.filter(function(n){return n.x===0&&n.y===0
 function normaliza(fx){fx.nos.forEach(function(n){var b=noPadrao(n.id,n.texto);n.largura=n.largura||b.largura;n.altura=n.altura||b.altura;
   n.espessuraBorda=n.espessuraBorda||b.espessuraBorda;n.corFundo=n.corFundo||b.corFundo;n.corBorda=n.corBorda||b.corBorda;
   n.corTexto=n.corTexto||b.corTexto;n.tipo=n.tipo||"retangulo";n.tipoTraco=n.tipoTraco||"solido";});
-  fx.conexoes.forEach(function(c){c.tipoTraco=c.tipoTraco||"solido";c.tamanhoSeta=tamSeta(c.tamanhoSeta);});return fx;}
+  fx.conexoes.forEach(function(c){c.tipoTraco=c.tipoTraco||"solido";c.tamanhoSeta=tamSeta(c.tamanhoSeta);c.curvatura=isFinite(c.curvatura)?c.curvatura:0;});return fx;}
 function carregarFluxo(fx){
   S.nos=fx.nos;S.conexoes=fx.conexoes;normalizarSetas();S.sel=null;
   var nums=S.nos.concat(S.conexoes).map(function(x){return parseInt(String(x.id).replace(/^\D+/,""),10);}).filter(function(n){return isFinite(n);});
@@ -679,9 +695,9 @@ function svgExport(fundo,semPreench){
   return{svg:new XMLSerializer().serializeToString(clone),largura:lim.largura,altura:lim.altura};
 }
 function mk(ns,id,cor,fim,tam){var m=document.createElementNS(ns,"marker"),t=tamSeta(tam);m.setAttribute("id",id);m.setAttribute("viewBox","0 0 10 10");
-  m.setAttribute("refX",fim?"9":"1");m.setAttribute("refY","5");m.setAttribute("markerWidth",t);m.setAttribute("markerHeight",t);
+  m.setAttribute("refX","9");m.setAttribute("refY","5");m.setAttribute("markerWidth",t);m.setAttribute("markerHeight",t);
   m.setAttribute("orient","auto-start-reverse");m.setAttribute("markerUnits","userSpaceOnUse");
-  var p=document.createElementNS(ns,"path");p.setAttribute("d",fim?"M 0 0 L 10 5 L 0 10 z":"M 10 0 L 0 5 L 10 10 z");p.setAttribute("fill",cor);m.appendChild(p);return m;}
+  var p=document.createElementNS(ns,"path");p.setAttribute("d","M 0 0 L 10 5 L 0 10 z");p.setAttribute("fill",cor);m.appendChild(p);return m;}
 function rasterizar(mime,fundo,escala,semPreench){
   return new Promise(function(res,rej){var d=svgExport(fundo,semPreench);if(!d){rej(new Error("Adicione ao menos uma forma."));return;}
     var blob=new Blob([d.svg],{type:"image/svg+xml;charset=utf-8"}),u=URL.createObjectURL(blob),img=new Image();

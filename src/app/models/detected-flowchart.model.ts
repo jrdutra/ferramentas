@@ -1,4 +1,4 @@
-export type DetectedNodeType = 'process' | 'decision' | 'terminator' | 'inputOutput' | 'unknown';
+export type DetectedNodeType = 'process' | 'decision' | 'terminator' | 'inputOutput' | 'circle' | 'unknown';
 
 export interface DetectedPoint {
   x: number;

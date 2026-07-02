@@ -183,6 +183,15 @@
 }
 .alca:hover { fill: #ff2db2; }
 
+.ponto-ligacao {
+  fill: #ffffff;
+  stroke: #ff2db2;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  cursor: move;
+}
+.ponto-ligacao:hover { fill: #ff2db2; }
+
 /* ─────────────── Conexões ─────────────── */
 
 .conexao-linha {
