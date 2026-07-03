@@ -29,6 +29,11 @@
         {{ arquivo.tipo === 'pdf' ? 'picture_as_pdf' : 'image' }}
       </mat-icon>
       <span class="nome-arquivo" [title]="arquivo.nome">{{ arquivo.nome }}</span>
+      <button *ngIf="arquivo.tipo === 'imagem'" mat-icon-button class="btn-preview"
+        (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation(); abrirPreviewImagem(arquivo)"
+        title="Pré-visualizar imagem" aria-label="Pré-visualizar imagem">
+        <mat-icon>visibility</mat-icon>
+      </button>
       <span class="tipo-badge">{{ arquivo.tipo === 'pdf' ? 'PDF' : 'Imagem' }}</span>
       <button mat-icon-button class="btn-remover" (click)="remover(i)" title="Remover">
         <mat-icon>close</mat-icon>
@@ -55,6 +60,21 @@
     {{ mensagem }}
   </div>
 
+</div>
+
+<div class="preview-fundo" *ngIf="previewImagem as preview" (click)="fecharPreviewImagem()">
+  <div class="preview-balao" (click)="$event.stopPropagation()">
+    <button mat-icon-button class="preview-fechar" (click)="fecharPreviewImagem()" aria-label="Fechar prévia">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="preview-topo">
+      <mat-icon>visibility</mat-icon>
+      <span [title]="preview.nome">{{ preview.nome }}</span>
+    </div>
+    <div class="preview-moldura">
+      <img [src]="preview.url" [alt]="'Prévia de ' + preview.nome">
+    </div>
+  </div>
 </div>
 
 <div class="instrucoes">

@@ -15,6 +15,11 @@ interface ArquivoCarregado {
   tipo: 'pdf' | 'imagem';
 }
 
+interface PreviewImagem {
+  url: string;
+  nome: string;
+}
+
 @Component({
   selector: 'app-juntador-pdf',
   standalone: true,
@@ -28,6 +33,7 @@ export class JuntadorPdfComponent {
   processandoImg = false;
   mensagem = '';
   erro = false;
+  previewImagem: PreviewImagem | null = null;
 
   constructor(
     private dataService: DataService,
@@ -56,13 +62,29 @@ export class JuntadorPdfComponent {
   }
 
   remover(index: number): void {
+    if (this.previewImagem?.nome === this.arquivos[index]?.nome) this.fecharPreviewImagem();
     this.arquivos.splice(index, 1);
   }
 
   limpar(): void {
+    this.fecharPreviewImagem();
     this.arquivos = [];
     this.mensagem = '';
     this.erro = false;
+  }
+
+  abrirPreviewImagem(arquivo: ArquivoCarregado): void {
+    if (arquivo.tipo !== 'imagem' || !isPlatformBrowser(this.platformId)) return;
+    this.fecharPreviewImagem();
+    this.previewImagem = {
+      url: URL.createObjectURL(arquivo.file),
+      nome: arquivo.nome,
+    };
+  }
+
+  fecharPreviewImagem(): void {
+    if (this.previewImagem) URL.revokeObjectURL(this.previewImagem.url);
+    this.previewImagem = null;
   }
 
   async juntar(): Promise<void> {
