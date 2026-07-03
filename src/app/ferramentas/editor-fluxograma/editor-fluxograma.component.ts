@@ -418,6 +418,7 @@ export class EditorFluxogramaComponent implements OnInit {
     this.criarNoImagem('data:image/svg+xml,' + encodeURIComponent(this.badgeIconeSvg(nome)), 80, 80, nome, {
       corFundo: this.corDe(nome),
       escalaImagem: 0.72,
+      raioBordaImagem: 18,
     });
     this.salvar();
   }
@@ -427,6 +428,7 @@ export class EditorFluxogramaComponent implements OnInit {
     this.criarNoImagem('data:image/svg+xml,' + encodeURIComponent(svg), 72, 72, '', {
       corFundo: this.padrao.corFundo,
       escalaImagem: 0.82,
+      raioBordaImagem: 18,
     });
     this.salvar();
   }
@@ -643,7 +645,7 @@ export class EditorFluxogramaComponent implements OnInit {
     w: number,
     h: number,
     texto = '',
-    opcoes: { corFundo?: string; escalaImagem?: number } = {},
+    opcoes: { corFundo?: string; escalaImagem?: number; raioBordaImagem?: number } = {},
   ): void {
     const max = 240;
     const escala = Math.min(1, max / Math.max(w, h));
@@ -665,6 +667,7 @@ export class EditorFluxogramaComponent implements OnInit {
       tipoTraco: 'solido',
       src,
       escalaImagem: this.normalizarEscalaImagem(opcoes.escalaImagem ?? 1),
+      raioBordaImagem: this.normalizarRaioBordaImagem(opcoes.raioBordaImagem ?? 18),
     };
     this.nos.push(no);
     this.selecionar(no.id, 'no');
@@ -1273,7 +1276,11 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   raioIcone(no: NoFluxograma): number {
-    return Math.min(18, Math.max(6, Math.min(no.largura, no.altura) * 0.18));
+    return Math.min(this.raioBordaImagem(no), no.largura / 2, no.altura / 2);
+  }
+
+  raioBordaImagem(no: NoFluxograma): number {
+    return this.normalizarRaioBordaImagem(no.raioBordaImagem ?? 18);
   }
 
   clipImagemId(no: NoFluxograma): string {
@@ -1284,6 +1291,12 @@ export class EditorFluxogramaComponent implements OnInit {
     const n = Number(valor);
     if (!Number.isFinite(n)) return 1;
     return Math.min(1, Math.max(0.2, n));
+  }
+
+  private normalizarRaioBordaImagem(valor: unknown): number {
+    const n = Number(valor);
+    if (!Number.isFinite(n)) return 18;
+    return Math.min(80, Math.max(0, n));
   }
 
   /** Ponto na borda do nó na direção de (px, py). */
@@ -2264,6 +2277,11 @@ export class EditorFluxogramaComponent implements OnInit {
 
   setEscalaImagem(no: NoFluxograma, v: string): void {
     no.escalaImagem = this.normalizarEscalaImagem(Number(v) / 100);
+    this.salvar();
+  }
+
+  setRaioBordaImagem(no: NoFluxograma, v: string): void {
+    no.raioBordaImagem = this.normalizarRaioBordaImagem(v);
     this.salvar();
   }
 

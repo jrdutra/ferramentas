@@ -438,6 +438,12 @@
             (input)="setEscalaImagem(no, $any($event.target).value)" />
         </label>
 
+        <label class="campo" *ngIf="no.tipo === 'imagem'">
+          <span>Raio das bordas <b>{{ raioBordaImagem(no) | number:'1.0-0' }}px</b></span>
+          <input type="range" min="0" max="80" step="1" [value]="raioBordaImagem(no)"
+            (input)="setRaioBordaImagem(no, $any($event.target).value)" />
+        </label>
+
         <label class="campo cor">
           <span>Cor de fundo</span>
           <input type="color" [(ngModel)]="no.corFundo" />

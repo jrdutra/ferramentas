@@ -40,6 +40,8 @@ export interface NoFluxograma {
   src?: string;
   /** Escala da imagem dentro do quadro do ícone (0..1). */
   escalaImagem?: number;
+  /** Raio dos cantos do quadro de imagem/icone, em pixels. */
+  raioBordaImagem?: number;
 }
 
 export interface ConexaoFluxograma {
@@ -262,6 +264,7 @@ export class FluxogramaService {
           ` corTexto="${esc(n.corTexto)}" tipoTraco="${n.tipoTraco}"` +
           (n.src ? ` src="${esc(n.src)}"` : '') +
           (n.escalaImagem != null ? ` escalaImagem="${n.escalaImagem}"` : '') +
+          (n.raioBordaImagem != null ? ` raioBordaImagem="${n.raioBordaImagem}"` : '') +
           `>${esc(n.texto)}</no>`,
       );
     }
@@ -309,6 +312,7 @@ export class FluxogramaService {
         tipoTraco: (el.getAttribute('tipoTraco') as TipoTraco) || 'solido',
         src: el.getAttribute('src') || undefined,
         escalaImagem: el.getAttribute('escalaImagem') != null ? this.normalizaEscalaImagem(el.getAttribute('escalaImagem')) : undefined,
+        raioBordaImagem: el.getAttribute('raioBordaImagem') != null ? this.normalizaRaioBordaImagem(el.getAttribute('raioBordaImagem')) : undefined,
       });
     });
 
@@ -383,7 +387,10 @@ export class FluxogramaService {
       n.corTexto = n.corTexto || base.corTexto;
       n.tipo = n.tipo || 'retangulo';
       n.tipoTraco = n.tipoTraco || 'solido';
-      if (n.tipo === 'imagem') n.escalaImagem = this.normalizaEscalaImagem(n.escalaImagem);
+      if (n.tipo === 'imagem') {
+        n.escalaImagem = this.normalizaEscalaImagem(n.escalaImagem);
+        n.raioBordaImagem = this.normalizaRaioBordaImagem(n.raioBordaImagem);
+      }
     });
     fluxo.conexoes.forEach((c) => {
       c.tipoTraco = c.tipoTraco || 'solido';
@@ -403,6 +410,12 @@ export class FluxogramaService {
     const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
     if (!Number.isFinite(n)) return 1;
     return Math.min(1, Math.max(0.2, n));
+  }
+
+  private normalizaRaioBordaImagem(v: unknown): number {
+    const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
+    if (!Number.isFinite(n)) return 18;
+    return Math.min(80, Math.max(0, n));
   }
 
   private parsePontos(v: string | null): { x: number; y: number }[] | undefined {
