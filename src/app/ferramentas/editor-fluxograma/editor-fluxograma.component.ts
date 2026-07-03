@@ -424,13 +424,64 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   inserirEmoji(e: string): void {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="55" font-size="78" text-anchor="middle" dominant-baseline="central">${e}</text></svg>`;
-    this.criarNoImagem('data:image/svg+xml,' + encodeURIComponent(svg), 72, 72, '', {
+    this.criarNoImagem('data:image/svg+xml,' + encodeURIComponent(this.emojiIconeSvg(e)), 72, 72, '', {
       corFundo: this.padrao.corFundo,
       escalaImagem: 0.82,
       raioBordaImagem: 18,
     });
     this.salvar();
+  }
+
+  private emojiIconeSvg(e: string): string {
+    const tipo = this.tipoEmoji(e);
+    const face = (detalhe: string, fill = '#ffd166') =>
+      `<circle cx="50" cy="50" r="35" fill="${fill}" stroke="#332415" stroke-width="4"/>${detalhe}`;
+    const olhos = '<circle cx="38" cy="42" r="4" fill="#332415"/><circle cx="62" cy="42" r="4" fill="#332415"/>';
+    const sorriso = '<path d="M34 58 Q50 73 66 58" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>';
+    const pessoa =
+      '<circle cx="50" cy="29" r="14" fill="#ffd166" stroke="#332415" stroke-width="4"/>' +
+      '<path d="M25 84 Q50 53 75 84" fill="#66d9ef" stroke="#332415" stroke-width="4" stroke-linejoin="round"/>' +
+      '<path d="M38 31 Q50 41 62 31" fill="none" stroke="#332415" stroke-width="3" stroke-linecap="round"/>';
+
+    let detalhe = olhos + sorriso;
+    let fill = '#ffd166';
+    if (tipo === 'laugh') detalhe = '<path d="M34 39 Q38 35 42 39M58 39 Q62 35 66 39" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/><path d="M32 56 Q50 78 68 56 Q50 65 32 56" fill="#332415"/><path d="M28 49 Q21 44 25 36" fill="none" stroke="#4aa3df" stroke-width="4" stroke-linecap="round"/>';
+    else if (tipo === 'wink') detalhe = '<circle cx="38" cy="42" r="4" fill="#332415"/><path d="M57 42 Q62 38 67 42" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/>' + sorriso;
+    else if (tipo === 'love') detalhe = '<path d="M31 39 C26 33 18 39 23 47 L31 55 L39 47 C44 39 36 33 31 39Z" fill="#ef476f"/><path d="M69 39 C64 33 56 39 61 47 L69 55 L77 47 C82 39 74 33 69 39Z" fill="#ef476f"/>' + sorriso;
+    else if (tipo === 'cool') detalhe = '<path d="M27 39 H45 L42 51 H30 ZM55 39 H73 L70 51 H58 ZM45 43 H55" fill="#16213e" stroke="#332415" stroke-width="3" stroke-linejoin="round"/><path d="M38 63 Q50 69 62 63" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/>';
+    else if (tipo === 'think') detalhe = olhos + '<path d="M39 60 Q50 55 61 60" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/><path d="M63 68 q9 2 10 10" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>';
+    else if (tipo === 'neutral') detalhe = olhos + '<path d="M36 61 H64" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>';
+    else if (tipo === 'sleep') detalhe = '<path d="M32 42 q6 -5 12 0M56 42 q6 -5 12 0" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/><path d="M39 62 Q50 58 61 62" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/><text x="70" y="27" font-size="18" font-family="Arial" font-weight="800" fill="#4aa3df">Z</text>';
+    else if (tipo === 'surprise') detalhe = olhos + '<ellipse cx="50" cy="62" rx="9" ry="12" fill="#332415"/>';
+    else if (tipo === 'sad') detalhe = olhos + '<path d="M34 67 Q50 52 66 67" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>';
+    else if (tipo === 'cry') detalhe = '<circle cx="38" cy="42" r="4" fill="#332415"/><circle cx="62" cy="42" r="4" fill="#332415"/><path d="M34 68 Q50 54 66 68" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/><path d="M30 50 q-7 10 1 17 q8 -7 -1 -17Z" fill="#4aa3df"/>';
+    else if (tipo === 'angry') { fill = '#ff6b6b'; detalhe = '<path d="M30 35 L45 43M70 35 L55 43" stroke="#332415" stroke-width="5" stroke-linecap="round"/><circle cx="38" cy="45" r="4" fill="#332415"/><circle cx="62" cy="45" r="4" fill="#332415"/><path d="M36 66 Q50 56 64 66" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>'; }
+    else if (tipo === 'party') detalhe = olhos + sorriso + '<path d="M43 16 L70 25 L50 39 Z" fill="#8e7dff" stroke="#332415" stroke-width="3"/><circle cx="67" cy="22" r="3" fill="#ef476f"/><path d="M23 29 q-10 -7 -3 -16M76 72 q12 3 13 -10" fill="none" stroke="#06d6a0" stroke-width="4" stroke-linecap="round"/>';
+    else if (tipo === 'scared') { fill = '#b8e7ff'; detalhe = '<circle cx="38" cy="42" r="6" fill="#332415"/><circle cx="62" cy="42" r="6" fill="#332415"/><ellipse cx="50" cy="65" rx="10" ry="14" fill="#332415"/><path d="M25 54 H18M82 54 H75" stroke="#4aa3df" stroke-width="4" stroke-linecap="round"/>'; }
+    else if (tipo === 'sick') { fill = '#98d982'; detalhe = olhos + '<path d="M36 63 Q50 57 64 63" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/><path d="M31 28 q19 -10 38 0" fill="none" stroke="#4c956c" stroke-width="5" stroke-linecap="round"/>'; }
+    else if (tipo === 'cold') { fill = '#a8dadc'; detalhe = '<circle cx="38" cy="42" r="4" fill="#16324f"/><circle cx="62" cy="42" r="4" fill="#16324f"/><path d="M38 63 h24" stroke="#16324f" stroke-width="5" stroke-linecap="round"/><path d="M31 74 h38M35 80 h30" stroke="#16324f" stroke-width="3" stroke-linecap="round"/>'; }
+    else if (tipo === 'person') return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${pessoa}</svg>`;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${face(detalhe, fill)}</svg>`;
+  }
+
+  private tipoEmoji(e: string): string {
+    if (['😂', '😆', '😅', '😭'].includes(e)) return e === '😭' ? 'cry' : 'laugh';
+    if (['😉', '🙃'].includes(e)) return 'wink';
+    if (['😍', '🤩'].includes(e)) return 'love';
+    if (['😎'].includes(e)) return 'cool';
+    if (['🤔', '🧐', '🤨'].includes(e)) return 'think';
+    if (['😐', '😬'].includes(e)) return 'neutral';
+    if (['😴'].includes(e)) return 'sleep';
+    if (['😮', '🤯'].includes(e)) return 'surprise';
+    if (['😢'].includes(e)) return 'sad';
+    if (['😡'].includes(e)) return 'angry';
+    if (['🥳', '😇'].includes(e)) return 'party';
+    if (['😱', '😳'].includes(e)) return 'scared';
+    if (['🤢'].includes(e)) return 'sick';
+    if (['🥶'].includes(e)) return 'cold';
+    if (/[\u{1F9CD}\u{1F6B6}\u{1F3C3}\u{1F574}\u{1F481}\u{1F64B}\u{1F646}\u{1F645}\u{1F937}\u{1F926}\u{1F477}\u{1F9B8}\u{1F9B9}\u{1F9D9}\u{1F9D1}\u{1F468}\u{1F469}]/u.test(e)) return 'person';
+    return 'happy';
   }
 
   private escaparXml(s: string): string {
