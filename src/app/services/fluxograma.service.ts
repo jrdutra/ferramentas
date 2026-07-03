@@ -12,14 +12,18 @@ export type FormaTipo =
   | 'hexagono'
   | 'cilindro'
   | 'subprocesso'
+  | 'seta'
   | 'container'
   | 'frame'
   | 'grupo'
   | 'swimlane'
+  | 'texto'
   | 'imagem';
 
 /** Estilo do traço das bordas e linhas. */
 export type TipoTraco = 'solido' | 'giz' | 'lapis';
+export type TipoAlinhamentoTexto = 'esquerda' | 'centro' | 'direita';
+export type TipoAlinhamentoVerticalTexto = 'topo' | 'meio' | 'rodape';
 
 export const TAMANHO_SETA_PADRAO = 14;
 
@@ -35,7 +39,10 @@ export interface NoFluxograma {
   corBorda: string;
   espessuraBorda: number;
   corTexto: string;
+  tamanhoFonte?: number;
   tipoTraco: TipoTraco;
+  alinhamentoTexto?: TipoAlinhamentoTexto;
+  alinhamentoVerticalTexto?: TipoAlinhamentoVerticalTexto;
   /** Data URL da imagem (apenas para o tipo 'imagem'). */
   src?: string;
   /** Escala da imagem dentro do quadro do ícone (0..1). */
@@ -76,6 +83,8 @@ const MERMAID_FORMAS: Record<FormaTipo, { abre: string; fecha: string }> = {
   hexagono: { abre: '{{', fecha: '}}' },
   paralelogramo: { abre: '[/', fecha: '/]' },
   cilindro: { abre: '[(', fecha: ')]' },
+  // Sem forma nativa equivalente; o desenho real e preservado no meta/XML.
+  seta: { abre: '[', fecha: ']' },
   circulo: { abre: '((', fecha: '))' },
   // Sem forma nativa equivalente — exportado como círculo, tipo real preservado no meta.
   elipse: { abre: '((', fecha: '))' },
@@ -85,6 +94,7 @@ const MERMAID_FORMAS: Record<FormaTipo, { abre: string; fecha: string }> = {
   frame: { abre: '[', fecha: ']' },
   grupo: { abre: '[', fecha: ']' },
   swimlane: { abre: '[', fecha: ']' },
+  texto: { abre: '[', fecha: ']' },
   imagem: { abre: '[', fecha: ']' },
 };
 
@@ -224,7 +234,7 @@ export class FluxogramaService {
               de: idDe,
               para: idPara,
               texto: this.desescapaMermaid(rotulo.replace(/^"(.*)"$/, '$1')),
-              cor: '#5b7cff',
+              cor: '#00ffd1',
               espessura: 2,
               tracejada: seta.includes('.'),
               setaInicio: seta.startsWith('<'),
@@ -261,7 +271,9 @@ export class FluxogramaService {
       linhas.push(
         `    <no id="${esc(n.id)}" tipo="${n.tipo}" x="${n.x}" y="${n.y}" largura="${n.largura}" altura="${n.altura}"` +
           ` corFundo="${esc(n.corFundo)}" corBorda="${esc(n.corBorda)}" espessuraBorda="${n.espessuraBorda}"` +
-          ` corTexto="${esc(n.corTexto)}" tipoTraco="${n.tipoTraco}"` +
+          ` corTexto="${esc(n.corTexto)}" tamanhoFonte="${this.normalizaTamanhoFonte(n.tamanhoFonte)}" tipoTraco="${n.tipoTraco}"` +
+          (n.alinhamentoTexto ? ` alinhamentoTexto="${n.alinhamentoTexto}"` : '') +
+          (n.alinhamentoVerticalTexto ? ` alinhamentoVerticalTexto="${n.alinhamentoVerticalTexto}"` : '') +
           (n.src ? ` src="${esc(n.src)}"` : '') +
           (n.escalaImagem != null ? ` escalaImagem="${n.escalaImagem}"` : '') +
           (n.raioBordaImagem != null ? ` raioBordaImagem="${n.raioBordaImagem}"` : '') +
@@ -309,7 +321,10 @@ export class FluxogramaService {
         corBorda: el.getAttribute('corBorda') || base.corBorda,
         espessuraBorda: this.num(el.getAttribute('espessuraBorda'), base.espessuraBorda),
         corTexto: el.getAttribute('corTexto') || base.corTexto,
+        tamanhoFonte: this.normalizaTamanhoFonte(el.getAttribute('tamanhoFonte')),
         tipoTraco: (el.getAttribute('tipoTraco') as TipoTraco) || 'solido',
+        alinhamentoTexto: (el.getAttribute('alinhamentoTexto') as TipoAlinhamentoTexto) || undefined,
+        alinhamentoVerticalTexto: (el.getAttribute('alinhamentoVerticalTexto') as TipoAlinhamentoVerticalTexto) || undefined,
         src: el.getAttribute('src') || undefined,
         escalaImagem: el.getAttribute('escalaImagem') != null ? this.normalizaEscalaImagem(el.getAttribute('escalaImagem')) : undefined,
         raioBordaImagem: el.getAttribute('raioBordaImagem') != null ? this.normalizaRaioBordaImagem(el.getAttribute('raioBordaImagem')) : undefined,
@@ -323,7 +338,7 @@ export class FluxogramaService {
         de: el.getAttribute('de') || '',
         para: el.getAttribute('para') || '',
         texto: el.textContent || '',
-        cor: el.getAttribute('cor') || '#5b7cff',
+        cor: el.getAttribute('cor') || '#00ffd1',
         espessura: this.num(el.getAttribute('espessura'), 2),
         tracejada: el.getAttribute('tracejada') === 'true',
         setaInicio: el.getAttribute('setaInicio') === 'true',
@@ -353,11 +368,14 @@ export class FluxogramaService {
       largura: 150,
       altura: 70,
       texto,
-      corFundo: '#0b2344',
+      corFundo: 'transparent',
       corBorda: '#00ffd1',
       espessuraBorda: 2,
       corTexto: '#f4fbff',
+      tamanhoFonte: 13,
       tipoTraco: 'solido',
+      alinhamentoTexto: 'centro',
+      alinhamentoVerticalTexto: 'meio',
     };
   }
 
@@ -385,8 +403,11 @@ export class FluxogramaService {
       n.corFundo = n.corFundo || base.corFundo;
       n.corBorda = n.corBorda || base.corBorda;
       n.corTexto = n.corTexto || base.corTexto;
+      n.tamanhoFonte = this.normalizaTamanhoFonte(n.tamanhoFonte);
       n.tipo = n.tipo || 'retangulo';
       n.tipoTraco = n.tipoTraco || 'solido';
+      n.alinhamentoTexto = this.normalizaAlinhamentoTexto(n.alinhamentoTexto);
+      n.alinhamentoVerticalTexto = this.normalizaAlinhamentoVerticalTexto(n.alinhamentoVerticalTexto);
       if (n.tipo === 'imagem') {
         n.escalaImagem = this.normalizaEscalaImagem(n.escalaImagem);
         n.raioBordaImagem = this.normalizaRaioBordaImagem(n.raioBordaImagem);
@@ -416,6 +437,20 @@ export class FluxogramaService {
     const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
     if (!Number.isFinite(n)) return 18;
     return Math.min(80, Math.max(0, n));
+  }
+
+  private normalizaTamanhoFonte(v: unknown): number {
+    const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
+    if (!Number.isFinite(n)) return 13;
+    return Math.min(48, Math.max(8, n));
+  }
+
+  private normalizaAlinhamentoTexto(v: unknown): TipoAlinhamentoTexto {
+    return v === 'esquerda' || v === 'direita' || v === 'centro' ? v : 'centro';
+  }
+
+  private normalizaAlinhamentoVerticalTexto(v: unknown): TipoAlinhamentoVerticalTexto {
+    return v === 'topo' || v === 'rodape' || v === 'meio' ? v : 'meio';
   }
 
   private parsePontos(v: string | null): { x: number; y: number }[] | undefined {

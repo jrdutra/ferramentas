@@ -13,6 +13,8 @@ import {
   FormaTipo,
   NoFluxograma,
   TAMANHO_SETA_PADRAO,
+  TipoAlinhamentoTexto,
+  TipoAlinhamentoVerticalTexto,
   TipoTraco,
 } from '../../services/fluxograma.service';
 import { FluxogramaImagemImportService } from '../../services/fluxograma-imagem-import/fluxograma-imagem-import.service';
@@ -24,12 +26,6 @@ interface OpcaoForma {
   tipo: FormaTipo;
   nome: string;
   icone: string;
-}
-
-interface BackupTema {
-  nos: Map<string, { f: string; b: string; t: string }>;
-  con: Map<string, string>;
-  padrao: { corFundo: string; corBorda: string; corTexto: string; corLinha: string };
 }
 
 interface RetanguloCanvas {
@@ -49,6 +45,11 @@ interface EditorTextoInline {
   height: number;
 }
 
+interface ClipboardFluxograma {
+  nos: NoFluxograma[];
+  conexoes: ConexaoFluxograma[];
+}
+
 @Component({
   selector: 'app-editor-fluxograma',
   standalone: true,
@@ -62,10 +63,12 @@ export class EditorFluxogramaComponent implements OnInit {
   @ViewChild('editorTextoInline') editorTextoInlineEl?: ElementRef<HTMLTextAreaElement>;
 
   readonly formas: OpcaoForma[] = [
+    { tipo: 'texto', nome: 'Texto', icone: 'title' },
     { tipo: 'retangulo', nome: 'Processo', icone: 'crop_16_9' },
     { tipo: 'arredondado', nome: 'Arredondado', icone: 'rounded_corner' },
     { tipo: 'terminador', nome: 'Início/Fim', icone: 'stadium' },
     { tipo: 'losango', nome: 'Decisão', icone: 'change_history' },
+    { tipo: 'seta', nome: 'Seta desenhada', icone: 'keyboard_backspace' },
     { tipo: 'circulo', nome: 'Círculo', icone: 'circle' },
     { tipo: 'elipse', nome: 'Elipse', icone: 'lens_blur' },
     { tipo: 'paralelogramo', nome: 'Entrada/Saída', icone: 'polyline' },
@@ -560,12 +563,27 @@ export class EditorFluxogramaComponent implements OnInit {
   conexaoOrigemId: string | null = null;
 
   // Estilos padrão aplicados a novos elementos.
-  padrao = {
-    corFundo: '#0b2344',
+  private readonly temaPadraoEscuro = {
+    corFundo: 'transparent',
     corBorda: '#00ffd1',
-    espessuraBorda: 2,
     corTexto: '#f4fbff',
-    corLinha: '#5b7cff',
+    corLinha: '#00ffd1',
+  };
+
+  private readonly temaPadraoClaro = {
+    corFundo: 'transparent',
+    corBorda: '#1f2937',
+    corTexto: '#111827',
+    corLinha: '#334155',
+  };
+
+  padrao = {
+    corFundo: this.temaPadraoEscuro.corFundo,
+    corBorda: this.temaPadraoEscuro.corBorda,
+    espessuraBorda: 2,
+    corTexto: this.temaPadraoEscuro.corTexto,
+    tamanhoFonte: 13,
+    corLinha: this.temaPadraoEscuro.corLinha,
     espessuraLinha: 2,
     tamanhoSeta: TAMANHO_SETA_PADRAO,
     tipoTraco: 'solido' as TipoTraco,
@@ -573,7 +591,6 @@ export class EditorFluxogramaComponent implements OnInit {
 
   temaClaro = false;
   aviso = '';
-  private backupTema: BackupTema | null = null;
   private substituirImagemId: string | null = null;
   private readonly chaveLocal = 'fluxograma-editor-v1';
 
@@ -629,6 +646,8 @@ export class EditorFluxogramaComponent implements OnInit {
   private resizeBounds = { x: 0, y: 0, largura: 0, altura: 0 };
 
   private contador = 0;
+  private clipboardFluxograma: ClipboardFluxograma | null = null;
+  private colagensSequenciais = 0;
 
   constructor(
     private dataService: DataService,
@@ -689,6 +708,12 @@ export class EditorFluxogramaComponent implements OnInit {
     if (tipo === 'circulo') {
       largura = 90;
       altura = 90;
+    } else if (tipo === 'texto') {
+      largura = 180;
+      altura = 54;
+    } else if (tipo === 'seta') {
+      largura = 220;
+      altura = 110;
     } else if (tipo === 'swimlane') {
       largura = 340;
       altura = 220;
@@ -704,11 +729,14 @@ export class EditorFluxogramaComponent implements OnInit {
       largura,
       altura,
       texto: this.textoInicial(tipo),
-      corFundo: this.padrao.corFundo,
-      corBorda: this.padrao.corBorda,
-      espessuraBorda: this.padrao.espessuraBorda,
+      corFundo: tipo === 'texto' ? 'transparent' : this.padrao.corFundo,
+      corBorda: tipo === 'texto' ? 'transparent' : this.padrao.corBorda,
+      espessuraBorda: tipo === 'texto' ? 0 : this.padrao.espessuraBorda,
       corTexto: this.padrao.corTexto,
+      tamanhoFonte: tipo === 'texto' ? 15 : this.normalizarTamanhoFonte(this.padrao.tamanhoFonte),
       tipoTraco: this.padrao.tipoTraco,
+      alinhamentoTexto: 'centro',
+      alinhamentoVerticalTexto: 'meio',
     };
     // Contêineres entram no início do array para ficarem atrás dos demais.
     if (this.ehContainer(tipo)) this.nos.unshift(no);
@@ -772,7 +800,10 @@ export class EditorFluxogramaComponent implements OnInit {
       corBorda: this.padrao.corBorda,
       espessuraBorda: 0,
       corTexto: this.padrao.corTexto,
+      tamanhoFonte: this.normalizarTamanhoFonte(this.padrao.tamanhoFonte),
       tipoTraco: 'solido',
+      alinhamentoTexto: 'centro',
+      alinhamentoVerticalTexto: 'meio',
       src,
       escalaImagem: this.normalizarEscalaImagem(opcoes.escalaImagem ?? 1),
       raioBordaImagem: this.normalizarRaioBordaImagem(opcoes.raioBordaImagem ?? 18),
@@ -830,6 +861,10 @@ export class EditorFluxogramaComponent implements OnInit {
         return 'Grupo';
       case 'swimlane':
         return 'Raia';
+      case 'texto':
+        return 'Texto';
+      case 'seta':
+        return '';
       default:
         return 'Texto';
     }
@@ -1042,6 +1077,29 @@ export class EditorFluxogramaComponent implements OnInit {
   aoTeclar(evento: KeyboardEvent): void {
     const alvo = evento.target as HTMLElement | null;
     if (alvo && ['INPUT', 'TEXTAREA', 'SELECT'].includes(alvo.tagName)) return;
+    const deslocamentos: Record<string, { dx: number; dy: number }> = {
+      ArrowLeft: { dx: -1, dy: 0 },
+      ArrowRight: { dx: 1, dy: 0 },
+      ArrowUp: { dx: 0, dy: -1 },
+      ArrowDown: { dx: 0, dy: 1 },
+    };
+    const deslocamento = deslocamentos[evento.key];
+    if (deslocamento && this.nosSelecionados.size > 0) {
+      const passo = evento.shiftKey ? 10 : 1;
+      evento.preventDefault();
+      this.moverNosSelecionados(deslocamento.dx * passo, deslocamento.dy * passo);
+      return;
+    }
+    if ((evento.ctrlKey || evento.metaKey) && evento.key.toLowerCase() === 'c' && this.temSelecao) {
+      evento.preventDefault();
+      this.copiarSelecionados();
+      return;
+    }
+    if ((evento.ctrlKey || evento.metaKey) && evento.key.toLowerCase() === 'v') {
+      evento.preventDefault();
+      this.colarSelecionados();
+      return;
+    }
     if ((evento.key === 'Delete' || evento.key === 'Backspace') && this.temSelecao) {
       evento.preventDefault();
       this.excluirSelecionado();
@@ -1052,6 +1110,20 @@ export class EditorFluxogramaComponent implements OnInit {
       this.conexaoOrigemId = null;
       this.ferramenta = 'selecionar';
     }
+  }
+
+  private moverNosSelecionados(dx: number, dy: number): void {
+    if (!dx && !dy) return;
+    let moveu = false;
+    this.nos.forEach((no) => {
+      if (!this.nosSelecionados.has(no.id)) return;
+      no.x = Math.round(no.x + dx);
+      no.y = Math.round(no.y + dy);
+      moveu = true;
+    });
+    this.guiaV = null;
+    this.guiaH = null;
+    if (moveu) this.salvar();
   }
 
   private criarConexao(de: string, para: string): ConexaoFluxograma {
@@ -1065,7 +1137,7 @@ export class EditorFluxogramaComponent implements OnInit {
       tracejada: false,
       setaInicio: false,
       setaFim: true,
-      tamanhoSeta: this.padrao.tamanhoSeta,
+      tamanhoSeta: this.normalizarTamanhoSeta(this.padrao.tamanhoSeta),
       curvatura: 0,
       tipoTraco: this.padrao.tipoTraco,
     };
@@ -1139,6 +1211,74 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   // ─────────────────────── Coordenadas / viewport ───────────────────────
+
+  private copiarSelecionados(): void {
+    const idsNos = new Set(this.nosSelecionados);
+    for (const idConexao of this.conexoesSelecionadas) {
+      const c = this.conexoes.find((x) => x.id === idConexao);
+      if (c) {
+        idsNos.add(c.de);
+        idsNos.add(c.para);
+      }
+    }
+
+    const nos = this.nos.filter((n) => idsNos.has(n.id)).map((n) => this.clonarNo(n));
+    const conexoes = this.conexoes
+      .filter((c) => (this.conexoesSelecionadas.has(c.id) || (idsNos.has(c.de) && idsNos.has(c.para))) && idsNos.has(c.de) && idsNos.has(c.para))
+      .map((c) => this.clonarConexao(c));
+
+    if (!nos.length && !conexoes.length) return;
+    this.clipboardFluxograma = { nos, conexoes };
+    this.colagensSequenciais = 0;
+    this.avisar(`${nos.length} forma(s) copiada(s).`);
+  }
+
+  private colarSelecionados(): void {
+    if (!this.clipboardFluxograma || !this.clipboardFluxograma.nos.length) return;
+    this.colagensSequenciais += 1;
+    const deslocamento = 28 * this.colagensSequenciais;
+    const mapaIds = new Map<string, string>();
+    const novosNos = this.clipboardFluxograma.nos.map((n) => {
+      const novo = this.clonarNo(n);
+      const idNovo = this.novoId('n');
+      mapaIds.set(n.id, idNovo);
+      novo.id = idNovo;
+      novo.x = Math.round(novo.x + deslocamento);
+      novo.y = Math.round(novo.y + deslocamento);
+      return novo;
+    });
+
+    const novasConexoes = this.clipboardFluxograma.conexoes
+      .filter((c) => mapaIds.has(c.de) && mapaIds.has(c.para))
+      .map((c) => {
+        const nova = this.clonarConexao(c);
+        nova.id = this.novoId('e');
+        nova.de = mapaIds.get(c.de)!;
+        nova.para = mapaIds.get(c.para)!;
+        if (nova.pontos?.length) {
+          nova.pontos = nova.pontos.map((p) => ({ x: Math.round(p.x + deslocamento), y: Math.round(p.y + deslocamento) }));
+        }
+        nova.tamanhoSeta = this.normalizarTamanhoSeta(nova.tamanhoSeta);
+        return nova;
+      });
+
+    this.nos.push(...novosNos);
+    this.conexoes.push(...novasConexoes);
+    this.nosSelecionados = new Set(novosNos.map((n) => n.id));
+    this.conexoesSelecionadas = new Set(novasConexoes.map((c) => c.id));
+    this.definirAtivoDaSelecao();
+    this.ferramenta = 'selecionar';
+    this.conexaoOrigemId = null;
+    this.salvar();
+  }
+
+  private clonarNo(no: NoFluxograma): NoFluxograma {
+    return JSON.parse(JSON.stringify(no)) as NoFluxograma;
+  }
+
+  private clonarConexao(conexao: ConexaoFluxograma): ConexaoFluxograma {
+    return JSON.parse(JSON.stringify(conexao)) as ConexaoFluxograma;
+  }
 
   private pontoCanvas(evento: MouseEvent): { x: number; y: number } {
     const svg = this.svgCanvas?.nativeElement;
@@ -1293,51 +1433,7 @@ export class EditorFluxogramaComponent implements OnInit {
   /** Alterna o tema do gráfico entre escuro (atual) e claro (fundo branco, traços escuros). */
   alternarTema(): void {
     this.temaClaro = !this.temaClaro;
-    if (this.temaClaro) {
-      this.backupTema = {
-        nos: new Map(this.nos.map((n) => [n.id, { f: n.corFundo, b: n.corBorda, t: n.corTexto }])),
-        con: new Map(this.conexoes.map((c) => [c.id, c.cor])),
-        padrao: {
-          corFundo: this.padrao.corFundo,
-          corBorda: this.padrao.corBorda,
-          corTexto: this.padrao.corTexto,
-          corLinha: this.padrao.corLinha,
-        },
-      };
-      const borda = '#1f2937';
-      const texto = '#111827';
-      const fundo = '#ffffff';
-      const linha = '#334155';
-      this.nos.forEach((n) => {
-        n.corFundo = fundo;
-        n.corBorda = borda;
-        n.corTexto = texto;
-      });
-      this.conexoes.forEach((c) => (c.cor = linha));
-      this.padrao.corFundo = fundo;
-      this.padrao.corBorda = borda;
-      this.padrao.corTexto = texto;
-      this.padrao.corLinha = linha;
-    } else if (this.backupTema) {
-      const bk = this.backupTema;
-      this.nos.forEach((n) => {
-        const o = bk.nos.get(n.id);
-        if (o) {
-          n.corFundo = o.f;
-          n.corBorda = o.b;
-          n.corTexto = o.t;
-        }
-      });
-      this.conexoes.forEach((c) => {
-        const o = bk.con.get(c.id);
-        if (o !== undefined) c.cor = o;
-      });
-      this.padrao.corFundo = bk.padrao.corFundo;
-      this.padrao.corBorda = bk.padrao.corBorda;
-      this.padrao.corTexto = bk.padrao.corTexto;
-      this.padrao.corLinha = bk.padrao.corLinha;
-      this.backupTema = null;
-    }
+    this.aplicarCoresPadraoTema(this.temaClaro ? this.temaPadraoClaro : this.temaPadraoEscuro);
     this.salvar();
   }
 
@@ -1346,6 +1442,54 @@ export class EditorFluxogramaComponent implements OnInit {
     if (tipo === 'giz') return 'url(#traco-giz)';
     if (tipo === 'lapis') return 'url(#traco-lapis)';
     return null;
+  }
+
+  private aplicarCoresPadraoTema(tema: { corFundo: string; corBorda: string; corTexto: string; corLinha: string }): void {
+    this.nos.forEach((n) => {
+      if (!this.noUsaCoresPadrao(n)) return;
+      n.corFundo = tema.corFundo;
+      n.corBorda = tema.corBorda;
+      n.corTexto = tema.corTexto;
+    });
+    this.conexoes.forEach((c) => {
+      if (this.conexaoUsaCorPadrao(c.cor)) c.cor = tema.corLinha;
+    });
+    if (this.padraoUsaCoresPadrao()) {
+      this.padrao.corFundo = tema.corFundo;
+      this.padrao.corBorda = tema.corBorda;
+      this.padrao.corTexto = tema.corTexto;
+      this.padrao.corLinha = tema.corLinha;
+    }
+  }
+
+  private noUsaCoresPadrao(no: NoFluxograma): boolean {
+    return (
+      this.fundoUsaCorPadrao(no.corFundo) &&
+      this.corEmLista(no.corBorda, ['#00ffd1', '#1f2937']) &&
+      this.corEmLista(no.corTexto, ['#f4fbff', '#111827'])
+    );
+  }
+
+  private padraoUsaCoresPadrao(): boolean {
+    return (
+      this.fundoUsaCorPadrao(this.padrao.corFundo) &&
+      this.corEmLista(this.padrao.corBorda, ['#00ffd1', '#1f2937']) &&
+      this.corEmLista(this.padrao.corTexto, ['#f4fbff', '#111827']) &&
+      this.conexaoUsaCorPadrao(this.padrao.corLinha)
+    );
+  }
+
+  private fundoUsaCorPadrao(cor: string | null | undefined): boolean {
+    return this.ehSemCor(cor) || this.corEmLista(cor, ['#0b2344', '#ffffff']);
+  }
+
+  private conexaoUsaCorPadrao(cor: string | null | undefined): boolean {
+    return this.corEmLista(cor, ['#00ffd1', '#334155', '#5b7cff']);
+  }
+
+  private corEmLista(cor: string | null | undefined, lista: string[]): boolean {
+    const normalizada = String(cor || '').trim().toLowerCase();
+    return lista.some((item) => item.toLowerCase() === normalizada);
   }
 
   aoRolar(evento: WheelEvent): void {
@@ -1658,6 +1802,12 @@ export class EditorFluxogramaComponent implements OnInit {
     });
   }
 
+  private normalizarTamanhosFonte(): void {
+    this.nos.forEach((n) => {
+      n.tamanhoFonte = this.normalizarTamanhoFonte(n.tamanhoFonte ?? (n.tipo === 'texto' ? 15 : 13));
+    });
+  }
+
   /** Pontos do polígono (losango, paralelogramo, hexágono) em coordenadas absolutas. */
   pontosPoligono(no: NoFluxograma): string {
     const { x, y, largura: w, altura: h } = no;
@@ -1692,6 +1842,51 @@ export class EditorFluxogramaComponent implements OnInit {
     const { x, y, largura: w } = no;
     const r = Math.min(no.altura * 0.18, 14);
     return `M ${x} ${y + r} A ${w / 2} ${r} 0 0 0 ${x + w} ${y + r}`;
+  }
+
+  caminhoSetaDesenhada(no: NoFluxograma): string {
+    const { x, y, largura: w, altura: h } = no;
+    const ponta = x + Math.max(7, Math.min(w * 0.08, 14));
+    const eixo = y + h / 2;
+    const topoCabecaX = x + w * 0.42;
+    const corpoInicioX = x + w * 0.56;
+    const direita = x + w - Math.max(7, Math.min(w * 0.06, 12));
+    const raio = Math.max(4, Math.min(h * 0.08, 10));
+    const topo = y + h * 0.08;
+    const topoCorpo = y + h * 0.33;
+    const baseCorpo = y + h * 0.67;
+    const base = y + h * 0.92;
+
+    return [
+      `M ${ponta} ${eixo}`,
+      `Q ${x + w * 0.02} ${eixo} ${ponta + raio} ${eixo - raio}`,
+      `L ${topoCabecaX - raio} ${topo}`,
+      `Q ${topoCabecaX} ${topo - raio * 0.4} ${topoCabecaX + raio} ${topo + raio}`,
+      `L ${corpoInicioX} ${topoCorpo}`,
+      `L ${direita - raio} ${topoCorpo}`,
+      `Q ${direita} ${topoCorpo} ${direita} ${topoCorpo + raio}`,
+      `L ${direita} ${baseCorpo - raio}`,
+      `Q ${direita} ${baseCorpo} ${direita - raio} ${baseCorpo}`,
+      `L ${corpoInicioX} ${baseCorpo}`,
+      `L ${topoCabecaX + raio} ${base - raio}`,
+      `Q ${topoCabecaX} ${base + raio * 0.4} ${topoCabecaX - raio} ${base}`,
+      `L ${ponta + raio} ${eixo + raio}`,
+      `Q ${x + w * 0.02} ${eixo} ${ponta} ${eixo}`,
+      'Z',
+    ].join(' ');
+  }
+
+  detalhesSetaDesenhada(no: NoFluxograma): string {
+    const { x, y, largura: w, altura: h } = no;
+    return [
+      `M ${x + w * 0.27} ${y + h * 0.45} L ${x + w * 0.42} ${y + h * 0.23}`,
+      `M ${x + w * 0.18} ${y + h * 0.54} L ${x + w * 0.23} ${y + h * 0.49}`,
+      `M ${x + w * 0.22} ${y + h * 0.61} L ${x + w * 0.42} ${y + h * 0.84}`,
+    ].join(' ');
+  }
+
+  espessuraDetalheSeta(no: NoFluxograma): number {
+    return Math.max(2, no.espessuraBorda + 2);
   }
 
   raioArredondado(no: NoFluxograma): number {
@@ -1775,7 +1970,7 @@ export class EditorFluxogramaComponent implements OnInit {
   /** Quebra o texto em linhas para renderizar em tspans. */
   linhasTexto(no: NoFluxograma): string[] {
     const bruto = (no.texto || '').split(/\r?\n/);
-    const maxChars = Math.max(6, Math.floor(no.largura / 8));
+    const maxChars = Math.max(4, Math.floor(no.largura / (this.tamanhoFonte(no) * 0.58)));
     const linhas: string[] = [];
     for (const parte of bruto) {
       if (parte.length <= maxChars) {
@@ -1795,6 +1990,67 @@ export class EditorFluxogramaComponent implements OnInit {
       if (atual) linhas.push(atual);
     }
     return linhas.length ? linhas : [''];
+  }
+
+  tamanhoFonte(no: NoFluxograma): number {
+    return this.normalizarTamanhoFonte(no.tamanhoFonte ?? (no.tipo === 'texto' ? 15 : 13));
+  }
+
+  alturaLinhaTexto(no: NoFluxograma): number {
+    return Math.round(this.tamanhoFonte(no) * 1.25);
+  }
+
+  temTextoInterno(no: NoFluxograma): boolean {
+    return no.tipo !== 'imagem' && !this.ehContainer(no.tipo);
+  }
+
+  alinhamentoTexto(no: NoFluxograma): TipoAlinhamentoTexto {
+    return no.alinhamentoTexto === 'esquerda' || no.alinhamentoTexto === 'direita' ? no.alinhamentoTexto : 'centro';
+  }
+
+  alinhamentoVerticalTexto(no: NoFluxograma): TipoAlinhamentoVerticalTexto {
+    return no.alinhamentoVerticalTexto === 'topo' || no.alinhamentoVerticalTexto === 'rodape' ? no.alinhamentoVerticalTexto : 'meio';
+  }
+
+  textoAnchor(no: NoFluxograma): 'start' | 'middle' | 'end' {
+    const a = this.alinhamentoTexto(no);
+    if (a === 'esquerda') return 'start';
+    if (a === 'direita') return 'end';
+    return 'middle';
+  }
+
+  textoX(no: NoFluxograma): number {
+    const margem = Math.min(18, Math.max(10, no.largura * 0.08));
+    const a = this.alinhamentoTexto(no);
+    if (a === 'esquerda') return no.x + margem;
+    if (a === 'direita') return no.x + no.largura - margem;
+    return this.cx(no);
+  }
+
+  textoY(no: NoFluxograma): number {
+    const margem = Math.min(18, Math.max(10, no.altura * 0.12));
+    const alturaLinha = this.alturaLinhaTexto(no);
+    const total = this.linhasTexto(no).length * alturaLinha;
+    const a = this.alinhamentoVerticalTexto(no);
+    if (a === 'topo') return no.y + margem;
+    if (a === 'rodape') return no.y + no.altura - margem - total;
+    return this.cy(no) - total / 2;
+  }
+
+  setAlinhamentoTexto(no: NoFluxograma, valor: TipoAlinhamentoTexto): void {
+    no.alinhamentoTexto = valor;
+    this.salvar();
+  }
+
+  setAlinhamentoVerticalTexto(no: NoFluxograma, valor: TipoAlinhamentoVerticalTexto): void {
+    no.alinhamentoVerticalTexto = valor;
+    this.salvar();
+  }
+
+  private normalizarTamanhoFonte(valor: unknown): number {
+    const n = typeof valor === 'number' ? valor : parseFloat(String(valor ?? ''));
+    if (!Number.isFinite(n)) return 13;
+    return Math.min(48, Math.max(8, Math.round(n)));
   }
 
   editarTextoNo(evento: MouseEvent, no: NoFluxograma): void {
@@ -1907,6 +2163,7 @@ export class EditorFluxogramaComponent implements OnInit {
   private carregar(fluxo: Fluxograma): void {
     this.nos = fluxo.nos;
     this.conexoes = fluxo.conexoes;
+    this.normalizarTamanhosFonte();
     this.normalizarTamanhoSetas();
     this.limparSelecao();
     // Ajusta o contador para evitar colisão de ids.
@@ -1982,7 +2239,7 @@ export class EditorFluxogramaComponent implements OnInit {
         corBorda: this.padrao.corBorda,
         corTexto: this.padrao.corTexto,
         corLinha: this.padrao.corLinha,
-        tamanhoSeta: this.padrao.tamanhoSeta,
+        tamanhoSeta: this.normalizarTamanhoSeta(this.padrao.tamanhoSeta),
         tipoTraco: this.padrao.tipoTraco,
       });
       this.painelRevisaoImagem = true;
@@ -2118,7 +2375,7 @@ export class EditorFluxogramaComponent implements OnInit {
     if (defs) {
       let i = 0;
       clone.querySelectorAll('.conexao-linha').forEach((linha) => {
-        const cor = linha.getAttribute('stroke') || '#5b7cff';
+        const cor = linha.getAttribute('stroke') || '#00ffd1';
         const tamanho = this.normalizarTamanhoSeta(linha.getAttribute('data-tamanho-seta'));
         if (linha.getAttribute('marker-end')) {
           const id = `exp-fim-${i}`;
@@ -2308,8 +2565,11 @@ export class EditorFluxogramaComponent implements OnInit {
       this.panY = d.panY ?? 40;
       this.temaClaro = !!d.temaClaro;
       if (d.padrao) this.padrao = { ...this.padrao, ...d.padrao };
-      this.padrao.tamanhoSeta = this.normalizarTamanhoSeta(this.padrao.tamanhoSeta);
+      this.padrao.tamanhoFonte = this.normalizarTamanhoFonte(this.padrao.tamanhoFonte);
+      this.padrao.tamanhoSeta = TAMANHO_SETA_PADRAO;
+      this.normalizarTamanhosFonte();
       this.normalizarTamanhoSetas();
+      this.aplicarCoresPadraoTema(this.temaClaro ? this.temaPadraoClaro : this.temaPadraoEscuro);
       this.contador = d.contador ?? 0;
       return true;
     } catch {
@@ -2369,6 +2629,11 @@ export class EditorFluxogramaComponent implements OnInit {
     this.salvar();
   }
 
+  setTamanhoFonte(no: NoFluxograma, v: string): void {
+    no.tamanhoFonte = this.normalizarTamanhoFonte(v);
+    this.salvar();
+  }
+
   ehSemCor(cor: string | null | undefined): boolean {
     return !cor || cor === 'transparent' || cor === 'none' || cor === 'rgba(0,0,0,0)';
   }
@@ -2410,6 +2675,11 @@ export class EditorFluxogramaComponent implements OnInit {
 
   setTamanhoSetaPadrao(v: string): void {
     this.padrao.tamanhoSeta = this.normalizarTamanhoSeta(v);
+    this.salvar();
+  }
+
+  setTamanhoFontePadrao(v: string): void {
+    this.padrao.tamanhoFonte = this.normalizarTamanhoFonte(v);
     this.salvar();
   }
 

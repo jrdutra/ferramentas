@@ -285,7 +285,17 @@
   font-size: 13px;
   font-weight: 600;
   pointer-events: none;
-  dominant-baseline: middle;
+  dominant-baseline: hanging;
+}
+.no-texto.texto-livre { font-size: 15px; }
+
+.seta-desenhada-corpo,
+.seta-desenhada-detalhe {
+  vector-effect: non-scaling-stroke;
+}
+
+.seta-desenhada-detalhe {
+  pointer-events: none;
 }
 
 .icone-legenda {
@@ -518,6 +528,31 @@
   cursor: pointer;
 }
 
+.alinhamento-texto { gap: 0.4em; }
+.grupo-alinhamento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35em;
+}
+.grupo-alinhamento button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.1em;
+  color: var(--text-muted);
+  border: 1px solid rgba(91, 124, 255, 0.34);
+  border-radius: 0.4em;
+  background: rgba(3, 13, 30, 0.82);
+  cursor: pointer;
+}
+.grupo-alinhamento button:hover,
+.grupo-alinhamento button.ativo {
+  color: #ffffff;
+  border-color: #ff2db2;
+  background: rgba(255, 45, 178, 0.16);
+}
+.grupo-alinhamento mat-icon { font-size: 1.15em; width: 1.15em; height: 1.15em; }
+
 .campo-duplo { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6em; }
 
 .campo-check {
@@ -690,4 +725,130 @@
   .menu-botoes { grid-template-columns: repeat(auto-fill, minmax(2.4em, 1fr)); }
   .fluxo-canvas-wrap { height: 55vh; }
   .fluxo-painel { max-height: none; }
+}
+
+/* Modo escuro original: verde/aqua com texto claro. */
+.fluxo-barra,
+.fluxo-menu-esq,
+.fluxo-painel {
+  background:
+    linear-gradient(145deg, rgba(5, 18, 39, 0.96), rgba(2, 9, 23, 0.98)) padding-box,
+    conic-gradient(from 135deg, rgba(0, 255, 209, 0.14), rgba(0, 255, 136, 0.54), rgba(0, 255, 209, 0.46), rgba(255, 234, 0, 0.24), rgba(0, 255, 209, 0.14)) border-box;
+  color: var(--text-main);
+}
+
+.fluxo-canvas-wrap:not(.tema-claro) {
+  background:
+    linear-gradient(145deg, rgba(4, 14, 32, 0.96), rgba(2, 7, 20, 0.98)) padding-box,
+    conic-gradient(from 135deg, rgba(0, 255, 209, 0.14), rgba(0, 255, 136, 0.48), rgba(0, 255, 209, 0.42), rgba(255, 234, 0, 0.18), rgba(0, 255, 209, 0.14)) border-box;
+}
+
+.ferr-btn,
+.menu-filtro,
+.campo textarea,
+.campo input[type="text"],
+.campo input[type="number"],
+.campo select,
+.sem-cor-btn,
+.grupo-alinhamento button,
+.acao-btn {
+  color: var(--text-main);
+  border-color: rgba(0, 255, 209, 0.3);
+}
+
+.ferr-btn:hover:not(:disabled),
+.btn-emoji:hover,
+.grupo-alinhamento button:hover,
+.acao-btn:hover {
+  border-color: #00ffd1;
+  background: rgba(0, 255, 209, 0.12);
+  box-shadow: 0 0 12px rgba(0, 255, 209, 0.18);
+}
+
+.ferr-btn.ativo,
+.grupo-alinhamento button.ativo,
+.acao-btn.destaque {
+  color: var(--text-main);
+  border-color: rgba(0, 255, 209, 0.62);
+  background: linear-gradient(135deg, rgba(0, 255, 209, 0.22), rgba(0, 255, 136, 0.14));
+  box-shadow: 0 0 14px rgba(0, 255, 209, 0.22);
+}
+
+.menu-secao-titulo,
+.menu-secao-cab,
+.menu-secao-cab.estatica,
+.menu-secao.sub .menu-secao-cab,
+.fluxo-painel h3 mat-icon,
+.campo > span b,
+.painel-troca-img,
+.zoom-label,
+.modal-dados-info b,
+.modal-dados-msg {
+  color: #00ffd1;
+}
+
+.menu-subgrupos {
+  border-left-color: rgba(0, 255, 209, 0.24);
+}
+
+.menu-secao-cab:hover:not(.estatica),
+.menu-filtro-limpar:hover,
+.modal-fechar:hover {
+  color: #d9fff5;
+}
+
+.contorno-selecao,
+.alca,
+.ponto-ligacao,
+.guia-alinhamento {
+  stroke: #00ffd1;
+}
+
+.alca:hover,
+.ponto-ligacao:hover {
+  fill: #00ffd1;
+}
+
+.conexao-linha.selecionada {
+  filter: drop-shadow(0 0 4px #00ffd1);
+}
+
+.dica-canvas {
+  border-color: rgba(0, 255, 209, 0.4);
+}
+
+.dica-canvas mat-icon {
+  color: #00ffd1;
+}
+
+.campo textarea:focus,
+.campo input:focus,
+.campo select:focus,
+.modal-dados-texto:focus {
+  border-color: #00ffd1;
+  box-shadow: 0 0 0 3px rgba(0, 255, 209, 0.14);
+}
+
+.campo.cor input[type="color"],
+.sem-cor-btn.ativo {
+  border-color: #00ffd1;
+}
+
+.sem-cor-btn.ativo {
+  box-shadow: 0 0 0 2px rgba(0, 255, 209, 0.18);
+}
+
+.campo input[type="range"],
+.campo-check input[type="checkbox"] {
+  accent-color: #00ffd1;
+}
+
+.painel-troca-img {
+  border-color: rgba(0, 255, 209, 0.3);
+  background: rgba(0, 255, 209, 0.08);
+}
+
+.painel-troca-img:hover {
+  border-color: #00ffd1;
+  background: rgba(0, 255, 209, 0.16);
 }

@@ -310,6 +310,21 @@
               [attr.fill]="temaClaro ? '#111827' : '#f4fbff'">{{ no.texto }}</text>
 
             <!-- Retângulo / arredondado / terminador -->
+            <rect *ngIf="no.tipo === 'texto' && (!ehSemCor(no.corFundo) || no.espessuraBorda > 0)"
+              [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura" rx="6"
+              [attr.fill]="no.corFundo" [attr.stroke]="no.corBorda" [attr.stroke-width]="no.espessuraBorda"
+              [attr.filter]="filtroTraco(no.tipoTraco)" />
+
+            <!-- Seta desenhada -->
+            <ng-container *ngIf="no.tipo === 'seta'">
+              <path class="seta-desenhada-corpo" [attr.d]="caminhoSetaDesenhada(no)"
+                [attr.fill]="no.corFundo" [attr.stroke]="no.corBorda" [attr.stroke-width]="no.espessuraBorda"
+                stroke-linejoin="round" [attr.filter]="filtroTraco(no.tipoTraco)" />
+              <path class="seta-desenhada-detalhe" [attr.d]="detalhesSetaDesenhada(no)"
+                fill="none" [attr.stroke]="no.corTexto" [attr.stroke-width]="espessuraDetalheSeta(no)"
+                stroke-linecap="round" stroke-linejoin="round" opacity="0.7" />
+            </ng-container>
+
             <rect *ngIf="no.tipo === 'retangulo' || no.tipo === 'arredondado' || no.tipo === 'terminador'"
               [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
               [attr.rx]="raioArredondado(no)" [attr.fill]="no.corFundo" [attr.stroke]="no.corBorda"
@@ -346,9 +361,12 @@
             </ng-container>
 
             <!-- Texto -->
-            <text *ngIf="no.tipo !== 'imagem'" class="no-texto" [attr.x]="cx(no)" [attr.y]="cy(no)" text-anchor="middle" [attr.fill]="no.corTexto">
+            <text *ngIf="no.tipo !== 'imagem'" class="no-texto" [class.texto-livre]="no.tipo === 'texto'"
+              [attr.x]="textoX(no)" [attr.y]="textoY(no)"
+              [style.font-size.px]="tamanhoFonte(no)"
+              [attr.text-anchor]="textoAnchor(no)" dominant-baseline="hanging" [attr.fill]="no.corTexto">
               <tspan *ngFor="let linha of linhasTexto(no); let i = index; let total = count"
-                [attr.x]="cx(no)" [attr.dy]="i === 0 ? -(total - 1) * 8 : 16">{{ linha }}</tspan>
+                [attr.x]="textoX(no)" [attr.dy]="i === 0 ? 0 : alturaLinhaTexto(no)">{{ linha }}</tspan>
             </text>
 
             <!-- Contorno de seleção -->
@@ -420,6 +438,42 @@
           <textarea rows="2" [(ngModel)]="no.texto"></textarea>
         </label>
 
+        <div class="campo alinhamento-texto" *ngIf="temTextoInterno(no)">
+          <span>Alinhamento horizontal</span>
+          <div class="grupo-alinhamento">
+            <button type="button" [class.ativo]="alinhamentoTexto(no) === 'esquerda'"
+              (click)="setAlinhamentoTexto(no, 'esquerda')" matTooltip="Alinhar à esquerda">
+              <mat-icon>format_align_left</mat-icon>
+            </button>
+            <button type="button" [class.ativo]="alinhamentoTexto(no) === 'centro'"
+              (click)="setAlinhamentoTexto(no, 'centro')" matTooltip="Centralizar">
+              <mat-icon>format_align_center</mat-icon>
+            </button>
+            <button type="button" [class.ativo]="alinhamentoTexto(no) === 'direita'"
+              (click)="setAlinhamentoTexto(no, 'direita')" matTooltip="Alinhar à direita">
+              <mat-icon>format_align_right</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="campo alinhamento-texto" *ngIf="temTextoInterno(no)">
+          <span>Alinhamento vertical</span>
+          <div class="grupo-alinhamento">
+            <button type="button" [class.ativo]="alinhamentoVerticalTexto(no) === 'topo'"
+              (click)="setAlinhamentoVerticalTexto(no, 'topo')" matTooltip="Alinhar ao topo">
+              <mat-icon>vertical_align_top</mat-icon>
+            </button>
+            <button type="button" [class.ativo]="alinhamentoVerticalTexto(no) === 'meio'"
+              (click)="setAlinhamentoVerticalTexto(no, 'meio')" matTooltip="Centralizar verticalmente">
+              <mat-icon>vertical_align_center</mat-icon>
+            </button>
+            <button type="button" [class.ativo]="alinhamentoVerticalTexto(no) === 'rodape'"
+              (click)="setAlinhamentoVerticalTexto(no, 'rodape')" matTooltip="Alinhar ao rodapé">
+              <mat-icon>vertical_align_bottom</mat-icon>
+            </button>
+          </div>
+        </div>
+
         <label class="campo">
           <span>Tipo</span>
           <select [(ngModel)]="no.tipo">
@@ -460,6 +514,12 @@
         <label class="campo cor">
           <span>Cor do texto</span>
           <input type="color" [(ngModel)]="no.corTexto" />
+        </label>
+
+        <label class="campo" *ngIf="temTextoInterno(no)">
+          <span>Tamanho da fonte <b>{{ tamanhoFonte(no) }}px</b></span>
+          <input type="range" min="8" max="48" step="1" [value]="tamanhoFonte(no)"
+            (input)="setTamanhoFonte(no, $any($event.target).value)" />
         </label>
 
         <label class="campo">
@@ -563,6 +623,11 @@
         </div>
         <label class="campo cor"><span>Borda da forma</span><input type="color" [(ngModel)]="padrao.corBorda" /></label>
         <label class="campo cor"><span>Texto da forma</span><input type="color" [(ngModel)]="padrao.corTexto" /></label>
+        <label class="campo">
+          <span>Tamanho da fonte <b>{{ padrao.tamanhoFonte }}px</b></span>
+          <input type="range" min="8" max="48" step="1" [value]="padrao.tamanhoFonte"
+            (input)="setTamanhoFontePadrao($any($event.target).value)" />
+        </label>
         <label class="campo">
           <span>Espessura da borda <b>{{ padrao.espessuraBorda }}px</b></span>
           <input type="range" min="0" max="10" step="0.5" [(ngModel)]="padrao.espessuraBorda" />
