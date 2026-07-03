@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { PDFDocument } from 'pdf-lib';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild, afterNextRender } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -15,6 +15,8 @@ import {
   TAMANHO_SETA_PADRAO,
   TipoAlinhamentoTexto,
   TipoAlinhamentoVerticalTexto,
+  TipoFonte,
+  TipoTextura,
   TipoTraco,
 } from '../../services/fluxograma.service';
 import { FluxogramaImagemImportService } from '../../services/fluxograma-imagem-import/fluxograma-imagem-import.service';
@@ -64,6 +66,7 @@ export class EditorFluxogramaComponent implements OnInit {
 
   readonly formas: OpcaoForma[] = [
     { tipo: 'texto', nome: 'Texto', icone: 'title' },
+    { tipo: 'notas', nome: 'Notas', icone: 'sticky_note_2' },
     { tipo: 'retangulo', nome: 'Processo', icone: 'crop_16_9' },
     { tipo: 'arredondado', nome: 'Arredondado', icone: 'rounded_corner' },
     { tipo: 'terminador', nome: 'Início/Fim', icone: 'stadium' },
@@ -473,6 +476,7 @@ export class EditorFluxogramaComponent implements OnInit {
     else if (tipo === 'cry') detalhe = olhos + '<path d="M34 69 Q50 55 66 69" fill="none" stroke="#2b1d17" stroke-width="5" stroke-linecap="round"/><path d="M29 50 C20 62 25 72 33 70 C40 62 35 54 29 50Z" fill="url(#tear3d)"/><circle cx="31" cy="57" r="2" fill="#fff" opacity=".55"/>';
     else if (tipo === 'angry') { paleta = ['#ffb199', '#ff675f', '#c92a34']; detalhe = '<path d="M29 35 L45 43M71 35 L55 43" stroke="#391414" stroke-width="5" stroke-linecap="round"/><circle cx="38" cy="46" r="4.5" fill="#391414"/><circle cx="62" cy="46" r="4.5" fill="#391414"/><path d="M36 67 Q50 56 64 67" fill="none" stroke="#391414" stroke-width="5" stroke-linecap="round"/><path d="M25 27 l8 -5M75 27 l-8 -5" stroke="#ffddd2" stroke-width="3" opacity=".5" stroke-linecap="round"/>'; }
     else if (tipo === 'party') detalhe = olhos + bochechas + sorrisoAberto + '<path d="M42 14 L72 24 L50 41 Z" fill="#8e7dff" stroke="#2b1d17" stroke-width="3"/><circle cx="68" cy="22" r="3" fill="#ef476f"/><path d="M22 29 C10 20 25 12 18 6M76 73 C92 75 82 59 93 55" fill="none" stroke="#06d6a0" stroke-width="4" stroke-linecap="round"/><circle cx="21" cy="24" r="2.6" fill="#ffbe0b"/><circle cx="81" cy="69" r="2.6" fill="#ef476f"/>';
+    else if (tipo === 'halo') detalhe = olhos + bochechas + sorrisoLinha + '<ellipse cx="50" cy="12" rx="15" ry="4.5" fill="none" stroke="#ffd94a" stroke-width="4"/><ellipse cx="50" cy="12" rx="15" ry="4.5" fill="none" stroke="#fff2b0" stroke-width="1.4"/>';
     else if (tipo === 'scared') { paleta = ['#ecfbff', '#a7e0ff', '#63a7dc']; detalhe = '<circle cx="38" cy="42" r="6" fill="#16324f"/><circle cx="62" cy="42" r="6" fill="#16324f"/><ellipse cx="50" cy="66" rx="10" ry="14" fill="#16324f"/><path d="M25 55 H17M83 55 H75" stroke="#3973aa" stroke-width="4" stroke-linecap="round"/><path d="M32 30 Q38 25 44 30M56 30 Q62 25 68 30" fill="none" stroke="#16324f" stroke-width="3" opacity=".5"/>'; }
     else if (tipo === 'sick') { paleta = ['#d8ffd2', '#91df83', '#4c9a54']; detalhe = olhos + '<path d="M36 64 Q50 58 64 64" fill="none" stroke="#183b21" stroke-width="5" stroke-linecap="round"/><path d="M31 29 C43 21 57 21 69 29" fill="none" stroke="#2f6f3e" stroke-width="5" stroke-linecap="round"/><circle cx="27" cy="52" r="2.6" fill="#2f6f3e" opacity=".45"/><circle cx="72" cy="58" r="2" fill="#2f6f3e" opacity=".45"/>'; }
     else if (tipo === 'cold') { paleta = ['#eaffff', '#9de7ef', '#4aa7c5']; detalhe = '<circle cx="38" cy="42" r="4.5" fill="#16324f"/><circle cx="62" cy="42" r="4.5" fill="#16324f"/><path d="M38 63 h24" stroke="#16324f" stroke-width="5" stroke-linecap="round"/><path d="M31 75 h38M35 81 h30" stroke="#16324f" stroke-width="3" stroke-linecap="round"/><path d="M24 31 l5 5M76 31 l-5 5M50 18 v8" stroke="#fff" stroke-width="3" opacity=".7" stroke-linecap="round"/>'; }
@@ -536,7 +540,8 @@ export class EditorFluxogramaComponent implements OnInit {
     if (['😮', '🤯'].includes(e)) return 'surprise';
     if (['😢'].includes(e)) return 'sad';
     if (['😡'].includes(e)) return 'angry';
-    if (['🥳', '😇'].includes(e)) return 'party';
+    if (e === '🥳') return 'party';
+    if (e === '😇') return 'halo';
     if (['😱', '😳'].includes(e)) return 'scared';
     if (['🤢'].includes(e)) return 'sick';
     if (['🥶'].includes(e)) return 'cold';
@@ -561,20 +566,22 @@ export class EditorFluxogramaComponent implements OnInit {
 
   // Origem temporária ao criar conexões.
   conexaoOrigemId: string | null = null;
+  // Quando verdadeiro, a próxima conexão criada será uma "seta com área" (bloco).
+  novaConexaoBloco = false;
 
   // Estilos padrão aplicados a novos elementos.
   private readonly temaPadraoEscuro = {
     corFundo: 'transparent',
-    corBorda: '#00ffd1',
+    corBorda: '#ff4fa3',
     corTexto: '#f4fbff',
-    corLinha: '#00ffd1',
+    corLinha: '#00e676',
   };
 
   private readonly temaPadraoClaro = {
     corFundo: 'transparent',
-    corBorda: '#1f2937',
+    corBorda: '#111827',
     corTexto: '#111827',
-    corLinha: '#334155',
+    corLinha: '#111827',
   };
 
   padrao = {
@@ -622,6 +629,7 @@ export class EditorFluxogramaComponent implements OnInit {
   private pendenteLinha: { c: ConexaoFluxograma; x: number; y: number } | null = null;
   guiaV: { x: number; y1: number; y2: number } | null = null;
   guiaH: { y: number; x1: number; x2: number } | null = null;
+  guiaSegmentos: { x1: number; y1: number; x2: number; y2: number }[] = [];
   private arrastando: NoFluxograma | null = null;
   private arrasteDx = 0;
   private arrasteDy = 0;
@@ -649,16 +657,32 @@ export class EditorFluxogramaComponent implements OnInit {
   private clipboardFluxograma: ClipboardFluxograma | null = null;
   private colagensSequenciais = 0;
 
+  // Histórico para desfazer/refazer (snapshots JSON de {nos, conexoes}).
+  private historico: string[] = [];
+  private historicoRefazer: string[] = [];
+  private snapshotAtual = '';
+  private restaurando = false;
+  private readonly maxHistorico = 100;
+
   constructor(
     private dataService: DataService,
     private fluxogramaService: FluxogramaService,
     private importadorImagem: FluxogramaImagemImportService,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) {
+    // Só desenha depois da hidratação, no navegador: primeiro verifica o
+    // localStorage e, apenas se não houver gráfico salvo, mostra o exemplo.
+    // Evita o "flash" do gráfico prévio durante o SSR (onde não há localStorage).
+    afterNextRender(() => {
+      if (!this.carregarLocal()) this.exemplo();
+      this.migrarCoresAuto();
+      this.snapshotAtual = JSON.stringify({ nos: this.nos, conexoes: this.conexoes });
+      this.cdr.markForCheck();
+    });
+  }
 
   ngOnInit(): void {
     this.dataService.setTituloAplicacao('Editor de Fluxograma');
-    if (!this.carregarLocal()) this.exemplo();
   }
 
   // ─────────────────────────── Getters ───────────────────────────
@@ -708,7 +732,7 @@ export class EditorFluxogramaComponent implements OnInit {
     if (tipo === 'circulo') {
       largura = 90;
       altura = 90;
-    } else if (tipo === 'texto') {
+    } else if (tipo === 'texto' || tipo === 'notas') {
       largura = 180;
       altura = 54;
     } else if (tipo === 'seta') {
@@ -729,14 +753,15 @@ export class EditorFluxogramaComponent implements OnInit {
       largura,
       altura,
       texto: this.textoInicial(tipo),
-      corFundo: tipo === 'texto' ? 'transparent' : this.padrao.corFundo,
-      corBorda: tipo === 'texto' ? 'transparent' : this.padrao.corBorda,
-      espessuraBorda: tipo === 'texto' ? 0 : this.padrao.espessuraBorda,
-      corTexto: this.padrao.corTexto,
-      tamanhoFonte: tipo === 'texto' ? 15 : this.normalizarTamanhoFonte(this.padrao.tamanhoFonte),
+      corFundo: 'transparent',
+      corBorda: tipo === 'texto' || tipo === 'notas' ? 'transparent' : 'auto',
+      espessuraBorda: tipo === 'texto' || tipo === 'notas' ? 0 : this.padrao.espessuraBorda,
+      corTexto: 'auto',
+      tamanhoFonte: tipo === 'texto' || tipo === 'notas' ? 15 : this.normalizarTamanhoFonte(this.padrao.tamanhoFonte),
       tipoTraco: this.padrao.tipoTraco,
       alinhamentoTexto: 'centro',
       alinhamentoVerticalTexto: 'meio',
+      fonte: tipo === 'notas' ? 'cursiva' : undefined,
     };
     // Contêineres entram no início do array para ficarem atrás dos demais.
     if (this.ehContainer(tipo)) this.nos.unshift(no);
@@ -796,10 +821,10 @@ export class EditorFluxogramaComponent implements OnInit {
       largura,
       altura,
       texto,
-      corFundo: opcoes.corFundo || this.padrao.corFundo,
-      corBorda: this.padrao.corBorda,
+      corFundo: opcoes.corFundo || 'transparent',
+      corBorda: 'auto',
       espessuraBorda: 0,
-      corTexto: this.padrao.corTexto,
+      corTexto: 'auto',
       tamanhoFonte: this.normalizarTamanhoFonte(this.padrao.tamanhoFonte),
       tipoTraco: 'solido',
       alinhamentoTexto: 'centro',
@@ -810,6 +835,8 @@ export class EditorFluxogramaComponent implements OnInit {
     };
     this.nos.push(no);
     this.selecionar(no.id, 'no');
+    // Após adicionar um elemento, volta ao modo selecionar.
+    this.ferramenta = 'selecionar';
   }
 
   /** Marca a imagem selecionada para ser substituída pelo próximo arquivo escolhido. */
@@ -863,6 +890,8 @@ export class EditorFluxogramaComponent implements OnInit {
         return 'Raia';
       case 'texto':
         return 'Texto';
+      case 'notas':
+        return 'Nota';
       case 'seta':
         return '';
       default:
@@ -901,6 +930,8 @@ export class EditorFluxogramaComponent implements OnInit {
       } else if (this.conexaoOrigemId !== no.id) {
         this.criarConexao(this.conexaoOrigemId, no.id);
         this.conexaoOrigemId = null;
+        this.novaConexaoBloco = false;
+        this.ferramenta = 'selecionar';
         this.salvar();
       }
       return;
@@ -927,6 +958,12 @@ export class EditorFluxogramaComponent implements OnInit {
     this.posicoesInicioArraste = new Map(
       this.nos.filter((n) => this.nosSelecionados.has(n.id)).map((n) => [n.id, { x: n.x, y: n.y }]),
     );
+  }
+
+  aoClicarNo(evento: MouseEvent): void {
+    // Clique único apenas seleciona (a seleção ocorre no mousedown); a edição
+    // de texto acontece com duplo clique. Evita que o clique limpe a seleção.
+    evento.stopPropagation();
   }
 
   aoClicarConexao(evento: MouseEvent, c: ConexaoFluxograma): void {
@@ -1028,6 +1065,7 @@ export class EditorFluxogramaComponent implements OnInit {
     this.pendenteLinha = null;
     this.guiaV = null;
     this.guiaH = null;
+    this.guiaSegmentos = [];
     if (mudou) this.salvar();
   }
 
@@ -1090,6 +1128,19 @@ export class EditorFluxogramaComponent implements OnInit {
       this.moverNosSelecionados(deslocamento.dx * passo, deslocamento.dy * passo);
       return;
     }
+    if ((evento.ctrlKey || evento.metaKey) && evento.key.toLowerCase() === 'z' && !evento.shiftKey) {
+      evento.preventDefault();
+      this.desfazer();
+      return;
+    }
+    if (
+      (evento.ctrlKey || evento.metaKey) &&
+      (evento.key.toLowerCase() === 'y' || (evento.key.toLowerCase() === 'z' && evento.shiftKey))
+    ) {
+      evento.preventDefault();
+      this.refazer();
+      return;
+    }
     if ((evento.ctrlKey || evento.metaKey) && evento.key.toLowerCase() === 'c' && this.temSelecao) {
       evento.preventDefault();
       this.copiarSelecionados();
@@ -1132,13 +1183,16 @@ export class EditorFluxogramaComponent implements OnInit {
       de,
       para,
       texto: '',
-      cor: this.padrao.corLinha,
+      cor: 'auto',
       espessura: this.padrao.espessuraLinha,
       tracejada: false,
       setaInicio: false,
       setaFim: true,
       tamanhoSeta: this.normalizarTamanhoSeta(this.padrao.tamanhoSeta),
       curvatura: 0,
+      bloco: this.novaConexaoBloco || undefined,
+      larguraCorpo: this.novaConexaoBloco ? 16 : undefined,
+      tamanhoFlecha: this.novaConexaoBloco ? 26 : undefined,
       tipoTraco: this.padrao.tipoTraco,
     };
     this.conexoes.push(c);
@@ -1437,6 +1491,73 @@ export class EditorFluxogramaComponent implements OnInit {
     this.salvar();
   }
 
+  private temaAtual(): { corFundo: string; corBorda: string; corTexto: string; corLinha: string } {
+    return this.temaClaro ? this.temaPadraoClaro : this.temaPadraoEscuro;
+  }
+
+  // Resolvedores: cor 'auto' segue o tema atual (rosa/verde no escuro, preto no claro).
+  bordaDe(no: NoFluxograma): string {
+    return !no.corBorda || no.corBorda === 'auto' ? this.temaAtual().corBorda : no.corBorda;
+  }
+
+  textoDe(no: NoFluxograma): string {
+    return !no.corTexto || no.corTexto === 'auto' ? this.temaAtual().corTexto : no.corTexto;
+  }
+
+  corConexaoDe(c: ConexaoFluxograma): string {
+    return !c.cor || c.cor === 'auto' ? this.temaAtual().corLinha : c.cor;
+  }
+
+  ehCorAuto(cor: string | null | undefined): boolean {
+    return !cor || cor === 'auto';
+  }
+
+  /** Volta a cor ao padrão do tema (valor 'auto', que se adapta ao alternar o tema). */
+  usarFundoPadrao(no: NoFluxograma): void {
+    no.corFundo = 'transparent';
+    this.salvar();
+  }
+
+  usarBordaPadrao(no: NoFluxograma): void {
+    no.corBorda = 'auto';
+    this.salvar();
+  }
+
+  usarTextoPadrao(no: NoFluxograma): void {
+    no.corTexto = 'auto';
+    this.salvar();
+  }
+
+  usarCorConexaoPadrao(c: ConexaoFluxograma): void {
+    c.cor = 'auto';
+    this.salvar();
+  }
+
+  setCorBorda(no: NoFluxograma, v: string): void {
+    no.corBorda = v;
+    this.salvar();
+  }
+
+  setCorTexto(no: NoFluxograma, v: string): void {
+    no.corTexto = v;
+    this.salvar();
+  }
+
+  setCorConexao(c: ConexaoFluxograma, v: string): void {
+    c.cor = v;
+    this.salvar();
+  }
+
+  setSemCorBorda(no: NoFluxograma): void {
+    no.corBorda = 'transparent';
+    this.salvar();
+  }
+
+  setSemCorTexto(no: NoFluxograma): void {
+    no.corTexto = 'transparent';
+    this.salvar();
+  }
+
   /** Filtro SVG (giz/lápis) correspondente ao tipo de traço. */
   filtroTraco(tipo: TipoTraco): string | null {
     if (tipo === 'giz') return 'url(#traco-giz)';
@@ -1444,12 +1565,23 @@ export class EditorFluxogramaComponent implements OnInit {
     return null;
   }
 
+  /** Converte cores que estão num padrão de tema para 'auto' (passam a seguir o tema). */
+  private migrarCoresAuto(): void {
+    this.nos.forEach((n) => {
+      if (this.corEmLista(n.corBorda, ['#00ffd1', '#1f2937', '#ff4fa3', '#111827'])) n.corBorda = 'auto';
+      if (this.corEmLista(n.corTexto, ['#f4fbff', '#111827'])) n.corTexto = 'auto';
+    });
+    this.conexoes.forEach((c) => {
+      if (this.conexaoUsaCorPadrao(c.cor)) c.cor = 'auto';
+    });
+  }
+
   private aplicarCoresPadraoTema(tema: { corFundo: string; corBorda: string; corTexto: string; corLinha: string }): void {
     this.nos.forEach((n) => {
-      if (!this.noUsaCoresPadrao(n)) return;
-      n.corFundo = tema.corFundo;
-      n.corBorda = tema.corBorda;
-      n.corTexto = tema.corTexto;
+      // Cada cor que ainda estiver no padrão de algum tema adapta-se independentemente.
+      if (this.fundoUsaCorPadrao(n.corFundo)) n.corFundo = tema.corFundo;
+      if (this.corEmLista(n.corBorda, ['#00ffd1', '#1f2937', '#ff4fa3', '#111827'])) n.corBorda = tema.corBorda;
+      if (this.corEmLista(n.corTexto, ['#f4fbff', '#111827'])) n.corTexto = tema.corTexto;
     });
     this.conexoes.forEach((c) => {
       if (this.conexaoUsaCorPadrao(c.cor)) c.cor = tema.corLinha;
@@ -1465,7 +1597,7 @@ export class EditorFluxogramaComponent implements OnInit {
   private noUsaCoresPadrao(no: NoFluxograma): boolean {
     return (
       this.fundoUsaCorPadrao(no.corFundo) &&
-      this.corEmLista(no.corBorda, ['#00ffd1', '#1f2937']) &&
+      this.corEmLista(no.corBorda, ['#00ffd1', '#1f2937', '#ff4fa3', '#111827']) &&
       this.corEmLista(no.corTexto, ['#f4fbff', '#111827'])
     );
   }
@@ -1473,7 +1605,7 @@ export class EditorFluxogramaComponent implements OnInit {
   private padraoUsaCoresPadrao(): boolean {
     return (
       this.fundoUsaCorPadrao(this.padrao.corFundo) &&
-      this.corEmLista(this.padrao.corBorda, ['#00ffd1', '#1f2937']) &&
+      this.corEmLista(this.padrao.corBorda, ['#00ffd1', '#1f2937', '#ff4fa3', '#111827']) &&
       this.corEmLista(this.padrao.corTexto, ['#f4fbff', '#111827']) &&
       this.conexaoUsaCorPadrao(this.padrao.corLinha)
     );
@@ -1484,7 +1616,7 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   private conexaoUsaCorPadrao(cor: string | null | undefined): boolean {
-    return this.corEmLista(cor, ['#00ffd1', '#334155', '#5b7cff']);
+    return this.corEmLista(cor, ['#00ffd1', '#334155', '#5b7cff', '#ff4fa3', '#111827', '#00e676']);
   }
 
   private corEmLista(cor: string | null | undefined, lista: string[]): boolean {
@@ -1713,6 +1845,290 @@ export class EditorFluxogramaComponent implements OnInit {
     return { x: P[mid].x, y: P[mid].y };
   }
 
+  // ─── Seta com área (conexão em bloco) ───
+
+  larguraCorpoDe(c: ConexaoFluxograma): number {
+    return Math.min(80, Math.max(2, c.larguraCorpo ?? 16));
+  }
+
+  tamanhoFlechaDe(c: ConexaoFluxograma): number {
+    return Math.min(80, Math.max(6, c.tamanhoFlecha ?? 26));
+  }
+
+  /** Pontos do caminho alinhados ao traçado desenhado (reta/curva/waypoints). */
+  private pontosCaminho(c: ConexaoFluxograma): { x: number; y: number }[] | null {
+    const wp = c.pontos || [];
+    if (!wp.length) {
+      const p = this.pontosConexao(c);
+      if (!p) return null;
+      if (c.curvatura) return [{ x: p.x1, y: p.y1 }, { x: p.cx, y: p.cy }, { x: p.x2, y: p.y2 }];
+      return [{ x: p.x1, y: p.y1 }, { x: p.x2, y: p.y2 }];
+    }
+    return this.anchorsConexao(c);
+  }
+
+  /**
+   * Contorno fechado (hollow) da seta com área, entre a borda de origem e destino.
+   * `larguraCorpo` define a espessura do corpo e `tamanhoFlecha` a cabeça; o traço
+   * usa a espessura normal da conexão e o preenchimento é transparente por padrão.
+   */
+  caminhoSetaBloco(c: ConexaoFluxograma): string {
+    const C = this.amostrarCentro(c);
+    if (!C || C.length < 2) return '';
+
+    // Comprimentos de arco acumulados.
+    const seg: number[] = [0];
+    for (let i = 1; i < C.length; i += 1) seg.push(seg[i - 1] + this.distancia(C[i - 1], C[i]));
+    const total = seg[seg.length - 1] || 1;
+
+    const bw = this.larguraCorpoDe(c) / 2;
+    const tf = this.tamanhoFlechaDe(c);
+    const setaFim = !!c.setaFim;
+    const setaInicio = !!c.setaInicio;
+    const doisLados = setaFim && setaInicio;
+    const hl = Math.max(4, Math.min(tf, (doisLados ? total / 2 : total) * 0.9));
+    const hw = Math.max(tf * 0.72, bw + 2);
+
+    // Ponto + tangente a um comprimento de arco.
+    const emComprimento = (alvo: number): { p: { x: number; y: number }; u: { x: number; y: number } } => {
+      const l = Math.max(0, Math.min(total, alvo));
+      let i = 1;
+      while (i < seg.length && seg[i] < l) i += 1;
+      const i0 = i - 1;
+      const i1 = Math.min(i, C.length - 1);
+      const t = (l - seg[i0]) / ((seg[i1] - seg[i0]) || 1);
+      const dx = C[i1].x - C[i0].x;
+      const dy = C[i1].y - C[i0].y;
+      const d = Math.hypot(dx, dy) || 1;
+      return { p: { x: C[i0].x + dx * t, y: C[i0].y + dy * t }, u: { x: dx / d, y: dy / d } };
+    };
+
+    const inicioL = setaInicio ? hl : 0;
+    const fimL = setaFim ? total - hl : total;
+
+    // Pontos do corpo entre inicioL e fimL, com tangentes por vértice.
+    const corpo: { p: { x: number; y: number }; u: { x: number; y: number } }[] = [emComprimento(inicioL)];
+    for (let i = 0; i < C.length; i += 1) {
+      if (seg[i] > inicioL + 0.5 && seg[i] < fimL - 0.5) {
+        const a0 = C[Math.max(i - 1, 0)];
+        const a1 = C[Math.min(i + 1, C.length - 1)];
+        const dx = a1.x - a0.x;
+        const dy = a1.y - a0.y;
+        const d = Math.hypot(dx, dy) || 1;
+        corpo.push({ p: C[i], u: { x: dx / d, y: dy / d } });
+      }
+    }
+    corpo.push(emComprimento(fimL));
+
+    const nrm = (u: { x: number; y: number }) => ({ x: -u.y, y: u.x });
+    const left = corpo.map((s) => { const n = nrm(s.u); return { x: s.p.x + n.x * bw, y: s.p.y + n.y * bw }; });
+    const right = corpo.map((s) => { const n = nrm(s.u); return { x: s.p.x - n.x * bw, y: s.p.y - n.y * bw }; });
+
+    const S = C[0];
+    const E = C[C.length - 1];
+    const Bs = corpo[0];
+    const Bf = corpo[corpo.length - 1];
+    const nBs = nrm(Bs.u);
+    const nBf = nrm(Bf.u);
+    const pt = (p: { x: number; y: number }) => `${Math.round(p.x * 100) / 100},${Math.round(p.y * 100) / 100}`;
+
+    const out: string[] = [];
+    left.forEach((p) => out.push(pt(p)));
+    if (setaFim) {
+      out.push(pt({ x: Bf.p.x + nBf.x * hw, y: Bf.p.y + nBf.y * hw }), pt(E), pt({ x: Bf.p.x - nBf.x * hw, y: Bf.p.y - nBf.y * hw }));
+    }
+    for (let i = right.length - 1; i >= 0; i -= 1) out.push(pt(right[i]));
+    if (setaInicio) {
+      out.push(pt({ x: Bs.p.x - nBs.x * hw, y: Bs.p.y - nBs.y * hw }), pt(S), pt({ x: Bs.p.x + nBs.x * hw, y: Bs.p.y + nBs.y * hw }));
+    }
+    return 'M ' + out.join(' L ') + ' Z';
+  }
+
+  /** Linha central da seta de bloco, amostrada conforme a curvatura/waypoints da conexão. */
+  private amostrarCentro(c: ConexaoFluxograma): { x: number; y: number }[] | null {
+    const a = this.nos.find((n) => n.id === c.de);
+    const b = this.nos.find((n) => n.id === c.para);
+    if (!a || !b) return null;
+    const centroA = { x: this.cx(a), y: this.cy(a) };
+    const centroB = { x: this.cx(b), y: this.cy(b) };
+    const wp = c.pontos || [];
+    if (!wp.length) {
+      const ctrl = this.controleConexao(a, b, c.curvatura || 0);
+      const bordA = this.pontoBorda(a, ctrl.x, ctrl.y);
+      const bordB = this.pontoBorda(b, ctrl.x, ctrl.y);
+      const folga = 4;
+      // Com flecha: para um pouco antes da borda (não sobrepõe a forma); sem flecha: no centro do nó.
+      const S = c.setaInicio ? this.pontoNaDirecao(bordA, ctrl, folga) : centroA;
+      const E = c.setaFim ? this.pontoNaDirecao(bordB, ctrl, folga) : centroB;
+      if (!c.curvatura) return [S, E];
+      const pts: { x: number; y: number }[] = [];
+      const N = 26;
+      for (let i = 0; i <= N; i += 1) {
+        const t = i / N;
+        const mt = 1 - t;
+        pts.push({
+          x: mt * mt * S.x + 2 * mt * t * ctrl.x + t * t * E.x,
+          y: mt * mt * S.y + 2 * mt * t * ctrl.y + t * t * E.y,
+        });
+      }
+      return pts;
+    }
+    const P = this.anchorsConexao(c);
+    if (!P || P.length < 2) return null;
+    const pontos = P.map((p) => ({ x: p.x, y: p.y }));
+    if (!c.setaInicio) pontos[0] = centroA;
+    if (!c.setaFim) pontos[pontos.length - 1] = centroB;
+    const estilo = c.estilo || 'arredondado';
+    if (estilo === 'curvo') return this.amostrarSpline(pontos, 14);
+    if (estilo === 'reto') return pontos;
+    return this.amostrarArredondado(pontos, c.raioCanto ?? 50, 8);
+  }
+
+  /** Amostra uma polilinha com cantos arredondados (igual ao traçado da conexão). */
+  private amostrarArredondado(P: { x: number; y: number }[], raio: number, seg: number): { x: number; y: number }[] {
+    if (P.length < 3 || raio <= 0) return P;
+    const out: { x: number; y: number }[] = [{ x: P[0].x, y: P[0].y }];
+    for (let i = 1; i < P.length - 1; i += 1) {
+      const prev = P[i - 1];
+      const cur = P[i];
+      const next = P[i + 1];
+      const r1 = Math.min(raio, this.distancia(prev, cur) / 2);
+      const r2 = Math.min(raio, this.distancia(cur, next) / 2);
+      const ent = this.pontoNaDirecao(cur, prev, r1);
+      const sai = this.pontoNaDirecao(cur, next, r2);
+      out.push(ent);
+      for (let j = 1; j <= seg; j += 1) {
+        const t = j / seg;
+        const mt = 1 - t;
+        out.push({
+          x: mt * mt * ent.x + 2 * mt * t * cur.x + t * t * sai.x,
+          y: mt * mt * ent.y + 2 * mt * t * cur.y + t * t * sai.y,
+        });
+      }
+    }
+    out.push({ x: P[P.length - 1].x, y: P[P.length - 1].y });
+    return out;
+  }
+
+  /** Amostra uma spline Catmull-Rom nos pontos dados. */
+  private amostrarSpline(P: { x: number; y: number }[], porSeg: number): { x: number; y: number }[] {
+    if (P.length < 3) return P;
+    const out: { x: number; y: number }[] = [{ x: P[0].x, y: P[0].y }];
+    for (let i = 0; i < P.length - 1; i += 1) {
+      const p0 = P[i - 1] || P[i];
+      const p1 = P[i];
+      const p2 = P[i + 1];
+      const p3 = P[i + 2] || P[i + 1];
+      for (let j = 1; j <= porSeg; j += 1) {
+        const t = j / porSeg;
+        const t2 = t * t;
+        const t3 = t2 * t;
+        out.push({
+          x: 0.5 * (2 * p1.x + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+          y: 0.5 * (2 * p1.y + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3),
+        });
+      }
+    }
+    return out;
+  }
+
+  ativarConectar(bloco: boolean): void {
+    this.novaConexaoBloco = bloco;
+    this.selecionarFerramenta('conectar');
+  }
+
+  setSetaBloco(c: ConexaoFluxograma, ativo: boolean): void {
+    c.bloco = ativo || undefined;
+    if (ativo) {
+      c.larguraCorpo = c.larguraCorpo ?? 16;
+      c.tamanhoFlecha = c.tamanhoFlecha ?? 26;
+    }
+    this.salvar();
+  }
+
+  setLarguraCorpo(c: ConexaoFluxograma, v: string): void {
+    c.larguraCorpo = Math.min(80, Math.max(2, Number(v)));
+    this.salvar();
+  }
+
+  setTamanhoFlecha(c: ConexaoFluxograma, v: string): void {
+    c.tamanhoFlecha = Math.min(80, Math.max(6, Number(v)));
+    this.salvar();
+  }
+
+  // ─── Texturas (preenchimento hachurado) ───
+
+  readonly texturas: { id: TipoTextura | ''; nome: string }[] = [
+    { id: '', nome: 'Sem textura' },
+    { id: 'diagonal', nome: 'Hachura diagonal' },
+    { id: 'cruzada', nome: 'Hachura cruzada' },
+    { id: 'pontos', nome: 'Pontos' },
+    { id: 'grade', nome: 'Grade' },
+  ];
+
+  patternId(textura: string, cor: string): string {
+    return 'tex-' + textura + '-' + String(cor).replace(/[^a-z0-9]/gi, '');
+  }
+
+  /** Preenchimento de um nó: padrão de textura (na cor da borda) ou a cor de fundo. */
+  preenchimentoNo(no: NoFluxograma): string {
+    if (no.textura) return `url(#${this.patternId(no.textura, this.bordaDe(no))})`;
+    return no.corFundo;
+  }
+
+  /** Preenchimento da seta de bloco: textura (na cor da linha) ou transparente. */
+  preenchimentoConexao(c: ConexaoFluxograma): string {
+    if (c.textura) return `url(#${this.patternId(c.textura, this.corConexaoDe(c))})`;
+    return 'none';
+  }
+
+  private _texSig = '';
+  private _texCache: { id: string; textura: string; cor: string }[] = [];
+
+  /** Padrões (textura+cor) atualmente em uso, para renderizar em <defs>. */
+  texturasUsadas(): { id: string; textura: string; cor: string }[] {
+    const map = new Map<string, { id: string; textura: string; cor: string }>();
+    this.nos.forEach((n) => {
+      if (n.textura) {
+        const cor = this.bordaDe(n);
+        const id = this.patternId(n.textura, cor);
+        if (!map.has(id)) map.set(id, { id, textura: n.textura, cor });
+      }
+    });
+    this.conexoes.forEach((c) => {
+      if (c.textura) {
+        const cor = this.corConexaoDe(c);
+        const id = this.patternId(c.textura, cor);
+        if (!map.has(id)) map.set(id, { id, textura: c.textura, cor });
+      }
+    });
+    const arr = [...map.values()];
+    const sig = arr.map((a) => a.id).join('|');
+    if (sig === this._texSig) return this._texCache;
+    this._texSig = sig;
+    this._texCache = arr;
+    return arr;
+  }
+
+  setTexturaNo(no: NoFluxograma, v: string): void {
+    no.textura = (v || undefined) as TipoTextura | undefined;
+    this.salvar();
+  }
+
+  setTexturaConexao(c: ConexaoFluxograma, v: string): void {
+    c.textura = (v || undefined) as TipoTextura | undefined;
+    this.salvar();
+  }
+
+  /** Raio aproximado do nó, para a máscara que oculta a seta sob o componente. */
+  raioMascara(no: NoFluxograma): number {
+    if (no.tipo === 'terminador' || no.tipo === 'circulo' || no.tipo === 'elipse') {
+      return Math.min(no.largura, no.altura) / 2;
+    }
+    if (no.tipo === 'arredondado') return this.raioArredondado(no);
+    return 0;
+  }
+
   /** Pressionar a linha: prepara para criar um ponto se houver arraste. */
   aoPressionarLinha(evento: MouseEvent, c: ConexaoFluxograma): void {
     if (this.ferramenta !== 'selecionar') return;
@@ -1766,9 +2182,73 @@ export class EditorFluxogramaComponent implements OnInit {
     const pt = c.pontos[this.arrastePontoIndice];
     if (!pt) return;
     const p = this.pontoCanvas(evento);
-    pt.x = Math.round(p.x);
-    pt.y = Math.round(p.y);
+    // Vizinhos no traçado completo [origem, ...pontos, destino].
+    const anc = this.anchorsConexao(c);
+    const i = this.arrastePontoIndice + 1;
+    const prev = anc && anc[i - 1] ? anc[i - 1] : null;
+    const next = anc && anc[i + 1] ? anc[i + 1] : null;
+    const s = this.aplicarSnapPonto(p.x, p.y, prev, next);
+    pt.x = Math.round(s.x);
+    pt.y = Math.round(s.y);
     this.curvouMovimento = true;
+  }
+
+  /**
+   * Ajusta o ponto para alinhar os segmentos vizinhos a ângulos "bons"
+   * (horizontal, vertical, 45° e ângulo reto) e monta as guias tracejadas.
+   */
+  private aplicarSnapPonto(
+    x: number,
+    y: number,
+    prev: { x: number; y: number } | null,
+    next: { x: number; y: number } | null,
+  ): { x: number; y: number } {
+    const limiar = 7 / this.zoom;
+    this.guiaSegmentos = [];
+    const vizinhos = [prev, next].filter((v): v is { x: number; y: number } => !!v);
+    if (!vizinhos.length) return { x, y };
+
+    // 1) Horizontal/vertical: encaixa X e Y na coordenada do vizinho mais próximo.
+    let snapX: number | null = null;
+    let snapY: number | null = null;
+    for (const n of vizinhos) {
+      if (Math.abs(x - n.x) <= limiar && (snapX === null || Math.abs(n.x - x) < Math.abs(snapX - x))) snapX = n.x;
+      if (Math.abs(y - n.y) <= limiar && (snapY === null || Math.abs(n.y - y) < Math.abs(snapY - y))) snapY = n.y;
+    }
+    if (snapX !== null) x = snapX;
+    if (snapY !== null) y = snapY;
+
+    // 2) Diagonal 45°: só quando não houve encaixe H/V (para não conflitar).
+    if (snapX === null && snapY === null) {
+      for (const n of vizinhos) {
+        const dx = x - n.x;
+        const dy = y - n.y;
+        const adx = Math.abs(dx);
+        const ady = Math.abs(dy);
+        if (adx > 4 && ady > 4 && Math.abs(adx - ady) <= limiar) {
+          const m = (adx + ady) / 2;
+          x = n.x + Math.sign(dx) * m;
+          y = n.y + Math.sign(dy) * m;
+          break;
+        }
+      }
+    }
+
+    // 3) Guias: para cada segmento que ficou alinhado (H, V ou 45°), desenha a linha.
+    for (const n of vizinhos) {
+      const dx = x - n.x;
+      const dy = y - n.y;
+      const adx = Math.abs(dx);
+      const ady = Math.abs(dy);
+      const alinhado = adx < 0.6 || ady < 0.6 || Math.abs(adx - ady) < 0.6;
+      if (alinhado && (adx > 0.6 || ady > 0.6)) {
+        const l = Math.hypot(dx, dy) || 1;
+        const ux = (dx / l) * 26;
+        const uy = (dy / l) * 26;
+        this.guiaSegmentos.push({ x1: n.x - ux, y1: n.y - uy, x2: x + ux, y2: y + uy });
+      }
+    }
+    return { x, y };
   }
 
   setRaioCanto(c: ConexaoFluxograma, v: string): void {
@@ -1804,7 +2284,7 @@ export class EditorFluxogramaComponent implements OnInit {
 
   private normalizarTamanhosFonte(): void {
     this.nos.forEach((n) => {
-      n.tamanhoFonte = this.normalizarTamanhoFonte(n.tamanhoFonte ?? (n.tipo === 'texto' ? 15 : 13));
+      n.tamanhoFonte = this.normalizarTamanhoFonte(n.tamanhoFonte ?? (n.tipo === 'texto' || n.tipo === 'notas' ? 15 : 13));
     });
   }
 
@@ -1993,7 +2473,7 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   tamanhoFonte(no: NoFluxograma): number {
-    return this.normalizarTamanhoFonte(no.tamanhoFonte ?? (no.tipo === 'texto' ? 15 : 13));
+    return this.normalizarTamanhoFonte(no.tamanhoFonte ?? (no.tipo === 'texto' || no.tipo === 'notas' ? 15 : 13));
   }
 
   alturaLinhaTexto(no: NoFluxograma): number {
@@ -2002,6 +2482,29 @@ export class EditorFluxogramaComponent implements OnInit {
 
   temTextoInterno(no: NoFluxograma): boolean {
     return no.tipo !== 'imagem' && !this.ehContainer(no.tipo);
+  }
+
+  readonly fontes: { id: TipoFonte; nome: string }[] = [
+    { id: 'sans', nome: 'Sem serifa' },
+    { id: 'serif', nome: 'Serifada (Times)' },
+    { id: 'cursiva', nome: 'Cursiva' },
+  ];
+
+  /** Família tipográfica CSS conforme a fonte escolhida no nó. */
+  familiaFonte(no: NoFluxograma): string {
+    switch (no.fonte) {
+      case 'serif':
+        return "'Times New Roman', Times, Georgia, serif";
+      case 'cursiva':
+        return "'Segoe Script', 'Bradley Hand', 'Brush Script MT', 'Snell Roundhand', cursive";
+      default:
+        return "Roboto, 'Helvetica Neue', Arial, sans-serif";
+    }
+  }
+
+  setFonte(no: NoFluxograma, v: string): void {
+    no.fonte = (v || 'sans') as TipoFonte;
+    this.salvar();
   }
 
   alinhamentoTexto(no: NoFluxograma): TipoAlinhamentoTexto {
@@ -2213,6 +2716,61 @@ export class EditorFluxogramaComponent implements OnInit {
     leitor.readAsText(arquivo);
   }
 
+  /** Importa um conteúdo XML/Mermaid direto no board (usado pelo arrastar-e-soltar). */
+  private importarConteudo(conteudo: string, nome: string): void {
+    const inicio = conteudo.trimStart();
+    this.formato = inicio.startsWith('<') || /\.xml$/i.test(nome) ? 'xml' : 'mermaid';
+    this.textoDados = conteudo;
+    try {
+      const fluxo =
+        this.formato === 'mermaid'
+          ? this.fluxogramaService.deMermaid(conteudo)
+          : this.fluxogramaService.deXml(conteudo);
+      this.carregar(fluxo);
+      this.avisar(`Diagrama importado: ${fluxo.nos.length} formas, ${fluxo.conexoes.length} conexões.`);
+    } catch (e) {
+      this.avisar('Erro ao importar: ' + (e instanceof Error ? e.message : 'formato inválido.'));
+    }
+  }
+
+  // ─── Arrastar e soltar arquivos (.xml / .mermaid) ───
+
+  arrastandoArquivo = false;
+
+  aoArrastarArquivo(evento: DragEvent): void {
+    const dt = evento.dataTransfer;
+    if (!dt) return;
+    const temArquivo = Array.from(dt.items || []).some((i) => i.kind === 'file') || (dt.types || []).indexOf('Files') !== -1;
+    if (!temArquivo) return;
+    evento.preventDefault();
+    dt.dropEffect = 'copy';
+    this.arrastandoArquivo = true;
+  }
+
+  aoSairArrasteArquivo(evento: DragEvent): void {
+    // Só encerra quando o ponteiro realmente sai da área do canvas.
+    const alvo = evento.currentTarget as HTMLElement | null;
+    const rel = evento.relatedTarget as Node | null;
+    if (alvo && rel && alvo.contains(rel)) return;
+    this.arrastandoArquivo = false;
+  }
+
+  aoSoltarArquivo(evento: DragEvent): void {
+    const arquivo = evento.dataTransfer?.files?.[0];
+    if (!arquivo) return;
+    evento.preventDefault();
+    this.arrastandoArquivo = false;
+    const nome = arquivo.name.toLowerCase();
+    if (/\.(png|jpe?g|gif|bmp|webp|svg)$/.test(nome) || arquivo.type.startsWith('image/')) {
+      this.avisar('Para importar imagem, use o botão "Importar imagem".');
+      return;
+    }
+    const leitor = new FileReader();
+    leitor.onload = () => this.importarConteudo(String(leitor.result || ''), arquivo.name);
+    leitor.onerror = () => this.avisar('Não foi possível ler o arquivo.');
+    leitor.readAsText(arquivo);
+  }
+
   async importarImagemFluxograma(evento: Event): Promise<void> {
     const input = evento.target as HTMLInputElement;
     const arquivo = input.files?.[0];
@@ -2366,7 +2924,8 @@ export class EditorFluxogramaComponent implements OnInit {
     estilo.textContent =
       "text{font-family:Roboto,'Helvetica Neue',Arial,sans-serif;}" +
       '.no-texto{font-size:13px;font-weight:600;}' +
-      '.conexao-rotulo{font-size:12px;font-weight:600;}' +
+      '.conexao-rotulo{font-size:12px;font-weight:600;fill:#f4fbff;}' +
+      '.conexao-rotulo-bg{fill:rgba(3,13,30,0.92);}' +
       '.conexao-linha{fill:none;}';
     clone.insertBefore(estilo, clone.firstChild);
 
@@ -2531,6 +3090,7 @@ export class EditorFluxogramaComponent implements OnInit {
   // ─────────────────────── Persistência (localStorage) ───────────────────────
 
   salvar(): void {
+    this.capturarHistorico();
     if (typeof localStorage === 'undefined') return;
     try {
       localStorage.setItem(
@@ -2549,6 +3109,51 @@ export class EditorFluxogramaComponent implements OnInit {
     } catch {
       /* localStorage cheio ou indisponível — ignora */
     }
+  }
+
+  // ─── Histórico (desfazer / refazer) ───
+
+  private capturarHistorico(): void {
+    if (this.restaurando) return;
+    const atual = JSON.stringify({ nos: this.nos, conexoes: this.conexoes });
+    if (this.snapshotAtual && this.snapshotAtual !== atual) {
+      this.historico.push(this.snapshotAtual);
+      if (this.historico.length > this.maxHistorico) this.historico.shift();
+      this.historicoRefazer = [];
+    }
+    this.snapshotAtual = atual;
+  }
+
+  desfazer(): void {
+    if (!this.historico.length) return;
+    const atual = JSON.stringify({ nos: this.nos, conexoes: this.conexoes });
+    const anterior = this.historico.pop() as string;
+    this.historicoRefazer.push(atual);
+    this.aplicarSnapshot(anterior);
+  }
+
+  refazer(): void {
+    if (!this.historicoRefazer.length) return;
+    const atual = JSON.stringify({ nos: this.nos, conexoes: this.conexoes });
+    const proximo = this.historicoRefazer.pop() as string;
+    this.historico.push(atual);
+    this.aplicarSnapshot(proximo);
+  }
+
+  private aplicarSnapshot(json: string): void {
+    let d: { nos?: NoFluxograma[]; conexoes?: ConexaoFluxograma[] };
+    try {
+      d = JSON.parse(json);
+    } catch {
+      return;
+    }
+    this.restaurando = true;
+    this.nos = Array.isArray(d.nos) ? d.nos : [];
+    this.conexoes = Array.isArray(d.conexoes) ? d.conexoes : [];
+    this.limparSelecao();
+    this.snapshotAtual = json;
+    this.salvar();
+    this.restaurando = false;
   }
 
   private carregarLocal(): boolean {

@@ -18,10 +18,13 @@ export type FormaTipo =
   | 'grupo'
   | 'swimlane'
   | 'texto'
+  | 'notas'
   | 'imagem';
 
 /** Estilo do traço das bordas e linhas. */
 export type TipoTraco = 'solido' | 'giz' | 'lapis';
+export type TipoTextura = 'diagonal' | 'cruzada' | 'pontos' | 'grade';
+export type TipoFonte = 'sans' | 'serif' | 'cursiva';
 export type TipoAlinhamentoTexto = 'esquerda' | 'centro' | 'direita';
 export type TipoAlinhamentoVerticalTexto = 'topo' | 'meio' | 'rodape';
 
@@ -49,6 +52,10 @@ export interface NoFluxograma {
   escalaImagem?: number;
   /** Raio dos cantos do quadro de imagem/icone, em pixels. */
   raioBordaImagem?: number;
+  /** Preenchimento hachurado opcional (usa a cor da borda). */
+  textura?: TipoTextura;
+  /** Família tipográfica do texto (sem serifa, serifada ou cursiva). */
+  fonte?: TipoFonte;
 }
 
 export interface ConexaoFluxograma {
@@ -66,6 +73,14 @@ export interface ConexaoFluxograma {
   pontos?: { x: number; y: number }[];
   estilo?: 'reto' | 'arredondado' | 'curvo';
   raioCanto?: number;
+  /** Seta com área (bloco): corpo espesso + flecha triangular. */
+  bloco?: boolean;
+  /** Largura do corpo da seta de bloco, em pixels. */
+  larguraCorpo?: number;
+  /** Tamanho da flecha (cabeça) da seta de bloco, em pixels. */
+  tamanhoFlecha?: number;
+  /** Preenchimento hachurado opcional (usa a cor da linha). */
+  textura?: TipoTextura;
   tipoTraco: TipoTraco;
 }
 
@@ -95,6 +110,7 @@ const MERMAID_FORMAS: Record<FormaTipo, { abre: string; fecha: string }> = {
   grupo: { abre: '[', fecha: ']' },
   swimlane: { abre: '[', fecha: ']' },
   texto: { abre: '[', fecha: ']' },
+  notas: { abre: '[', fecha: ']' },
   imagem: { abre: '[', fecha: ']' },
 };
 
@@ -277,6 +293,8 @@ export class FluxogramaService {
           (n.src ? ` src="${esc(n.src)}"` : '') +
           (n.escalaImagem != null ? ` escalaImagem="${n.escalaImagem}"` : '') +
           (n.raioBordaImagem != null ? ` raioBordaImagem="${n.raioBordaImagem}"` : '') +
+          (n.textura ? ` textura="${n.textura}"` : '') +
+          (n.fonte ? ` fonte="${n.fonte}"` : '') +
           `>${esc(n.texto)}</no>`,
       );
     }
@@ -290,6 +308,10 @@ export class FluxogramaService {
           (c.pontos && c.pontos.length ? ` pontos="${c.pontos.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`).join(' ')}"` : '') +
           (c.estilo ? ` estilo="${c.estilo}"` : '') +
           (c.raioCanto != null ? ` raioCanto="${c.raioCanto}"` : '') +
+          (c.bloco ? ` bloco="true"` : '') +
+          (c.larguraCorpo != null ? ` larguraCorpo="${c.larguraCorpo}"` : '') +
+          (c.tamanhoFlecha != null ? ` tamanhoFlecha="${c.tamanhoFlecha}"` : '') +
+          (c.textura ? ` textura="${c.textura}"` : '') +
           ` tipoTraco="${c.tipoTraco}">${esc(c.texto)}</conexao>`,
       );
     }
@@ -328,6 +350,8 @@ export class FluxogramaService {
         src: el.getAttribute('src') || undefined,
         escalaImagem: el.getAttribute('escalaImagem') != null ? this.normalizaEscalaImagem(el.getAttribute('escalaImagem')) : undefined,
         raioBordaImagem: el.getAttribute('raioBordaImagem') != null ? this.normalizaRaioBordaImagem(el.getAttribute('raioBordaImagem')) : undefined,
+        textura: (el.getAttribute('textura') as TipoTextura) || undefined,
+        fonte: (el.getAttribute('fonte') as TipoFonte) || undefined,
       });
     });
 
@@ -348,6 +372,10 @@ export class FluxogramaService {
         pontos: this.parsePontos(el.getAttribute('pontos')),
         estilo: (el.getAttribute('estilo') as 'reto' | 'arredondado' | 'curvo') || undefined,
         raioCanto: el.getAttribute('raioCanto') != null ? this.num(el.getAttribute('raioCanto'), 10) : undefined,
+        bloco: el.getAttribute('bloco') === 'true' || undefined,
+        larguraCorpo: el.getAttribute('larguraCorpo') != null ? this.num(el.getAttribute('larguraCorpo'), 16) : undefined,
+        tamanhoFlecha: el.getAttribute('tamanhoFlecha') != null ? this.num(el.getAttribute('tamanhoFlecha'), 26) : undefined,
+        textura: (el.getAttribute('textura') as TipoTextura) || undefined,
         tipoTraco: (el.getAttribute('tipoTraco') as TipoTraco) || 'solido',
       });
     });
