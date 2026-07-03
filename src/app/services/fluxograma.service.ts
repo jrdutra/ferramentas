@@ -38,6 +38,8 @@ export interface NoFluxograma {
   tipoTraco: TipoTraco;
   /** Data URL da imagem (apenas para o tipo 'imagem'). */
   src?: string;
+  /** Escala da imagem dentro do quadro do ícone (0..1). */
+  escalaImagem?: number;
 }
 
 export interface ConexaoFluxograma {
@@ -257,7 +259,10 @@ export class FluxogramaService {
       linhas.push(
         `    <no id="${esc(n.id)}" tipo="${n.tipo}" x="${n.x}" y="${n.y}" largura="${n.largura}" altura="${n.altura}"` +
           ` corFundo="${esc(n.corFundo)}" corBorda="${esc(n.corBorda)}" espessuraBorda="${n.espessuraBorda}"` +
-          ` corTexto="${esc(n.corTexto)}" tipoTraco="${n.tipoTraco}"${n.src ? ` src="${esc(n.src)}"` : ''}>${esc(n.texto)}</no>`,
+          ` corTexto="${esc(n.corTexto)}" tipoTraco="${n.tipoTraco}"` +
+          (n.src ? ` src="${esc(n.src)}"` : '') +
+          (n.escalaImagem != null ? ` escalaImagem="${n.escalaImagem}"` : '') +
+          `>${esc(n.texto)}</no>`,
       );
     }
     linhas.push('  </nos>', '  <conexoes>');
@@ -303,6 +308,7 @@ export class FluxogramaService {
         corTexto: el.getAttribute('corTexto') || base.corTexto,
         tipoTraco: (el.getAttribute('tipoTraco') as TipoTraco) || 'solido',
         src: el.getAttribute('src') || undefined,
+        escalaImagem: el.getAttribute('escalaImagem') != null ? this.normalizaEscalaImagem(el.getAttribute('escalaImagem')) : undefined,
       });
     });
 
@@ -377,6 +383,7 @@ export class FluxogramaService {
       n.corTexto = n.corTexto || base.corTexto;
       n.tipo = n.tipo || 'retangulo';
       n.tipoTraco = n.tipoTraco || 'solido';
+      if (n.tipo === 'imagem') n.escalaImagem = this.normalizaEscalaImagem(n.escalaImagem);
     });
     fluxo.conexoes.forEach((c) => {
       c.tipoTraco = c.tipoTraco || 'solido';
@@ -390,6 +397,12 @@ export class FluxogramaService {
     const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
     if (!Number.isFinite(n)) return TAMANHO_SETA_PADRAO;
     return Math.min(24, Math.max(3, n));
+  }
+
+  private normalizaEscalaImagem(v: unknown): number {
+    const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
+    if (!Number.isFinite(n)) return 1;
+    return Math.min(1, Math.max(0.2, n));
   }
 
   private parsePontos(v: string | null): { x: number; y: number }[] | undefined {

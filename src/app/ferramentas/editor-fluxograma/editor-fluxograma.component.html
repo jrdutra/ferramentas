@@ -7,37 +7,6 @@
         (click)="selecionarFerramenta('selecionar')" matTooltip="Selecionar / mover; arraste o fundo para selecionar por área">
         <mat-icon>near_me</mat-icon>
       </button>
-      <button class="ferr-btn" [class.ativo]="ferramenta === 'conectar'"
-        (click)="selecionarFerramenta('conectar')" matTooltip="Conectar: clique na origem e depois no destino">
-        <mat-icon>timeline</mat-icon>
-      </button>
-    </div>
-
-    <span class="barra-sep"></span>
-
-    <div class="barra-grupo-f formas-grupo">
-      <button *ngFor="let f of formas" class="ferr-btn" [class.ativo]="ferramenta === f.tipo"
-        (click)="selecionarFerramenta(f.tipo)" [matTooltip]="f.nome">
-        <mat-icon>{{ f.icone }}</mat-icon>
-      </button>
-    </div>
-
-    <span class="barra-sep"></span>
-
-    <div class="barra-grupo-f formas-grupo">
-      <button *ngFor="let f of containers" class="ferr-btn" [class.ativo]="ferramenta === f.tipo"
-        (click)="selecionarFerramenta(f.tipo)" [matTooltip]="f.nome">
-        <mat-icon>{{ f.icone }}</mat-icon>
-      </button>
-    </div>
-
-    <span class="barra-sep"></span>
-
-    <div class="barra-grupo-f">
-      <button class="ferr-btn" (click)="inputImagem.click()" matTooltip="Adicionar imagem">
-        <mat-icon>add_photo_alternate</mat-icon>
-      </button>
-      <input #inputImagem type="file" accept="image/*" hidden (change)="adicionarImagem($event)" />
     </div>
 
     <span class="barra-sep"></span>
@@ -89,14 +58,6 @@
     <span class="barra-sep"></span>
 
     <div class="barra-grupo-f">
-      <button class="ferr-btn texto-btn destaque-offline" (click)="baixarOffline()" matTooltip="Baixar a versão HTML que roda 100% offline">
-        <mat-icon>download</mat-icon> Executar Offline
-      </button>
-    </div>
-
-    <span class="barra-sep"></span>
-
-    <div class="barra-grupo-f">
       <button class="ferr-btn texto-btn" (click)="baixarPng()" matTooltip="Baixar PNG"><mat-icon>image</mat-icon> PNG</button>
       <button class="ferr-btn texto-btn" (click)="baixarPngTransparente()" matTooltip="Baixar PNG com fundo e formas transparentes">
         <mat-icon>gradient</mat-icon> PNG&nbsp;transp.
@@ -104,11 +65,111 @@
       <button class="ferr-btn texto-btn" (click)="baixarJpg()" matTooltip="Baixar JPG"><mat-icon>photo</mat-icon> JPG</button>
       <button class="ferr-btn texto-btn" (click)="baixarPdf()" matTooltip="Baixar PDF"><mat-icon>picture_as_pdf</mat-icon> PDF</button>
       <button class="ferr-btn texto-btn" (click)="baixarSvg()" matTooltip="Baixar SVG"><mat-icon>polyline</mat-icon> SVG</button>
+      <button class="ferr-btn texto-btn destaque-offline" (click)="baixarOffline()" matTooltip="Baixar a versão HTML que roda 100% offline">
+        <mat-icon>download</mat-icon> Executar Offline
+      </button>
     </div>
   </div>
 
   <!-- ═══════════════ Área principal ═══════════════ -->
   <div class="fluxo-corpo">
+
+    <!-- Menu lateral esquerdo: inserção de elementos -->
+    <aside class="fluxo-menu-esq">
+      <div class="menu-filtro">
+        <mat-icon>search</mat-icon>
+        <input type="text" [(ngModel)]="filtroElementos" placeholder="Buscar elemento…" spellcheck="false" autocomplete="off" />
+        <button *ngIf="filtroElementos" class="menu-filtro-limpar" (click)="filtroElementos = ''" aria-label="Limpar filtro">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- Resultado da busca -->
+      <div class="menu-secao" *ngIf="filtroElementos">
+        <div class="menu-secao-cab estatica"><mat-icon>search</mat-icon><span>Encontrados ({{ resultadosBusca.length }})</span></div>
+        <div class="menu-botoes" *ngIf="resultadosBusca.length">
+          <ng-container *ngFor="let r of resultadosBusca">
+            <button *ngIf="r.forma" class="ferr-btn" [class.ativo]="ferramenta === r.forma.tipo"
+              (click)="selecionarFerramenta(r.forma.tipo)" [matTooltip]="r.forma.nome"><mat-icon>{{ r.forma.icone }}</mat-icon></button>
+            <button *ngIf="r.icone" class="btn-ling" [style.background]="corDe(r.icone)" [style.color]="corTextoDe(corDe(r.icone))"
+              (click)="inserirIcone(r.icone)" [matTooltip]="r.icone">{{ abrevDe(r.icone) }}</button>
+          </ng-container>
+        </div>
+        <div class="menu-vazio" *ngIf="!resultadosBusca.length">Nenhum elemento encontrado.</div>
+      </div>
+
+      <!-- Categorias recolhíveis (fora da busca) -->
+      <ng-container *ngIf="!filtroElementos">
+        <div class="menu-secao">
+          <button class="menu-secao-cab" (click)="toggleCat('Ligações')">
+            <mat-icon>{{ catAberta('Ligações') ? 'expand_more' : 'chevron_right' }}</mat-icon><span>Ligações</span>
+          </button>
+          <div class="menu-botoes" *ngIf="catAberta('Ligações')">
+            <button class="ferr-btn" [class.ativo]="ferramenta === 'conectar'"
+              (click)="selecionarFerramenta('conectar')" matTooltip="Conectar: clique na origem e depois no destino">
+              <mat-icon>timeline</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="menu-secao">
+          <button class="menu-secao-cab" (click)="toggleCat('Formas')">
+            <mat-icon>{{ catAberta('Formas') ? 'expand_more' : 'chevron_right' }}</mat-icon><span>Formas</span>
+          </button>
+          <div class="menu-botoes" *ngIf="catAberta('Formas')">
+            <button *ngFor="let f of formas" class="ferr-btn" [class.ativo]="ferramenta === f.tipo"
+              (click)="selecionarFerramenta(f.tipo)" [matTooltip]="f.nome"><mat-icon>{{ f.icone }}</mat-icon></button>
+          </div>
+        </div>
+
+        <div class="menu-secao">
+          <button class="menu-secao-cab" (click)="toggleCat('Contêineres')">
+            <mat-icon>{{ catAberta('Contêineres') ? 'expand_more' : 'chevron_right' }}</mat-icon><span>Contêineres</span>
+          </button>
+          <div class="menu-botoes" *ngIf="catAberta('Contêineres')">
+            <button *ngFor="let f of containers" class="ferr-btn" [class.ativo]="ferramenta === f.tipo"
+              (click)="selecionarFerramenta(f.tipo)" [matTooltip]="f.nome"><mat-icon>{{ f.icone }}</mat-icon></button>
+          </div>
+        </div>
+
+        <div class="menu-secao">
+          <button class="menu-secao-cab" (click)="toggleCat('Imagem')">
+            <mat-icon>{{ catAberta('Imagem') ? 'expand_more' : 'chevron_right' }}</mat-icon><span>Imagem</span>
+          </button>
+          <div class="menu-botoes" *ngIf="catAberta('Imagem')">
+            <button class="ferr-btn" (click)="inputImagem.click()" matTooltip="Adicionar imagem"><mat-icon>add_photo_alternate</mat-icon></button>
+          </div>
+        </div>
+
+        <div class="menu-secao">
+          <button class="menu-secao-cab" (click)="toggleCat('Ícones')">
+            <mat-icon>{{ catAberta('Ícones') ? 'expand_more' : 'chevron_right' }}</mat-icon><span>Ícones</span>
+          </button>
+          <div class="menu-subgrupos" *ngIf="catAberta('Ícones')">
+            <div class="menu-secao sub">
+              <button class="menu-secao-cab" (click)="toggleCat('Emojis')">
+                <mat-icon>{{ catAberta('Emojis') ? 'expand_more' : 'chevron_right' }}</mat-icon><span>Emojis</span>
+              </button>
+              <div class="menu-emojis" *ngIf="catAberta('Emojis')">
+                <button *ngFor="let e of emojis" class="btn-emoji" (click)="inserirEmoji(e)" matTooltip="Inserir emoji">{{ e }}</button>
+              </div>
+            </div>
+
+            <div class="menu-secao sub" *ngFor="let cat of catalogoIcones">
+              <button class="menu-secao-cab" (click)="toggleCat(cat.categoria)">
+                <mat-icon>{{ catAberta(cat.categoria) ? 'expand_more' : 'chevron_right' }}</mat-icon><span>{{ cat.categoria }}</span>
+              </button>
+              <div class="menu-botoes" *ngIf="catAberta(cat.categoria)">
+                <button *ngFor="let n of cat.nomes" class="btn-ling" [style.background]="corDe(n)" [style.color]="corTextoDe(corDe(n))"
+                  (click)="inserirIcone(n)" [matTooltip]="n">{{ abrevDe(n) }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <input #inputImagem type="file" accept="image/*" hidden (change)="adicionarImagem($event)" />
+    </aside>
 
     <!-- Canvas -->
     <div class="fluxo-canvas-wrap" [class.tema-claro]="temaClaro"
@@ -230,11 +291,23 @@
             (dblclick)="editarTextoNo($event, no)">
 
             <!-- Imagem -->
-            <image *ngIf="no.tipo === 'imagem'" [attr.href]="no.src" [attr.x]="no.x" [attr.y]="no.y"
-              [attr.width]="no.largura" [attr.height]="no.altura" preserveAspectRatio="none" />
+            <ng-container *ngIf="no.tipo === 'imagem'">
+              <clipPath [attr.id]="clipImagemId(no)">
+                <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
+                  [attr.rx]="raioIcone(no)" />
+              </clipPath>
+              <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
+                [attr.rx]="raioIcone(no)" [attr.fill]="no.corFundo" />
+              <image [attr.href]="no.src" [attr.x]="imagemX(no)" [attr.y]="imagemY(no)"
+                [attr.width]="imagemLargura(no)" [attr.height]="imagemAltura(no)"
+                [attr.clip-path]="'url(#' + clipImagemId(no) + ')'" preserveAspectRatio="xMidYMid meet" />
+            </ng-container>
             <rect *ngIf="no.tipo === 'imagem' && no.espessuraBorda > 0" [attr.x]="no.x" [attr.y]="no.y"
               [attr.width]="no.largura" [attr.height]="no.altura" fill="none" [attr.stroke]="no.corBorda"
-              [attr.stroke-width]="no.espessuraBorda" />
+              [attr.stroke-width]="no.espessuraBorda" [attr.rx]="raioIcone(no)" />
+            <text *ngIf="no.tipo === 'imagem' && no.texto" class="icone-legenda"
+              [attr.x]="cx(no)" [attr.y]="no.y + no.altura + 13" text-anchor="middle"
+              [attr.fill]="temaClaro ? '#111827' : '#f4fbff'">{{ no.texto }}</text>
 
             <!-- Retângulo / arredondado / terminador -->
             <rect *ngIf="no.tipo === 'retangulo' || no.tipo === 'arredondado' || no.tipo === 'terminador'"
@@ -301,6 +374,10 @@
               (dblclick)="removerPonto($event, csel, i)" (click)="$event.stopPropagation()" />
           </g>
 
+          <!-- Guias de alinhamento (snap) -->
+          <line *ngIf="guiaV as g" class="guia-alinhamento" [attr.x1]="g.x" [attr.y1]="g.y1" [attr.x2]="g.x" [attr.y2]="g.y2" />
+          <line *ngIf="guiaH as g" class="guia-alinhamento" [attr.x1]="g.x1" [attr.y1]="g.y" [attr.x2]="g.x2" [attr.y2]="g.y" />
+
           <rect *ngIf="retanguloSelecao as r" class="retangulo-selecao-area"
             [attr.x]="r.x" [attr.y]="r.y" [attr.width]="r.largura" [attr.height]="r.altura" />
         </g>
@@ -354,6 +431,12 @@
         <button *ngIf="no.tipo === 'imagem'" class="painel-troca-img" (click)="trocarImagem(); inputImagem.click()">
           <mat-icon>image</mat-icon> Trocar imagem
         </button>
+
+        <label class="campo" *ngIf="no.tipo === 'imagem'">
+          <span>Tamanho da imagem <b>{{ escalaImagem(no) * 100 | number:'1.0-0' }}%</b></span>
+          <input type="range" min="20" max="100" step="1" [value]="escalaImagem(no) * 100"
+            (input)="setEscalaImagem(no, $any($event.target).value)" />
+        </label>
 
         <label class="campo cor">
           <span>Cor de fundo</span>

@@ -70,7 +70,7 @@ export class EditorFluxogramaComponent implements OnInit {
     { tipo: 'elipse', nome: 'Elipse', icone: 'lens_blur' },
     { tipo: 'paralelogramo', nome: 'Entrada/Saída', icone: 'polyline' },
     { tipo: 'hexagono', nome: 'Preparação', icone: 'hexagon' },
-    { tipo: 'cilindro', nome: 'Dados', icone: 'database' },
+    { tipo: 'cilindro', nome: 'Dados', icone: 'storage' },
   ];
 
   readonly containers: OpcaoForma[] = [
@@ -81,6 +81,53 @@ export class EditorFluxogramaComponent implements OnInit {
     { tipo: 'swimlane', nome: 'Raia', icone: 'view_week' },
   ];
 
+  readonly emojis: string[] = [
+    '😀', '😄', '😁', '😆', '😅', '😂', '🙂', '😉', '😊', '😍', '😎', '🤔',
+    '😐', '😴', '😮', '😢', '😭', '😡', '🤯', '🥳', '😱', '🤩', '😇', '🤨',
+    '🙃', '😬', '😌', '🤗', '🧐', '😳', '🥶', '🤢',
+    '🧍', '🚶', '🏃', '🕴️', '💁', '🙋', '🙆', '🙅', '🤷', '🤦',
+    '🧑‍💻', '👨‍💻', '👩‍💻', '👷', '🧑‍🏫', '🧑‍💼', '🧑‍🔧', '🦸', '🦹', '🧙', '🧑‍🚀', '🧑‍🍳',
+  ];
+
+  // Catálogo de ícones por categoria. Crachás de texto nas cores das marcas
+  // (não são os logotipos oficiais). A abreviação e a cor são geradas por nome.
+  readonly catalogoIcones: { categoria: string; nomes: string[] }[] = [
+    { categoria: 'Diversos', nomes: ['Computador', 'Celular', 'Servidor', 'Banco de Dados', 'Nuvem', 'Casa', 'Chave', 'Cadeado', 'Token', 'Certificado', 'Usuário', 'Rede', 'API', 'Webhook', 'Fila', 'Arquivo', 'Pasta', 'JSON', 'YAML', 'XML', 'JWT', 'JWE', 'JWK', 'JWS', 'OAuth', 'Timer'] },
+    { categoria: 'Linguagens', nomes: ['Python', 'JavaScript', 'TypeScript', 'Java', 'C#', 'Go', 'Rust', 'C++', 'C', 'Kotlin', 'PHP', 'Swift', 'Dart', 'Scala', 'Ruby', 'Julia', 'R', 'Bash', 'Node.js'] },
+    { categoria: 'Empresas', nomes: ['Apple', 'Microsoft', 'Google', 'Amazon', 'Meta', 'NVIDIA', 'OpenAI', 'Oracle', 'IBM', 'Intel', 'AMD', 'Cisco', 'Adobe', 'Salesforce', 'SAP', 'Samsung', 'Sony', 'Dell', 'Lenovo', 'Tencent'] },
+    { categoria: 'Gateways de API', nomes: ['Apigee', 'Azure API Management', 'AWS API Gateway', 'Kong', 'NGINX', 'Traefik', 'Gravitee', 'WSO2', 'Axway', 'IBM API Connect', 'Oracle API', 'Red Hat', 'Tyk', 'MuleSoft', 'Broadcom', 'Solo.io', 'Envoy Proxy', 'Apache APISIX', 'Express Gateway', 'KrakenD', 'Zuplo', 'Akamai', 'Cloudflare', 'Boomi', 'Software AG', 'Gloo Gateway'] },
+    { categoria: 'Front-end', nomes: ['React', 'Angular', 'Vue.js', 'Svelte', 'Next.js', 'Nuxt.js', 'Remix', 'Astro', 'Tailwind CSS', 'Bootstrap'] },
+    { categoria: 'Back-end', nomes: ['Spring Boot', 'ASP.NET Core', 'Node.js', 'Express.js', 'NestJS', 'Django', 'FastAPI', 'Flask', 'Laravel', 'Ruby on Rails', 'Quarkus', 'Micronaut'] },
+    { categoria: 'Mobile', nomes: ['Flutter', 'React Native', 'Android SDK', 'Jetpack Compose', 'SwiftUI', '.NET MAUI', 'Ionic'] },
+    { categoria: 'Desktop', nomes: ['Electron', 'Qt', 'JavaFX', 'WPF', 'Avalonia', 'GTK'] },
+    { categoria: 'Inteligência Artificial', nomes: ['TensorFlow', 'PyTorch', 'Keras', 'Hugging Face', 'LangChain', 'LlamaIndex', 'MLflow', 'ONNX', 'OpenCV', 'Scikit-learn', 'XGBoost'] },
+    { categoria: 'Ciência de Dados', nomes: ['Pandas', 'NumPy', 'SciPy', 'Matplotlib', 'Plotly', 'Seaborn', 'Apache Spark', 'Apache Hadoop', 'Jupyter', 'Polars'] },
+    { categoria: 'Banco de Dados', nomes: ['PostgreSQL', 'MySQL', 'SQL Server', 'Oracle Database', 'MongoDB', 'Redis', 'Cassandra', 'Elasticsearch', 'Neo4j', 'SQLite', 'MariaDB'] },
+    { categoria: 'ORM', nomes: ['Hibernate', 'Entity Framework', 'Prisma', 'Sequelize', 'TypeORM', 'SQLAlchemy', 'JPA', 'Doctrine'] },
+    { categoria: 'APIs', nomes: ['OpenAPI', 'GraphQL', 'gRPC', 'Postman', 'Insomnia', 'SoapUI', 'AsyncAPI'] },
+    { categoria: 'Mensageria', nomes: ['Apache Kafka', 'RabbitMQ', 'ActiveMQ', 'Apache Pulsar', 'IBM MQ', 'Amazon SQS', 'Google Pub/Sub', 'Azure Service Bus', 'NATS'] },
+    { categoria: 'Containers', nomes: ['Docker', 'Podman', 'containerd', 'Buildah'] },
+    { categoria: 'Orquestração', nomes: ['Kubernetes', 'OpenShift', 'Docker Swarm', 'Nomad', 'Rancher'] },
+    { categoria: 'DevOps / CI-CD', nomes: ['Jenkins', 'GitHub Actions', 'GitLab CI/CD', 'Azure DevOps', 'Bamboo', 'TeamCity', 'CircleCI', 'ArgoCD', 'FluxCD', 'Tekton'] },
+    { categoria: 'Cloud', nomes: ['AWS', 'Microsoft Azure', 'Google Cloud', 'Oracle Cloud', 'IBM Cloud', 'DigitalOcean', 'Cloudflare'] },
+    { categoria: 'Infra como Código', nomes: ['Terraform', 'OpenTofu', 'Ansible', 'Puppet', 'Chef', 'SaltStack', 'Pulumi'] },
+    { categoria: 'Monitoramento', nomes: ['Dynatrace', 'Prometheus', 'Grafana', 'Datadog', 'New Relic', 'Splunk', 'Elastic Stack', 'Zabbix', 'Nagios', 'Jaeger', 'Zipkin'] },
+    { categoria: 'Segurança', nomes: ['Keycloak', 'HashiCorp Vault', 'OAuth 2.0', 'OpenID Connect', 'JWT', 'SonarQube', 'OWASP ZAP', 'Burp Suite', 'Snyk', 'Trivy', 'Checkmarx', 'Fortify'] },
+    { categoria: 'Testes', nomes: ['JUnit', 'NUnit', 'xUnit', 'Mockito', 'Jest', 'Cypress', 'Playwright', 'Selenium', 'Cucumber', 'Karate', 'Gatling', 'JMeter', 'Testcontainers'] },
+    { categoria: 'Versionamento', nomes: ['Git', 'GitHub', 'GitLab', 'Bitbucket', 'Azure Repos'] },
+    { categoria: 'Build', nomes: ['Maven', 'Gradle', 'npm', 'pnpm', 'Yarn', 'Vite', 'Webpack', 'Rollup', 'Parcel', 'Turbopack'] },
+    { categoria: 'Linux / Automação', nomes: ['Bash', 'PowerShell', 'Make', 'CMake', 'GNU Make'] },
+    { categoria: 'Big Data', nomes: ['Apache Spark', 'Hadoop', 'Hive', 'Flink', 'Airflow', 'Kafka', 'Delta Lake', 'Iceberg'] },
+    { categoria: 'BI', nomes: ['Power BI', 'Tableau', 'Looker', 'Qlik Sense', 'Apache Superset', 'Metabase'] },
+    { categoria: 'Design / UX', nomes: ['Figma', 'Adobe XD', 'Sketch', 'Miro', 'FigJam', 'Canva'] },
+    { categoria: 'IDEs e Editores', nomes: ['VS Code', 'IntelliJ IDEA', 'Visual Studio', 'Eclipse', 'PyCharm', 'WebStorm', 'Rider', 'Android Studio', 'Xcode', 'NetBeans', 'Vim', 'Neovim'] },
+    { categoria: 'Gestão Ágil', nomes: ['Jira', 'Confluence', 'Azure Boards', 'Trello', 'Monday', 'Asana', 'ClickUp', 'Notion'] },
+    { categoria: 'Low-Code / No-Code', nomes: ['Power Platform', 'OutSystems', 'Mendix', 'Retool', 'Appsmith', 'Bubble'] },
+    { categoria: 'Blockchain', nomes: ['Hardhat', 'Foundry', 'Truffle', 'Ganache', 'Remix IDE', 'Web3.js', 'Ethers.js'] },
+    { categoria: 'Game Development', nomes: ['Unity', 'Unreal Engine', 'Godot', 'CryEngine'] },
+    { categoria: 'Embedded / IoT', nomes: ['PlatformIO', 'Arduino IDE', 'ESP-IDF', 'Zephyr RTOS', 'FreeRTOS', 'STM32CubeIDE'] },
+  ];
+
   readonly tracos: { id: TipoTraco; nome: string }[] = [
     { id: 'solido', nome: 'Traço sólido' },
     { id: 'giz', nome: 'Risco de giz' },
@@ -89,6 +136,303 @@ export class EditorFluxogramaComponent implements OnInit {
 
   get todasFormas(): OpcaoForma[] {
     return [...this.formas, ...this.containers];
+  }
+
+  filtroElementos = '';
+
+  get formasFiltradas(): OpcaoForma[] {
+    return this.filtrarElementos(this.formas);
+  }
+
+  get containersFiltradas(): OpcaoForma[] {
+    return this.filtrarElementos(this.containers);
+  }
+
+  private filtrarElementos(lista: OpcaoForma[]): OpcaoForma[] {
+    const t = this.filtroElementos.trim().toLowerCase();
+    if (!t) return lista;
+    return lista.filter((f) => f.nome.toLowerCase().includes(t) || f.tipo.toLowerCase().includes(t));
+  }
+
+  // ─── Categorias recolhíveis (só "Formas" começa aberta) ───
+  categoriasAbertas: Record<string, boolean> = { Formas: true };
+
+  catAberta(nome: string): boolean {
+    return !!this.categoriasAbertas[nome];
+  }
+
+  toggleCat(nome: string): void {
+    this.categoriasAbertas[nome] = !this.categoriasAbertas[nome];
+  }
+
+  private _buscaTermo: string | null = null;
+  private _buscaCache: { forma?: OpcaoForma; icone?: string }[] = [];
+
+  /**
+   * Itens que correspondem à busca (formas, contêineres e ícones do catálogo).
+   * Memoizado pelo termo para manter a MESMA referência entre ciclos de detecção
+   * de mudança — senão o *ngFor recria os botões e o clique não registra.
+   */
+  get resultadosBusca(): { forma?: OpcaoForma; icone?: string }[] {
+    const t = this.filtroElementos.trim().toLowerCase();
+    if (t === this._buscaTermo) return this._buscaCache;
+    this._buscaTermo = t;
+    const res: { forma?: OpcaoForma; icone?: string }[] = [];
+    if (t) {
+      [...this.formas, ...this.containers].forEach((f) => {
+        if (f.nome.toLowerCase().includes(t) || f.tipo.toLowerCase().includes(t)) res.push({ forma: f });
+      });
+      this.catalogoIcones.forEach((c) => {
+        c.nomes.forEach((n) => {
+          if (n.toLowerCase().includes(t) || c.categoria.toLowerCase().includes(t)) res.push({ icone: n });
+        });
+      });
+    }
+    this._buscaCache = res;
+    return res;
+  }
+
+  // ─── Crachás de ícone (SVG em data URL, sem recursos externos) ───
+  private readonly coresMarca: Record<string, string> = {
+    python: '#3776AB', javascript: '#F7DF1E', typescript: '#3178C6', java: '#007396', 'c#': '#239120',
+    go: '#00ADD8', rust: '#DEA584', 'c++': '#00599C', c: '#A8B9CC', kotlin: '#7F52FF', php: '#777BB4',
+    swift: '#F05138', dart: '#0175C2', scala: '#DC322F', ruby: '#CC342D', julia: '#9558B2', r: '#276DC3',
+    bash: '#4EAA25', 'node.js': '#5FA04E', apple: '#111111', microsoft: '#0078D4', google: '#4285F4',
+    amazon: '#FF9900', aws: '#FF9900', meta: '#0866FF', nvidia: '#76B900', openai: '#10A37F', oracle: '#C74634',
+    ibm: '#0F62FE', intel: '#0071C5', amd: '#ED1C24', cisco: '#1BA0D7', adobe: '#FA0F00', salesforce: '#00A1E0',
+    sap: '#008FD3', samsung: '#1428A0', sony: '#111111', dell: '#007DB8', lenovo: '#E2231A', tencent: '#0052D9',
+    react: '#61DAFB', angular: '#DD0031', 'vue.js': '#4FC08D', svelte: '#FF3E00', 'next.js': '#111111',
+    'nuxt.js': '#00DC82', astro: '#FF5D01', 'tailwind css': '#38BDF8', bootstrap: '#7952B3', 'spring boot': '#6DB33F',
+    'asp.net core': '#512BD4', django: '#092E20', fastapi: '#009688', flask: '#111111', laravel: '#FF2D20',
+    'ruby on rails': '#CC0000', flutter: '#02569B', 'react native': '#61DAFB', ionic: '#3880FF', electron: '#47848F',
+    qt: '#41CD52', tensorflow: '#FF6F00', pytorch: '#EE4C2C', keras: '#D00000', 'hugging face': '#FFD21E',
+    opencv: '#5C3EE8', 'scikit-learn': '#F7931E', pandas: '#150458', numpy: '#013243', matplotlib: '#11557C',
+    plotly: '#3F4F75', jupyter: '#F37626', postgresql: '#4169E1', mysql: '#4479A1', 'sql server': '#CC2927',
+    mongodb: '#47A248', redis: '#DC382D', cassandra: '#1287B1', elasticsearch: '#005571', neo4j: '#4581C3',
+    sqlite: '#003B57', mariadb: '#003545', graphql: '#E10098', grpc: '#244B5A', postman: '#FF6C37',
+    'apache kafka': '#231F20', kafka: '#231F20', rabbitmq: '#FF6600', nats: '#27AAE1', docker: '#2496ED',
+    podman: '#892CA0', kubernetes: '#326CE5', openshift: '#EE0000', rancher: '#0075A8', jenkins: '#D24939',
+    'github actions': '#2088FF', 'gitlab ci/cd': '#FC6D26', 'azure devops': '#0078D7', circleci: '#343434',
+    argocd: '#EF7B4D', terraform: '#7B42BC', ansible: '#EE0000', pulumi: '#8A3391', prometheus: '#E6522C',
+    grafana: '#F46800', datadog: '#632CA6', 'new relic': '#008C99', splunk: '#000000', keycloak: '#008AAA',
+    sonarqube: '#4E9BCD', snyk: '#4C4A73', junit: '#25A162', jest: '#C21325', cypress: '#17202C',
+    playwright: '#2EAD33', selenium: '#43B02A', git: '#F05032', github: '#181717', gitlab: '#FC6D26',
+    bitbucket: '#0052CC', maven: '#C71A36', gradle: '#02303A', npm: '#CB3837', yarn: '#2C8EBB', vite: '#646CFF',
+    webpack: '#8DD6F9', powershell: '#5391FE', 'power bi': '#F2C811', tableau: '#E97627', figma: '#F24E1E',
+    canva: '#00C4CC', 'vs code': '#007ACC', 'intellij idea': '#000000', 'visual studio': '#5C2D91',
+    eclipse: '#2C2255', pycharm: '#21D789', 'android studio': '#3DDC84', xcode: '#147EFB', jira: '#0052CC',
+    notion: '#000000', trello: '#0052CC', unity: '#000000', 'unreal engine': '#0E1128', godot: '#478CBF',
+    cloudflare: '#F38020', vim: '#019733', json: '#EAB308', yaml: '#CB171E', xml: '#F1662A', jwt: '#FB015B',
+    jwe: '#7B2FBE', jwk: '#2E7D32', jws: '#1565C0', certificado: '#B8860B', chave: '#C7A008', cadeado: '#607D8B',
+    token: '#8E44AD', servidor: '#455A64', computador: '#37474F', celular: '#00695C', nuvem: '#0288D1',
+    casa: '#6D4C41', 'banco de dados': '#00838F', rede: '#5E35B1', usuário: '#3949AB', arquivo: '#546E7A',
+    pasta: '#F9A825', timer: '#00897B', webhook: '#7B1FA2', fila: '#455A64', oauth: '#EB5424',
+    apigee: '#4285F4', 'azure api management': '#0078D4', 'aws api gateway': '#FF9900', kong: '#1155CB',
+    nginx: '#009639', traefik: '#24A1C1', gravitee: '#663CDC', wso2: '#FF7300', axway: '#CE0E2D',
+    'ibm api connect': '#0F62FE', 'oracle api': '#C74634', 'red hat': '#EE0000', tyk: '#009D9A',
+    mulesoft: '#00A0DF', broadcom: '#CC092F', 'solo.io': '#24BFA5', 'envoy proxy': '#AC6199',
+    'apache apisix': '#E2231A', 'express gateway': '#444444', krakend: '#00B0EF', zuplo: '#FF00BD',
+    akamai: '#0F7FC0', boomi: '#00AEEF', 'software ag': '#1B4EA0', 'gloo gateway': '#24BFA5',
+    remix: '#121212', nestjs: '#E0234E', 'express.js': '#000000', quarkus: '#4695EB', micronaut: '#0FA5A5',
+    'jetpack compose': '#4285F4', swiftui: '#0071E3', '.net maui': '#512BD4', javafx: '#007396',
+    wpf: '#0C54C2', avalonia: '#8C2FDE', gtk: '#4A86CF', langchain: '#1C3C3C', llamaindex: '#5A67D8',
+    mlflow: '#0194E2', onnx: '#005CED', xgboost: '#189FDD', scipy: '#8CAAE6', seaborn: '#4C72B0',
+    'apache hadoop': '#66CCFF', hadoop: '#66CCFF', polars: '#CD792C', 'oracle database': '#C74634',
+    hibernate: '#59666C', 'entity framework': '#512BD4', prisma: '#2D3748', sequelize: '#52B0E7',
+    typeorm: '#FE0902', sqlalchemy: '#D71F00', jpa: '#59666C', doctrine: '#FB6B00', openapi: '#6BA539',
+    insomnia: '#4000BF', soapui: '#5AA700', asyncapi: '#2856FF', activemq: '#78A540', 'apache pulsar': '#188FFF',
+    'ibm mq': '#0F62FE', 'amazon sqs': '#FF4F8B', 'google pub/sub': '#4285F4', 'azure service bus': '#0078D4',
+    containerd: '#575757', buildah: '#2496ED', 'docker swarm': '#2496ED', nomad: '#00CA8E',
+    bamboo: '#0052CC', teamcity: '#000000', fluxcd: '#5468FF', tekton: '#FD495C', 'google cloud': '#4285F4',
+    'oracle cloud': '#F80000', 'ibm cloud': '#1261FE', digitalocean: '#0080FF', opentofu: '#FFDA18',
+    puppet: '#FFAE1A', chef: '#F09820', saltstack: '#00A651', dynatrace: '#1496FF', zabbix: '#D40000',
+    nagios: '#CC0000', jaeger: '#66CFE3', zipkin: '#FF8000', 'openid connect': '#F78C40',
+    'owasp zap': '#00549E', 'burp suite': '#FF6633', trivy: '#1904DA', nunit: '#004071', xunit: '#000000',
+    mockito: '#78A641', cucumber: '#23D96C', gatling: '#FF3C2E', jmeter: '#D22128', testcontainers: '#291A44',
+    'azure repos': '#0078D7', pnpm: '#F69220', rollup: '#EC4A3F', parcel: '#E7A93E', turbopack: '#EF4444',
+    make: '#427819', cmake: '#064F8C', 'gnu make': '#427819', flink: '#E6526F', airflow: '#017CEE',
+    hive: '#FDEE21', 'delta lake': '#00ADD4', iceberg: '#4B8BBE', looker: '#4285F4', 'qlik sense': '#009848',
+    'apache superset': '#20A6C9', metabase: '#509EE3', 'adobe xd': '#FF61F6', sketch: '#F7B500',
+    miro: '#FFD02F', figjam: '#FF7A00', webstorm: '#00CDD7', rider: '#C90F5E', netbeans: '#1B6AC6',
+    neovim: '#57A143', confluence: '#172B4D', 'azure boards': '#0078D7', monday: '#FF3D57', asana: '#F06A6A',
+    clickup: '#7B68EE', 'power platform': '#742774', outsystems: '#CC092F', mendix: '#0595DB',
+    retool: '#3D3D3D', appsmith: '#2A2929', bubble: '#0000FF', hardhat: '#FFF100', foundry: '#000000',
+    truffle: '#3FE0C5', ganache: '#E4A663', 'remix ide': '#B7B7B7', 'web3.js': '#F16822', 'ethers.js': '#2535A0',
+    cryengine: '#000000', platformio: '#F5822A', 'arduino ide': '#00979D', 'esp-idf': '#E7352C',
+    'zephyr rtos': '#7B3F96', freertos: '#59CE3F', stm32cubeide: '#03234B', 'apache spark': '#E25A1C',
+  };
+
+  private readonly abrevMarca: Record<string, string> = {
+    'c#': 'C#', 'c++': 'C++', c: 'C', r: 'R', go: 'Go', 'node.js': 'Node', php: 'php', bash: '>_',
+    javascript: 'JS', typescript: 'TS', 'asp.net core': '.NET', '.net maui': 'MAUI', 'vs code': 'VSC',
+    'sql server': 'SQL', 'power bi': 'BI', 'ruby on rails': 'RoR', 'github actions': 'GHA', 'gitlab ci/cd': 'CI',
+    graphql: 'GQL', grpc: 'gRPC', jwt: 'JWT', jwe: 'JWE', jwk: 'JWK', jws: 'JWS', 'oauth 2.0': 'OAu',
+    'openid connect': 'OIDC', npm: 'npm', 'next.js': 'Nx', 'nuxt.js': 'Nu', 'vue.js': 'Vue', json: '{}',
+    yaml: 'YAML', xml: '</>', computador: 'PC', celular: 'Cel', servidor: 'Srv', 'banco de dados': 'DB',
+    nuvem: 'Nuv', casa: 'Casa', chave: 'Key', cadeado: 'Lock', token: 'Tok', certificado: 'Cert',
+    usuário: 'Usr', rede: 'Net', api: 'API', webhook: 'Hook', fila: 'Fila', arquivo: 'Arq', pasta: 'Dir',
+    oauth: 'OAu', timer: 'Tmr',
+    apple: 'App', microsoft: 'MS', google: 'G', amazon: 'AMZ', meta: 'MT', nvidia: 'NV', openai: 'AI',
+    oracle: 'ORA', ibm: 'IBM', intel: 'INT', amd: 'AMD', cisco: 'CIS', adobe: 'Ad', salesforce: 'SF',
+    sap: 'SAP', samsung: 'SS', sony: 'SNY', dell: 'DL', lenovo: 'LNV', tencent: 'TCT',
+  };
+
+  corDe(nome: string): string {
+    const k = nome.toLowerCase();
+    return this.coresMarca[k] || this.corHash(nome);
+  }
+
+  private corHash(nome: string): string {
+    let h = 0;
+    for (let i = 0; i < nome.length; i += 1) h = (h * 31 + nome.charCodeAt(i)) | 0;
+    const hue = Math.abs(h) % 360;
+    return `hsl(${hue}, 52%, 40%)`;
+  }
+
+  corTextoDe(cor: string): string {
+    if (cor[0] !== '#') return '#ffffff';
+    const r = parseInt(cor.slice(1, 3), 16);
+    const g = parseInt(cor.slice(3, 5), 16);
+    const b = parseInt(cor.slice(5, 7), 16);
+    const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return lum > 0.62 ? '#111111' : '#ffffff';
+  }
+
+  abrevDe(nome: string): string {
+    const k = nome.toLowerCase();
+    if (this.abrevMarca[k]) return this.abrevMarca[k];
+    const limpo = nome.replace(/\.(js|io|net)\b/gi, '').trim();
+    const palavras = limpo
+      .split(/[\s./_-]+/)
+      .filter((p) => p.length > 0 && !['de', 'the', 'on', 'of', 'and'].includes(p.toLowerCase()));
+    if (palavras.length >= 2) return (palavras[0][0] + palavras[1][0]).toUpperCase();
+    const w = palavras[0] || nome;
+    return (w[0].toUpperCase() + (w[1] || '')).slice(0, 3);
+  }
+
+  // Glifos (traços em coordenadas 0..24) por conceito específico.
+  private readonly glifosNome: Record<string, string> = {
+    computador: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+    celular: '<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/>',
+    servidor: '<rect x="3" y="4" width="18" height="7" rx="1"/><rect x="3" y="13" width="18" height="7" rx="1"/><path d="M7 7.5h.01M7 16.5h.01"/>',
+    'banco de dados': '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.6 3.6 3 8 3s8-1.4 8-3V5M4 12c0 1.6 3.6 3 8 3s8-1.4 8-3"/>',
+    nuvem: '<path d="M7 18a4 4 0 010-8 5 5 0 019.6-1.4A3.5 3.5 0 1117 18z"/>',
+    casa: '<path d="M3 11l9-8 9 8M5 10v10h14V10"/>',
+    chave: '<circle cx="7" cy="15" r="4"/><path d="M10 12l9-9 3 3-3 3 2 2"/>',
+    cadeado: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/>',
+    token: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a2 2 0 010 4h-4"/>',
+    certificado: '<rect x="3" y="4" width="18" height="12" rx="2"/><circle cx="12" cy="19" r="2"/><path d="M8 8h8M8 11h5"/>',
+    'usuário': '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/>',
+    rede: '<circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v3M11 11l-5 6M13 11l5 6"/>',
+    api: '<circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 12h8"/>',
+    webhook: '<circle cx="12" cy="7" r="3"/><path d="M9.5 9L6 17M14.5 9L18 17M6 17h12"/>',
+    fila: '<rect x="3" y="6" width="4" height="12"/><rect x="10" y="6" width="4" height="12"/><rect x="17" y="6" width="4" height="12"/>',
+    arquivo: '<path d="M6 2h8l6 6v14H6z"/><path d="M14 2v6h6"/>',
+    pasta: '<path d="M3 7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>',
+    timer: '<circle cx="12" cy="13" r="8"/><path d="M12 13V8M9 2h6"/>',
+    json: '<path d="M8 4c-2 0-3 1-3 3v2c0 1-1 2-2 2 1 0 2 1 2 2v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 2 2 2-1 0-2 1-2 2v2c0 2-1 3-3 3"/>',
+    xml: '<path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/>',
+    yaml: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+    jwt: '<path d="M12 2l8 3v6c0 5-3.5 8-8 11-4.5-3-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/>',
+    jwe: '<path d="M12 2l8 3v6c0 5-3.5 8-8 11-4.5-3-8-6-8-11V5z"/><path d="M8 11h8"/>',
+    jwk: '<path d="M12 2l8 3v6c0 5-3.5 8-8 11-4.5-3-8-6-8-11V5z"/><circle cx="12" cy="11" r="2"/>',
+    jws: '<path d="M12 2l8 3v6c0 5-3.5 8-8 11-4.5-3-8-6-8-11V5z"/><path d="M9 11c1-1 5-1 5 1s-4 2-3 4"/>',
+    oauth: '<path d="M12 2l8 3v6c0 5-3.5 8-8 11-4.5-3-8-6-8-11V5z"/><circle cx="12" cy="11" r="2"/>',
+  };
+
+  // Glifos por categoria (quando o item não tem um específico).
+  private readonly glifosCategoria: Record<string, string> = {
+    Linguagens: '<path d="M8 6l-5 6 5 6M16 6l5 6-5 6"/>',
+    Empresas: '<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2M10 21v-3h4v3"/>',
+    'Gateways de API': '<circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 12h8"/>',
+    'Front-end': '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M9 21h6"/>',
+    'Back-end': '<rect x="3" y="4" width="18" height="7" rx="1"/><rect x="3" y="13" width="18" height="7" rx="1"/><path d="M7 7.5h.01M7 16.5h.01"/>',
+    Mobile: '<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/>',
+    Desktop: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+    'Inteligência Artificial': '<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M7 3v2M17 3v2"/>',
+    'Ciência de Dados': '<path d="M4 20V10M10 20V4M16 20v-8M2 20h20"/>',
+    'Banco de Dados': '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.6 3.6 3 8 3s8-1.4 8-3V5M4 12c0 1.6 3.6 3 8 3s8-1.4 8-3"/>',
+    ORM: '<path d="M9 12a3 3 0 013-3h1a3 3 0 010 6M15 12a3 3 0 01-3 3h-1a3 3 0 010-6"/>',
+    APIs: '<circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 12h8"/>',
+    Mensageria: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+    Containers: '<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v9"/>',
+    'Orquestração': '<path d="M12 2l4 2v4l-4 2-4-2V4z"/><path d="M12 10v6M8 14l-4 4M16 14l4 4"/>',
+    'DevOps / CI-CD': '<path d="M21 12a9 9 0 11-2.6-6.4M21 3v5h-5"/>',
+    Cloud: '<path d="M7 18a4 4 0 010-8 5 5 0 019.6-1.4A3.5 3.5 0 1117 18z"/>',
+    'Infra como Código': '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/>',
+    Monitoramento: '<path d="M2 12h4l3-8 4 16 3-8h4"/>',
+    'Segurança': '<path d="M12 2l8 3v6c0 5-3.5 8-8 11-4.5-3-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/>',
+    Testes: '<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',
+    Versionamento: '<circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="9" r="2"/><path d="M6 8v8M6 12h6a3 3 0 003-3"/>',
+    Build: '<path d="M14 7l3-3 3 3-3 3zM14 7L4 17l3 3L17 10"/>',
+    'Linux / Automação': '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/>',
+    'Big Data': '<path d="M4 20V10M10 20V4M16 20v-8M2 20h20"/>',
+    BI: '<path d="M4 20V10M10 20V4M16 20v-8M2 20h20"/>',
+    'Design / UX': '<path d="M12 19l7-7-4-4-7 7-1 5z"/>',
+    'IDEs e Editores': '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 10l-2 2 2 2M15 10l2 2-2 2"/>',
+    'Gestão Ágil': '<rect x="3" y="4" width="5" height="16"/><rect x="10" y="4" width="5" height="10"/><rect x="17" y="4" width="4" height="13"/>',
+    'Low-Code / No-Code': '<rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/>',
+    Blockchain: '<path d="M9 12a3 3 0 013-3h1a3 3 0 010 6M15 12a3 3 0 01-3 3h-1a3 3 0 010-6"/>',
+    'Game Development': '<rect x="3" y="8" width="18" height="9" rx="4"/><path d="M8 12h.01M16 12h.01M12 11v2"/>',
+    'Embedded / IoT': '<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M7 3v2M17 3v2"/>',
+    Diversos: '<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>',
+  };
+
+  private readonly glifoGenerico = '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/>';
+
+  private categoriaDe(nome: string): string {
+    for (const c of this.catalogoIcones) {
+      if (c.nomes.includes(nome)) return c.categoria;
+    }
+    return '';
+  }
+
+  private glifoDe(nome: string): string {
+    const k = nome.toLowerCase();
+    if (this.glifosNome[k]) return this.glifosNome[k];
+    const cat = this.categoriaDe(nome);
+    if (cat && this.glifosCategoria[cat]) return this.glifosCategoria[cat];
+    return this.glifoGenerico;
+  }
+
+  private badgeIconeSvg(nome: string): string {
+    const corTexto = this.corTextoDe(this.corDe(nome));
+    if (this.categoriaDe(nome) === 'Empresas') {
+      const ab = this.escaparXml(this.abrevDe(nome));
+      const fs = ab.length >= 4 ? 30 : ab.length === 3 ? 40 : 52;
+      return (
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">` +
+        `<text x="50" y="54" font-size="${fs}" font-family="Arial,Helvetica,sans-serif" font-weight="800" fill="${corTexto}" text-anchor="middle" dominant-baseline="central">${ab}</text>` +
+        `</svg>`
+      );
+    }
+    const glifo = this.glifoDe(nome);
+    return (
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">` +
+      `<g transform="translate(26,26) scale(2)" fill="none" stroke="${corTexto}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${glifo}</g>` +
+      `</svg>`
+    );
+  }
+
+  inserirIcone(nome: string): void {
+    this.criarNoImagem('data:image/svg+xml,' + encodeURIComponent(this.badgeIconeSvg(nome)), 80, 80, nome, {
+      corFundo: this.corDe(nome),
+      escalaImagem: 0.72,
+    });
+    this.salvar();
+  }
+
+  inserirEmoji(e: string): void {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="55" font-size="78" text-anchor="middle" dominant-baseline="central">${e}</text></svg>`;
+    this.criarNoImagem('data:image/svg+xml,' + encodeURIComponent(svg), 72, 72, '', {
+      corFundo: this.padrao.corFundo,
+      escalaImagem: 0.82,
+    });
+    this.salvar();
+  }
+
+  private escaparXml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   nos: NoFluxograma[] = [];
@@ -149,6 +493,8 @@ export class EditorFluxogramaComponent implements OnInit {
   private curvouMovimento = false;
   private arrastePontoIndice = -1;
   private pendenteLinha: { c: ConexaoFluxograma; x: number; y: number } | null = null;
+  guiaV: { x: number; y1: number; y2: number } | null = null;
+  guiaH: { y: number; x1: number; x2: number } | null = null;
   private arrastando: NoFluxograma | null = null;
   private arrasteDx = 0;
   private arrasteDy = 0;
@@ -292,7 +638,13 @@ export class EditorFluxogramaComponent implements OnInit {
     leitor.readAsDataURL(arquivo);
   }
 
-  private criarNoImagem(src: string, w: number, h: number): void {
+  private criarNoImagem(
+    src: string,
+    w: number,
+    h: number,
+    texto = '',
+    opcoes: { corFundo?: string; escalaImagem?: number } = {},
+  ): void {
     const max = 240;
     const escala = Math.min(1, max / Math.max(w, h));
     const largura = Math.max(30, Math.round(w * escala));
@@ -305,13 +657,14 @@ export class EditorFluxogramaComponent implements OnInit {
       y: Math.round(centro.y - altura / 2),
       largura,
       altura,
-      texto: '',
-      corFundo: 'transparent',
+      texto,
+      corFundo: opcoes.corFundo || this.padrao.corFundo,
       corBorda: this.padrao.corBorda,
       espessuraBorda: 0,
       corTexto: this.padrao.corTexto,
       tipoTraco: 'solido',
       src,
+      escalaImagem: this.normalizarEscalaImagem(opcoes.escalaImagem ?? 1),
     };
     this.nos.push(no);
     this.selecionar(no.id, 'no');
@@ -495,6 +848,7 @@ export class EditorFluxogramaComponent implements OnInit {
       } else {
         this.arrastando.x = Math.round(p.x - this.arrasteDx);
         this.arrastando.y = Math.round(p.y - this.arrasteDy);
+        this.aplicarSnap(this.arrastando);
       }
     } else if (this.panning) {
       this.panX = evento.clientX - this.panIniX;
@@ -526,7 +880,51 @@ export class EditorFluxogramaComponent implements OnInit {
       this.curvouMovimento = false;
     }
     this.pendenteLinha = null;
+    this.guiaV = null;
+    this.guiaH = null;
     if (mudou) this.salvar();
+  }
+
+  /** Alinha o elemento arrastado ao centro ou às bordas de outro próximo (snap) e exibe a guia. */
+  private aplicarSnap(no: NoFluxograma): void {
+    const limiar = 6 / this.zoom;
+    const outros = this.nos.filter((n) => n.id !== no.id);
+    const dragX = [no.x, no.x + no.largura / 2, no.x + no.largura];
+    const dragY = [no.y, no.y + no.altura / 2, no.y + no.altura];
+    let melhorX: { delta: number; guia: number; o: NoFluxograma } | null = null;
+    let melhorY: { delta: number; guia: number; o: NoFluxograma } | null = null;
+
+    for (const o of outros) {
+      const oX = [o.x, o.x + o.largura / 2, o.x + o.largura];
+      const oY = [o.y, o.y + o.altura / 2, o.y + o.altura];
+      for (let i = 0; i < 3; i += 1) {
+        for (let j = 0; j < 3; j += 1) {
+          const dX = oX[j] - dragX[i];
+          if (Math.abs(dX) <= limiar && (!melhorX || Math.abs(dX) < Math.abs(melhorX.delta))) {
+            melhorX = { delta: dX, guia: oX[j], o };
+          }
+          const dY = oY[j] - dragY[i];
+          if (Math.abs(dY) <= limiar && (!melhorY || Math.abs(dY) < Math.abs(melhorY.delta))) {
+            melhorY = { delta: dY, guia: oY[j], o };
+          }
+        }
+      }
+    }
+
+    if (melhorX) {
+      no.x = Math.round(no.x + melhorX.delta);
+      const o = melhorX.o;
+      this.guiaV = { x: melhorX.guia, y1: Math.min(no.y, o.y) - 10, y2: Math.max(no.y + no.altura, o.y + o.altura) + 10 };
+    } else {
+      this.guiaV = null;
+    }
+    if (melhorY) {
+      no.y = Math.round(no.y + melhorY.delta);
+      const o = melhorY.o;
+      this.guiaH = { y: melhorY.guia, x1: Math.min(no.x, o.x) - 10, x2: Math.max(no.x + no.largura, o.x + o.largura) + 10 };
+    } else {
+      this.guiaH = null;
+    }
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -852,6 +1250,40 @@ export class EditorFluxogramaComponent implements OnInit {
   }
   cy(no: NoFluxograma): number {
     return no.y + no.altura / 2;
+  }
+
+  escalaImagem(no: NoFluxograma): number {
+    return this.normalizarEscalaImagem(no.escalaImagem ?? 1);
+  }
+
+  imagemX(no: NoFluxograma): number {
+    return no.x + (no.largura - this.imagemLargura(no)) / 2;
+  }
+
+  imagemY(no: NoFluxograma): number {
+    return no.y + (no.altura - this.imagemAltura(no)) / 2;
+  }
+
+  imagemLargura(no: NoFluxograma): number {
+    return no.largura * this.escalaImagem(no);
+  }
+
+  imagemAltura(no: NoFluxograma): number {
+    return no.altura * this.escalaImagem(no);
+  }
+
+  raioIcone(no: NoFluxograma): number {
+    return Math.min(18, Math.max(6, Math.min(no.largura, no.altura) * 0.18));
+  }
+
+  clipImagemId(no: NoFluxograma): string {
+    return `clip-img-${no.id}`;
+  }
+
+  private normalizarEscalaImagem(valor: unknown): number {
+    const n = Number(valor);
+    if (!Number.isFinite(n)) return 1;
+    return Math.min(1, Math.max(0.2, n));
   }
 
   /** Ponto na borda do nó na direção de (px, py). */
@@ -1497,8 +1929,32 @@ export class EditorFluxogramaComponent implements OnInit {
       maxX = Math.max(maxX, n.x + n.largura);
       maxY = Math.max(maxY, n.y + n.altura);
     }
+    // Inclui a geometria das ligações — curvas e waypoints podem extrapolar as formas.
+    for (const c of this.conexoes) {
+      for (const p of this.pontosLimiteConexao(c)) {
+        minX = Math.min(minX, p.x);
+        minY = Math.min(minY, p.y);
+        maxX = Math.max(maxX, p.x);
+        maxY = Math.max(maxY, p.y);
+      }
+    }
     const pad = 32;
     return { minX: minX - pad, minY: minY - pad, largura: maxX - minX + pad * 2, altura: maxY - minY + pad * 2 };
+  }
+
+  /** Pontos que delimitam a geometria de uma ligação (extremidades, waypoints e ponto de controle). */
+  private pontosLimiteConexao(c: ConexaoFluxograma): { x: number; y: number }[] {
+    const a = this.nos.find((n) => n.id === c.de);
+    const b = this.nos.find((n) => n.id === c.para);
+    if (!a || !b) return [];
+    const wp = c.pontos || [];
+    if (!wp.length) {
+      const ctrl = this.controleConexao(a, b, c.curvatura || 0);
+      const p1 = this.pontoBorda(a, ctrl.x, ctrl.y);
+      const p2 = this.pontoBorda(b, ctrl.x, ctrl.y);
+      return c.curvatura ? [p1, p2, ctrl] : [p1, p2];
+    }
+    return this.anchorsConexao(c) || [];
   }
 
   /** Constrói um SVG autônomo, recortado ao conteúdo e com setas coloridas embutidas. */
@@ -1803,6 +2259,11 @@ export class EditorFluxogramaComponent implements OnInit {
 
   setTamanhoSetaPadrao(v: string): void {
     this.padrao.tamanhoSeta = this.normalizarTamanhoSeta(v);
+    this.salvar();
+  }
+
+  setEscalaImagem(no: NoFluxograma, v: string): void {
+    no.escalaImagem = this.normalizarEscalaImagem(Number(v) / 100);
     this.salvar();
   }
 
