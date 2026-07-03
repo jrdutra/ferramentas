@@ -444,10 +444,15 @@
             (input)="setRaioBordaImagem(no, $any($event.target).value)" />
         </label>
 
-        <label class="campo cor">
+        <div class="campo cor">
           <span>Cor de fundo</span>
-          <input type="color" [(ngModel)]="no.corFundo" />
-        </label>
+          <div class="cor-controles">
+            <input type="color" [value]="corParaInput(no.corFundo)"
+              (input)="setCorFundo(no, $any($event.target).value)" />
+            <button type="button" class="sem-cor-btn" [class.ativo]="ehSemCor(no.corFundo)"
+              (click)="setSemCorFundo(no)">Sem cor</button>
+          </div>
+        </div>
         <label class="campo cor">
           <span>Cor da borda</span>
           <input type="color" [(ngModel)]="no.corBorda" />
@@ -547,7 +552,15 @@
         <h3><mat-icon>palette</mat-icon> Estilos padrão</h3>
         <p class="painel-dica">Aplicados às próximas formas e conexões criadas.</p>
 
-        <label class="campo cor"><span>Fundo da forma</span><input type="color" [(ngModel)]="padrao.corFundo" /></label>
+        <div class="campo cor">
+          <span>Fundo da forma</span>
+          <div class="cor-controles">
+            <input type="color" [value]="corParaInput(padrao.corFundo)"
+              (input)="setCorFundoPadrao($any($event.target).value)" />
+            <button type="button" class="sem-cor-btn" [class.ativo]="ehSemCor(padrao.corFundo)"
+              (click)="setSemCorFundoPadrao()">Sem cor</button>
+          </div>
+        </div>
         <label class="campo cor"><span>Borda da forma</span><input type="color" [(ngModel)]="padrao.corBorda" /></label>
         <label class="campo cor"><span>Texto da forma</span><input type="color" [(ngModel)]="padrao.corTexto" /></label>
         <label class="campo">

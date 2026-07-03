@@ -434,35 +434,92 @@ export class EditorFluxogramaComponent implements OnInit {
 
   private emojiIconeSvg(e: string): string {
     const tipo = this.tipoEmoji(e);
-    const face = (detalhe: string, fill = '#ffd166') =>
-      `<circle cx="50" cy="50" r="35" fill="${fill}" stroke="#332415" stroke-width="4"/>${detalhe}`;
-    const olhos = '<circle cx="38" cy="42" r="4" fill="#332415"/><circle cx="62" cy="42" r="4" fill="#332415"/>';
-    const sorriso = '<path d="M34 58 Q50 73 66 58" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>';
-    const pessoa =
-      '<circle cx="50" cy="29" r="14" fill="#ffd166" stroke="#332415" stroke-width="4"/>' +
-      '<path d="M25 84 Q50 53 75 84" fill="#66d9ef" stroke="#332415" stroke-width="4" stroke-linejoin="round"/>' +
-      '<path d="M38 31 Q50 41 62 31" fill="none" stroke="#332415" stroke-width="3" stroke-linecap="round"/>';
+    const seed = Array.from(e).reduce((acc, ch) => acc + (ch.codePointAt(0) || 0), 0);
+    const olho = (x: number, y = 43, rx = 4.4, ry = 5.6) =>
+      `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#2b1d17"/><circle cx="${x - 1.3}" cy="${y - 1.8}" r="1.2" fill="#fff" opacity=".72"/>`;
+    const olhos = olho(38) + olho(62);
+    const bochechas = '<ellipse cx="31" cy="55" rx="8" ry="4" fill="#f47b6b" opacity=".28"/><ellipse cx="69" cy="55" rx="8" ry="4" fill="#f47b6b" opacity=".28"/>';
+    const sorrisoAberto = '<path d="M33 58 Q50 78 67 58 Q50 67 33 58" fill="#3a231b"/><path d="M40 62 Q50 69 60 62" fill="none" stroke="#ff8da1" stroke-width="4" stroke-linecap="round"/>';
+    const sorrisoLinha = '<path d="M34 59 Q50 73 66 59" fill="none" stroke="#2b1d17" stroke-width="5" stroke-linecap="round"/>';
+    const defs = (claro: string, meio: string, escuro: string) =>
+      '<defs>' +
+      `<radialGradient id="face3d" cx="34%" cy="26%" r="70%"><stop offset="0" stop-color="${claro}"/><stop offset=".58" stop-color="${meio}"/><stop offset="1" stop-color="${escuro}"/></radialGradient>` +
+      '<radialGradient id="shine" cx="33%" cy="22%" r="36%"><stop offset="0" stop-color="#fff" stop-opacity=".78"/><stop offset=".7" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
+      '<filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#1b1010" flood-opacity=".32"/></filter>' +
+      '<linearGradient id="tear3d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8f3ff"/><stop offset="1" stop-color="#3187d6"/></linearGradient>' +
+      '<linearGradient id="glass3d" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26395c"/><stop offset=".55" stop-color="#101828"/><stop offset="1" stop-color="#050914"/></linearGradient>' +
+      '</defs>';
+    const face = (detalhe: string, paleta = ['#fff1a8', '#ffd057', '#e99723']) =>
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${defs(paleta[0], paleta[1], paleta[2])}` +
+      '<ellipse cx="50" cy="89" rx="29" ry="6" fill="#000" opacity=".18"/>' +
+      '<g filter="url(#softShadow)"><circle cx="50" cy="50" r="35" fill="url(#face3d)"/><circle cx="39" cy="35" r="20" fill="url(#shine)"/>' +
+      '<path d="M20 53 C22 78 44 89 66 79" fill="none" stroke="#8d5d18" stroke-width="2.6" opacity=".18" stroke-linecap="round"/>' +
+      detalhe + '</g></svg>';
 
-    let detalhe = olhos + sorriso;
-    let fill = '#ffd166';
-    if (tipo === 'laugh') detalhe = '<path d="M34 39 Q38 35 42 39M58 39 Q62 35 66 39" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/><path d="M32 56 Q50 78 68 56 Q50 65 32 56" fill="#332415"/><path d="M28 49 Q21 44 25 36" fill="none" stroke="#4aa3df" stroke-width="4" stroke-linecap="round"/>';
-    else if (tipo === 'wink') detalhe = '<circle cx="38" cy="42" r="4" fill="#332415"/><path d="M57 42 Q62 38 67 42" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/>' + sorriso;
-    else if (tipo === 'love') detalhe = '<path d="M31 39 C26 33 18 39 23 47 L31 55 L39 47 C44 39 36 33 31 39Z" fill="#ef476f"/><path d="M69 39 C64 33 56 39 61 47 L69 55 L77 47 C82 39 74 33 69 39Z" fill="#ef476f"/>' + sorriso;
-    else if (tipo === 'cool') detalhe = '<path d="M27 39 H45 L42 51 H30 ZM55 39 H73 L70 51 H58 ZM45 43 H55" fill="#16213e" stroke="#332415" stroke-width="3" stroke-linejoin="round"/><path d="M38 63 Q50 69 62 63" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/>';
-    else if (tipo === 'think') detalhe = olhos + '<path d="M39 60 Q50 55 61 60" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/><path d="M63 68 q9 2 10 10" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>';
-    else if (tipo === 'neutral') detalhe = olhos + '<path d="M36 61 H64" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>';
-    else if (tipo === 'sleep') detalhe = '<path d="M32 42 q6 -5 12 0M56 42 q6 -5 12 0" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/><path d="M39 62 Q50 58 61 62" fill="none" stroke="#332415" stroke-width="4" stroke-linecap="round"/><text x="70" y="27" font-size="18" font-family="Arial" font-weight="800" fill="#4aa3df">Z</text>';
-    else if (tipo === 'surprise') detalhe = olhos + '<ellipse cx="50" cy="62" rx="9" ry="12" fill="#332415"/>';
-    else if (tipo === 'sad') detalhe = olhos + '<path d="M34 67 Q50 52 66 67" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>';
-    else if (tipo === 'cry') detalhe = '<circle cx="38" cy="42" r="4" fill="#332415"/><circle cx="62" cy="42" r="4" fill="#332415"/><path d="M34 68 Q50 54 66 68" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/><path d="M30 50 q-7 10 1 17 q8 -7 -1 -17Z" fill="#4aa3df"/>';
-    else if (tipo === 'angry') { fill = '#ff6b6b'; detalhe = '<path d="M30 35 L45 43M70 35 L55 43" stroke="#332415" stroke-width="5" stroke-linecap="round"/><circle cx="38" cy="45" r="4" fill="#332415"/><circle cx="62" cy="45" r="4" fill="#332415"/><path d="M36 66 Q50 56 64 66" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/>'; }
-    else if (tipo === 'party') detalhe = olhos + sorriso + '<path d="M43 16 L70 25 L50 39 Z" fill="#8e7dff" stroke="#332415" stroke-width="3"/><circle cx="67" cy="22" r="3" fill="#ef476f"/><path d="M23 29 q-10 -7 -3 -16M76 72 q12 3 13 -10" fill="none" stroke="#06d6a0" stroke-width="4" stroke-linecap="round"/>';
-    else if (tipo === 'scared') { fill = '#b8e7ff'; detalhe = '<circle cx="38" cy="42" r="6" fill="#332415"/><circle cx="62" cy="42" r="6" fill="#332415"/><ellipse cx="50" cy="65" rx="10" ry="14" fill="#332415"/><path d="M25 54 H18M82 54 H75" stroke="#4aa3df" stroke-width="4" stroke-linecap="round"/>'; }
-    else if (tipo === 'sick') { fill = '#98d982'; detalhe = olhos + '<path d="M36 63 Q50 57 64 63" fill="none" stroke="#332415" stroke-width="5" stroke-linecap="round"/><path d="M31 28 q19 -10 38 0" fill="none" stroke="#4c956c" stroke-width="5" stroke-linecap="round"/>'; }
-    else if (tipo === 'cold') { fill = '#a8dadc'; detalhe = '<circle cx="38" cy="42" r="4" fill="#16324f"/><circle cx="62" cy="42" r="4" fill="#16324f"/><path d="M38 63 h24" stroke="#16324f" stroke-width="5" stroke-linecap="round"/><path d="M31 74 h38M35 80 h30" stroke="#16324f" stroke-width="3" stroke-linecap="round"/>'; }
-    else if (tipo === 'person') return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${pessoa}</svg>`;
+    let detalhe = olhos + bochechas + (seed % 3 === 0 ? sorrisoAberto : sorrisoLinha);
+    let paleta = ['#fff1a8', '#ffd057', '#e99723'];
+    if (tipo === 'laugh') detalhe = '<path d="M31 39 Q37 33 43 39M57 39 Q63 33 69 39" fill="none" stroke="#2b1d17" stroke-width="4.5" stroke-linecap="round"/>' + bochechas + '<path d="M29 56 Q50 82 71 56 Q50 68 29 56" fill="#2b1d17"/><path d="M39 65 Q50 73 61 65" fill="none" stroke="#ff8da1" stroke-width="5" stroke-linecap="round"/><path d="M25 51 C15 43 22 35 29 43" fill="none" stroke="url(#tear3d)" stroke-width="4" stroke-linecap="round"/>';
+    else if (tipo === 'wink') detalhe = olho(38) + '<path d="M56 42 Q63 36 70 42" fill="none" stroke="#2b1d17" stroke-width="4.5" stroke-linecap="round"/>' + bochechas + sorrisoLinha;
+    else if (tipo === 'love') detalhe = '<path d="M31 39 C26 31 17 38 22 47 L31 56 L40 47 C45 38 36 31 31 39Z" fill="#ef476f" stroke="#8f1239" stroke-width="2"/><path d="M69 39 C64 31 55 38 60 47 L69 56 L78 47 C83 38 74 31 69 39Z" fill="#ef476f" stroke="#8f1239" stroke-width="2"/>' + bochechas + sorrisoAberto;
+    else if (tipo === 'cool') detalhe = '<path d="M25 38 H46 L42 52 H30 ZM54 38 H75 L70 52 H58 ZM46 43 H54" fill="url(#glass3d)" stroke="#2b1d17" stroke-width="3" stroke-linejoin="round"/><path d="M31 41 H43M59 41 H71" stroke="#fff" stroke-width="2" opacity=".35" stroke-linecap="round"/><path d="M39 64 Q50 70 61 64" fill="none" stroke="#2b1d17" stroke-width="4.5" stroke-linecap="round"/>';
+    else if (tipo === 'think') detalhe = olho(37) + '<path d="M58 39 q7 -5 13 0" fill="none" stroke="#2b1d17" stroke-width="4" stroke-linecap="round"/><path d="M39 60 Q50 55 61 60" fill="none" stroke="#2b1d17" stroke-width="4.5" stroke-linecap="round"/><path d="M62 69 C71 68 76 73 75 81" fill="none" stroke="#2b1d17" stroke-width="5" stroke-linecap="round"/><circle cx="70" cy="78" r="3.5" fill="#2b1d17"/>';
+    else if (tipo === 'neutral') detalhe = olhos + '<path d="M35 61 H65" fill="none" stroke="#2b1d17" stroke-width="5" stroke-linecap="round"/><path d="M33 35 Q38 32 43 35M57 35 Q62 32 67 35" fill="none" stroke="#2b1d17" stroke-width="3" opacity=".55"/>';
+    else if (tipo === 'sleep') detalhe = '<path d="M31 42 q7 -6 14 0M55 42 q7 -6 14 0" fill="none" stroke="#2b1d17" stroke-width="4.5" stroke-linecap="round"/><path d="M39 62 Q50 58 61 62" fill="none" stroke="#2b1d17" stroke-width="4" stroke-linecap="round"/><text x="70" y="27" font-size="18" font-family="Arial" font-weight="800" fill="#3f8efc">Z</text><text x="82" y="17" font-size="12" font-family="Arial" font-weight="800" fill="#7ab7ff">Z</text>';
+    else if (tipo === 'surprise') detalhe = '<circle cx="38" cy="42" r="6" fill="#2b1d17"/><circle cx="62" cy="42" r="6" fill="#2b1d17"/><ellipse cx="50" cy="64" rx="10" ry="13" fill="#2b1d17"/><ellipse cx="46" cy="59" rx="3" ry="2" fill="#fff" opacity=".35"/>';
+    else if (tipo === 'sad') detalhe = olhos + '<path d="M34 68 Q50 53 66 68" fill="none" stroke="#2b1d17" stroke-width="5" stroke-linecap="round"/><path d="M30 33 q8 -5 16 0M54 33 q8 -5 16 0" fill="none" stroke="#2b1d17" stroke-width="3" opacity=".45"/>';
+    else if (tipo === 'cry') detalhe = olhos + '<path d="M34 69 Q50 55 66 69" fill="none" stroke="#2b1d17" stroke-width="5" stroke-linecap="round"/><path d="M29 50 C20 62 25 72 33 70 C40 62 35 54 29 50Z" fill="url(#tear3d)"/><circle cx="31" cy="57" r="2" fill="#fff" opacity=".55"/>';
+    else if (tipo === 'angry') { paleta = ['#ffb199', '#ff675f', '#c92a34']; detalhe = '<path d="M29 35 L45 43M71 35 L55 43" stroke="#391414" stroke-width="5" stroke-linecap="round"/><circle cx="38" cy="46" r="4.5" fill="#391414"/><circle cx="62" cy="46" r="4.5" fill="#391414"/><path d="M36 67 Q50 56 64 67" fill="none" stroke="#391414" stroke-width="5" stroke-linecap="round"/><path d="M25 27 l8 -5M75 27 l-8 -5" stroke="#ffddd2" stroke-width="3" opacity=".5" stroke-linecap="round"/>'; }
+    else if (tipo === 'party') detalhe = olhos + bochechas + sorrisoAberto + '<path d="M42 14 L72 24 L50 41 Z" fill="#8e7dff" stroke="#2b1d17" stroke-width="3"/><circle cx="68" cy="22" r="3" fill="#ef476f"/><path d="M22 29 C10 20 25 12 18 6M76 73 C92 75 82 59 93 55" fill="none" stroke="#06d6a0" stroke-width="4" stroke-linecap="round"/><circle cx="21" cy="24" r="2.6" fill="#ffbe0b"/><circle cx="81" cy="69" r="2.6" fill="#ef476f"/>';
+    else if (tipo === 'scared') { paleta = ['#ecfbff', '#a7e0ff', '#63a7dc']; detalhe = '<circle cx="38" cy="42" r="6" fill="#16324f"/><circle cx="62" cy="42" r="6" fill="#16324f"/><ellipse cx="50" cy="66" rx="10" ry="14" fill="#16324f"/><path d="M25 55 H17M83 55 H75" stroke="#3973aa" stroke-width="4" stroke-linecap="round"/><path d="M32 30 Q38 25 44 30M56 30 Q62 25 68 30" fill="none" stroke="#16324f" stroke-width="3" opacity=".5"/>'; }
+    else if (tipo === 'sick') { paleta = ['#d8ffd2', '#91df83', '#4c9a54']; detalhe = olhos + '<path d="M36 64 Q50 58 64 64" fill="none" stroke="#183b21" stroke-width="5" stroke-linecap="round"/><path d="M31 29 C43 21 57 21 69 29" fill="none" stroke="#2f6f3e" stroke-width="5" stroke-linecap="round"/><circle cx="27" cy="52" r="2.6" fill="#2f6f3e" opacity=".45"/><circle cx="72" cy="58" r="2" fill="#2f6f3e" opacity=".45"/>'; }
+    else if (tipo === 'cold') { paleta = ['#eaffff', '#9de7ef', '#4aa7c5']; detalhe = '<circle cx="38" cy="42" r="4.5" fill="#16324f"/><circle cx="62" cy="42" r="4.5" fill="#16324f"/><path d="M38 63 h24" stroke="#16324f" stroke-width="5" stroke-linecap="round"/><path d="M31 75 h38M35 81 h30" stroke="#16324f" stroke-width="3" stroke-linecap="round"/><path d="M24 31 l5 5M76 31 l-5 5M50 18 v8" stroke="#fff" stroke-width="3" opacity=".7" stroke-linecap="round"/>'; }
+    else if (tipo === 'person') return this.pessoaEmojiSvg(seed);
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${face(detalhe, fill)}</svg>`;
+    return face(detalhe, paleta);
+  }
+
+  private pessoaEmojiSvg(seed: number): string {
+    const cores = [
+      ['#fff0bd', '#f7bf72', '#b86f37', '#5b7cff'],
+      ['#ffe0c4', '#d9955b', '#8a4f2a', '#06b6d4'],
+      ['#f5c89e', '#b97845', '#5b351f', '#8b5cf6'],
+      ['#d49a6a', '#8a5635', '#3a2418', '#10b981'],
+    ][seed % 4];
+    const gesto = seed % 5;
+    const cabelo =
+      gesto === 0
+        ? '<path d="M31 31 C34 14 65 12 70 33 C60 25 45 25 31 31Z" fill="#2d1b13"/>'
+        : gesto === 1
+          ? '<path d="M30 34 C32 15 68 17 71 38 C59 27 42 29 30 34Z" fill="#1f2937"/>'
+          : '<path d="M32 29 C39 16 61 16 68 30 C59 25 43 25 32 29Z" fill="#5a371f"/>';
+    const bracos =
+      gesto === 0
+        ? '<path d="M31 64 C17 58 13 46 18 39" stroke="#f7bf72" stroke-width="9" stroke-linecap="round"/><path d="M69 64 C83 58 87 46 82 39" stroke="#f7bf72" stroke-width="9" stroke-linecap="round"/>'
+        : gesto === 1
+          ? '<path d="M32 64 C20 67 17 80 26 84" stroke="#f7bf72" stroke-width="9" stroke-linecap="round"/><path d="M68 64 C80 58 78 42 70 35" stroke="#f7bf72" stroke-width="9" stroke-linecap="round"/>'
+          : gesto === 2
+            ? '<path d="M32 64 C19 61 14 70 17 80" stroke="#f7bf72" stroke-width="9" stroke-linecap="round"/><path d="M68 64 C81 61 86 70 83 80" stroke="#f7bf72" stroke-width="9" stroke-linecap="round"/>'
+            : '<path d="M31 65 C19 69 15 78 21 86" stroke="#f7bf72" stroke-width="9" stroke-linecap="round"/><path d="M69 65 C81 69 85 78 79 86" stroke="#f7bf72" stroke-width="9" stroke-linecap="round"/>';
+
+    return (
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+      '<defs><radialGradient id="skin" cx="35%" cy="23%" r="75%">' +
+      `<stop offset="0" stop-color="${cores[0]}"/><stop offset=".62" stop-color="${cores[1]}"/><stop offset="1" stop-color="${cores[2]}"/>` +
+      '</radialGradient><linearGradient id="shirt" x1="0" y1="0" x2="0" y2="1">' +
+      `<stop offset="0" stop-color="${cores[3]}"/><stop offset="1" stop-color="#172554"/>` +
+      '</linearGradient><filter id="personShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#111827" flood-opacity=".35"/></filter></defs>' +
+      '<ellipse cx="50" cy="90" rx="28" ry="6" fill="#000" opacity=".18"/>' +
+      '<g filter="url(#personShadow)">' +
+      bracos +
+      '<path d="M24 87 C30 59 70 59 76 87 Z" fill="url(#shirt)"/>' +
+      '<circle cx="50" cy="36" r="21" fill="url(#skin)"/>' +
+      cabelo +
+      '<circle cx="42" cy="37" r="3.3" fill="#20120d"/><circle cx="58" cy="37" r="3.3" fill="#20120d"/>' +
+      '<path d="M41 49 Q50 57 59 49" fill="none" stroke="#20120d" stroke-width="4" stroke-linecap="round"/>' +
+      '<ellipse cx="36" cy="46" rx="5" ry="3" fill="#f47b6b" opacity=".28"/><ellipse cx="64" cy="46" rx="5" ry="3" fill="#f47b6b" opacity=".28"/>' +
+      '<path d="M36 25 C43 19 58 19 65 25" fill="none" stroke="#fff" stroke-width="4" opacity=".25" stroke-linecap="round"/>' +
+      '</g></svg>'
+    );
   }
 
   private tipoEmoji(e: string): string {
@@ -2311,6 +2368,36 @@ export class EditorFluxogramaComponent implements OnInit {
     no.espessuraBorda = +v;
     this.salvar();
   }
+
+  ehSemCor(cor: string | null | undefined): boolean {
+    return !cor || cor === 'transparent' || cor === 'none' || cor === 'rgba(0,0,0,0)';
+  }
+
+  corParaInput(cor: string | null | undefined): string {
+    if (this.ehSemCor(cor)) return '#ffffff';
+    return /^#[0-9a-f]{6}$/i.test(cor || '') ? String(cor) : '#ffffff';
+  }
+
+  setCorFundo(no: NoFluxograma, cor: string): void {
+    no.corFundo = cor;
+    this.salvar();
+  }
+
+  setSemCorFundo(no: NoFluxograma): void {
+    no.corFundo = 'transparent';
+    this.salvar();
+  }
+
+  setCorFundoPadrao(cor: string): void {
+    this.padrao.corFundo = cor;
+    this.salvar();
+  }
+
+  setSemCorFundoPadrao(): void {
+    this.padrao.corFundo = 'transparent';
+    this.salvar();
+  }
+
   setEspessuraLinha(c: ConexaoFluxograma, v: string): void {
     c.espessura = +v;
     this.salvar();

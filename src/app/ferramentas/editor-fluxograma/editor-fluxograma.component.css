@@ -496,6 +496,21 @@
 }
 .campo.cor input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
 .campo.cor input[type="color"]::-webkit-color-swatch { border: none; border-radius: 0.3em; }
+.cor-controles { display: flex; align-items: center; gap: 0.35em; }
+.sem-cor-btn {
+  padding: 0.36em 0.55em;
+  color: var(--text-muted);
+  border: 1px solid rgba(91, 124, 255, 0.34);
+  border-radius: 0.4em;
+  background:
+    linear-gradient(135deg, transparent 46%, rgba(255, 112, 112, 0.8) 48%, rgba(255, 112, 112, 0.8) 52%, transparent 54%),
+    rgba(3, 13, 30, 0.82);
+  font: inherit;
+  font-size: 0.72em;
+  font-weight: 700;
+  cursor: pointer;
+}
+.sem-cor-btn.ativo { color: #ffffff; border-color: #ff2db2; box-shadow: 0 0 0 2px rgba(255, 45, 178, 0.18); }
 
 .campo input[type="range"] {
   width: 100%;
