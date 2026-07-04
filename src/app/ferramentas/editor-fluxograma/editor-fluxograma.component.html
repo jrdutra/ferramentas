@@ -117,6 +117,16 @@
         </div>
 
         <div class="menu-secao">
+          <button class="menu-secao-cab" (click)="toggleCat('Texto')">
+            <mat-icon>{{ catAberta('Texto') ? 'expand_more' : 'chevron_right' }}</mat-icon><span>Texto</span>
+          </button>
+          <div class="menu-botoes" *ngIf="catAberta('Texto')">
+            <button *ngFor="let f of textos" class="ferr-btn" [class.ativo]="ferramenta === f.tipo"
+              (click)="selecionarFerramenta(f.tipo)" [matTooltip]="f.nome"><mat-icon>{{ f.icone }}</mat-icon></button>
+          </div>
+        </div>
+
+        <div class="menu-secao">
           <button class="menu-secao-cab" (click)="toggleCat('Formas')">
             <mat-icon>{{ catAberta('Formas') ? 'expand_more' : 'chevron_right' }}</mat-icon><span>Formas</span>
           </button>
@@ -176,6 +186,45 @@
     </aside>
 
     <!-- Canvas -->
+    <div class="fluxo-canvas-col">
+      <button type="button" class="btn-camadas" [class.ativo]="painelCamadas"
+        (click)="alternarPainelCamadas($event)" matTooltip="Gerenciar camadas">
+        <mat-icon>layers</mat-icon><span>Camadas</span>
+      </button>
+
+      <!-- Balão de camadas -->
+      <div class="painel-camadas" *ngIf="painelCamadas" (mousedown)="$event.stopPropagation()">
+        <label class="campo camadas-ativa">
+          <span>Camada ativa (recebe os novos elementos)</span>
+          <select [ngModel]="camadaAtivaId" (ngModelChange)="setCamadaAtiva($event)">
+            <option *ngFor="let cm of camadas; trackBy: trackCamada" [value]="cm.id">{{ cm.nome }}</option>
+          </select>
+        </label>
+
+        <div class="camadas-lista">
+          <div class="camada-item" *ngFor="let cm of camadas; trackBy: trackCamada"
+            [class.ativa]="cm.id === camadaAtivaId">
+            <input type="checkbox" [checked]="cm.visivel" (change)="alternarVisibilidadeCamada(cm)"
+              [matTooltip]="cm.visivel ? 'Ocultar camada' : 'Mostrar camada'" />
+            <span *ngIf="camadaRenomeandoId !== cm.id" class="camada-nome"
+              (dblclick)="iniciarRenomearCamada(cm)" matTooltip="Duplo clique para renomear">{{ cm.nome }}</span>
+            <input *ngIf="camadaRenomeandoId === cm.id" class="camada-nome-input" type="text"
+              [(ngModel)]="camadaNomeEdicao" (keydown.enter)="confirmarRenomearCamada()"
+              (keydown.escape)="cancelarRenomearCamada()" (blur)="confirmarRenomearCamada()" />
+            <span class="camada-qtd" matTooltip="Elementos na camada">{{ contarElementosCamada(cm.id) }}</span>
+            <button type="button" class="camada-excluir" (click)="excluirCamada(cm)"
+              [disabled]="camadas.length === 1"
+              [matTooltip]="camadas.length === 1 ? 'A última camada não pode ser excluída' : 'Excluir camada'">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="camada-add" (click)="adicionarCamada()">
+          <mat-icon>add</mat-icon> Nova camada
+        </button>
+      </div>
+
     <div class="fluxo-canvas-wrap" [class.tema-claro]="temaClaro" [class.arraste-arquivo]="arrastandoArquivo"
       [class.modo-criar]="ferramenta !== 'selecionar' && ferramenta !== 'conectar'"
       [class.modo-conectar]="ferramenta === 'conectar'" (wheel)="aoRolar($event)"
@@ -226,7 +275,7 @@
           <!-- Máscara: esconde o que estiver sob qualquer nó (usada pelas setas de bloco) -->
           <mask id="fluxo-mask-nos" maskUnits="userSpaceOnUse" x="-100000" y="-100000" width="200000" height="200000">
             <rect x="-100000" y="-100000" width="200000" height="200000" fill="white" />
-            <ng-container *ngFor="let no of nos; trackBy: trackNo">
+            <ng-container *ngFor="let no of nosVisiveis; trackBy: trackNo">
               <ellipse *ngIf="no.tipo === 'circulo' || no.tipo === 'elipse'"
                 [attr.cx]="cx(no)" [attr.cy]="cy(no)" [attr.rx]="no.largura / 2" [attr.ry]="no.altura / 2" fill="black" />
               <polygon *ngIf="no.tipo === 'losango' || no.tipo === 'paralelogramo' || no.tipo === 'hexagono'"
@@ -293,7 +342,7 @@
           </g>
 
           <!-- Conexões -->
-          <g *ngFor="let c of conexoes; trackBy: trackConexao">
+          <g *ngFor="let c of conexoesVisiveis; trackBy: trackConexao">
             <ng-container *ngIf="pontosConexao(c) as p">
               <path class="conexao-hit" fill="none" [attr.d]="caminhoConexao(c)"
                 (mousedown)="aoPressionarLinha($event, c)" (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
@@ -345,6 +394,12 @@
             <text *ngIf="no.tipo === 'imagem' && no.texto" class="icone-legenda"
               [attr.x]="cx(no)" [attr.y]="no.y + no.altura + 13" text-anchor="middle"
               [attr.fill]="temaClaro ? '#111827' : '#f4fbff'">{{ no.texto }}</text>
+
+            <!-- Área de clique do texto/notas: sempre presente, pois esses nós podem
+                 não ter fundo nem borda pintados (e o <text> tem pointer-events: none). -->
+            <rect *ngIf="no.tipo === 'texto' || no.tipo === 'notas'"
+              [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
+              fill="transparent" stroke="none" />
 
             <!-- Retângulo / arredondado / terminador -->
             <rect *ngIf="no.tipo === 'texto' && (!ehSemCor(no.corFundo) || no.espessuraBorda > 0)"
@@ -454,6 +509,7 @@
       <div class="toast-canvas" *ngIf="aviso">
         <mat-icon>info</mat-icon> {{ aviso }}
       </div>
+    </div>
     </div>
 
     <!-- Painel de propriedades -->

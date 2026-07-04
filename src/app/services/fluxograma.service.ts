@@ -56,6 +56,8 @@ export interface NoFluxograma {
   textura?: TipoTextura;
   /** Família tipográfica do texto (sem serifa, serifada ou cursiva). */
   fonte?: TipoFonte;
+  /** Id da camada (layer) à qual o nó pertence. Ausente = primeira camada. */
+  camada?: string;
 }
 
 export interface ConexaoFluxograma {
@@ -82,6 +84,8 @@ export interface ConexaoFluxograma {
   /** Preenchimento hachurado opcional (usa a cor da linha). */
   textura?: TipoTextura;
   tipoTraco: TipoTraco;
+  /** Id da camada (layer) à qual a conexão pertence. Ausente = primeira camada. */
+  camada?: string;
 }
 
 export interface Fluxograma {
@@ -295,6 +299,7 @@ export class FluxogramaService {
           (n.raioBordaImagem != null ? ` raioBordaImagem="${n.raioBordaImagem}"` : '') +
           (n.textura ? ` textura="${n.textura}"` : '') +
           (n.fonte ? ` fonte="${n.fonte}"` : '') +
+          (n.camada ? ` camada="${esc(n.camada)}"` : '') +
           `>${esc(n.texto)}</no>`,
       );
     }
@@ -312,6 +317,7 @@ export class FluxogramaService {
           (c.larguraCorpo != null ? ` larguraCorpo="${c.larguraCorpo}"` : '') +
           (c.tamanhoFlecha != null ? ` tamanhoFlecha="${c.tamanhoFlecha}"` : '') +
           (c.textura ? ` textura="${c.textura}"` : '') +
+          (c.camada ? ` camada="${esc(c.camada)}"` : '') +
           ` tipoTraco="${c.tipoTraco}">${esc(c.texto)}</conexao>`,
       );
     }
@@ -352,6 +358,7 @@ export class FluxogramaService {
         raioBordaImagem: el.getAttribute('raioBordaImagem') != null ? this.normalizaRaioBordaImagem(el.getAttribute('raioBordaImagem')) : undefined,
         textura: (el.getAttribute('textura') as TipoTextura) || undefined,
         fonte: (el.getAttribute('fonte') as TipoFonte) || undefined,
+        camada: el.getAttribute('camada') || undefined,
       });
     });
 
@@ -377,6 +384,7 @@ export class FluxogramaService {
         tamanhoFlecha: el.getAttribute('tamanhoFlecha') != null ? this.num(el.getAttribute('tamanhoFlecha'), 26) : undefined,
         textura: (el.getAttribute('textura') as TipoTextura) || undefined,
         tipoTraco: (el.getAttribute('tipoTraco') as TipoTraco) || 'solido',
+        camada: el.getAttribute('camada') || undefined,
       });
     });
 

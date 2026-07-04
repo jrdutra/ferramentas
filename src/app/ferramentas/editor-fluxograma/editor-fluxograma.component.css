@@ -116,6 +116,7 @@
   gap: 0.75em;
   padding: 0.7em 0.5em;
   overflow-y: auto;
+  box-sizing: border-box;
   max-height: 70vh;
   border: 1px solid transparent;
   border-radius: 0.6em;
@@ -242,8 +243,161 @@
 }
 .btn-ling:hover { filter: brightness(1.12); transform: translateY(-1px); }
 
+/* ─────────────── Camadas (layers) ─────────────── */
+
+/* Coluna do canvas: ancora o botão/balão de camadas sem ser cortada pelo overflow do board. */
+.fluxo-canvas-col {
+  position: relative;
+  min-width: 0;
+}
+
+.btn-camadas {
+  position: absolute;
+  top: 0.75em;
+  right: 0.75em;
+  z-index: 7;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.34em 0.75em;
+  color: var(--text-main);
+  border: 1px solid rgba(0, 255, 209, 0.4);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(5, 18, 39, 0.98), rgba(2, 9, 23, 0.99));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  font: inherit;
+  font-size: 0.78em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.btn-camadas mat-icon { font-size: 1.15em; width: 1.15em; height: 1.15em; color: #00ffd1; }
+.btn-camadas:hover,
+.btn-camadas.ativo { border-color: #00ffd1; box-shadow: 0 0 14px rgba(0, 255, 209, 0.25); }
+
+/* Balão de fala com os controles de camadas. */
+.painel-camadas {
+  position: absolute;
+  top: 3.1em;
+  right: 0.75em;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  width: 16.5em;
+  padding: 0.8em;
+  border: 1px solid rgba(0, 255, 209, 0.35);
+  border-radius: 0.6em;
+  background: linear-gradient(145deg, rgba(5, 18, 39, 0.98), rgba(2, 9, 23, 0.99));
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+  color: var(--text-main);
+}
+/* Seta do balão apontando para o botão. */
+.painel-camadas::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  right: 2.4em;
+  width: 12px;
+  height: 12px;
+  transform: rotate(45deg);
+  background: rgb(5, 18, 39);
+  border-top: 1px solid rgba(0, 255, 209, 0.35);
+  border-left: 1px solid rgba(0, 255, 209, 0.35);
+}
+
+.camadas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  max-height: 14em;
+  overflow-y: auto;
+}
+
+.camada-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.3em 0.4em;
+  border-radius: 0.4em;
+  font-size: 0.82em;
+}
+.camada-item.ativa { background: rgba(0, 255, 209, 0.08); }
+.camada-item input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 1.05em;
+  height: 1.05em;
+  accent-color: #00ffd1;
+  cursor: pointer;
+}
+
+.camada-nome {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: none;
+  cursor: default;
+}
+
+.camada-nome-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.15em 0.3em;
+  color: var(--text-main);
+  border: 1px solid rgba(0, 255, 209, 0.5);
+  border-radius: 0.3em;
+  background: rgba(3, 13, 30, 0.9);
+  font: inherit;
+  outline: none;
+}
+
+.camada-qtd {
+  flex: 0 0 auto;
+  min-width: 1.4em;
+  text-align: right;
+  font-size: 0.78em;
+  opacity: 0.65;
+}
+
+.camada-excluir {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1em;
+  color: var(--text-muted);
+  border: none;
+  border-radius: 0.3em;
+  background: transparent;
+  cursor: pointer;
+}
+.camada-excluir:hover:not(:disabled) { color: #ff7070; background: rgba(255, 112, 112, 0.12); }
+.camada-excluir:disabled { opacity: 0.3; cursor: not-allowed; }
+.camada-excluir mat-icon { font-size: 1.05em; width: 1.05em; height: 1.05em; }
+
+.camada-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  padding: 0.45em;
+  color: #00ffd1;
+  border: 1px dashed rgba(0, 255, 209, 0.4);
+  border-radius: 0.45em;
+  background: rgba(0, 255, 209, 0.05);
+  font: inherit;
+  font-size: 0.82em;
+  font-weight: 700;
+  cursor: pointer;
+}
+.camada-add:hover { background: rgba(0, 255, 209, 0.12); border-color: #00ffd1; }
+.camada-add mat-icon { font-size: 1.1em; width: 1.1em; height: 1.1em; }
+
 .fluxo-canvas-wrap {
   position: relative;
+  box-sizing: border-box;
   height: 70vh;
   min-height: 26em;
   overflow: hidden;
@@ -466,6 +620,7 @@
     conic-gradient(from 135deg, rgba(0, 208, 255, 0.16), rgba(182, 37, 255, 0.48), rgba(255, 45, 178, 0.36), rgba(91, 124, 255, 0.46), rgba(0, 208, 255, 0.16)) border-box;
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
+  box-sizing: border-box;
   max-height: 70vh;
 }
 
@@ -546,7 +701,7 @@
 .cor-grade {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.25em 0.5em;
+  gap: 0.25em 0.35em;
   align-items: center;
   justify-items: center;
   width: 100%;
@@ -558,12 +713,14 @@
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
+  /* Mesma base tipográfica dos botões de alinhamento, para os "em" coincidirem. */
+  font: inherit !important;
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
-  height: 2.2em !important;
-  min-height: 2.2em !important;
-  max-height: 2.2em !important;
+  height: 2.1em !important;
+  min-height: 2.1em !important;
+  max-height: 2.1em !important;
   padding: 0 !important;
   margin: 0 !important;
   border: 0 !important;
@@ -612,6 +769,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  font: inherit;
+  height: 2.1em;
   min-height: 2.1em;
   color: var(--text-muted);
   border: 1px solid rgba(91, 124, 255, 0.34);

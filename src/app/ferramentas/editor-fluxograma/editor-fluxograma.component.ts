@@ -52,6 +52,14 @@ interface ClipboardFluxograma {
   conexoes: ConexaoFluxograma[];
 }
 
+interface CamadaFluxograma {
+  id: string;
+  nome: string;
+  visivel: boolean;
+}
+
+const CAMADA_PADRAO: CamadaFluxograma = { id: 'cam1', nome: 'Camada 1', visivel: true };
+
 @Component({
   selector: 'app-editor-fluxograma',
   standalone: true,
@@ -64,8 +72,11 @@ export class EditorFluxogramaComponent implements OnInit {
   @ViewChild('svgCanvas') svgCanvas?: ElementRef<SVGSVGElement>;
   @ViewChild('editorTextoInline') editorTextoInlineEl?: ElementRef<HTMLTextAreaElement>;
 
-  readonly formas: OpcaoForma[] = [
+  readonly textos: OpcaoForma[] = [
     { tipo: 'texto', nome: 'Texto', icone: 'title' },
+  ];
+
+  readonly formas: OpcaoForma[] = [
     { tipo: 'notas', nome: 'Notas', icone: 'sticky_note_2' },
     { tipo: 'retangulo', nome: 'Processo', icone: 'crop_16_9' },
     { tipo: 'arredondado', nome: 'Arredondado', icone: 'rounded_corner' },
@@ -141,7 +152,7 @@ export class EditorFluxogramaComponent implements OnInit {
   ];
 
   get todasFormas(): OpcaoForma[] {
-    return [...this.formas, ...this.containers];
+    return [...this.textos, ...this.formas, ...this.containers];
   }
 
   filtroElementos = '';
@@ -185,7 +196,7 @@ export class EditorFluxogramaComponent implements OnInit {
     this._buscaTermo = t;
     const res: { forma?: OpcaoForma; icone?: string }[] = [];
     if (t) {
-      [...this.formas, ...this.containers].forEach((f) => {
+      [...this.textos, ...this.formas, ...this.containers].forEach((f) => {
         if (f.nome.toLowerCase().includes(t) || f.tipo.toLowerCase().includes(t)) res.push({ forma: f });
       });
       this.catalogoIcones.forEach((c) => {
@@ -556,6 +567,13 @@ export class EditorFluxogramaComponent implements OnInit {
   nos: NoFluxograma[] = [];
   conexoes: ConexaoFluxograma[] = [];
 
+  // ─── Camadas (layers) ───
+  camadas: CamadaFluxograma[] = [{ ...CAMADA_PADRAO }];
+  camadaAtivaId = CAMADA_PADRAO.id;
+  painelCamadas = false;
+  camadaRenomeandoId: string | null = null;
+  camadaNomeEdicao = '';
+
   ferramenta: Ferramenta = 'selecionar';
   selecionadoId: string | null = null;
   selecionadoTipo: 'no' | 'conexao' | null = null;
@@ -676,7 +694,7 @@ export class EditorFluxogramaComponent implements OnInit {
     afterNextRender(() => {
       if (!this.carregarLocal()) this.exemplo();
       this.migrarCoresAuto();
-      this.snapshotAtual = JSON.stringify({ nos: this.nos, conexoes: this.conexoes });
+      this.snapshotAtual = this.snapshotJson();
       this.cdr.markForCheck();
     });
   }
@@ -762,6 +780,7 @@ export class EditorFluxogramaComponent implements OnInit {
       alinhamentoTexto: 'centro',
       alinhamentoVerticalTexto: 'meio',
       fonte: tipo === 'notas' ? 'cursiva' : undefined,
+      camada: this.camadaAtivaId,
     };
     // Contêineres entram no início do array para ficarem atrás dos demais.
     if (this.ehContainer(tipo)) this.nos.unshift(no);
@@ -832,6 +851,7 @@ export class EditorFluxogramaComponent implements OnInit {
       src,
       escalaImagem: this.normalizarEscalaImagem(opcoes.escalaImagem ?? 1),
       raioBordaImagem: this.normalizarRaioBordaImagem(opcoes.raioBordaImagem ?? 18),
+      camada: this.camadaAtivaId,
     };
     this.nos.push(no);
     this.selecionar(no.id, 'no');
@@ -861,11 +881,174 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   get nosContainer(): NoFluxograma[] {
-    return this.nos.filter((n) => this.ehContainer(n.tipo));
+    return this.nos.filter((n) => this.ehContainer(n.tipo) && this.noVisivel(n));
   }
 
   get nosNormais(): NoFluxograma[] {
-    return this.nos.filter((n) => !this.ehContainer(n.tipo));
+    return this.nos.filter((n) => !this.ehContainer(n.tipo) && this.noVisivel(n));
+  }
+
+  // ─────────────────────── Camadas (layers) ───────────────────────
+
+  /** Camada de um elemento (elementos antigos, sem o campo, pertencem à primeira). */
+  camadaDe(el: { camada?: string }): string {
+    return el.camada ?? this.camadas[0]?.id ?? CAMADA_PADRAO.id;
+  }
+
+  private camadaVisivel(id: string): boolean {
+    const cm = this.camadas.find((c) => c.id === id);
+    return cm ? cm.visivel : true;
+  }
+
+  noVisivel(no: NoFluxograma): boolean {
+    return this.camadaVisivel(this.camadaDe(no));
+  }
+
+  /** Conexão visível: camada dela visível E ambas as pontas visíveis. */
+  conexaoVisivel(c: ConexaoFluxograma): boolean {
+    if (!this.camadaVisivel(this.camadaDe(c))) return false;
+    const a = this.nos.find((n) => n.id === c.de);
+    const b = this.nos.find((n) => n.id === c.para);
+    return (!a || this.noVisivel(a)) && (!b || this.noVisivel(b));
+  }
+
+  get nosVisiveis(): NoFluxograma[] {
+    return this.nos.filter((n) => this.noVisivel(n));
+  }
+
+  get conexoesVisiveis(): ConexaoFluxograma[] {
+    return this.conexoes.filter((c) => this.conexaoVisivel(c));
+  }
+
+  alternarPainelCamadas(evento: MouseEvent): void {
+    evento.stopPropagation();
+    this.painelCamadas = !this.painelCamadas;
+    this.camadaRenomeandoId = null;
+  }
+
+  /** Fecha o balão de camadas ao clicar fora dele. */
+  @HostListener('document:mousedown', ['$event'])
+  aoPressionarDocumento(evento: MouseEvent): void {
+    if (!this.painelCamadas) return;
+    const alvo = evento.target as HTMLElement | null;
+    if (alvo && (alvo.closest('.painel-camadas') || alvo.closest('.btn-camadas'))) return;
+    this.painelCamadas = false;
+    this.camadaRenomeandoId = null;
+  }
+
+  setCamadaAtiva(id: string): void {
+    const cm = this.camadas.find((c) => c.id === id);
+    if (!cm) return;
+    this.camadaAtivaId = id;
+    // Trabalhar numa camada oculta seria desenhar "no escuro" — torna visível.
+    if (!cm.visivel) cm.visivel = true;
+    this.salvar();
+  }
+
+  adicionarCamada(): void {
+    const id = this.fluxogramaService.gerarId('cam');
+    let n = this.camadas.length + 1;
+    while (this.camadas.some((c) => c.nome === `Camada ${n}`)) n += 1;
+    this.camadas.push({ id, nome: `Camada ${n}`, visivel: true });
+    this.camadaAtivaId = id;
+    this.salvar();
+  }
+
+  alternarVisibilidadeCamada(cm: CamadaFluxograma): void {
+    cm.visivel = !cm.visivel;
+    if (!cm.visivel) {
+      // Remove da seleção o que acabou de ficar oculto.
+      this.nos.forEach((n) => {
+        if (this.camadaDe(n) === cm.id) this.nosSelecionados.delete(n.id);
+      });
+      this.conexoes.forEach((c) => {
+        if (!this.conexaoVisivel(c)) this.conexoesSelecionadas.delete(c.id);
+      });
+      if (
+        this.selecionadoId &&
+        !this.nosSelecionados.has(this.selecionadoId) &&
+        !this.conexoesSelecionadas.has(this.selecionadoId)
+      ) {
+        this.definirAtivoDaSelecao();
+      }
+    }
+    this.salvar();
+  }
+
+  excluirCamada(cm: CamadaFluxograma): void {
+    if (this.camadas.length <= 1) return;
+    const qtd = this.contarElementosCamada(cm.id);
+    const msg = qtd
+      ? `Excluir a camada "${cm.nome}" e seu(s) ${qtd} elemento(s)? (Ctrl+Z desfaz)`
+      : `Excluir a camada vazia "${cm.nome}"?`;
+    if (typeof window !== 'undefined' && !window.confirm(msg)) return;
+    const idsNos = new Set(this.nos.filter((n) => this.camadaDe(n) === cm.id).map((n) => n.id));
+    this.nos = this.nos.filter((n) => !idsNos.has(n.id));
+    this.conexoes = this.conexoes.filter(
+      (c) => this.camadaDe(c) !== cm.id && !idsNos.has(c.de) && !idsNos.has(c.para),
+    );
+    this.camadas = this.camadas.filter((c) => c.id !== cm.id);
+    if (this.camadaAtivaId === cm.id) this.camadaAtivaId = this.camadas[0].id;
+    this.limparSelecao();
+    this.salvar();
+  }
+
+  contarElementosCamada(id: string): number {
+    return (
+      this.nos.filter((n) => this.camadaDe(n) === id).length +
+      this.conexoes.filter((c) => this.camadaDe(c) === id).length
+    );
+  }
+
+  iniciarRenomearCamada(cm: CamadaFluxograma): void {
+    this.camadaRenomeandoId = cm.id;
+    this.camadaNomeEdicao = cm.nome;
+    setTimeout(() => {
+      const el = typeof document !== 'undefined'
+        ? document.querySelector<HTMLInputElement>('.camada-nome-input')
+        : null;
+      el?.focus();
+      el?.select();
+    });
+  }
+
+  confirmarRenomearCamada(): void {
+    if (!this.camadaRenomeandoId) return;
+    const cm = this.camadas.find((c) => c.id === this.camadaRenomeandoId);
+    const nome = this.camadaNomeEdicao.trim();
+    this.camadaRenomeandoId = null;
+    if (cm && nome && cm.nome !== nome) {
+      cm.nome = nome;
+      this.salvar();
+    }
+  }
+
+  cancelarRenomearCamada(): void {
+    this.camadaRenomeandoId = null;
+  }
+
+  trackCamada(_: number, cm: CamadaFluxograma): string {
+    return cm.id;
+  }
+
+  /**
+   * Sane o estado das camadas: garante ao menos uma, cria entradas para ids
+   * referenciados por elementos (ex.: import de XML/Mermaid) e valida a ativa.
+   */
+  private normalizarCamadas(): void {
+    if (!Array.isArray(this.camadas)) this.camadas = [];
+    this.camadas = this.camadas
+      .filter((c) => c && c.id)
+      .map((c) => ({ id: String(c.id), nome: c.nome || 'Camada', visivel: c.visivel !== false }));
+    if (!this.camadas.length) this.camadas = [{ ...CAMADA_PADRAO }];
+    const conhecidas = new Set(this.camadas.map((c) => c.id));
+    [...this.nos, ...this.conexoes].forEach((el) => {
+      if (el.camada && !conhecidas.has(el.camada)) {
+        this.camadas.push({ id: el.camada, nome: `Camada ${this.camadas.length + 1}`, visivel: true });
+        conhecidas.add(el.camada);
+      }
+    });
+    if (!conhecidas.has(this.camadaAtivaId)) this.camadaAtivaId = this.camadas[0].id;
   }
 
   private textoInicial(tipo: FormaTipo): string {
@@ -1072,7 +1255,7 @@ export class EditorFluxogramaComponent implements OnInit {
   /** Alinha o elemento arrastado ao centro ou às bordas de outro próximo (snap) e exibe a guia. */
   private aplicarSnap(no: NoFluxograma): void {
     const limiar = 6 / this.zoom;
-    const outros = this.nos.filter((n) => n.id !== no.id);
+    const outros = this.nos.filter((n) => n.id !== no.id && this.noVisivel(n));
     const dragX = [no.x, no.x + no.largura / 2, no.x + no.largura];
     const dragY = [no.y, no.y + no.altura / 2, no.y + no.altura];
     let melhorX: { delta: number; guia: number; o: NoFluxograma } | null = null;
@@ -1160,6 +1343,8 @@ export class EditorFluxogramaComponent implements OnInit {
       this.limparSelecao();
       this.conexaoOrigemId = null;
       this.ferramenta = 'selecionar';
+      this.painelCamadas = false;
+      this.camadaRenomeandoId = null;
     }
   }
 
@@ -1194,6 +1379,7 @@ export class EditorFluxogramaComponent implements OnInit {
       larguraCorpo: this.novaConexaoBloco ? 16 : undefined,
       tamanhoFlecha: this.novaConexaoBloco ? 26 : undefined,
       tipoTraco: this.padrao.tipoTraco,
+      camada: this.camadaAtivaId,
     };
     this.conexoes.push(c);
     this.selecionar(c.id, 'conexao');
@@ -1299,6 +1485,7 @@ export class EditorFluxogramaComponent implements OnInit {
       novo.id = idNovo;
       novo.x = Math.round(novo.x + deslocamento);
       novo.y = Math.round(novo.y + deslocamento);
+      novo.camada = this.camadaAtivaId;
       return novo;
     });
 
@@ -1313,6 +1500,7 @@ export class EditorFluxogramaComponent implements OnInit {
           nova.pontos = nova.pontos.map((p) => ({ x: Math.round(p.x + deslocamento), y: Math.round(p.y + deslocamento) }));
         }
         nova.tamanhoSeta = this.normalizarTamanhoSeta(nova.tamanhoSeta);
+        nova.camada = this.camadaAtivaId;
         return nova;
       });
 
@@ -1361,12 +1549,14 @@ export class EditorFluxogramaComponent implements OnInit {
     }
 
     this.nos.forEach((n) => {
+      if (!this.noVisivel(n)) return;
       if (this.retangulosIntersectam(r, n.x, n.y, n.largura, n.altura)) {
         this.nosSelecionados.add(n.id);
       }
     });
 
     this.conexoes.forEach((c) => {
+      if (!this.conexaoVisivel(c)) return;
       const p = this.pontosConexao(c);
       if (!p) return;
       const meio = { x: (p.x1 + p.x2) / 2, y: (p.y1 + p.y2) / 2 };
@@ -2857,16 +3047,18 @@ export class EditorFluxogramaComponent implements OnInit {
 
   /** Limites do conteúdo (todas as formas). */
   private limitesConteudo(): { minX: number; minY: number; largura: number; altura: number } | null {
-    if (!this.nos.length) return null;
+    // Considera apenas o que está visível (camadas ocultas ficam fora do export/enquadrar).
+    const nosVis = this.nosVisiveis;
+    if (!nosVis.length) return null;
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    for (const n of this.nos) {
+    for (const n of nosVis) {
       minX = Math.min(minX, n.x);
       minY = Math.min(minY, n.y);
       maxX = Math.max(maxX, n.x + n.largura);
       maxY = Math.max(maxY, n.y + n.altura);
     }
     // Inclui a geometria das ligações — curvas e waypoints podem extrapolar as formas.
-    for (const c of this.conexoes) {
+    for (const c of this.conexoesVisiveis) {
       for (const p of this.pontosLimiteConexao(c)) {
         minX = Math.min(minX, p.x);
         minY = Math.min(minY, p.y);
@@ -3090,6 +3282,7 @@ export class EditorFluxogramaComponent implements OnInit {
   // ─────────────────────── Persistência (localStorage) ───────────────────────
 
   salvar(): void {
+    this.normalizarCamadas();
     this.capturarHistorico();
     if (typeof localStorage === 'undefined') return;
     try {
@@ -3098,6 +3291,8 @@ export class EditorFluxogramaComponent implements OnInit {
         JSON.stringify({
           nos: this.nos,
           conexoes: this.conexoes,
+          camadas: this.camadas,
+          camadaAtivaId: this.camadaAtivaId,
           zoom: this.zoom,
           panX: this.panX,
           panY: this.panY,
@@ -3113,9 +3308,18 @@ export class EditorFluxogramaComponent implements OnInit {
 
   // ─── Histórico (desfazer / refazer) ───
 
+  private snapshotJson(): string {
+    return JSON.stringify({
+      nos: this.nos,
+      conexoes: this.conexoes,
+      camadas: this.camadas,
+      camadaAtivaId: this.camadaAtivaId,
+    });
+  }
+
   private capturarHistorico(): void {
     if (this.restaurando) return;
-    const atual = JSON.stringify({ nos: this.nos, conexoes: this.conexoes });
+    const atual = this.snapshotJson();
     if (this.snapshotAtual && this.snapshotAtual !== atual) {
       this.historico.push(this.snapshotAtual);
       if (this.historico.length > this.maxHistorico) this.historico.shift();
@@ -3126,7 +3330,7 @@ export class EditorFluxogramaComponent implements OnInit {
 
   desfazer(): void {
     if (!this.historico.length) return;
-    const atual = JSON.stringify({ nos: this.nos, conexoes: this.conexoes });
+    const atual = this.snapshotJson();
     const anterior = this.historico.pop() as string;
     this.historicoRefazer.push(atual);
     this.aplicarSnapshot(anterior);
@@ -3134,14 +3338,19 @@ export class EditorFluxogramaComponent implements OnInit {
 
   refazer(): void {
     if (!this.historicoRefazer.length) return;
-    const atual = JSON.stringify({ nos: this.nos, conexoes: this.conexoes });
+    const atual = this.snapshotJson();
     const proximo = this.historicoRefazer.pop() as string;
     this.historico.push(atual);
     this.aplicarSnapshot(proximo);
   }
 
   private aplicarSnapshot(json: string): void {
-    let d: { nos?: NoFluxograma[]; conexoes?: ConexaoFluxograma[] };
+    let d: {
+      nos?: NoFluxograma[];
+      conexoes?: ConexaoFluxograma[];
+      camadas?: CamadaFluxograma[];
+      camadaAtivaId?: string;
+    };
     try {
       d = JSON.parse(json);
     } catch {
@@ -3150,6 +3359,9 @@ export class EditorFluxogramaComponent implements OnInit {
     this.restaurando = true;
     this.nos = Array.isArray(d.nos) ? d.nos : [];
     this.conexoes = Array.isArray(d.conexoes) ? d.conexoes : [];
+    if (Array.isArray(d.camadas) && d.camadas.length) this.camadas = d.camadas;
+    if (typeof d.camadaAtivaId === 'string') this.camadaAtivaId = d.camadaAtivaId;
+    this.normalizarCamadas();
     this.limparSelecao();
     this.snapshotAtual = json;
     this.salvar();
@@ -3176,6 +3388,9 @@ export class EditorFluxogramaComponent implements OnInit {
       this.normalizarTamanhoSetas();
       this.aplicarCoresPadraoTema(this.temaClaro ? this.temaPadraoClaro : this.temaPadraoEscuro);
       this.contador = d.contador ?? 0;
+      if (Array.isArray(d.camadas) && d.camadas.length) this.camadas = d.camadas;
+      if (typeof d.camadaAtivaId === 'string') this.camadaAtivaId = d.camadaAtivaId;
+      this.normalizarCamadas();
       return true;
     } catch {
       return false;
@@ -3203,6 +3418,8 @@ export class EditorFluxogramaComponent implements OnInit {
     this.selecionadoId = null;
     this.selecionadoTipo = null;
     this.contador = 0;
+    this.camadas = [{ ...CAMADA_PADRAO }];
+    this.camadaAtivaId = CAMADA_PADRAO.id;
     this.salvar();
   }
 
