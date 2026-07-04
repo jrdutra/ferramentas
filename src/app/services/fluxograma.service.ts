@@ -19,10 +19,17 @@ export type FormaTipo =
   | 'swimlane'
   | 'texto'
   | 'notas'
+  | 'ponto'
   | 'imagem';
+
+/** Papel legado do nó na apresentação do fluxo (início ou fim do processo). */
+export type PapelNo = 'inicio' | 'fim';
 
 /** Estilo do traço das bordas e linhas. */
 export type TipoTraco = 'solido' | 'giz' | 'lapis';
+
+/** Padrão do traço: linha contínua, tracejada ou pontilhada. */
+export type EstiloLinha = 'continuo' | 'tracejado' | 'pontilhado';
 export type TipoTextura = 'diagonal' | 'cruzada' | 'pontos' | 'grade';
 export type TipoFonte = 'sans' | 'serif' | 'cursiva';
 export type TipoAlinhamentoTexto = 'esquerda' | 'centro' | 'direita';
@@ -52,12 +59,20 @@ export interface NoFluxograma {
   escalaImagem?: number;
   /** Raio dos cantos do quadro de imagem/icone, em pixels. */
   raioBordaImagem?: number;
+  /** Estilo da borda: contínua (padrão), tracejada ou pontilhada. */
+  estiloBorda?: EstiloLinha;
   /** Preenchimento hachurado opcional (usa a cor da borda). */
   textura?: TipoTextura;
   /** Família tipográfica do texto (sem serifa, serifada ou cursiva). */
   fonte?: TipoFonte;
   /** Id da camada (layer) à qual o nó pertence. Ausente = primeira camada. */
   camada?: string;
+  /** Id do contêiner visual ao qual o nó pertence. */
+  containerId?: string;
+  /** Papel legado na apresentação: nó de início ou de fim do fluxo. */
+  papel?: PapelNo;
+  /** Ordem manual em que a forma deve surgir na apresentação animada. */
+  ordemApresentacao?: number;
 }
 
 export interface ConexaoFluxograma {
@@ -68,6 +83,8 @@ export interface ConexaoFluxograma {
   cor: string;
   espessura: number;
   tracejada: boolean;
+  /** Estilo do traço; complementa `tracejada` com a opção pontilhada. */
+  estiloLinha?: EstiloLinha;
   setaInicio: boolean;
   setaFim: boolean;
   tamanhoSeta: number;
@@ -115,6 +132,7 @@ const MERMAID_FORMAS: Record<FormaTipo, { abre: string; fecha: string }> = {
   swimlane: { abre: '[', fecha: ']' },
   texto: { abre: '[', fecha: ']' },
   notas: { abre: '[', fecha: ']' },
+  ponto: { abre: '((', fecha: '))' },
   imagem: { abre: '[', fecha: ']' },
 };
 
@@ -297,9 +315,12 @@ export class FluxogramaService {
           (n.src ? ` src="${esc(n.src)}"` : '') +
           (n.escalaImagem != null ? ` escalaImagem="${n.escalaImagem}"` : '') +
           (n.raioBordaImagem != null ? ` raioBordaImagem="${n.raioBordaImagem}"` : '') +
+          (n.estiloBorda ? ` estiloBorda="${n.estiloBorda}"` : '') +
           (n.textura ? ` textura="${n.textura}"` : '') +
           (n.fonte ? ` fonte="${n.fonte}"` : '') +
           (n.camada ? ` camada="${esc(n.camada)}"` : '') +
+          (n.containerId ? ` containerId="${esc(n.containerId)}"` : '') +
+          (n.ordemApresentacao != null ? ` ordemApresentacao="${n.ordemApresentacao}"` : '') +
           `>${esc(n.texto)}</no>`,
       );
     }
@@ -308,6 +329,7 @@ export class FluxogramaService {
       linhas.push(
         `    <conexao id="${esc(c.id)}" de="${esc(c.de)}" para="${esc(c.para)}" cor="${esc(c.cor)}"` +
           ` espessura="${c.espessura}" tracejada="${c.tracejada}" setaInicio="${c.setaInicio}" setaFim="${c.setaFim}"` +
+          (c.estiloLinha ? ` estiloLinha="${c.estiloLinha}"` : '') +
           ` tamanhoSeta="${this.normalizaTamanhoSeta(c.tamanhoSeta)}"` +
           ` curvatura="${c.curvatura ?? 0}"` +
           (c.pontos && c.pontos.length ? ` pontos="${c.pontos.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`).join(' ')}"` : '') +
@@ -356,9 +378,13 @@ export class FluxogramaService {
         src: el.getAttribute('src') || undefined,
         escalaImagem: el.getAttribute('escalaImagem') != null ? this.normalizaEscalaImagem(el.getAttribute('escalaImagem')) : undefined,
         raioBordaImagem: el.getAttribute('raioBordaImagem') != null ? this.normalizaRaioBordaImagem(el.getAttribute('raioBordaImagem')) : undefined,
+        estiloBorda: this.normalizaEstiloLinha(el.getAttribute('estiloBorda')),
         textura: (el.getAttribute('textura') as TipoTextura) || undefined,
         fonte: (el.getAttribute('fonte') as TipoFonte) || undefined,
         camada: el.getAttribute('camada') || undefined,
+        containerId: el.getAttribute('containerId') || undefined,
+        papel: this.normalizaPapel(el.getAttribute('papel')),
+        ordemApresentacao: this.normalizaOrdemApresentacao(el.getAttribute('ordemApresentacao')),
       });
     });
 
@@ -372,6 +398,7 @@ export class FluxogramaService {
         cor: el.getAttribute('cor') || '#00ffd1',
         espessura: this.num(el.getAttribute('espessura'), 2),
         tracejada: el.getAttribute('tracejada') === 'true',
+        estiloLinha: this.normalizaEstiloLinha(el.getAttribute('estiloLinha')),
         setaInicio: el.getAttribute('setaInicio') === 'true',
         setaFim: el.getAttribute('setaFim') !== 'false',
         tamanhoSeta: this.normalizaTamanhoSeta(el.getAttribute('tamanhoSeta')),
@@ -444,6 +471,9 @@ export class FluxogramaService {
       n.tipoTraco = n.tipoTraco || 'solido';
       n.alinhamentoTexto = this.normalizaAlinhamentoTexto(n.alinhamentoTexto);
       n.alinhamentoVerticalTexto = this.normalizaAlinhamentoVerticalTexto(n.alinhamentoVerticalTexto);
+      n.papel = this.normalizaPapel(n.papel);
+      n.ordemApresentacao = this.normalizaOrdemApresentacao(n.ordemApresentacao);
+      n.estiloBorda = this.normalizaEstiloLinha(n.estiloBorda);
       if (n.tipo === 'imagem') {
         n.escalaImagem = this.normalizaEscalaImagem(n.escalaImagem);
         n.raioBordaImagem = this.normalizaRaioBordaImagem(n.raioBordaImagem);
@@ -451,6 +481,7 @@ export class FluxogramaService {
     });
     fluxo.conexoes.forEach((c) => {
       c.tipoTraco = c.tipoTraco || 'solido';
+      c.estiloLinha = this.normalizaEstiloLinha(c.estiloLinha);
       c.tamanhoSeta = this.normalizaTamanhoSeta(c.tamanhoSeta);
       c.curvatura = Number.isFinite(c.curvatura as number) ? (c.curvatura as number) : 0;
     });
@@ -487,6 +518,20 @@ export class FluxogramaService {
 
   private normalizaAlinhamentoVerticalTexto(v: unknown): TipoAlinhamentoVerticalTexto {
     return v === 'topo' || v === 'rodape' || v === 'meio' ? v : 'meio';
+  }
+
+  private normalizaPapel(v: unknown): PapelNo | undefined {
+    return v === 'inicio' || v === 'fim' ? v : undefined;
+  }
+
+  private normalizaOrdemApresentacao(v: unknown): number | undefined {
+    const n = typeof v === 'number' ? v : parseInt(String(v ?? ''), 10);
+    if (!Number.isFinite(n) || n < 1) return undefined;
+    return Math.min(999, Math.round(n));
+  }
+
+  private normalizaEstiloLinha(v: unknown): EstiloLinha | undefined {
+    return v === 'continuo' || v === 'tracejado' || v === 'pontilhado' ? v : undefined;
   }
 
   private parsePontos(v: string | null): { x: number; y: number }[] | undefined {

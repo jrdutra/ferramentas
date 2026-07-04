@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { PDFDocument } from 'pdf-lib';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild, afterNextRender } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, afterNextRender } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DataService } from '../../data.service';
 import { DetectedFlowchart, FlowchartImageImportProgress } from '../../models/detected-flowchart.model';
 import {
   ConexaoFluxograma,
+  EstiloLinha,
   Fluxograma,
   FluxogramaService,
   FormaTipo,
@@ -20,9 +22,12 @@ import {
   TipoTraco,
 } from '../../services/fluxograma.service';
 import { FluxogramaImagemImportService } from '../../services/fluxograma-imagem-import/fluxograma-imagem-import.service';
+import { CodificadorGif, criarPaletaGif, indexarQuadroGif } from '../../services/gif-exportador';
 
 type Ferramenta = 'selecionar' | 'conectar' | FormaTipo;
 type Formato = 'mermaid' | 'xml';
+type TipoExportAnimado = 'svg' | 'gif';
+type ModoExportAnimado = 'apresentacao' | 'energia';
 
 interface OpcaoForma {
   tipo: FormaTipo;
@@ -63,21 +68,21 @@ const CAMADA_PADRAO: CamadaFluxograma = { id: 'cam1', nome: 'Camada 1', visivel:
 @Component({
   selector: 'app-editor-fluxograma',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatTooltipModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatMenuModule, MatTooltipModule],
   templateUrl: './editor-fluxograma.component.html',
   styleUrl: './editor-fluxograma.component.css',
 })
-export class EditorFluxogramaComponent implements OnInit {
+export class EditorFluxogramaComponent implements OnInit, OnDestroy {
 
   @ViewChild('svgCanvas') svgCanvas?: ElementRef<SVGSVGElement>;
   @ViewChild('editorTextoInline') editorTextoInlineEl?: ElementRef<HTMLTextAreaElement>;
 
   readonly textos: OpcaoForma[] = [
     { tipo: 'texto', nome: 'Texto', icone: 'title' },
+    { tipo: 'notas', nome: 'Notas', icone: 'sticky_note_2' },
   ];
 
   readonly formas: OpcaoForma[] = [
-    { tipo: 'notas', nome: 'Notas', icone: 'sticky_note_2' },
     { tipo: 'retangulo', nome: 'Processo', icone: 'crop_16_9' },
     { tipo: 'arredondado', nome: 'Arredondado', icone: 'rounded_corner' },
     { tipo: 'terminador', nome: 'Início/Fim', icone: 'stadium' },
@@ -571,6 +576,7 @@ export class EditorFluxogramaComponent implements OnInit {
   camadas: CamadaFluxograma[] = [{ ...CAMADA_PADRAO }];
   camadaAtivaId = CAMADA_PADRAO.id;
   painelCamadas = false;
+  exibirTagsAnimacao = true;
   camadaRenomeandoId: string | null = null;
   camadaNomeEdicao = '';
 
@@ -655,6 +661,7 @@ export class EditorFluxogramaComponent implements OnInit {
   private arrasteInicioY = 0;
   private arrasteGrupo = false;
   private posicoesInicioArraste = new Map<string, { x: number; y: number }>();
+  private idsArraste = new Set<string>();
   private panning = false;
   private panIniX = 0;
   private panIniY = 0;
@@ -672,6 +679,10 @@ export class EditorFluxogramaComponent implements OnInit {
   private resizeBounds = { x: 0, y: 0, largura: 0, altura: 0 };
 
   private contador = 0;
+  /** Versão dos dados; incrementa a cada salvar() (usado por caches derivados). */
+  private versaoDados = 0;
+  private _ordemAnimacaoSig = '';
+  private _ordemAnimacaoMapa = new Map<string, number>();
   private clipboardFluxograma: ClipboardFluxograma | null = null;
   private colagensSequenciais = 0;
 
@@ -701,6 +712,10 @@ export class EditorFluxogramaComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.setTituloAplicacao('Editor de Fluxograma');
+  }
+
+  ngOnDestroy(): void {
+    this.pararLoopPulsosEnergia();
   }
 
   // ─────────────────────────── Getters ───────────────────────────
@@ -885,7 +900,7 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   get nosNormais(): NoFluxograma[] {
-    return this.nos.filter((n) => !this.ehContainer(n.tipo) && this.noVisivel(n));
+    return this.nos.filter((n) => n.tipo !== 'ponto' && !this.ehContainer(n.tipo) && this.noVisivel(n));
   }
 
   // ─────────────────────── Camadas (layers) ───────────────────────
@@ -904,6 +919,10 @@ export class EditorFluxogramaComponent implements OnInit {
     return this.camadaVisivel(this.camadaDe(no));
   }
 
+  private noMesmoPlano(a: NoFluxograma, b: NoFluxograma): boolean {
+    return this.camadaDe(a) === this.camadaDe(b) && (a.containerId || '') === (b.containerId || '') && this.ehContainer(a.tipo) === this.ehContainer(b.tipo);
+  }
+
   /** Conexão visível: camada dela visível E ambas as pontas visíveis. */
   conexaoVisivel(c: ConexaoFluxograma): boolean {
     if (!this.camadaVisivel(this.camadaDe(c))) return false;
@@ -913,7 +932,7 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   get nosVisiveis(): NoFluxograma[] {
-    return this.nos.filter((n) => this.noVisivel(n));
+    return this.nos.filter((n) => n.tipo !== 'ponto' && this.noVisivel(n));
   }
 
   get conexoesVisiveis(): ConexaoFluxograma[] {
@@ -972,6 +991,11 @@ export class EditorFluxogramaComponent implements OnInit {
         this.definirAtivoDaSelecao();
       }
     }
+    this.salvar();
+  }
+
+  alternarTagsAnimacao(visivel: boolean): void {
+    this.exibirTagsAnimacao = visivel;
     this.salvar();
   }
 
@@ -1077,6 +1101,8 @@ export class EditorFluxogramaComponent implements OnInit {
         return 'Nota';
       case 'seta':
         return '';
+      case 'ponto':
+        return '';
       default:
         return 'Texto';
     }
@@ -1089,8 +1115,22 @@ export class EditorFluxogramaComponent implements OnInit {
       this.ignorarCliqueCanvas = false;
       return;
     }
+    if (this.ferramenta === 'conectar') {
+      if (!this.conexaoOrigemId) {
+        this.avisar('Clique primeiro na forma de origem da seta.');
+        return;
+      }
+      const p = this.pontoCanvas(evento);
+      const destino = this.criarPontoConexao(p.x, p.y);
+      this.criarConexao(this.conexaoOrigemId, destino.id);
+      this.conexaoOrigemId = null;
+      this.novaConexaoBloco = false;
+      this.ferramenta = 'selecionar';
+      this.salvar();
+      return;
+    }
     // Clique em área vazia.
-    if (this.ferramenta !== 'selecionar' && this.ferramenta !== 'conectar') {
+    if (this.ferramenta !== 'selecionar') {
       const p = this.pontoCanvas(evento);
       const no = this.criarNo(this.ferramenta, p.x, p.y);
       this.selecionar(no.id, 'no');
@@ -1137,9 +1177,10 @@ export class EditorFluxogramaComponent implements OnInit {
     this.arrasteDy = p.y - no.y;
     this.arrasteInicioX = p.x;
     this.arrasteInicioY = p.y;
-    this.arrasteGrupo = this.nosSelecionados.size > 1 && this.isNoSelecionado(no);
+    this.idsArraste = this.idsNosParaArraste(no);
+    this.arrasteGrupo = this.idsArraste.size > 1;
     this.posicoesInicioArraste = new Map(
-      this.nos.filter((n) => this.nosSelecionados.has(n.id)).map((n) => [n.id, { x: n.x, y: n.y }]),
+      this.nos.filter((n) => this.idsArraste.has(n.id)).map((n) => [n.id, { x: n.x, y: n.y }]),
     );
   }
 
@@ -1157,6 +1198,23 @@ export class EditorFluxogramaComponent implements OnInit {
     } else {
       this.selecionar(c.id, 'conexao');
     }
+  }
+
+  private idsNosParaArraste(noBase: NoFluxograma): Set<string> {
+    const ids = new Set<string>();
+    const baseSelecionada = this.isNoSelecionado(noBase) ? [...this.nosSelecionados] : [noBase.id];
+    baseSelecionada.forEach((id) => ids.add(id));
+    let mudou = true;
+    while (mudou) {
+      mudou = false;
+      this.nos.forEach((n) => {
+        if (n.containerId && ids.has(n.containerId) && !ids.has(n.id)) {
+          ids.add(n.id);
+          mudou = true;
+        }
+      });
+    }
+    return ids;
   }
 
   aoPressionarFundo(evento: MouseEvent): void {
@@ -1228,13 +1286,16 @@ export class EditorFluxogramaComponent implements OnInit {
   @HostListener('window:mouseup')
   aoSoltar(): void {
     const mudou = !!(this.arrastando || this.redimensionando || this.panning);
+    const idsSoltos = new Set(this.idsArraste);
     if (this.selecionandoArea) {
       const selecionou = this.aplicarSelecaoArea();
       this.ignorarCliqueCanvas = selecionou;
     }
+    if (this.arrastando && idsSoltos.size) this.atualizarContainersDosNos(idsSoltos);
     this.arrastando = null;
     this.arrasteGrupo = false;
     this.posicoesInicioArraste.clear();
+    this.idsArraste.clear();
     this.panning = false;
     this.redimensionando = null;
     this.selecionandoArea = false;
@@ -1250,6 +1311,33 @@ export class EditorFluxogramaComponent implements OnInit {
     this.guiaH = null;
     this.guiaSegmentos = [];
     if (mudou) this.salvar();
+  }
+
+  private atualizarContainersDosNos(ids: Set<string>): void {
+    ids.forEach((id) => {
+      const no = this.nos.find((n) => n.id === id);
+      if (!no || no.tipo === 'ponto' || this.ehContainer(no.tipo)) return;
+      const container = this.containerParaNo(no);
+      no.containerId = container?.id;
+      if (container && this.camadaDe(no) !== this.camadaDe(container)) no.camada = this.camadaDe(container);
+    });
+  }
+
+  private containerParaNo(no: NoFluxograma): NoFluxograma | null {
+    const centro = { x: this.cx(no), y: this.cy(no) };
+    return this.containerNoPonto(centro, no.id);
+  }
+
+  private containerNoPonto(p: { x: number; y: number }, ignorarId?: string): NoFluxograma | null {
+    const candidatos = this.nos.filter(
+      (c) => this.ehContainer(c.tipo) && c.id !== ignorarId && this.noVisivel(c) && this.pontoDentroNo(p, c),
+    );
+    if (!candidatos.length) return null;
+    return candidatos[candidatos.length - 1];
+  }
+
+  private pontoDentroNo(p: { x: number; y: number }, no: NoFluxograma): boolean {
+    return p.x >= no.x && p.x <= no.x + no.largura && p.y >= no.y && p.y <= no.y + no.altura;
   }
 
   /** Alinha o elemento arrastado ao centro ou às bordas de outro próximo (snap) e exibe a guia. */
@@ -1339,6 +1427,7 @@ export class EditorFluxogramaComponent implements OnInit {
       this.excluirSelecionado();
     }
     if (evento.key === 'Escape') {
+      this.pararApresentacao();
       this.cancelarEdicaoTextoInline();
       this.limparSelecao();
       this.conexaoOrigemId = null;
@@ -1351,15 +1440,23 @@ export class EditorFluxogramaComponent implements OnInit {
   private moverNosSelecionados(dx: number, dy: number): void {
     if (!dx && !dy) return;
     let moveu = false;
+    const ids = new Set<string>();
+    this.nosSelecionados.forEach((id) => {
+      const no = this.nos.find((n) => n.id === id);
+      if (no) this.idsNosParaArraste(no).forEach((x) => ids.add(x));
+    });
     this.nos.forEach((no) => {
-      if (!this.nosSelecionados.has(no.id)) return;
+      if (!ids.has(no.id)) return;
       no.x = Math.round(no.x + dx);
       no.y = Math.round(no.y + dy);
       moveu = true;
     });
     this.guiaV = null;
     this.guiaH = null;
-    if (moveu) this.salvar();
+    if (moveu) {
+      this.atualizarContainersDosNos(ids);
+      this.salvar();
+    }
   }
 
   private criarConexao(de: string, para: string): ConexaoFluxograma {
@@ -1384,6 +1481,31 @@ export class EditorFluxogramaComponent implements OnInit {
     this.conexoes.push(c);
     this.selecionar(c.id, 'conexao');
     return c;
+  }
+
+  private criarPontoConexao(x: number, y: number): NoFluxograma {
+    const container = this.containerNoPonto({ x, y });
+    const no: NoFluxograma = {
+      id: this.novoId('p'),
+      tipo: 'ponto',
+      x: x - 0.5,
+      y: y - 0.5,
+      largura: 1,
+      altura: 1,
+      texto: '',
+      corFundo: 'transparent',
+      corBorda: 'transparent',
+      espessuraBorda: 0,
+      corTexto: 'transparent',
+      tamanhoFonte: 1,
+      tipoTraco: 'solido',
+      alinhamentoTexto: 'centro',
+      alinhamentoVerticalTexto: 'meio',
+      camada: container ? this.camadaDe(container) : this.camadaAtivaId,
+      containerId: container?.id,
+    };
+    this.nos.push(no);
+    return no;
   }
 
   private selecionar(id: string, tipo: 'no' | 'conexao'): void {
@@ -1438,6 +1560,73 @@ export class EditorFluxogramaComponent implements OnInit {
     return this.conexoesSelecionadas.has(c.id);
   }
 
+  get menuOrdemElemento(): { x: number; y: number } | null {
+    if (this.selecaoMultipla || this.editorTextoInline) return null;
+    const no = this.noSelecionado;
+    if (no && no.tipo !== 'ponto') {
+      return {
+        x: this.panX + (no.x + no.largura / 2) * this.zoom,
+        y: this.panY + no.y * this.zoom - 42,
+      };
+    }
+    const c = this.conexaoSelecionada;
+    if (c) {
+      const m = this.meioConexao(c);
+      return { x: this.panX + m.x * this.zoom, y: this.panY + m.y * this.zoom - 34 };
+    }
+    return null;
+  }
+
+  enviarSelecionadoFrente(): void {
+    const no = this.noSelecionado;
+    if (no) {
+      this.moverNoNoPlano(no, 'frente');
+      return;
+    }
+    const c = this.conexaoSelecionada;
+    if (c) this.moverConexaoNoPlano(c, 'frente');
+  }
+
+  enviarSelecionadoTras(): void {
+    const no = this.noSelecionado;
+    if (no) {
+      this.moverNoNoPlano(no, 'tras');
+      return;
+    }
+    const c = this.conexaoSelecionada;
+    if (c) this.moverConexaoNoPlano(c, 'tras');
+  }
+
+  private moverNoNoPlano(no: NoFluxograma, direcao: 'frente' | 'tras'): void {
+    if (no.tipo === 'ponto') return;
+    const atual = this.nos.indexOf(no);
+    if (atual < 0) return;
+    const item = this.nos.splice(atual, 1)[0];
+    const indicesPlano = this.nos
+      .map((n, i) => (this.noMesmoPlano(item, n) ? i : -1))
+      .filter((i) => i >= 0);
+    const destino = direcao === 'frente'
+      ? (indicesPlano.length ? indicesPlano[indicesPlano.length - 1] + 1 : this.nos.length)
+      : (indicesPlano.length ? indicesPlano[0] : 0);
+    this.nos.splice(destino, 0, item);
+    this.salvar();
+  }
+
+  private moverConexaoNoPlano(c: ConexaoFluxograma, direcao: 'frente' | 'tras'): void {
+    const atual = this.conexoes.indexOf(c);
+    if (atual < 0) return;
+    const item = this.conexoes.splice(atual, 1)[0];
+    const camada = this.camadaDe(item);
+    const indicesPlano = this.conexoes
+      .map((cx, i) => (this.camadaDe(cx) === camada ? i : -1))
+      .filter((i) => i >= 0);
+    const destino = direcao === 'frente'
+      ? (indicesPlano.length ? indicesPlano[indicesPlano.length - 1] + 1 : this.conexoes.length)
+      : (indicesPlano.length ? indicesPlano[0] : 0);
+    this.conexoes.splice(destino, 0, item);
+    this.salvar();
+  }
+
   excluirSelecionado(): void {
     if (!this.temSelecao) return;
     const nosExcluidos = new Set(this.nosSelecionados);
@@ -1446,8 +1635,18 @@ export class EditorFluxogramaComponent implements OnInit {
     this.conexoes = this.conexoes.filter(
       (c) => !conexoesExcluidas.has(c.id) && !nosExcluidos.has(c.de) && !nosExcluidos.has(c.para),
     );
+    this.removerPontosConexaoOrfaos();
     this.limparSelecao();
     this.salvar();
+  }
+
+  private removerPontosConexaoOrfaos(): void {
+    const usados = new Set<string>();
+    this.conexoes.forEach((c) => {
+      usados.add(c.de);
+      usados.add(c.para);
+    });
+    this.nos = this.nos.filter((n) => n.tipo !== 'ponto' || usados.has(n.id));
   }
 
   // ─────────────────────── Coordenadas / viewport ───────────────────────
@@ -1486,6 +1685,9 @@ export class EditorFluxogramaComponent implements OnInit {
       novo.x = Math.round(novo.x + deslocamento);
       novo.y = Math.round(novo.y + deslocamento);
       novo.camada = this.camadaAtivaId;
+      // Cópias não herdam a ordem da apresentação, para evitar posições duplicadas sem querer.
+      novo.ordemApresentacao = undefined;
+      novo.papel = undefined;
       return novo;
     });
 
@@ -2256,14 +2458,23 @@ export class EditorFluxogramaComponent implements OnInit {
     { id: 'grade', nome: 'Grade' },
   ];
 
-  patternId(textura: string, cor: string): string {
-    return 'tex-' + textura + '-' + String(cor).replace(/[^a-z0-9]/gi, '');
+  private tamanhoTexturaNo(no: NoFluxograma): number {
+    return this.ehContainer(no.tipo) ? 18 : 8;
+  }
+
+  patternId(textura: string, cor: string, fundo = '', tamanho = 8): string {
+    const sane = (v: string | number) => String(v).replace(/[^a-z0-9]/gi, '');
+    return `tex-${textura}-${sane(cor)}-${sane(fundo)}-${sane(tamanho)}`;
   }
 
   /** Preenchimento de um nó: padrão de textura (na cor da borda) ou a cor de fundo. */
   preenchimentoNo(no: NoFluxograma): string {
-    if (no.textura) return `url(#${this.patternId(no.textura, this.bordaDe(no))})`;
+    if (no.textura) return `url(#${this.patternId(no.textura, this.bordaDe(no), no.corFundo, this.tamanhoTexturaNo(no))})`;
     return no.corFundo;
+  }
+
+  opacidadePreenchimentoContainer(no: NoFluxograma): number {
+    return this.ehSemCor(no.corFundo) && !no.textura ? 0 : 1;
   }
 
   /** Preenchimento da seta de bloco: textura (na cor da linha) ou transparente. */
@@ -2273,23 +2484,25 @@ export class EditorFluxogramaComponent implements OnInit {
   }
 
   private _texSig = '';
-  private _texCache: { id: string; textura: string; cor: string }[] = [];
+  private _texCache: { id: string; textura: string; cor: string; tamanho: number; fundo?: string }[] = [];
 
   /** Padrões (textura+cor) atualmente em uso, para renderizar em <defs>. */
-  texturasUsadas(): { id: string; textura: string; cor: string }[] {
-    const map = new Map<string, { id: string; textura: string; cor: string }>();
+  texturasUsadas(): { id: string; textura: string; cor: string; tamanho: number; fundo?: string }[] {
+    const map = new Map<string, { id: string; textura: string; cor: string; tamanho: number; fundo?: string }>();
     this.nos.forEach((n) => {
       if (n.textura) {
         const cor = this.bordaDe(n);
-        const id = this.patternId(n.textura, cor);
-        if (!map.has(id)) map.set(id, { id, textura: n.textura, cor });
+        const fundo = this.ehSemCor(n.corFundo) ? undefined : n.corFundo;
+        const tamanho = this.tamanhoTexturaNo(n);
+        const id = this.patternId(n.textura, cor, n.corFundo, tamanho);
+        if (!map.has(id)) map.set(id, { id, textura: n.textura, cor, tamanho, fundo });
       }
     });
     this.conexoes.forEach((c) => {
       if (c.textura) {
         const cor = this.corConexaoDe(c);
         const id = this.patternId(c.textura, cor);
-        if (!map.has(id)) map.set(id, { id, textura: c.textura, cor });
+        if (!map.has(id)) map.set(id, { id, textura: c.textura, cor, tamanho: 8 });
       }
     });
     const arr = [...map.values()];
@@ -2307,6 +2520,55 @@ export class EditorFluxogramaComponent implements OnInit {
 
   setTexturaConexao(c: ConexaoFluxograma, v: string): void {
     c.textura = (v || undefined) as TipoTextura | undefined;
+    this.salvar();
+  }
+
+  // ─── Estilo do traço: contínuo, tracejado ou pontilhado ───
+
+  readonly estilosLinha: { id: EstiloLinha; nome: string }[] = [
+    { id: 'continuo', nome: 'Contínuo' },
+    { id: 'tracejado', nome: 'Tracejado' },
+    { id: 'pontilhado', nome: 'Pontilhado' },
+  ];
+
+  /** Dasharray da borda do nó, proporcional à espessura. */
+  dashNo(no: NoFluxograma): string | null {
+    if (!no.estiloBorda || no.estiloBorda === 'continuo') return null;
+    const e = Math.max(1, no.espessuraBorda || 1);
+    return no.estiloBorda === 'tracejado'
+      ? `${(e * 4).toFixed(1)} ${(e * 2.5).toFixed(1)}`
+      : `${e.toFixed(1)} ${(e * 2).toFixed(1)}`;
+  }
+
+  /** Estilo efetivo da linha da conexão (compatível com o campo antigo `tracejada`). */
+  estiloLinhaDe(c: ConexaoFluxograma): EstiloLinha {
+    return c.estiloLinha ?? (c.tracejada ? 'tracejado' : 'continuo');
+  }
+
+  /** Dasharray da linha da conexão, proporcional à espessura. */
+  dashConexao(c: ConexaoFluxograma): string | null {
+    const estilo = this.estiloLinhaDe(c);
+    if (estilo === 'continuo') return null;
+    const e = Math.max(1, c.espessura || 1);
+    return estilo === 'tracejado'
+      ? `${(e * 3.5).toFixed(1)} ${(e * 2.5).toFixed(1)}`
+      : `${e.toFixed(1)} ${(e * 2).toFixed(1)}`;
+  }
+
+  setEstiloBorda(no: NoFluxograma, v: string): void {
+    no.estiloBorda = v === 'continuo' ? undefined : (v as EstiloLinha);
+    this.salvar();
+  }
+
+  setEstiloLinha(c: ConexaoFluxograma, v: string): void {
+    if (v === 'pontilhado') {
+      c.estiloLinha = 'pontilhado';
+      c.tracejada = false;
+    } else {
+      // Tracejado continua no campo antigo (compatível com o export Mermaid).
+      c.estiloLinha = undefined;
+      c.tracejada = v === 'tracejado';
+    }
     this.salvar();
   }
 
@@ -2858,6 +3120,8 @@ export class EditorFluxogramaComponent implements OnInit {
     this.conexoes = fluxo.conexoes;
     this.normalizarTamanhosFonte();
     this.normalizarTamanhoSetas();
+    this.normalizarOrdensApresentacao();
+    this.pararApresentacao();
     this.limparSelecao();
     // Ajusta o contador para evitar colisão de ids.
     const nums = [...this.nos, ...this.conexoes]
@@ -3090,6 +3354,20 @@ export class EditorFluxogramaComponent implements OnInit {
     fundo: string | null,
     semPreenchimento = false,
   ): { svg: string; largura: number; altura: number } | null {
+    const prep = this.prepararCloneExport(fundo, semPreenchimento);
+    if (!prep) return null;
+    return {
+      svg: new XMLSerializer().serializeToString(prep.clone),
+      largura: prep.largura,
+      altura: prep.altura,
+    };
+  }
+
+  /** Clona o SVG do canvas pronto para export: sem UI de edição e com marcadores embutidos. */
+  private prepararCloneExport(
+    fundo: string | null,
+    semPreenchimento = false,
+  ): { clone: SVGSVGElement; largura: number; altura: number; minX: number; minY: number } | null {
     if (typeof document === 'undefined' || !this.svgCanvas) return null;
     const lim = this.limitesConteudo();
     if (!lim) return null;
@@ -3109,7 +3387,9 @@ export class EditorFluxogramaComponent implements OnInit {
     });
 
     clone.querySelector('.fundo-grade')?.remove();
-    clone.querySelectorAll('.conexao-hit, .contorno-selecao, .alca, .ponto-ligacao').forEach((el) => el.remove());
+    clone
+      .querySelectorAll('.conexao-hit, .contorno-selecao, .alca, .ponto-ligacao, .pulso-energia, .papel-badge')
+      .forEach((el) => el.remove());
 
     // Estilos essenciais embutidos (o SVG exportado não carrega o CSS do componente).
     const estilo = document.createElementNS(ns, 'style');
@@ -3118,7 +3398,10 @@ export class EditorFluxogramaComponent implements OnInit {
       '.no-texto{font-size:13px;font-weight:600;}' +
       '.conexao-rotulo{font-size:12px;font-weight:600;fill:#f4fbff;}' +
       '.conexao-rotulo-bg{fill:rgba(3,13,30,0.92);}' +
-      '.conexao-linha{fill:none;}';
+      '.conexao-linha{fill:none;}' +
+      '.ordem-animacao-badge{pointer-events:none;}' +
+      '.ordem-animacao-badge rect{fill:rgba(3,13,30,.94);stroke:#00ffd1;stroke-width:1.4;}' +
+      ".ordem-animacao-badge text{fill:#fff;font-family:Roboto,'Helvetica Neue',Arial,sans-serif;font-size:10px;font-weight:800;}";
     clone.insertBefore(estilo, clone.firstChild);
 
     const defs = clone.querySelector('defs');
@@ -3163,8 +3446,7 @@ export class EditorFluxogramaComponent implements OnInit {
       });
     }
 
-    const svg = new XMLSerializer().serializeToString(clone);
-    return { svg, largura: lim.largura, altura: lim.altura };
+    return { clone, largura: lim.largura, altura: lim.altura, minX: lim.minX, minY: lim.minY };
   }
 
   private criarMarcador(ns: string, id: string, cor: string, _fim: boolean, tamanho = TAMANHO_SETA_PADRAO): SVGMarkerElement {
@@ -3282,7 +3564,9 @@ export class EditorFluxogramaComponent implements OnInit {
   // ─────────────────────── Persistência (localStorage) ───────────────────────
 
   salvar(): void {
+    this.versaoDados += 1;
     this.normalizarCamadas();
+    this.normalizarVinculosContainer();
     this.capturarHistorico();
     if (typeof localStorage === 'undefined') return;
     try {
@@ -3293,6 +3577,7 @@ export class EditorFluxogramaComponent implements OnInit {
           conexoes: this.conexoes,
           camadas: this.camadas,
           camadaAtivaId: this.camadaAtivaId,
+          exibirTagsAnimacao: this.exibirTagsAnimacao,
           zoom: this.zoom,
           panX: this.panX,
           panY: this.panY,
@@ -3314,6 +3599,15 @@ export class EditorFluxogramaComponent implements OnInit {
       conexoes: this.conexoes,
       camadas: this.camadas,
       camadaAtivaId: this.camadaAtivaId,
+    });
+  }
+
+  private normalizarVinculosContainer(): void {
+    const containers = new Set(this.nos.filter((n) => this.ehContainer(n.tipo)).map((n) => n.id));
+    this.nos.forEach((n) => {
+      if (this.ehContainer(n.tipo) || !n.containerId || !containers.has(n.containerId) || n.containerId === n.id) {
+        n.containerId = undefined;
+      }
     });
   }
 
@@ -3384,13 +3678,17 @@ export class EditorFluxogramaComponent implements OnInit {
       if (d.padrao) this.padrao = { ...this.padrao, ...d.padrao };
       this.padrao.tamanhoFonte = this.normalizarTamanhoFonte(this.padrao.tamanhoFonte);
       this.padrao.tamanhoSeta = TAMANHO_SETA_PADRAO;
+      // A espessura padrão das setas/linhas é sempre 2px ao abrir o editor.
+      this.padrao.espessuraLinha = 2;
       this.normalizarTamanhosFonte();
       this.normalizarTamanhoSetas();
       this.aplicarCoresPadraoTema(this.temaClaro ? this.temaPadraoClaro : this.temaPadraoEscuro);
       this.contador = d.contador ?? 0;
       if (Array.isArray(d.camadas) && d.camadas.length) this.camadas = d.camadas;
       if (typeof d.camadaAtivaId === 'string') this.camadaAtivaId = d.camadaAtivaId;
+      if (typeof d.exibirTagsAnimacao === 'boolean') this.exibirTagsAnimacao = d.exibirTagsAnimacao;
       this.normalizarCamadas();
+      this.normalizarOrdensApresentacao();
       return true;
     } catch {
       return false;
@@ -3527,6 +3825,784 @@ export class EditorFluxogramaComponent implements OnInit {
 
   larguraRotulo(texto: string, max: number): number {
     return Math.min(max, Math.max(40, (texto ? texto.length : 0) * 7 + 20));
+  }
+
+  // ─────────────────────── Ordem da apresentação ───────────────────────
+
+  setOrdemApresentacao(no: NoFluxograma, v: unknown): void {
+    const n = typeof v === 'number' ? v : parseInt(String(v ?? ''), 10);
+    no.ordemApresentacao = Number.isFinite(n) && n >= 1 ? Math.min(999, Math.round(n)) : undefined;
+    this.salvar();
+  }
+
+  limparOrdemApresentacao(no: NoFluxograma): void {
+    no.ordemApresentacao = undefined;
+    this.salvar();
+  }
+
+  ordemAnimacaoNo(no: NoFluxograma): number | null {
+    if (!this.exibirTagsAnimacao) return null;
+    return this.mapaOrdemAnimacao().get(no.id) ?? null;
+  }
+
+  larguraTagAnimacao(ordem: number): number {
+    return Math.max(22, String(ordem).length * 8 + 14);
+  }
+
+  private mapaOrdemAnimacao(): Map<string, number> {
+    const sig = `${this.versaoDados}|${this.nos.length}|${this.conexoes.length}|${this.camadas.map((c) => `${c.id}:${c.visivel}`).join(',')}`;
+    if (sig === this._ordemAnimacaoSig) return this._ordemAnimacaoMapa;
+    const mapa = new Map<string, number>();
+    const ordem = this.ordemApresentacao() ?? [];
+    ordem.forEach((n, i) => mapa.set(n.id, i + 1));
+    this._ordemAnimacaoSig = sig;
+    this._ordemAnimacaoMapa = mapa;
+    return mapa;
+  }
+
+  private normalizarOrdensApresentacao(): void {
+    this.nos.forEach((n) => {
+      const ordem = typeof n.ordemApresentacao === 'number' ? n.ordemApresentacao : parseInt(String(n.ordemApresentacao ?? ''), 10);
+      n.ordemApresentacao = Number.isFinite(ordem) && ordem >= 1 ? Math.min(999, Math.round(ordem)) : undefined;
+      n.papel = undefined;
+    });
+  }
+
+  private removerTagsAnimacaoDoClone(clone: SVGSVGElement): void {
+    clone.querySelectorAll('.ordem-animacao-badge').forEach((el) => el.remove());
+  }
+
+  // ─────────────────────── Modo apresentação (▶) ───────────────────────
+
+  apresentando = false;
+  nosRevelados = new Set<string>();
+  conexoesReveladas = new Set<string>();
+  conexoesTracando = new Set<string>();
+  /** Token que invalida apresentações anteriores (parar/reiniciar). */
+  private apresentacaoToken = 0;
+  private readonly duracaoTraco = 560;
+  private readonly duracaoNo = 420;
+
+  /** Inicia (ou para, se já estiver rodando) a apresentação animada do fluxo. */
+  async iniciarApresentacao(): Promise<void> {
+    if (this.apresentando) {
+      this.pararApresentacao();
+      return;
+    }
+    const ordem = this.ordemApresentacao();
+    if (!ordem || !ordem.length) {
+      this.avisar('Adicione ao menos uma forma ao diagrama para apresentar.');
+      return;
+    }
+    const token = ++this.apresentacaoToken;
+    this.apresentando = true;
+    this.limparSelecao();
+    this.resetarApresentacaoVisual();
+    this.cdr.detectChanges();
+    await this.esperar(120);
+
+    try {
+      while (token === this.apresentacaoToken) {
+        for (const no of ordem) {
+          if (token !== this.apresentacaoToken) return;
+          // Traça primeiro as conexões que chegam a este nó a partir de nós já visíveis.
+          const chegadas = this.conexoes.filter(
+            (c) => this.conexaoVisivel(c) && c.para === no.id && this.nosRevelados.has(c.de) && !this.conexoesReveladas.has(c.id),
+          );
+          if (chegadas.length) {
+            chegadas.forEach((c) => {
+              this.conexoesReveladas.add(c.id);
+              this.conexoesTracando.add(c.id);
+            });
+            this.cdr.detectChanges();
+            await this.esperar(this.duracaoTraco);
+            if (token !== this.apresentacaoToken) return;
+            chegadas.forEach((c) => this.conexoesTracando.delete(c.id));
+            this.cdr.detectChanges();
+          }
+          this.nosRevelados.add(no.id);
+          this.cdr.detectChanges();
+          await this.esperar(this.duracaoNo);
+        }
+        if (token !== this.apresentacaoToken) return;
+        // Conexões restantes entre nós já revelados (retornos, ciclos, atalhos).
+        const restantes = this.conexoes.filter(
+          (c) => this.conexaoVisivel(c) && !this.conexoesReveladas.has(c.id) && this.nosRevelados.has(c.de) && this.nosRevelados.has(c.para),
+        );
+        for (const c of restantes) {
+          if (token !== this.apresentacaoToken) return;
+          this.conexoesReveladas.add(c.id);
+          this.conexoesTracando.add(c.id);
+          this.cdr.detectChanges();
+          await this.esperar(Math.round(this.duracaoTraco * 0.8));
+          this.conexoesTracando.delete(c.id);
+          this.cdr.detectChanges();
+        }
+        await this.esperar(1200);
+        if (token !== this.apresentacaoToken) return;
+        this.resetarApresentacaoVisual();
+        this.cdr.detectChanges();
+        await this.esperar(250);
+      }
+    } finally {
+      if (token === this.apresentacaoToken) this.pararApresentacao();
+    }
+  }
+
+  private resetarApresentacaoVisual(): void {
+    this.nosRevelados = new Set<string>();
+    this.conexoesReveladas = new Set<string>();
+    this.conexoesTracando = new Set<string>();
+    // Contêineres são pano de fundo organizacional: aparecem desde o começo.
+    this.nos.forEach((n) => {
+      if (this.ehContainer(n.tipo) || n.tipo === 'ponto') this.nosRevelados.add(n.id);
+    });
+  }
+
+  /** Encerra a apresentação e restaura a exibição normal do diagrama. */
+  pararApresentacao(): void {
+    this.apresentacaoToken += 1;
+    this.apresentando = false;
+    this.nosRevelados.clear();
+    this.conexoesReveladas.clear();
+    this.conexoesTracando.clear();
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Ordem de exibição dos nós: respeita primeiro a ordem manual configurada no
+   * painel. Formas sem ordem entram depois, seguindo a leitura automática do grafo.
+   */
+  private ordemApresentacao(): NoFluxograma[] | null {
+    const candidatos = this.nosVisiveis.filter((n) => !this.ehContainer(n.tipo));
+    if (!candidatos.length) return null;
+
+    const indiceOriginal = new Map(candidatos.map((n, i) => [n.id, i]));
+    const ordenados = candidatos
+      .filter((n) => Number.isFinite(n.ordemApresentacao as number) && (n.ordemApresentacao as number) >= 1)
+      .sort(
+        (a, b) =>
+          (a.ordemApresentacao as number) - (b.ordemApresentacao as number) ||
+          (indiceOriginal.get(a.id) ?? 0) - (indiceOriginal.get(b.id) ?? 0),
+      );
+    const usados = new Set(ordenados.map((n) => n.id));
+    const restantes = this.ordemAutomatica(candidatos).filter((n) => !usados.has(n.id));
+    return [...ordenados, ...restantes];
+  }
+
+  private ordemAutomatica(candidatos: NoFluxograma[]): NoFluxograma[] {
+    const inicio = this.inicioAutomatico(candidatos);
+    if (!inicio) return [...candidatos];
+    const ordem: NoFluxograma[] = [];
+    const visitados = new Set<string>([inicio.id]);
+    const fila: NoFluxograma[] = [inicio];
+    while (fila.length) {
+      const atual = fila.shift() as NoFluxograma;
+      ordem.push(atual);
+      for (const c of this.conexoes) {
+        if (c.de !== atual.id || !this.conexaoVisivel(c)) continue;
+        const destino = candidatos.find((n) => n.id === c.para);
+        if (destino && !visitados.has(destino.id)) {
+          visitados.add(destino.id);
+          fila.push(destino);
+        }
+      }
+    }
+    for (const n of candidatos) {
+      if (!visitados.has(n.id)) {
+        visitados.add(n.id);
+        ordem.push(n);
+      }
+    }
+    return ordem;
+  }
+
+  /** Primeiro nó (na ordem do diagrama) sem conexão de entrada visível. */
+  private inicioAutomatico(candidatos: NoFluxograma[]): NoFluxograma | null {
+    const comEntrada = new Set(this.conexoes.filter((c) => this.conexaoVisivel(c)).map((c) => c.para));
+    return candidatos.find((n) => !comEntrada.has(n.id)) ?? (this.conexoes.length ? null : candidatos[0] ?? null);
+  }
+
+  private esperar(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // ─────────────────────── Pulsos de energia nas conexões ───────────────────────
+
+  pulsosAtivos = false;
+  pulsoEnergiaFrame = 0;
+  private pulsoEnergiaRaf: number | null = null;
+  private pulsoEnergiaInicio = 0;
+
+  alternarPulsos(): void {
+    this.pulsosAtivos = !this.pulsosAtivos;
+    if (this.pulsosAtivos) this.iniciarLoopPulsosEnergia();
+    else this.pararLoopPulsosEnergia();
+  }
+
+  /** Pulso visível: modo ligado e, durante a apresentação, apenas em conexões já traçadas. */
+  pulsoVisivel(c: ConexaoFluxograma): boolean {
+    return this.pulsosAtivos && !c.bloco && (!this.apresentando || this.conexoesReveladas.has(c.id));
+  }
+
+  /** Conexão com seta nas duas pontas: o pulso vai até o destino e volta (ping-pongue). */
+  pulsoBidirecional(c: ConexaoFluxograma): boolean {
+    return !!c.setaInicio && !!c.setaFim;
+  }
+
+  pontoPulsoEnergia(c: ConexaoFluxograma, i: number): { x: number; y: number } | null {
+    if (!this.pulsoVisivel(c)) return null;
+    const pontos = this.amostrarCentro(c);
+    if (!pontos || pontos.length < 2) return null;
+    let progresso = (this.pulsoEnergiaFrame + (i % 5) * 0.09) % 1;
+    if (this.pulsoBidirecional(c)) progresso = progresso <= 0.5 ? progresso * 2 : (1 - progresso) * 2;
+    return this.pontoEmFracaoDoCaminho(pontos, progresso);
+  }
+
+  private iniciarLoopPulsosEnergia(): void {
+    if (this.pulsoEnergiaRaf != null || typeof requestAnimationFrame === 'undefined') return;
+    this.pulsoEnergiaInicio = 0;
+    const passo = (t: number) => {
+      if (!this.pulsosAtivos) {
+        this.pulsoEnergiaRaf = null;
+        return;
+      }
+      if (!this.pulsoEnergiaInicio) this.pulsoEnergiaInicio = t;
+      this.pulsoEnergiaFrame = ((t - this.pulsoEnergiaInicio) % 2600) / 2600;
+      this.cdr.detectChanges();
+      this.pulsoEnergiaRaf = requestAnimationFrame(passo);
+    };
+    this.pulsoEnergiaRaf = requestAnimationFrame(passo);
+  }
+
+  private pararLoopPulsosEnergia(): void {
+    if (this.pulsoEnergiaRaf != null && typeof cancelAnimationFrame !== 'undefined') {
+      cancelAnimationFrame(this.pulsoEnergiaRaf);
+    }
+    this.pulsoEnergiaRaf = null;
+    this.pulsoEnergiaInicio = 0;
+  }
+
+  private pontoEmFracaoDoCaminho(pontos: { x: number; y: number }[], fracao: number): { x: number; y: number } {
+    const seg: number[] = [0];
+    for (let i = 1; i < pontos.length; i += 1) seg.push(seg[i - 1] + this.distancia(pontos[i - 1], pontos[i]));
+    const total = seg[seg.length - 1] || 1;
+    const alvo = Math.max(0, Math.min(total, total * fracao));
+    let i = 1;
+    while (i < seg.length && seg[i] < alvo) i += 1;
+    const i0 = Math.max(0, i - 1);
+    const i1 = Math.min(i, pontos.length - 1);
+    const t = (alvo - seg[i0]) / ((seg[i1] - seg[i0]) || 1);
+    return {
+      x: pontos[i0].x + (pontos[i1].x - pontos[i0].x) * t,
+      y: pontos[i0].y + (pontos[i1].y - pontos[i0].y) * t,
+    };
+  }
+
+  // ─────────────────────── Destaque de caminhos alcançáveis ───────────────────────
+
+  destaqueCaminhosAtivo = false;
+  private _alcSig = '';
+  private _alcNos = new Set<string>();
+  private _alcConexoes = new Set<string>();
+
+  alternarDestaqueCaminhos(): void {
+    this.destaqueCaminhosAtivo = !this.destaqueCaminhosAtivo;
+  }
+
+  /** Há um nó de origem válido para o destaque? */
+  private get origemDestaque(): string | null {
+    return this.destaqueCaminhosAtivo && this.selecionadoTipo === 'no' && this.selecionadoId ? this.selecionadoId : null;
+  }
+
+  /** Conjuntos de nós/conexões alcançáveis a partir do nó selecionado (memoizado). */
+  private alcancaveis(): { nos: Set<string>; conexoes: Set<string> } {
+    const origem = this.origemDestaque;
+    const sig = `${origem}|${this.versaoDados}`;
+    if (sig === this._alcSig) return { nos: this._alcNos, conexoes: this._alcConexoes };
+    const nosSet = new Set<string>();
+    const cxSet = new Set<string>();
+    if (origem) {
+      nosSet.add(origem);
+      const fila = [origem];
+      while (fila.length) {
+        const atual = fila.shift() as string;
+        for (const c of this.conexoes) {
+          if (c.de !== atual || !this.conexaoVisivel(c)) continue;
+          cxSet.add(c.id);
+          if (!nosSet.has(c.para)) {
+            nosSet.add(c.para);
+            fila.push(c.para);
+          }
+        }
+      }
+    }
+    this._alcSig = sig;
+    this._alcNos = nosSet;
+    this._alcConexoes = cxSet;
+    return { nos: nosSet, conexoes: cxSet };
+  }
+
+  ehNoAtenuado(no: NoFluxograma): boolean {
+    const origem = this.origemDestaque;
+    return !!origem && !this.alcancaveis().nos.has(no.id);
+  }
+
+  ehNoOrigemDestaque(no: NoFluxograma): boolean {
+    return this.origemDestaque === no.id;
+  }
+
+  ehConexaoAtenuada(c: ConexaoFluxograma): boolean {
+    const origem = this.origemDestaque;
+    return !!origem && !this.alcancaveis().conexoes.has(c.id);
+  }
+
+  ehConexaoDestacada(c: ConexaoFluxograma): boolean {
+    return !!this.origemDestaque && this.alcancaveis().conexoes.has(c.id);
+  }
+
+  // ─────────────────────── Export animado (GIF / SVG) ───────────────────────
+
+  exportandoGif = false;
+  modalExportAnimado: TipoExportAnimado | null = null;
+
+  abrirEscolhaAnimacao(tipo: TipoExportAnimado): void {
+    if (tipo === 'gif' && this.exportandoGif) return;
+    this.modalExportAnimado = tipo;
+  }
+
+  fecharEscolhaAnimacao(): void {
+    this.modalExportAnimado = null;
+  }
+
+  async confirmarExportAnimado(modo: ModoExportAnimado): Promise<void> {
+    const tipo = this.modalExportAnimado;
+    this.modalExportAnimado = null;
+    if (tipo === 'svg') {
+      modo === 'apresentacao' ? this.baixarSvgApresentacao() : this.baixarSvgEnergia();
+      return;
+    }
+    if (tipo === 'gif') {
+      if (modo === 'apresentacao') await this.baixarGifApresentacao();
+      else await this.baixarGifEnergia();
+    }
+  }
+
+  /**
+   * Linha do tempo da apresentação: instante e duração de entrada de cada nó
+   * e conexão (mesma ordem do modo ▶), usada pelos exports GIF e SVG animado.
+   */
+  private linhaTempoApresentacao(): {
+    nos: Map<string, { inicio: number; duracao: number }>;
+    conexoes: Map<string, { inicio: number; duracao: number }>;
+    total: number;
+  } | null {
+    const ordem = this.ordemApresentacao();
+    if (!ordem || !ordem.length) return null;
+    const nosT = new Map<string, { inicio: number; duracao: number }>();
+    const cxT = new Map<string, { inicio: number; duracao: number }>();
+    const revelados = new Set<string>();
+    this.nos.forEach((n) => {
+      if (this.ehContainer(n.tipo) || n.tipo === 'ponto') {
+        revelados.add(n.id);
+        nosT.set(n.id, { inicio: 0, duracao: 0 });
+      }
+    });
+    let t = 0;
+    for (const no of ordem) {
+      const chegadas = this.conexoes.filter(
+        (c) => this.conexaoVisivel(c) && c.para === no.id && revelados.has(c.de) && !cxT.has(c.id),
+      );
+      if (chegadas.length) {
+        chegadas.forEach((c) => cxT.set(c.id, { inicio: t, duracao: this.duracaoTraco }));
+        t += this.duracaoTraco;
+      }
+      revelados.add(no.id);
+      nosT.set(no.id, { inicio: t, duracao: this.duracaoNo });
+      t += this.duracaoNo;
+    }
+    const restantes = this.conexoes.filter(
+      (c) => this.conexaoVisivel(c) && !cxT.has(c.id) && revelados.has(c.de) && revelados.has(c.para),
+    );
+    for (const c of restantes) {
+      const dur = Math.round(this.duracaoTraco * 0.8);
+      cxT.set(c.id, { inicio: t, duracao: dur });
+      t += dur;
+    }
+    return { nos: nosT, conexoes: cxT, total: t };
+  }
+
+  /** Abre a escolha do tipo de animação para exportar em SVG. */
+  baixarSvgAnimado(): void {
+    this.abrirEscolhaAnimacao('svg');
+  }
+
+  /** Abre a escolha do tipo de animação para exportar em GIF. */
+  async baixarGif(): Promise<void> {
+    this.abrirEscolhaAnimacao('gif');
+  }
+
+  /** Baixa um SVG autônomo que reproduz a apresentação em loop (CSS embutido). */
+  private baixarSvgApresentacao(): void {
+    const lt = this.linhaTempoApresentacao();
+    if (!lt) {
+      this.avisar('Não foi possível montar a apresentação. Adicione ao menos uma forma ao diagrama.');
+      return;
+    }
+    const prep = this.prepararCloneExport(this.fundoExport);
+    if (!prep) {
+      this.avisar('Adicione ao menos uma forma ao diagrama.');
+      return;
+    }
+    this.removerTagsAnimacaoDoClone(prep.clone);
+    const totalMs = lt.total + 1800; // pausa no final antes de repetir
+    const pct = (ms: number) => Math.min(99.9, Math.max(0, (ms / totalMs) * 100)).toFixed(3);
+    const sane = (id: string) => id.replace(/[^A-Za-z0-9_-]/g, '_');
+    const regras: string[] = [];
+
+    lt.nos.forEach((ev, id) => {
+      if (!ev.duracao) return; // contêineres ficam visíveis o tempo todo
+      const s = sane(id);
+      const a = pct(ev.inicio);
+      const b = pct(ev.inicio + ev.duracao);
+      regras.push(`@keyframes no-${s}{0%,${a}%{opacity:0}${b}%,100%{opacity:1}}`);
+      regras.push(`[data-no-id="${id}"]{animation:no-${s} ${totalMs}ms linear infinite}`);
+    });
+
+    prep.clone.querySelectorAll('[data-conexao-id]').forEach((g) => {
+      const id = g.getAttribute('data-conexao-id') || '';
+      const ev = lt.conexoes.get(id);
+      if (!ev) return;
+      const s = sane(id);
+      const a = pct(ev.inicio);
+      const aposInicio = pct(ev.inicio + 1);
+      const b = pct(ev.inicio + ev.duracao);
+      const aposFim = pct(ev.inicio + ev.duracao + 1);
+      const linha = g.querySelector('.conexao-linha');
+      const desenhavel = !!linha && !linha.getAttribute('stroke-dasharray');
+      if (desenhavel && linha) {
+        // O grupo aparece quando o traçado começa e a linha se desenha até o destino.
+        regras.push(`@keyframes gcx-${s}{0%,${a}%{opacity:0}${aposInicio}%,100%{opacity:1}}`);
+        regras.push(`[data-conexao-id="${id}"]{animation:gcx-${s} ${totalMs}ms linear infinite}`);
+        linha.setAttribute('pathLength', '1');
+        regras.push(`@keyframes pcx-${s}{0%,${a}%{stroke-dashoffset:1}${b}%,100%{stroke-dashoffset:0}}`);
+        regras.push(
+          `[data-conexao-id="${id}"] .conexao-linha{stroke-dasharray:1;stroke-dashoffset:1;animation:pcx-${s} ${totalMs}ms linear infinite}`,
+        );
+        // As pontas (marcadores próprios desta conexão) só aparecem ao final do traçado.
+        for (const attr of ['marker-end', 'marker-start']) {
+          const m = (linha.getAttribute(attr) || '').match(/url\(#([^)]+)\)/);
+          if (m) {
+            const mid = sane(m[1]);
+            regras.push(`@keyframes mk-${mid}{0%,${b}%{opacity:0}${aposFim}%,100%{opacity:1}}`);
+            regras.push(`#${m[1]} path{animation:mk-${mid} ${totalMs}ms linear infinite}`);
+          }
+        }
+      } else {
+        // Tracejadas e setas de bloco surgem com fade (o dash faz parte do estilo).
+        regras.push(`@keyframes gcx-${s}{0%,${a}%{opacity:0}${b}%,100%{opacity:1}}`);
+        regras.push(`[data-conexao-id="${id}"]{animation:gcx-${s} ${totalMs}ms linear infinite}`);
+      }
+    });
+
+    const estilo = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+    estilo.textContent = regras.join('\n');
+    prep.clone.appendChild(estilo);
+    const svg = new XMLSerializer().serializeToString(prep.clone);
+    this.salvarBlob(new Blob([svg], { type: 'image/svg+xml' }), 'fluxograma-animado.svg');
+  }
+
+  /** Gera um GIF animado da apresentação (renderização e codificação 100% locais). */
+  private async baixarGifApresentacao(): Promise<void> {
+    if (this.exportandoGif) return;
+    const lt = this.linhaTempoApresentacao();
+    if (!lt) {
+      this.avisar('Não foi possível montar a apresentação. Adicione ao menos uma forma ao diagrama.');
+      return;
+    }
+    const prep = this.prepararCloneExport(this.fundoExport);
+    if (!prep) {
+      this.avisar('Adicione ao menos uma forma ao diagrama.');
+      return;
+    }
+    this.removerTagsAnimacaoDoClone(prep.clone);
+    this.exportandoGif = true;
+    this.aviso = 'Gerando GIF… 0%';
+    try {
+      const maxLargura = 840;
+      const escala = Math.min(1, maxLargura / Math.max(1, prep.largura));
+      const largura = Math.max(1, Math.round(prep.largura * escala));
+      const altura = Math.max(1, Math.round(prep.altura * escala));
+
+      // Mapeia os elementos do clone e guarda os atributos originais.
+      const gruposNo = new Map<string, SVGGElement>();
+      prep.clone.querySelectorAll<SVGGElement>('[data-no-id]').forEach((g) => {
+        gruposNo.set(g.getAttribute('data-no-id') || '', g);
+      });
+      interface RefConexao {
+        g: SVGGElement;
+        linha: SVGPathElement | null;
+        desenhavel: boolean;
+        markerEnd: string | null;
+        markerStart: string | null;
+      }
+      const gruposCx = new Map<string, RefConexao>();
+      prep.clone.querySelectorAll<SVGGElement>('[data-conexao-id]').forEach((g) => {
+        const linha = g.querySelector<SVGPathElement>('.conexao-linha');
+        gruposCx.set(g.getAttribute('data-conexao-id') || '', {
+          g,
+          linha,
+          desenhavel: !!linha && !linha.getAttribute('stroke-dasharray'),
+          markerEnd: linha ? linha.getAttribute('marker-end') : null,
+          markerStart: linha ? linha.getAttribute('marker-start') : null,
+        });
+      });
+
+      const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+      const aplicarEstado = (t: number): void => {
+        lt.nos.forEach((ev, id) => {
+          const g = gruposNo.get(id);
+          if (!g) return;
+          const p = ev.duracao ? clamp01((t - ev.inicio) / ev.duracao) : 1;
+          if (p >= 1) g.removeAttribute('opacity');
+          else g.setAttribute('opacity', p.toFixed(3));
+        });
+        lt.conexoes.forEach((ev, id) => {
+          const ref = gruposCx.get(id);
+          if (!ref) return;
+          const p = clamp01((t - ev.inicio) / ev.duracao);
+          if (ref.desenhavel && ref.linha) {
+            ref.g.setAttribute('opacity', t < ev.inicio ? '0' : '1');
+            if (p >= 1) {
+              ref.linha.removeAttribute('pathLength');
+              ref.linha.removeAttribute('stroke-dasharray');
+              if (ref.markerEnd) ref.linha.setAttribute('marker-end', ref.markerEnd);
+              if (ref.markerStart) ref.linha.setAttribute('marker-start', ref.markerStart);
+            } else {
+              ref.linha.setAttribute('pathLength', '1');
+              ref.linha.setAttribute('stroke-dasharray', `${p.toFixed(4)} 1`);
+              ref.linha.removeAttribute('marker-end');
+              ref.linha.removeAttribute('marker-start');
+            }
+          } else if (p >= 1) {
+            ref.g.removeAttribute('opacity');
+          } else {
+            ref.g.setAttribute('opacity', p.toFixed(3));
+          }
+        });
+      };
+
+      const canvas = document.createElement('canvas');
+      canvas.width = largura;
+      canvas.height = altura;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) throw new Error('Canvas indisponível.');
+      const fundo = this.fundoExport;
+
+      const rasterizarQuadro = (): Promise<Uint8ClampedArray> =>
+        new Promise((resolve, reject) => {
+          const svg = new XMLSerializer().serializeToString(prep.clone);
+          const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
+          const img = new Image();
+          img.onload = () => {
+            ctx.fillStyle = fundo;
+            ctx.fillRect(0, 0, largura, altura);
+            ctx.drawImage(img, 0, 0, largura, altura);
+            URL.revokeObjectURL(url);
+            resolve(ctx.getImageData(0, 0, largura, altura).data);
+          };
+          img.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error('Falha ao renderizar um quadro do GIF.'));
+          };
+          img.src = url;
+        });
+
+      // Paleta global a partir do estado final (contém todas as cores da cena).
+      aplicarEstado(lt.total + 1);
+      const paleta = criarPaletaGif(await rasterizarQuadro());
+
+      const passoMs = Math.max(80, Math.ceil(lt.total / 180));
+      const atrasoCs = Math.max(2, Math.round(passoMs / 10));
+      const tempos: number[] = [];
+      for (let t = 0; t <= lt.total; t += passoMs) tempos.push(t);
+      tempos.push(lt.total + 1);
+
+      const codificador = new CodificadorGif(largura, altura, paleta);
+      for (let i = 0; i < tempos.length; i += 1) {
+        aplicarEstado(tempos[i]);
+        const rgba = await rasterizarQuadro();
+        const ultimo = i === tempos.length - 1;
+        codificador.adicionarQuadro(indexarQuadroGif(rgba, paleta), ultimo ? 180 : atrasoCs);
+        this.aviso = `Gerando GIF… ${Math.round(((i + 1) / tempos.length) * 100)}%`;
+      }
+      this.salvarBlob(new Blob([codificador.finalizar()], { type: 'image/gif' }), 'fluxograma.gif');
+      this.aviso = '';
+      this.avisar('GIF gerado com sucesso.');
+    } catch (e) {
+      this.aviso = '';
+      this.avisar(e instanceof Error ? e.message : 'Erro ao gerar o GIF.');
+    } finally {
+      this.exportandoGif = false;
+    }
+  }
+
+  /** Baixa um SVG autônomo com pulsos de energia em loop nas conexões. */
+  private baixarSvgEnergia(): void {
+    const prep = this.prepararCloneExport(this.fundoExport);
+    if (!prep) {
+      this.avisar('Adicione ao menos uma forma ao diagrama.');
+      return;
+    }
+    this.removerTagsAnimacaoDoClone(prep.clone);
+    if (!this.aplicarPulsosEnergiaSvg(prep.clone)) {
+      this.avisar('Adicione ao menos uma conexão ao diagrama para animar o fluxo de energia.');
+      return;
+    }
+    const svg = new XMLSerializer().serializeToString(prep.clone);
+    this.salvarBlob(new Blob([svg], { type: 'image/svg+xml' }), 'fluxograma-energia.svg');
+  }
+
+  /** Gera um GIF com pulsos de energia se movendo nas conexões. */
+  private async baixarGifEnergia(): Promise<void> {
+    if (this.exportandoGif) return;
+    const prep = this.prepararCloneExport(this.fundoExport);
+    if (!prep) {
+      this.avisar('Adicione ao menos uma forma ao diagrama.');
+      return;
+    }
+    this.removerTagsAnimacaoDoClone(prep.clone);
+    const refs = this.prepararPulsosEnergiaGif(prep.clone);
+    if (!refs.length) {
+      this.avisar('Adicione ao menos uma conexão ao diagrama para animar o fluxo de energia.');
+      return;
+    }
+    this.exportandoGif = true;
+    this.aviso = 'Gerando GIF… 0%';
+    try {
+      const maxLargura = 840;
+      const escala = Math.min(1, maxLargura / Math.max(1, prep.largura));
+      const largura = Math.max(1, Math.round(prep.largura * escala));
+      const altura = Math.max(1, Math.round(prep.altura * escala));
+      const canvas = document.createElement('canvas');
+      canvas.width = largura;
+      canvas.height = altura;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) throw new Error('Canvas indisponível.');
+      const fundo = this.fundoExport;
+
+      const rasterizarQuadro = (): Promise<Uint8ClampedArray> =>
+        new Promise((resolve, reject) => {
+          const svg = new XMLSerializer().serializeToString(prep.clone);
+          const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
+          const img = new Image();
+          img.onload = () => {
+            ctx.fillStyle = fundo;
+            ctx.fillRect(0, 0, largura, altura);
+            ctx.drawImage(img, 0, 0, largura, altura);
+            URL.revokeObjectURL(url);
+            resolve(ctx.getImageData(0, 0, largura, altura).data);
+          };
+          img.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error('Falha ao renderizar um quadro do GIF.'));
+          };
+          img.src = url;
+        });
+
+      this.aplicarEstadoPulsosEnergia(refs, 0);
+      const paleta = criarPaletaGif(await rasterizarQuadro());
+      const duracaoMs = 2600;
+      const passoMs = 80;
+      const atrasoCs = Math.max(2, Math.round(passoMs / 10));
+      const codificador = new CodificadorGif(largura, altura, paleta);
+      const totalQuadros = Math.ceil(duracaoMs / passoMs);
+      for (let i = 0; i < totalQuadros; i += 1) {
+        this.aplicarEstadoPulsosEnergia(refs, (i * passoMs) / duracaoMs);
+        const rgba = await rasterizarQuadro();
+        codificador.adicionarQuadro(indexarQuadroGif(rgba, paleta), atrasoCs);
+        this.aviso = `Gerando GIF… ${Math.round(((i + 1) / totalQuadros) * 100)}%`;
+      }
+      this.salvarBlob(new Blob([codificador.finalizar()], { type: 'image/gif' }), 'fluxograma-energia.gif');
+      this.aviso = '';
+      this.avisar('GIF gerado com sucesso.');
+    } catch (e) {
+      this.aviso = '';
+      this.avisar(e instanceof Error ? e.message : 'Erro ao gerar o GIF.');
+    } finally {
+      this.exportandoGif = false;
+    }
+  }
+
+  private aplicarPulsosEnergiaSvg(clone: SVGSVGElement): boolean {
+    const ns = 'http://www.w3.org/2000/svg';
+    let total = 0;
+    clone.querySelectorAll<SVGGElement>('[data-conexao-id]').forEach((g, i) => {
+      const linha = g.querySelector<SVGPathElement>('.conexao-linha');
+      const d = linha?.getAttribute('d');
+      if (!linha || !d) return;
+      const cor = linha.getAttribute('stroke') || '#00ffd1';
+      const bidirecional = !!linha.getAttribute('marker-start') && !!linha.getAttribute('marker-end');
+      const pulso = document.createElementNS(ns, 'circle');
+      pulso.setAttribute('class', 'pulso-energia-export');
+      pulso.setAttribute('r', '3.4');
+      pulso.setAttribute('fill', cor);
+      const anim = document.createElementNS(ns, 'animateMotion');
+      anim.setAttribute('dur', bidirecional ? '5.2s' : '2.6s');
+      anim.setAttribute('repeatCount', 'indefinite');
+      anim.setAttribute('path', d);
+      anim.setAttribute('begin', `${(i % 5) * 0.18}s`);
+      if (bidirecional) {
+        anim.setAttribute('calcMode', 'linear');
+        anim.setAttribute('keyPoints', '0;1;0');
+        anim.setAttribute('keyTimes', '0;0.5;1');
+      }
+      pulso.appendChild(anim);
+      g.appendChild(pulso);
+      total += 1;
+    });
+    if (!total) return false;
+    const estilo = document.createElementNS(ns, 'style');
+    estilo.textContent =
+      '.pulso-energia-export{pointer-events:none;opacity:.95;filter:drop-shadow(0 0 5px rgba(255,255,255,.65));}';
+    clone.appendChild(estilo);
+    return true;
+  }
+
+  private prepararPulsosEnergiaGif(clone: SVGSVGElement): { circle: SVGCircleElement; path: SVGPathElement; bidirecional: boolean; fase: number }[] {
+    const ns = 'http://www.w3.org/2000/svg';
+    const refs: { circle: SVGCircleElement; path: SVGPathElement; bidirecional: boolean; fase: number }[] = [];
+    clone.querySelectorAll<SVGGElement>('[data-conexao-id]').forEach((g, i) => {
+      const linha = g.querySelector<SVGPathElement>('.conexao-linha');
+      if (!linha) return;
+      const cor = linha.getAttribute('stroke') || '#00ffd1';
+      const pulso = document.createElementNS(ns, 'circle');
+      pulso.setAttribute('r', '3.4');
+      pulso.setAttribute('fill', cor);
+      pulso.setAttribute('opacity', '0.95');
+      g.appendChild(pulso);
+      refs.push({
+        circle: pulso,
+        path: linha,
+        bidirecional: !!linha.getAttribute('marker-start') && !!linha.getAttribute('marker-end'),
+        fase: (i % 5) * 0.09,
+      });
+    });
+    return refs;
+  }
+
+  private aplicarEstadoPulsosEnergia(
+    refs: { circle: SVGCircleElement; path: SVGPathElement; bidirecional: boolean; fase: number }[],
+    t: number,
+  ): void {
+    refs.forEach((ref) => {
+      let p = (t + ref.fase) % 1;
+      if (ref.bidirecional) p = p <= 0.5 ? p * 2 : (1 - p) * 2;
+      const total = ref.path.getTotalLength();
+      const pt = ref.path.getPointAtLength(total * p);
+      ref.circle.setAttribute('cx', pt.x.toFixed(2));
+      ref.circle.setAttribute('cy', pt.y.toFixed(2));
+    });
   }
 
   trackNo(_: number, n: NoFluxograma): string {

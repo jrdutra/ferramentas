@@ -34,37 +34,77 @@
       </button>
     </div>
 
-    <span class="barra-sep barra-flex"></span>
+    <span class="barra-sep"></span>
 
+    <!-- Apresentação / efeitos visuais -->
     <div class="barra-grupo-f">
-      <button class="ferr-btn texto-btn" (click)="inputArquivo.click()" matTooltip="Abrir arquivo .mmd ou .xml exportado">
-        <mat-icon>folder_open</mat-icon> Abrir
+      <button class="ferr-btn" [class.ativo]="apresentando" (click)="iniciarApresentacao()"
+        [matTooltip]="apresentando ? 'Parar apresentação (Esc)' : 'Apresentar em loop pela ordem configurada'">
+        <mat-icon>{{ apresentando ? 'stop' : 'play_arrow' }}</mat-icon>
       </button>
-      <input #inputArquivo type="file" accept=".mmd,.txt,.xml" hidden (change)="carregarArquivo($event)" />
-      <button class="ferr-btn texto-btn" (click)="inputFluxogramaImagem.click()" [disabled]="importandoImagem"
-        matTooltip="Importar fluxograma a partir de JPG ou PNG">
-        <mat-icon>image_search</mat-icon> Imagem
+      <button class="ferr-btn" [class.ativo]="pulsosAtivos" (click)="alternarPulsos()"
+        matTooltip="Pulsos de energia percorrendo as conexões (liga/desliga)">
+        <mat-icon>flash_on</mat-icon>
       </button>
-      <input #inputFluxogramaImagem type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" hidden
-        (change)="importarImagemFluxograma($event)" />
-      <button class="ferr-btn texto-btn" (click)="abrirPainelDados('mermaid')" matTooltip="Importar / exportar Mermaid">
-        <mat-icon>account_tree</mat-icon> Mermaid
-      </button>
-      <button class="ferr-btn texto-btn" (click)="abrirPainelDados('xml')" matTooltip="Importar / exportar XML">
-        <mat-icon>code</mat-icon> XML
+      <button class="ferr-btn" [class.ativo]="destaqueCaminhosAtivo" (click)="alternarDestaqueCaminhos()"
+        matTooltip="Destacar caminhos: clique numa forma para iluminar tudo que é alcançável a partir dela">
+        <mat-icon>highlight</mat-icon>
       </button>
     </div>
 
-    <span class="barra-sep"></span>
+    <span class="barra-sep barra-flex"></span>
 
-    <div class="barra-grupo-f">
-      <button class="ferr-btn texto-btn" (click)="baixarPng()" matTooltip="Baixar PNG"><mat-icon>image</mat-icon> PNG</button>
-      <button class="ferr-btn texto-btn" (click)="baixarPngTransparente()" matTooltip="Baixar PNG com fundo e formas transparentes">
-        <mat-icon>gradient</mat-icon> PNG&nbsp;transp.
+    <div class="barra-grupo-dropdown">
+      <button class="ferr-btn texto-btn menu-principal" [matMenuTriggerFor]="menuSalvarAbrir" matTooltip="Salvar/Abrir">
+        <mat-icon>folder_open</mat-icon> Salvar/Abrir <mat-icon class="menu-seta">expand_more</mat-icon>
       </button>
-      <button class="ferr-btn texto-btn" (click)="baixarJpg()" matTooltip="Baixar JPG"><mat-icon>photo</mat-icon> JPG</button>
-      <button class="ferr-btn texto-btn" (click)="baixarPdf()" matTooltip="Baixar PDF"><mat-icon>picture_as_pdf</mat-icon> PDF</button>
-      <button class="ferr-btn texto-btn" (click)="baixarSvg()" matTooltip="Baixar SVG"><mat-icon>polyline</mat-icon> SVG</button>
+      <input #inputArquivo type="file" accept=".mmd,.txt,.xml" hidden (change)="carregarArquivo($event)" />
+      <input #inputFluxogramaImagem type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" hidden
+        (change)="importarImagemFluxograma($event)" />
+      <mat-menu #menuSalvarAbrir="matMenu" class="fluxo-menu-popup" yPosition="below">
+        <button mat-menu-item (click)="inputArquivo.click()">
+          <mat-icon>folder_open</mat-icon><span>Abrir</span>
+        </button>
+        <button mat-menu-item (click)="inputFluxogramaImagem.click()" [disabled]="importandoImagem">
+          <mat-icon>image_search</mat-icon><span>Imagem</span>
+        </button>
+        <button mat-menu-item (click)="abrirPainelDados('mermaid')">
+          <mat-icon>account_tree</mat-icon><span>Mermaid</span>
+        </button>
+        <button mat-menu-item (click)="abrirPainelDados('xml')">
+          <mat-icon>code</mat-icon><span>XML</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    <div class="barra-grupo-dropdown">
+      <button class="ferr-btn texto-btn menu-principal" [matMenuTriggerFor]="menuExportarEstatico" matTooltip="Exportar estático">
+        <mat-icon>ios_share</mat-icon> Exportar estático <mat-icon class="menu-seta">expand_more</mat-icon>
+      </button>
+      <mat-menu #menuExportarEstatico="matMenu" class="fluxo-menu-popup" yPosition="below">
+        <button mat-menu-item (click)="baixarPng()"><mat-icon>image</mat-icon><span>PNG</span></button>
+        <button mat-menu-item (click)="baixarPngTransparente()"><mat-icon>gradient</mat-icon><span>PNG transp.</span></button>
+        <button mat-menu-item (click)="baixarJpg()"><mat-icon>photo</mat-icon><span>JPG</span></button>
+        <button mat-menu-item (click)="baixarPdf()"><mat-icon>picture_as_pdf</mat-icon><span>PDF</span></button>
+        <button mat-menu-item (click)="baixarSvg()"><mat-icon>polyline</mat-icon><span>SVG</span></button>
+      </mat-menu>
+    </div>
+
+    <div class="barra-grupo-dropdown">
+      <button class="ferr-btn texto-btn menu-principal" [matMenuTriggerFor]="menuExportarAnimado" matTooltip="Exportar animado">
+        <mat-icon>animation</mat-icon> Exportar animado <mat-icon class="menu-seta">expand_more</mat-icon>
+      </button>
+      <mat-menu #menuExportarAnimado="matMenu" class="fluxo-menu-popup" yPosition="below">
+        <button mat-menu-item (click)="baixarSvgAnimado()">
+          <mat-icon>slideshow</mat-icon><span>SVG anim.</span>
+        </button>
+        <button mat-menu-item (click)="baixarGif()" [disabled]="exportandoGif">
+          <mat-icon>animation</mat-icon><span>{{ exportandoGif ? 'Gerando...' : 'GIF' }}</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    <div class="barra-offline-wrap">
       <button class="ferr-btn texto-btn destaque-offline" (click)="baixarOffline()" matTooltip="Baixar a versão HTML que roda 100% offline">
         <mat-icon>download</mat-icon> Executar Offline
       </button>
@@ -106,11 +146,11 @@
           </button>
           <div class="menu-botoes" *ngIf="catAberta('Ligações')">
             <button class="ferr-btn" [class.ativo]="ferramenta === 'conectar' && !novaConexaoBloco"
-              (click)="ativarConectar(false)" matTooltip="Conectar: clique na origem e depois no destino">
+              (click)="ativarConectar(false)" matTooltip="Conectar: clique na origem e depois no destino ou no vazio">
               <mat-icon>timeline</mat-icon>
             </button>
             <button class="ferr-btn" [class.ativo]="ferramenta === 'conectar' && novaConexaoBloco"
-              (click)="ativarConectar(true)" matTooltip="Seta com área: clique na origem e depois no destino">
+              (click)="ativarConectar(true)" matTooltip="Seta com área: clique na origem e depois no destino ou no vazio">
               <mat-icon>double_arrow</mat-icon>
             </button>
           </div>
@@ -201,6 +241,12 @@
           </select>
         </label>
 
+        <label class="camadas-opcao">
+          <input type="checkbox" [checked]="exibirTagsAnimacao"
+            (change)="alternarTagsAnimacao($any($event.target).checked)" />
+          <span>Exibir tags da animação</span>
+        </label>
+
         <div class="camadas-lista">
           <div class="camada-item" *ngFor="let cm of camadas; trackBy: trackCamada"
             [class.ativa]="cm.id === camadaAtivaId">
@@ -264,12 +310,19 @@
             <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.4" xChannelSelector="R" yChannelSelector="G" />
           </filter>
           <!-- Padrões de textura (hachura), na cor da borda/linha do elemento -->
-          <pattern *ngFor="let t of texturasUsadas()" [attr.id]="t.id" width="8" height="8" patternUnits="userSpaceOnUse">
+          <pattern *ngFor="let t of texturasUsadas()" [attr.id]="t.id" [attr.width]="t.tamanho" [attr.height]="t.tamanho" patternUnits="userSpaceOnUse">
+            <rect *ngIf="t.fundo" x="0" y="0" [attr.width]="t.tamanho" [attr.height]="t.tamanho" [attr.fill]="t.fundo" />
             <ng-container [ngSwitch]="t.textura">
-              <path *ngSwitchCase="'diagonal'" d="M0,8 l8,-8 M-2,2 l4,-4 M6,10 l4,-4" fill="none" [attr.stroke]="t.cor" stroke-width="1.2" />
-              <path *ngSwitchCase="'cruzada'" d="M0,8 l8,-8 M-2,2 l4,-4 M6,10 l4,-4 M0,0 l8,8 M-2,6 l4,4 M6,-2 l4,4" fill="none" [attr.stroke]="t.cor" stroke-width="1.1" />
-              <circle *ngSwitchCase="'pontos'" cx="2" cy="2" r="1.3" [attr.fill]="t.cor" />
-              <path *ngSwitchCase="'grade'" d="M0,0 H8 M0,0 V8" fill="none" [attr.stroke]="t.cor" stroke-width="1" />
+              <path *ngSwitchCase="'diagonal'"
+                [attr.d]="'M0,' + t.tamanho + ' l' + t.tamanho + ',-' + t.tamanho + ' M-' + (t.tamanho / 4) + ',' + (t.tamanho / 4) + ' l' + (t.tamanho / 2) + ',-' + (t.tamanho / 2) + ' M' + (t.tamanho * 0.75) + ',' + (t.tamanho * 1.25) + ' l' + (t.tamanho / 2) + ',-' + (t.tamanho / 2)"
+                fill="none" [attr.stroke]="t.cor" [attr.stroke-width]="t.tamanho > 8 ? 1.7 : 1.2" />
+              <path *ngSwitchCase="'cruzada'"
+                [attr.d]="'M0,' + t.tamanho + ' l' + t.tamanho + ',-' + t.tamanho + ' M-' + (t.tamanho / 4) + ',' + (t.tamanho / 4) + ' l' + (t.tamanho / 2) + ',-' + (t.tamanho / 2) + ' M' + (t.tamanho * 0.75) + ',' + (t.tamanho * 1.25) + ' l' + (t.tamanho / 2) + ',-' + (t.tamanho / 2) + ' M0,0 l' + t.tamanho + ',' + t.tamanho + ' M-' + (t.tamanho / 4) + ',' + (t.tamanho * 0.75) + ' l' + (t.tamanho / 2) + ',' + (t.tamanho / 2) + ' M' + (t.tamanho * 0.75) + ',-' + (t.tamanho / 4) + ' l' + (t.tamanho / 2) + ',' + (t.tamanho / 2)"
+                fill="none" [attr.stroke]="t.cor" [attr.stroke-width]="t.tamanho > 8 ? 1.55 : 1.1" />
+              <circle *ngSwitchCase="'pontos'" [attr.cx]="t.tamanho / 4" [attr.cy]="t.tamanho / 4"
+                [attr.r]="t.tamanho > 8 ? 2.2 : 1.3" [attr.fill]="t.cor" />
+              <path *ngSwitchCase="'grade'" [attr.d]="'M0,0 H' + t.tamanho + ' M0,0 V' + t.tamanho"
+                fill="none" [attr.stroke]="t.cor" [attr.stroke-width]="t.tamanho > 8 ? 1.45 : 1" />
             </ng-container>
           </pattern>
           <!-- Máscara: esconde o que estiver sob qualquer nó (usada pelas setas de bloco) -->
@@ -293,14 +346,17 @@
 
           <!-- Contêineres (atrás de tudo) -->
           <g *ngFor="let no of nosContainer; trackBy: trackNo" class="no-grupo container-grupo"
+            [attr.data-no-id]="no.id"
             [class.selecionado]="isNoSelecionado(no)"
+            [class.apres-oculto]="apresentando && !nosRevelados.has(no.id)"
+            [class.atenuado]="ehNoAtenuado(no)"
             (mousedown)="aoPressionarNo($event, no)" (click)="$event.stopPropagation()"
             (dblclick)="editarTextoNo($event, no)">
 
             <!-- Contêiner: corpo + barra de título -->
             <ng-container *ngIf="no.tipo === 'container'">
               <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura" rx="8"
-                [attr.fill]="preenchimentoNo(no)" fill-opacity="0.16" [attr.stroke]="bordaDe(no)"
+                [attr.fill]="preenchimentoNo(no)" [attr.fill-opacity]="opacidadePreenchimentoContainer(no)" [attr.stroke]="bordaDe(no)"
                 [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
               <path [attr.d]="'M ' + no.x + ' ' + (no.y + 8) + ' q 0 -8 8 -8 l ' + (no.largura - 16) + ' 0 q 8 0 8 8 l 0 20 l ' + (-no.largura) + ' 0 Z'"
                 [attr.fill]="bordaDe(no)" fill-opacity="0.85" />
@@ -310,7 +366,7 @@
             <!-- Moldura (frame): corpo + aba no canto superior esquerdo -->
             <ng-container *ngIf="no.tipo === 'frame'">
               <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
-                [attr.fill]="preenchimentoNo(no)" fill-opacity="0.1" [attr.stroke]="bordaDe(no)"
+                [attr.fill]="preenchimentoNo(no)" [attr.fill-opacity]="opacidadePreenchimentoContainer(no)" [attr.stroke]="bordaDe(no)"
                 [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
               <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="larguraRotulo(no.texto, no.largura)" height="22"
                 [attr.fill]="bordaDe(no)" fill-opacity="0.85" />
@@ -320,7 +376,7 @@
             <!-- Grupo: retângulo tracejado + rótulo -->
             <ng-container *ngIf="no.tipo === 'grupo'">
               <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura" rx="6"
-                [attr.fill]="preenchimentoNo(no)" fill-opacity="0.06" [attr.stroke]="bordaDe(no)"
+                [attr.fill]="preenchimentoNo(no)" [attr.fill-opacity]="opacidadePreenchimentoContainer(no)" [attr.stroke]="bordaDe(no)"
                 [attr.stroke-width]="no.espessuraBorda" stroke-dasharray="8 5"
                 [attr.filter]="filtroTraco(no.tipoTraco)" />
               <text class="container-titulo" [attr.x]="no.x + 10" [attr.y]="no.y + 18" [attr.fill]="textoDe(no)">{{ no.texto }}</text>
@@ -329,7 +385,7 @@
             <!-- Raia (swimlane): faixa lateral com título vertical -->
             <ng-container *ngIf="no.tipo === 'swimlane'">
               <rect [attr.x]="no.x" [attr.y]="no.y" [attr.width]="no.largura" [attr.height]="no.altura"
-                [attr.fill]="preenchimentoNo(no)" fill-opacity="0.1" [attr.stroke]="bordaDe(no)"
+                [attr.fill]="preenchimentoNo(no)" [attr.fill-opacity]="opacidadePreenchimentoContainer(no)" [attr.stroke]="bordaDe(no)"
                 [attr.stroke-width]="no.espessuraBorda" [attr.filter]="filtroTraco(no.tipoTraco)" />
               <rect [attr.x]="no.x" [attr.y]="no.y" width="30" [attr.height]="no.altura"
                 [attr.fill]="bordaDe(no)" fill-opacity="0.85" />
@@ -342,20 +398,27 @@
           </g>
 
           <!-- Conexões -->
-          <g *ngFor="let c of conexoesVisiveis; trackBy: trackConexao">
+          <g *ngFor="let c of conexoesVisiveis; let i = index; trackBy: trackConexao"
+            [attr.data-conexao-id]="c.id"
+            [class.apres-oculto]="apresentando && !conexoesReveladas.has(c.id)"
+            [class.atenuado]="ehConexaoAtenuada(c)"
+            [class.conexao-destacada]="ehConexaoDestacada(c)">
             <ng-container *ngIf="pontosConexao(c) as p">
               <path class="conexao-hit" fill="none" [attr.d]="caminhoConexao(c)"
                 (mousedown)="aoPressionarLinha($event, c)" (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
               <path *ngIf="!c.bloco" class="conexao-linha" fill="none" [class.selecionada]="isConexaoSelecionada(c)"
+                [class.apres-tracando]="conexoesTracando.has(c.id)"
+                [attr.pathLength]="conexoesTracando.has(c.id) ? 1 : null"
                 [attr.d]="caminhoConexao(c)"
                 [attr.stroke]="corConexaoDe(c)" [attr.stroke-width]="c.espessura"
                 [attr.stroke-dasharray]="c.tracejada ? '7 5' : null"
                 [attr.filter]="filtroTraco(c.tipoTraco)"
                 [attr.data-tamanho-seta]="tamanhoSetaConexao(c)"
-                [attr.marker-end]="c.setaFim ? 'url(#' + marcadorSetaId(c, 'fim') + ')' : null"
-                [attr.marker-start]="c.setaInicio ? 'url(#' + marcadorSetaId(c, 'inicio') + ')' : null"
+                [attr.marker-end]="c.setaFim && !conexoesTracando.has(c.id) ? 'url(#' + marcadorSetaId(c, 'fim') + ')' : null"
+                [attr.marker-start]="c.setaInicio && !conexoesTracando.has(c.id) ? 'url(#' + marcadorSetaId(c, 'inicio') + ')' : null"
                 (mousedown)="aoPressionarLinha($event, c)" (click)="aoClicarConexao($event, c)" (dblclick)="editarTextoConexao($event, c)" />
               <path *ngIf="c.bloco" class="conexao-bloco" [class.selecionada]="isConexaoSelecionada(c)"
+                [class.apres-tracando]="conexoesTracando.has(c.id)"
                 [attr.d]="caminhoSetaBloco(c)" [attr.fill]="preenchimentoConexao(c)" [attr.stroke]="corConexaoDe(c)" [attr.stroke-width]="c.espessura"
                 [attr.stroke-dasharray]="c.tracejada ? '7 5' : null" stroke-linejoin="round"
                 mask="url(#fluxo-mask-nos)" [attr.filter]="filtroTraco(c.tipoTraco)"
@@ -367,12 +430,21 @@
                 <text class="conexao-rotulo" x="0" y="0" text-anchor="middle" dominant-baseline="middle"
                   [attr.fill]="temaClaro ? '#111827' : '#f4fbff'">{{ c.texto }}</text>
               </g>
+              <!-- Pulso de energia percorrendo a conexão (modo opcional).
+                   Com seta nas duas pontas, o pulso vai e volta (ping-pongue). -->
+              <circle *ngIf="pontoPulsoEnergia(c, i) as pulso" class="pulso-energia" r="3.4"
+                [attr.cx]="pulso.x" [attr.cy]="pulso.y" [attr.fill]="corConexaoDe(c)" />
             </ng-container>
           </g>
 
           <!-- Nós normais -->
           <g *ngFor="let no of nosNormais; trackBy: trackNo" class="no-grupo"
+            [attr.data-no-id]="no.id"
             [class.selecionado]="isNoSelecionado(no)"
+            [class.apres-oculto]="apresentando && !nosRevelados.has(no.id)"
+            [class.apres-surgir]="apresentando && nosRevelados.has(no.id)"
+            [class.atenuado]="ehNoAtenuado(no)"
+            [class.destaque-origem]="ehNoOrigemDestaque(no)"
             (mousedown)="aoPressionarNo($event, no)" (click)="aoClicarNo($event)"
             (dblclick)="editarTextoNo($event, no)">
 
@@ -465,6 +537,14 @@
             <rect *ngIf="isNoSelecionado(no)" class="contorno-selecao"
               [attr.x]="no.x - 6" [attr.y]="no.y - 6" [attr.width]="no.largura + 12" [attr.height]="no.altura + 12"
               rx="6" />
+
+            <g *ngIf="ordemAnimacaoNo(no) as ordem" class="ordem-animacao-badge"
+              [attr.transform]="'translate(' + (no.x + no.largura - larguraTagAnimacao(ordem) / 2 - 6) + ',' + (no.y - 12) + ')'">
+              <rect [attr.x]="-larguraTagAnimacao(ordem) / 2" y="-10" [attr.width]="larguraTagAnimacao(ordem)"
+                height="20" rx="10" />
+              <text x="0" y="1" text-anchor="middle" dominant-baseline="middle">{{ ordem }}</text>
+            </g>
+
           </g>
 
           <!-- Alças de redimensionamento -->
@@ -494,6 +574,17 @@
         </g>
       </svg>
 
+      <div *ngIf="menuOrdemElemento as menu" class="menu-ordem-elemento"
+        [style.left.px]="menu.x" [style.top.px]="menu.y"
+        (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()">
+        <button type="button" (click)="enviarSelecionadoTras()" matTooltip="Enviar para trás no mesmo plano">
+          <mat-icon>flip_to_back</mat-icon>
+        </button>
+        <button type="button" (click)="enviarSelecionadoFrente()" matTooltip="Trazer para frente no mesmo plano">
+          <mat-icon>flip_to_front</mat-icon>
+        </button>
+      </div>
+
       <textarea *ngIf="editorTextoInline as ed" #editorTextoInline class="editor-texto-inline"
         [(ngModel)]="ed.texto"
         [style.left.px]="ed.left" [style.top.px]="ed.top"
@@ -503,7 +594,7 @@
 
       <div class="dica-canvas" *ngIf="ferramenta === 'conectar'">
         <mat-icon>timeline</mat-icon>
-        {{ conexaoOrigemId ? 'Agora clique na forma de destino' : 'Clique na forma de origem' }}
+        {{ conexaoOrigemId ? 'Agora clique na forma de destino ou em um ponto vazio' : 'Clique na forma de origem' }}
       </div>
 
       <div class="toast-canvas" *ngIf="aviso">
@@ -574,6 +665,18 @@
             <option *ngFor="let f of todasFormas" [value]="f.tipo">{{ f.nome }}</option>
             <option value="imagem">Imagem</option>
           </select>
+        </label>
+
+        <label class="campo ordem-apresentacao" *ngIf="!ehContainer(no.tipo)">
+          <span>Ordem na apresentação</span>
+          <div class="ordem-linha">
+            <input type="number" min="1" max="999" step="1" placeholder="Auto" [ngModel]="no.ordemApresentacao ?? null"
+              (ngModelChange)="setOrdemApresentacao(no, $event)" />
+            <button type="button" class="ordem-limpar" [disabled]="no.ordemApresentacao == null"
+              (click)="limparOrdemApresentacao(no)" matTooltip="Remover ordem manual e deixar no modo automático">
+              <mat-icon>backspace</mat-icon>
+            </button>
+          </div>
         </label>
 
         <button *ngIf="no.tipo === 'imagem'" class="painel-troca-img" (click)="trocarImagem(); inputImagem.click()">
@@ -868,6 +971,32 @@
   </div>
 
   <!-- ═══════════════ Painel Import/Export ═══════════════ -->
+  <div class="modal-dados-fundo" *ngIf="modalExportAnimado" (click)="fecharEscolhaAnimacao()">
+    <div class="modal-dados modal-animacao" (click)="$event.stopPropagation()">
+      <div class="modal-dados-topo">
+        <h3><mat-icon>animation</mat-icon> Tipo de animação</h3>
+        <button class="modal-fechar" (click)="fecharEscolhaAnimacao()"><mat-icon>close</mat-icon></button>
+      </div>
+
+      <div class="opcoes-animacao">
+        <button type="button" class="opcao-animacao" (click)="confirmarExportAnimado('apresentacao')">
+          <mat-icon>slideshow</mat-icon>
+          <span>
+            <strong>Apresentação</strong>
+            <small>Mostra as formas surgindo pela ordem configurada.</small>
+          </span>
+        </button>
+        <button type="button" class="opcao-animacao" (click)="confirmarExportAnimado('energia')">
+          <mat-icon>flash_on</mat-icon>
+          <span>
+            <strong>Fluxos de energia</strong>
+            <small>Mantém o diagrama visível e anima pulsos nas conexões.</small>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-dados-fundo" *ngIf="painelDados" (click)="painelDados = false">
     <div class="modal-dados" (click)="$event.stopPropagation()">
       <div class="modal-dados-topo">
@@ -913,6 +1042,9 @@
 
   <h4 class="sublinhado">Exportação</h4>
   <p>O <strong>PNG transparente</strong> gera uma imagem sem fundo e com as formas sem preenchimento (apenas contornos, texto e linhas), ideal para sobrepor a outros materiais. O botão <strong>Mermaid</strong> gera um diagrama <em>flowchart</em> compatível com editores como o mermaid.live, com diretivas de estilo e um comentário de metadados que preserva posições e tipos exatos para reimportação sem perdas. O formato <strong>XML</strong> guarda todos os atributos de cada forma e conexão.</p>
+
+  <h4 class="sublinhado">Apresentação do fluxo</h4>
+  <p>Selecione uma forma e, no painel de propriedades, defina sua <strong>ordem na apresentação</strong>. O botão <strong>▶ Apresentar</strong> desenha o fluxograma sozinho: as formas com ordem manual surgem primeiro, em ordem crescente, e as demais entram depois pela leitura automática das conexões. O botão de <strong>pulsos de energia</strong> faz pequenos pontos de luz percorrerem continuamente as conexões (em conexões com seta nas duas pontas, o pulso vai e volta), e o botão de <strong>destacar caminhos</strong> ilumina, ao clicar em uma forma, tudo o que é alcançável a partir dela (clique no fundo ou desative o modo para limpar). Ao baixar <strong>SVG animado</strong> ou <strong>GIF</strong>, escolha entre animação de apresentação ou animação de fluxos de energia; ambos são gerados localmente, sem servidores.</p>
 
   <h4 class="sublinhado">Atalhos</h4>
   <p><strong>Delete</strong> remove o elemento selecionado, <strong>Esc</strong> cancela a seleção e o modo atual, e <strong>Ctrl + roda do mouse</strong> aplica zoom.</p>
