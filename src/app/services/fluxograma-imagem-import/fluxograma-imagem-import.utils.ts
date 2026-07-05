@@ -63,7 +63,7 @@ export function classifyShape(metrics: ShapeMetrics): ShapeClassification {
   const fill = metrics.fillRatio;
   const circularity = metrics.circularity ?? 0;
 
-  if (mid > 0.68 && top < 0.62 && bottom < 0.62 && aspect >= 0.65 && aspect <= 1.9) {
+  if (mid > 0.68 && top < 0.62 && bottom < 0.62 && aspect >= 0.65 && aspect <= 3.2) {
     const confidence = 0.62 + (0.62 - Math.max(top, bottom)) * 0.35 + Math.min(0.2, mid * 0.12);
     return { type: 'decision', confidence: clamp01(confidence) };
   }

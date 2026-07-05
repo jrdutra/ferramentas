@@ -27,6 +27,21 @@ describe('fluxograma-imagem-import utils', () => {
     expect(result.confidence).toBeGreaterThan(0.65);
   });
 
+  it('classifica losango largo como decisao', () => {
+    const result = classifyShape({
+      width: 300,
+      height: 145,
+      fillRatio: 0.5,
+      topWidthRatio: 0.26,
+      middleWidthRatio: 1,
+      bottomWidthRatio: 0.26,
+      centerSkewRatio: 0,
+    });
+
+    expect(result.type).toBe('decision');
+    expect(result.confidence).toBeGreaterThan(0.65);
+  });
+
   it('classifica paralelogramo como entrada/saida', () => {
     const result = classifyShape({
       width: 160,

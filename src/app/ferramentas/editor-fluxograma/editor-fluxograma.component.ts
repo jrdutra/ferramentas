@@ -2376,6 +2376,37 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
     return this.amostrarArredondado(pontos, c.raioCanto ?? 50, 8);
   }
 
+  /** Traçado visível da conexão normal, sempre da borda da origem à borda do destino. */
+  private amostrarTracadoConexao(c: ConexaoFluxograma): { x: number; y: number }[] | null {
+    const a = this.nos.find((n) => n.id === c.de);
+    const b = this.nos.find((n) => n.id === c.para);
+    if (!a || !b) return null;
+    const wp = c.pontos || [];
+    if (!wp.length) {
+      const ctrl = this.controleConexao(a, b, c.curvatura || 0);
+      const bordA = this.pontoBorda(a, ctrl.x, ctrl.y);
+      const bordB = this.pontoBorda(b, ctrl.x, ctrl.y);
+      if (!c.curvatura) return [bordA, bordB];
+      const pts: { x: number; y: number }[] = [];
+      const N = 26;
+      for (let i = 0; i <= N; i += 1) {
+        const t = i / N;
+        const mt = 1 - t;
+        pts.push({
+          x: mt * mt * bordA.x + 2 * mt * t * ctrl.x + t * t * bordB.x,
+          y: mt * mt * bordA.y + 2 * mt * t * ctrl.y + t * t * bordB.y,
+        });
+      }
+      return pts;
+    }
+    const pontos = this.anchorsConexao(c);
+    if (!pontos || pontos.length < 2) return null;
+    const estilo = c.estilo || 'arredondado';
+    if (estilo === 'curvo') return this.amostrarSpline(pontos, 14);
+    if (estilo === 'reto') return pontos;
+    return this.amostrarArredondado(pontos, c.raioCanto ?? 50, 8);
+  }
+
   /** Amostra uma polilinha com cantos arredondados (igual ao traçado da conexão). */
   private amostrarArredondado(P: { x: number; y: number }[], raio: number, seg: number): { x: number; y: number }[] {
     if (P.length < 3 || raio <= 0) return P;
@@ -4052,11 +4083,11 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
 
   pontoPulsoEnergia(c: ConexaoFluxograma, i: number): { x: number; y: number } | null {
     if (!this.pulsoVisivel(c)) return null;
-    const pontos = this.amostrarCentro(c);
+    const pontos = this.amostrarTracadoConexao(c);
     if (!pontos || pontos.length < 2) return null;
     let progresso = (this.pulsoEnergiaFrame + (i % 5) * 0.09) % 1;
     if (this.pulsoBidirecional(c)) progresso = progresso <= 0.5 ? progresso * 2 : (1 - progresso) * 2;
-    return this.pontoEmFracaoDoCaminho(pontos, progresso);
+    return this.pontoEmTrechoVisivelDoCaminho(pontos, progresso, this.margemPulsoEnergia(c, 'inicio'), this.margemPulsoEnergia(c, 'fim'));
   }
 
   private iniciarLoopPulsosEnergia(): void {
@@ -4083,11 +4114,18 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
     this.pulsoEnergiaInicio = 0;
   }
 
-  private pontoEmFracaoDoCaminho(pontos: { x: number; y: number }[], fracao: number): { x: number; y: number } {
+  private pontoEmTrechoVisivelDoCaminho(
+    pontos: { x: number; y: number }[],
+    fracao: number,
+    margemInicio: number,
+    margemFim: number,
+  ): { x: number; y: number } {
     const seg: number[] = [0];
     for (let i = 1; i < pontos.length; i += 1) seg.push(seg[i - 1] + this.distancia(pontos[i - 1], pontos[i]));
     const total = seg[seg.length - 1] || 1;
-    const alvo = Math.max(0, Math.min(total, total * fracao));
+    const inicio = Math.min(Math.max(0, margemInicio), total / 2);
+    const fim = Math.max(inicio, total - Math.min(Math.max(0, margemFim), total / 2));
+    const alvo = Math.max(inicio, Math.min(fim, inicio + (fim - inicio) * fracao));
     let i = 1;
     while (i < seg.length && seg[i] < alvo) i += 1;
     const i0 = Math.max(0, i - 1);
@@ -4097,6 +4135,13 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
       x: pontos[i0].x + (pontos[i1].x - pontos[i0].x) * t,
       y: pontos[i0].y + (pontos[i1].y - pontos[i0].y) * t,
     };
+  }
+
+  private margemPulsoEnergia(c: ConexaoFluxograma, lado: 'inicio' | 'fim'): number {
+    const raioPulso = 3.4;
+    const folgaBorda = raioPulso + Math.max(1, c.espessura / 2);
+    const temSeta = lado === 'inicio' ? c.setaInicio : c.setaFim;
+    return temSeta ? Math.max(folgaBorda, this.tamanhoSetaConexao(c) * 0.55) : folgaBorda;
   }
 
   // ─────────────────────── Destaque de caminhos alcançáveis ───────────────────────

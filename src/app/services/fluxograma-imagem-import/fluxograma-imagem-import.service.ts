@@ -21,6 +21,9 @@ interface PreprocessedImage {
   height: number;
   gray: Uint8Array;
   binary: Uint8Array;
+  shapeBinary?: Uint8Array;
+  connectorBinary?: Uint8Array;
+  textBinary?: Uint8Array;
   threshold: number;
   inverted: boolean;
 }
@@ -74,7 +77,8 @@ export class FluxogramaImagemImportService {
     }
 
     progress('shapes', 34, 'Detectando formas fechadas');
-    let nodes = this.detectarNos(pre);
+    let nodes = this.detectarNosPorCores(pre);
+    if (!nodes.length) nodes = this.detectarNos(pre);
     if (!nodes.length) {
       warnings.push('Nao foi possivel encontrar formas fechadas; tentando fallback por componentes de borda.');
       nodes = this.detectarNosPorComponentes(pre);
@@ -183,7 +187,75 @@ export class FluxogramaImagemImportService {
 
     binary = this.limparRuido(binary, width, height);
     binary = this.fecharPequenasFalhas(binary, width, height);
-    return { width, height, gray, binary, threshold, inverted };
+
+    const colorMasks = this.extrairMascarasColoridas(imageData);
+    return { width, height, gray, binary, ...colorMasks, threshold, inverted };
+  }
+
+  private extrairMascarasColoridas(imageData: ImageData): Pick<PreprocessedImage, 'shapeBinary' | 'connectorBinary' | 'textBinary'> {
+    const { width, height, data } = imageData;
+    let shapeBinary = new Uint8Array(width * height);
+    let connectorBinary = new Uint8Array(width * height);
+    let textBinary = new Uint8Array(width * height);
+    let shapeCount = 0;
+    let connectorCount = 0;
+    let textCount = 0;
+
+    for (let i = 0, p = 0; i < data.length; i += 4, p += 1) {
+      const { h, s, v } = this.rgbToHsv(data[i], data[i + 1], data[i + 2]);
+      const vivid = v > 0.32 && s > 0.34;
+      const magentaOuRosa = vivid && (h >= 285 || h <= 25);
+      const verdeOuCiano = vivid && h >= 75 && h <= 175;
+      const textoClaro = v > 0.58 && s < 0.28;
+
+      if (magentaOuRosa) {
+        shapeBinary[p] = 1;
+        shapeCount += 1;
+      }
+      if (verdeOuCiano) {
+        connectorBinary[p] = 1;
+        connectorCount += 1;
+      }
+      if (textoClaro) {
+        textBinary[p] = 1;
+        textCount += 1;
+      }
+    }
+
+    const minEstrutural = Math.max(80, (width * height) / 25000);
+    const minTexto = Math.max(30, (width * height) / 90000);
+    const result: Pick<PreprocessedImage, 'shapeBinary' | 'connectorBinary' | 'textBinary'> = {};
+
+    if (shapeCount >= minEstrutural) {
+      shapeBinary = this.limparRuido(shapeBinary, width, height);
+      result.shapeBinary = this.fecharPequenasFalhas(shapeBinary, width, height);
+    }
+    if (connectorCount >= minEstrutural) {
+      connectorBinary = this.limparRuido(connectorBinary, width, height);
+      result.connectorBinary = this.fecharPequenasFalhas(connectorBinary, width, height);
+    }
+    if ((shapeCount >= minEstrutural || connectorCount >= minEstrutural) && textCount >= minTexto && textCount / (width * height) < 0.35) {
+      result.textBinary = this.limparRuido(textBinary, width, height);
+    }
+
+    return result;
+  }
+
+  private rgbToHsv(r: number, g: number, b: number): { h: number; s: number; v: number } {
+    const rn = r / 255;
+    const gn = g / 255;
+    const bn = b / 255;
+    const max = Math.max(rn, gn, bn);
+    const min = Math.min(rn, gn, bn);
+    const delta = max - min;
+    let h = 0;
+    if (delta > 0) {
+      if (max === rn) h = 60 * (((gn - bn) / delta) % 6);
+      else if (max === gn) h = 60 * ((bn - rn) / delta + 2);
+      else h = 60 * ((rn - gn) / delta + 4);
+    }
+    if (h < 0) h += 360;
+    return { h, s: max === 0 ? 0 : delta / max, v: max };
   }
 
   private otsu(gray: Uint8Array): number {
@@ -281,6 +353,134 @@ export class FluxogramaImagemImportService {
       ...node,
       id: `n${i + 1}`,
     }));
+  }
+
+  private detectarNosPorCores(pre: PreprocessedImage): DetectedNode[] {
+    if (!pre.shapeBinary) return [];
+    const comps = this.componentesForeground(pre.shapeBinary, pre.width, pre.height);
+    const minArea = Math.max(120, (pre.width * pre.height) / 12000);
+    const nodes = comps
+      .filter((c) => c.area >= minArea && c.width >= 42 && c.height >= 30)
+      .filter((c) => c.width / Math.max(1, c.height) < 5.8 && c.height / Math.max(1, c.width) < 3.8)
+      .filter((c) => c.area / Math.max(1, c.width * c.height) > 0.008)
+      .map((c, i) => {
+        const cls = this.classificarComponenteColorido(c, pre.width);
+        const pad = 2;
+        const x = Math.max(0, c.x - pad);
+        const y = Math.max(0, c.y - pad);
+        return {
+          id: `n${i + 1}`,
+          type: cls.type,
+          text: '',
+          x,
+          y,
+          width: Math.min(pre.width - x, c.width + pad * 2),
+          height: Math.min(pre.height - y, c.height + pad * 2),
+          confidence: cls.confidence,
+        };
+      });
+
+    return this.deduplicarNos(nodes).sort((a, b) => a.y - b.y || a.x - b.x).map((node, i) => ({
+      ...node,
+      id: `n${i + 1}`,
+    }));
+  }
+
+  private classificarComponenteColorido(comp: PixelComponent, imageWidth: number): { type: DetectedNode['type']; confidence: number } {
+    const { metrics, cornerDensity } = this.metricsFromComponent(comp, imageWidth);
+    const aspect = metrics.width / Math.max(1, metrics.height);
+    const top = metrics.topWidthRatio;
+    const mid = metrics.middleWidthRatio;
+    const bottom = metrics.bottomWidthRatio;
+    const skew = Math.abs(metrics.centerSkewRatio);
+
+    if (mid > 0.72 && top < 0.66 && bottom < 0.66 && aspect >= 0.55 && aspect <= 3.2) {
+      return { type: 'decision', confidence: 0.9 };
+    }
+    if (mid > 0.78 && top > 0.62 && bottom > 0.62 && skew > 0.08 && aspect >= 1.05) {
+      return { type: 'inputOutput', confidence: Math.min(0.9, 0.62 + skew * 1.4) };
+    }
+    if (mid > 0.86 && top > 0.52 && bottom > 0.52 && top < 0.93 && bottom < 0.93 && aspect >= 1.12 && cornerDensity < 0.19) {
+      return { type: 'terminator', confidence: 0.86 };
+    }
+    if (mid > 0.82 && top > 0.5 && top < 0.84 && bottom > 0.5 && bottom < 0.84 && aspect >= 0.78 && aspect <= 1.32) {
+      return { type: 'circle', confidence: 0.78 };
+    }
+    if (top > 0.76 && mid > 0.82 && bottom > 0.76) {
+      return { type: 'process', confidence: 0.88 };
+    }
+
+    return classifyShape(metrics);
+  }
+
+  private metricsFromComponent(comp: PixelComponent, imageWidth: number): { metrics: ShapeMetrics; cornerDensity: number } {
+    const rowMin = new Array<number>(comp.height).fill(Infinity);
+    const rowMax = new Array<number>(comp.height).fill(-Infinity);
+    let cornerPixels = 0;
+    const cornerW = Math.max(1, Math.round(comp.width * 0.18));
+    const cornerH = Math.max(1, Math.round(comp.height * 0.18));
+
+    for (const idx of comp.pixels) {
+      const x = idx % imageWidth;
+      const y = Math.floor(idx / imageWidth);
+      const lx = x - comp.x;
+      const ly = y - comp.y;
+      if (ly < 0 || ly >= comp.height || lx < 0 || lx >= comp.width) continue;
+      rowMin[ly] = Math.min(rowMin[ly], lx);
+      rowMax[ly] = Math.max(rowMax[ly], lx);
+      const inLeft = lx < cornerW;
+      const inRight = lx >= comp.width - cornerW;
+      const inTop = ly < cornerH;
+      const inBottom = ly >= comp.height - cornerH;
+      if ((inLeft || inRight) && (inTop || inBottom)) cornerPixels += 1;
+    }
+
+    const maxSpan = rowMax.reduce((acc, max, y) => {
+      if (!Number.isFinite(rowMin[y]) || !Number.isFinite(max)) return acc;
+      return Math.max(acc, max - rowMin[y] + 1);
+    }, 1);
+    const spanAt = (relativeY: number): number => {
+      const y = Math.max(0, Math.min(comp.height - 1, Math.round(comp.height * relativeY)));
+      const radius = Math.max(8, Math.round(comp.height * 0.06));
+      for (let offset = 0; offset <= radius; offset += 1) {
+        for (const yy of [y - offset, y + offset]) {
+          if (yy >= 0 && yy < comp.height && Number.isFinite(rowMin[yy]) && Number.isFinite(rowMax[yy])) {
+            return (rowMax[yy] - rowMin[yy] + 1) / maxSpan;
+          }
+        }
+      }
+      return 0;
+    };
+    const centerAt = (relativeY: number): number => {
+      const y = Math.max(0, Math.min(comp.height - 1, Math.round(comp.height * relativeY)));
+      const radius = Math.max(8, Math.round(comp.height * 0.06));
+      for (let offset = 0; offset <= radius; offset += 1) {
+        for (const yy of [y - offset, y + offset]) {
+          if (yy >= 0 && yy < comp.height && Number.isFinite(rowMin[yy]) && Number.isFinite(rowMax[yy])) {
+            return (rowMin[yy] + rowMax[yy]) / 2;
+          }
+        }
+      }
+      return comp.width / 2;
+    };
+
+    const top = spanAt(0.12);
+    const middle = spanAt(0.5);
+    const bottom = spanAt(0.88);
+    const cornerArea = Math.max(1, cornerW * cornerH * 4);
+    return {
+      metrics: {
+        width: comp.width,
+        height: comp.height,
+        fillRatio: comp.area / Math.max(1, comp.width * comp.height),
+        topWidthRatio: top,
+        middleWidthRatio: middle,
+        bottomWidthRatio: bottom,
+        centerSkewRatio: (centerAt(0.22) - centerAt(0.78)) / Math.max(1, comp.width),
+        circularity: this.circularityFromSpans(top, middle, bottom),
+      },
+      cornerDensity: cornerPixels / cornerArea,
+    };
   }
 
   private detectarNosPorComponentes(pre: PreprocessedImage): DetectedNode[] {
@@ -516,13 +716,15 @@ export class FluxogramaImagemImportService {
   }
 
   private detectarConectores(pre: PreprocessedImage, nodes: DetectedNode[]): DetectedConnectorCandidate[] {
-    const mask = this.nodeMask(nodes, pre.width, pre.height, 8);
-    const comps = this.componentesForeground(pre.binary, pre.width, pre.height, mask);
+    const connectorSource = pre.connectorBinary ?? pre.binary;
+    const usandoMascaraColorida = connectorSource === pre.connectorBinary;
+    const mask = this.nodeMask(nodes, pre.width, pre.height, usandoMascaraColorida ? 1 : 8);
+    const comps = this.componentesForeground(connectorSource, pre.width, pre.height, mask);
     const candidates: DetectedConnectorCandidate[] = [];
 
     for (const comp of comps) {
       const density = comp.area / Math.max(1, comp.width * comp.height);
-      if (comp.area < 8 || density > 0.62) continue;
+      if (comp.area < 8 || (!usandoMascaraColorida && density > 0.62)) continue;
       if (Math.max(comp.width, comp.height) < 18) continue;
 
       const pair = this.farthestPair(comp.pixels, pre.width);
@@ -775,6 +977,7 @@ export class FluxogramaImagemImportService {
   private cropTextoNo(pre: PreprocessedImage, node: DetectedNode): HTMLCanvasElement | null {
     const W = pre.width;
     const H = pre.height;
+    const textoMask = pre.textBinary ?? pre.binary;
     const mx = Math.round(Math.min(node.width * 0.16, 12));
     const my = Math.round(Math.min(node.height * 0.18, 10));
     const ix0 = Math.max(0, Math.round(node.x + mx));
@@ -791,7 +994,7 @@ export class FluxogramaImagemImportService {
     for (let y = iy0; y <= iy1; y += 1) {
       const row = y * W;
       for (let x = ix0; x <= ix1; x += 1) {
-        if (pre.binary[row + x]) {
+        if (textoMask[row + x]) {
           count += 1;
           if (x < minx) minx = x;
           if (x > maxx) maxx = x;
@@ -821,7 +1024,7 @@ export class FluxogramaImagemImportService {
     for (let y = miny; y <= maxy; y += 1) {
       const row = y * W;
       for (let x = minx; x <= maxx; x += 1) {
-        if (pre.binary[row + x]) {
+        if (textoMask[row + x]) {
           ctx.fillRect((x - minx) * escala, (y - miny) * escala, escala, escala);
         }
       }
