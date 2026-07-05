@@ -73,6 +73,10 @@ export interface NoFluxograma {
   papel?: PapelNo;
   /** Ordem manual em que a forma deve surgir na apresentação animada. */
   ordemApresentacao?: number;
+  /** Ordens manuais adicionais: o mesmo nó pode aparecer em vários passos da apresentação. */
+  ordensApresentacao?: number[];
+  /** Configurações da apresentação dinâmica por ordem. */
+  animacaoApresentacao?: Record<string, { zoom?: number }>;
 }
 
 export interface ConexaoFluxograma {
@@ -321,6 +325,8 @@ export class FluxogramaService {
           (n.camada ? ` camada="${esc(n.camada)}"` : '') +
           (n.containerId ? ` containerId="${esc(n.containerId)}"` : '') +
           (n.ordemApresentacao != null ? ` ordemApresentacao="${n.ordemApresentacao}"` : '') +
+          (n.ordensApresentacao?.length ? ` ordensApresentacao="${n.ordensApresentacao.join(',')}"` : '') +
+          (n.animacaoApresentacao ? ` animacaoApresentacao="${esc(JSON.stringify(n.animacaoApresentacao))}"` : '') +
           `>${esc(n.texto)}</no>`,
       );
     }
@@ -360,6 +366,7 @@ export class FluxogramaService {
     doc.querySelectorAll('no').forEach((el) => {
       const id = el.getAttribute('id') || this.gerarId('n');
       const base = this.noPadrao(id, el.textContent || '');
+      const ordensApresentacao = this.normalizaListaOrdensApresentacao(el.getAttribute('ordensApresentacao'));
       nos.push({
         ...base,
         tipo: (el.getAttribute('tipo') as FormaTipo) || 'retangulo',
@@ -385,6 +392,8 @@ export class FluxogramaService {
         containerId: el.getAttribute('containerId') || undefined,
         papel: this.normalizaPapel(el.getAttribute('papel')),
         ordemApresentacao: this.normalizaOrdemApresentacao(el.getAttribute('ordemApresentacao')),
+        ordensApresentacao,
+        animacaoApresentacao: this.normalizaAnimacaoApresentacao(el.getAttribute('animacaoApresentacao'), ordensApresentacao),
       });
     });
 
@@ -472,7 +481,9 @@ export class FluxogramaService {
       n.alinhamentoTexto = this.normalizaAlinhamentoTexto(n.alinhamentoTexto);
       n.alinhamentoVerticalTexto = this.normalizaAlinhamentoVerticalTexto(n.alinhamentoVerticalTexto);
       n.papel = this.normalizaPapel(n.papel);
-      n.ordemApresentacao = this.normalizaOrdemApresentacao(n.ordemApresentacao);
+      n.ordensApresentacao = this.normalizaListaOrdensApresentacao(n.ordensApresentacao ?? n.ordemApresentacao);
+      n.ordemApresentacao = n.ordensApresentacao?.[0];
+      n.animacaoApresentacao = this.normalizaAnimacaoApresentacao(n.animacaoApresentacao, n.ordensApresentacao);
       n.estiloBorda = this.normalizaEstiloLinha(n.estiloBorda);
       if (n.tipo === 'imagem') {
         n.escalaImagem = this.normalizaEscalaImagem(n.escalaImagem);
@@ -528,6 +539,55 @@ export class FluxogramaService {
     const n = typeof v === 'number' ? v : parseInt(String(v ?? ''), 10);
     if (!Number.isFinite(n) || n < 1) return undefined;
     return Math.min(999, Math.round(n));
+  }
+
+  private normalizaListaOrdensApresentacao(v: unknown): number[] | undefined {
+    const valores = Array.isArray(v)
+      ? v
+      : typeof v === 'number'
+        ? [v]
+        : String(v ?? '')
+            .split(/[,\s;]+/)
+            .filter(Boolean);
+    const unicas = new Set<number>();
+    valores.forEach((valor) => {
+      const ordem = this.normalizaOrdemApresentacao(valor);
+      if (ordem != null) unicas.add(ordem);
+    });
+    const ordenadas = [...unicas].sort((a, b) => a - b);
+    return ordenadas.length ? ordenadas : undefined;
+  }
+
+  private normalizaAnimacaoApresentacao(
+    v: unknown,
+    ordens?: number[],
+  ): Record<string, { zoom?: number }> | undefined {
+    let bruto = v;
+    if (typeof bruto === 'string') {
+      if (!bruto.trim()) return undefined;
+      try {
+        bruto = JSON.parse(bruto);
+      } catch {
+        return undefined;
+      }
+    }
+    if (!bruto || typeof bruto !== 'object' || Array.isArray(bruto)) return undefined;
+
+    const ordensValidas = new Set(ordens ?? []);
+    const saida: Record<string, { zoom?: number }> = {};
+    Object.entries(bruto as Record<string, unknown>).forEach(([chave, valor]) => {
+      const ordem = this.normalizaOrdemApresentacao(chave);
+      if (ordem == null || (ordensValidas.size > 0 && !ordensValidas.has(ordem))) return;
+      const zoom = this.normalizaZoomApresentacao((valor as { zoom?: unknown } | null)?.zoom);
+      if (zoom != null) saida[String(ordem)] = { zoom };
+    });
+    return Object.keys(saida).length ? saida : undefined;
+  }
+
+  private normalizaZoomApresentacao(v: unknown): number | undefined {
+    const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
+    if (!Number.isFinite(n)) return undefined;
+    return Math.round(Math.min(0.9, Math.max(0.15, n)) * 100) / 100;
   }
 
   private normalizaEstiloLinha(v: unknown): EstiloLinha | undefined {

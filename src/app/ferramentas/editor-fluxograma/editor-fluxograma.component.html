@@ -42,6 +42,10 @@
         [matTooltip]="apresentando ? 'Parar apresentação (Esc)' : 'Apresentar em loop pela ordem configurada'">
         <mat-icon>{{ apresentando ? 'stop' : 'play_arrow' }}</mat-icon>
       </button>
+      <button class="ferr-btn" [class.ativo]="apresentacaoDinamicaAtiva" (click)="iniciarApresentacaoDinamica()"
+        [matTooltip]="apresentacaoDinamicaAtiva ? 'Parar apresentação dinâmica (Esc)' : 'Apresentação dinâmica com zoom pela ordem das tags'">
+        <mat-icon>{{ apresentacaoDinamicaAtiva ? 'stop_circle' : 'travel_explore' }}</mat-icon>
+      </button>
       <button class="ferr-btn" [class.ativo]="pulsosAtivos" (click)="alternarPulsos()"
         matTooltip="Pulsos de energia percorrendo as conexões (liga/desliga)">
         <mat-icon>flash_on</mat-icon>
@@ -95,6 +99,9 @@
         <mat-icon>animation</mat-icon> Exportar animado <mat-icon class="menu-seta">expand_more</mat-icon>
       </button>
       <mat-menu #menuExportarAnimado="matMenu" class="fluxo-menu-popup" yPosition="below">
+        <button mat-menu-item (click)="baixarHtmlApresentacaoDinamica()">
+          <mat-icon>travel_explore</mat-icon><span>Apresentação dinâmica</span>
+        </button>
         <button mat-menu-item (click)="baixarSvgAnimado()">
           <mat-icon>slideshow</mat-icon><span>SVG anim.</span>
         </button>
@@ -275,12 +282,14 @@
       [class.modo-criar]="ferramenta !== 'selecionar' && ferramenta !== 'conectar'"
       [class.modo-conectar]="ferramenta === 'conectar'" (wheel)="aoRolar($event)"
       (dragenter)="aoArrastarArquivo($event)" (dragover)="aoArrastarArquivo($event)"
-      (dragleave)="aoSairArrasteArquivo($event)" (drop)="aoSoltarArquivo($event)">
+      (dragleave)="aoSairArrasteArquivo($event)" (drop)="aoSoltarArquivo($event)"
+      (auxclick)="aoCliqueAuxiliarCanvas($event)">
       <div class="arraste-overlay" *ngIf="arrastandoArquivo">
         <mat-icon>upload_file</mat-icon>
         <span>Solte um arquivo .xml ou Mermaid para abrir no board</span>
       </div>
-      <svg #svgCanvas class="fluxo-canvas" (mousedown)="aoPressionarFundo($event)" (click)="aoClicarCanvas($event)">
+      <svg #svgCanvas class="fluxo-canvas" (mousedown)="aoPressionarFundo($event)" (click)="aoClicarCanvas($event)"
+        (auxclick)="aoCliqueAuxiliarCanvas($event)">
         <defs>
           <pattern id="grade-fluxo" width="24" height="24" patternUnits="userSpaceOnUse"
             [attr.patternTransform]="'translate(' + panX + ',' + panY + ') scale(' + zoom + ')'">
@@ -445,6 +454,7 @@
             [class.apres-surgir]="apresentando && nosRevelados.has(no.id)"
             [class.atenuado]="ehNoAtenuado(no)"
             [class.destaque-origem]="ehNoOrigemDestaque(no)"
+            [class.dinamica-foco]="dinamicaNoFocoId === no.id"
             (mousedown)="aoPressionarNo($event, no)" (click)="aoClicarNo($event)"
             (dblclick)="editarTextoNo($event, no)">
 
@@ -538,8 +548,11 @@
               [attr.x]="no.x - 6" [attr.y]="no.y - 6" [attr.width]="no.largura + 12" [attr.height]="no.altura + 12"
               rx="6" />
 
-            <g *ngIf="ordemAnimacaoNo(no) as ordem" class="ordem-animacao-badge"
-              [attr.transform]="'translate(' + (no.x + no.largura - larguraTagAnimacao(ordem) / 2 - 6) + ',' + (no.y - 12) + ')'">
+            <g *ngFor="let ordem of ordensAnimacaoNo(no); let i = index" class="ordem-animacao-badge"
+              [class.configurado]="zoomAnimacaoOrdemConfigurado(no, ordem)"
+              [attr.transform]="'translate(' + (no.x + no.largura - larguraTagAnimacao(ordem) / 2 - 6) + ',' + (no.y - 12 - i * 22) + ')'"
+              (mousedown)="$event.stopPropagation()" (click)="abrirConfigAnimacaoOrdem($event, no, ordem)">
+              <title>Configurar ordem {{ ordem }}</title>
               <rect [attr.x]="-larguraTagAnimacao(ordem) / 2" y="-10" [attr.width]="larguraTagAnimacao(ordem)"
                 height="20" rx="10" />
               <text x="0" y="1" text-anchor="middle" dominant-baseline="middle">{{ ordem }}</text>
@@ -585,12 +598,56 @@
         </button>
       </div>
 
+      <div *ngIf="configAnimacaoOrdem as cfg" class="painel-config-animacao"
+        [style.left.px]="cfg.x" [style.top.px]="cfg.y"
+        (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()">
+        <div class="painel-config-animacao-topo">
+          <span>Ordem {{ cfg.ordem }}</span>
+          <button type="button" (click)="fecharConfigAnimacaoOrdem()" matTooltip="Fechar">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <strong class="painel-config-animacao-titulo">{{ tituloConfigAnimacao(cfg) }}</strong>
+        <label>
+          <span>Zoom no elemento <b>{{ zoomAnimacaoOrdemValor(cfg) | number:'1.2-2' }}</b></span>
+          <input type="range" min="15" max="90" step="1" [value]="zoomAnimacaoOrdemPercentual(cfg)"
+            (input)="setZoomAnimacaoOrdem(cfg, $any($event.target).value)" />
+        </label>
+        <div class="painel-config-animacao-linha">
+          <input type="number" min="0.15" max="0.9" step="0.01" [value]="zoomAnimacaoOrdemValor(cfg)"
+            (change)="setZoomAnimacaoOrdem(cfg, $any($event.target).value, false)" />
+          <button type="button" (click)="resetZoomAnimacaoOrdem(cfg)">Padrão</button>
+        </div>
+      </div>
+
       <textarea *ngIf="editorTextoInline as ed" #editorTextoInline class="editor-texto-inline"
         [(ngModel)]="ed.texto"
         [style.left.px]="ed.left" [style.top.px]="ed.top"
         [style.width.px]="ed.width" [style.height.px]="ed.height"
         (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()"
         (keydown)="aoTeclarEditorInline($event)" (blur)="confirmarEdicaoTextoInline()"></textarea>
+
+      <div *ngIf="apresentacaoDinamicaAtiva" class="apresentacao-dinamica-controles"
+        (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()">
+        <button type="button" (click)="voltarApresentacaoDinamica()" matTooltip="Voltar">
+          <mat-icon>skip_previous</mat-icon>
+        </button>
+        <button type="button" (click)="retomarApresentacaoDinamica()" [disabled]="!apresentacaoDinamicaPausada"
+          matTooltip="Play">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button type="button" (click)="pausarApresentacaoDinamica()" [disabled]="apresentacaoDinamicaPausada"
+          matTooltip="Pause">
+          <mat-icon>pause</mat-icon>
+        </button>
+        <button type="button" (click)="avancarApresentacaoDinamica()" matTooltip="Avançar">
+          <mat-icon>skip_next</mat-icon>
+        </button>
+        <div class="apresentacao-dinamica-status">
+          <span>{{ rotuloPassoApresentacaoDinamica() }}</span>
+          <strong>{{ tituloPassoApresentacaoDinamica() }}</strong>
+        </div>
+      </div>
 
       <div class="dica-canvas" *ngIf="ferramenta === 'conectar'">
         <mat-icon>timeline</mat-icon>
@@ -670,9 +727,10 @@
         <label class="campo ordem-apresentacao" *ngIf="!ehContainer(no.tipo)">
           <span>Ordem na apresentação</span>
           <div class="ordem-linha">
-            <input type="number" min="1" max="999" step="1" placeholder="Auto" [ngModel]="no.ordemApresentacao ?? null"
-              (ngModelChange)="setOrdemApresentacao(no, $event)" />
-            <button type="button" class="ordem-limpar" [disabled]="no.ordemApresentacao == null"
+            <input type="text" inputmode="numeric" placeholder="Auto ou 1, 4, 9" [value]="textoOrdensApresentacao(no)"
+              (change)="setOrdemApresentacao(no, $any($event.target).value)"
+              (keydown.enter)="setOrdemApresentacao(no, $any($event.target).value); $event.preventDefault()" />
+            <button type="button" class="ordem-limpar" [disabled]="!temOrdemApresentacao(no)"
               (click)="limparOrdemApresentacao(no)" matTooltip="Remover ordem manual e deixar no modo automático">
               <mat-icon>backspace</mat-icon>
             </button>

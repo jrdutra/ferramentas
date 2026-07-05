@@ -42,6 +42,18 @@ interface RetanguloCanvas {
   altura: number;
 }
 
+interface PassoApresentacao {
+  no: NoFluxograma;
+  ordem: number;
+}
+
+interface ConfigAnimacaoOrdemPainel {
+  noId: string;
+  ordem: number;
+  x: number;
+  y: number;
+}
+
 interface EditorTextoInline {
   tipo: 'no' | 'conexao';
   id: string;
@@ -587,6 +599,7 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   conexoesSelecionadas = new Set<string>();
   retanguloSelecao: RetanguloCanvas | null = null;
   editorTextoInline: EditorTextoInline | null = null;
+  configAnimacaoOrdem: ConfigAnimacaoOrdemPainel | null = null;
 
   // Origem temporária ao criar conexões.
   conexaoOrigemId: string | null = null;
@@ -624,6 +637,8 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   aviso = '';
   private substituirImagemId: string | null = null;
   private readonly chaveLocal = 'fluxograma-editor-v1';
+  private readonly zoomApresentacaoDinamicaPadrao = 0.46;
+  private readonly zoomSaidaApresentacaoDinamicaPadrao = 0.24;
 
   // Viewport
   zoom = 1;
@@ -682,7 +697,7 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   /** Versão dos dados; incrementa a cada salvar() (usado por caches derivados). */
   private versaoDados = 0;
   private _ordemAnimacaoSig = '';
-  private _ordemAnimacaoMapa = new Map<string, number>();
+  private _ordemAnimacaoMapa = new Map<string, number[]>();
   private clipboardFluxograma: ClipboardFluxograma | null = null;
   private colagensSequenciais = 0;
 
@@ -716,6 +731,8 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.pararLoopPulsosEnergia();
+    this.apresentacaoToken += 1;
+    this.encerrarApresentacaoDinamica(false);
   }
 
   // ─────────────────────────── Getters ───────────────────────────
@@ -1115,6 +1132,7 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
       this.ignorarCliqueCanvas = false;
       return;
     }
+    this.configAnimacaoOrdem = null;
     if (this.ferramenta === 'conectar') {
       if (!this.conexaoOrigemId) {
         this.avisar('Clique primeiro na forma de origem da seta.');
@@ -1145,6 +1163,12 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
 
   aoPressionarNo(evento: MouseEvent, no: NoFluxograma): void {
     evento.stopPropagation();
+    this.configAnimacaoOrdem = null;
+
+    if (evento.button === 1) {
+      this.iniciarPanCanvas(evento);
+      return;
+    }
 
     if (this.ferramenta === 'conectar') {
       if (!this.conexaoOrigemId) {
@@ -1218,11 +1242,10 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   }
 
   aoPressionarFundo(evento: MouseEvent): void {
+    this.configAnimacaoOrdem = null;
     if (this.ferramenta === 'selecionar') {
       if (evento.button === 1 || evento.altKey) {
-        this.panning = true;
-        this.panIniX = evento.clientX - this.panX;
-        this.panIniY = evento.clientY - this.panY;
+        this.iniciarPanCanvas(evento);
         return;
       }
       const p = this.pontoCanvas(evento);
@@ -1232,6 +1255,20 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
       this.selecaoIniY = p.y;
       this.retanguloSelecao = { x: p.x, y: p.y, largura: 0, altura: 0 };
     }
+  }
+
+  aoCliqueAuxiliarCanvas(evento: MouseEvent): void {
+    if (evento.button !== 1) return;
+    evento.preventDefault();
+    evento.stopPropagation();
+  }
+
+  private iniciarPanCanvas(evento: MouseEvent): void {
+    evento.preventDefault();
+    evento.stopPropagation();
+    this.panning = true;
+    this.panIniX = evento.clientX - this.panX;
+    this.panIniY = evento.clientY - this.panY;
   }
 
   @HostListener('window:mousemove', ['$event'])
@@ -1275,6 +1312,7 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
         this.aplicarSnap(this.arrastando);
       }
     } else if (this.panning) {
+      evento.preventDefault();
       this.panX = evento.clientX - this.panIniX;
       this.panY = evento.clientY - this.panIniY;
     } else if (this.selecionandoArea) {
@@ -1283,9 +1321,10 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('window:mouseup')
-  aoSoltar(): void {
+  @HostListener('window:mouseup', ['$event'])
+  aoSoltar(evento?: MouseEvent): void {
     const mudou = !!(this.arrastando || this.redimensionando || this.panning);
+    if (this.panning || evento?.button === 1) evento?.preventDefault();
     const idsSoltos = new Set(this.idsArraste);
     if (this.selecionandoArea) {
       const selecionou = this.aplicarSelecaoArea();
@@ -1687,6 +1726,8 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
       novo.camada = this.camadaAtivaId;
       // Cópias não herdam a ordem da apresentação, para evitar posições duplicadas sem querer.
       novo.ordemApresentacao = undefined;
+      novo.ordensApresentacao = undefined;
+      novo.animacaoApresentacao = undefined;
       novo.papel = undefined;
       return novo;
     });
@@ -2616,6 +2657,10 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   aoPressionarLinha(evento: MouseEvent, c: ConexaoFluxograma): void {
     if (this.ferramenta !== 'selecionar') return;
     evento.stopPropagation();
+    if (evento.button === 1) {
+      this.iniciarPanCanvas(evento);
+      return;
+    }
     this.selecionar(c.id, 'conexao');
     const p = this.pontoCanvas(evento);
     this.pendenteLinha = { c, x: p.x, y: p.y };
@@ -2625,6 +2670,10 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   aoPressionarPonto(evento: MouseEvent, c: ConexaoFluxograma, indice: number): void {
     if (this.ferramenta !== 'selecionar') return;
     evento.stopPropagation();
+    if (evento.button === 1) {
+      this.iniciarPanCanvas(evento);
+      return;
+    }
     this.selecionar(c.id, 'conexao');
     this.curvando = c;
     this.arrastePontoIndice = indice;
@@ -3687,6 +3736,7 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
     if (Array.isArray(d.camadas) && d.camadas.length) this.camadas = d.camadas;
     if (typeof d.camadaAtivaId === 'string') this.camadaAtivaId = d.camadaAtivaId;
     this.normalizarCamadas();
+    this.normalizarOrdensApresentacao();
     this.limparSelecao();
     this.snapshotAtual = json;
     this.salvar();
@@ -3861,31 +3911,134 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   // ─────────────────────── Ordem da apresentação ───────────────────────
 
   setOrdemApresentacao(no: NoFluxograma, v: unknown): void {
-    const n = typeof v === 'number' ? v : parseInt(String(v ?? ''), 10);
-    no.ordemApresentacao = Number.isFinite(n) && n >= 1 ? Math.min(999, Math.round(n)) : undefined;
+    no.ordensApresentacao = this.parseOrdensApresentacao(v);
+    no.ordemApresentacao = no.ordensApresentacao?.[0];
+    this.removerConfigsAnimacaoSemOrdem(no);
     this.salvar();
   }
 
   limparOrdemApresentacao(no: NoFluxograma): void {
     no.ordemApresentacao = undefined;
+    no.ordensApresentacao = undefined;
+    no.animacaoApresentacao = undefined;
+    if (this.configAnimacaoOrdem?.noId === no.id) this.configAnimacaoOrdem = null;
     this.salvar();
   }
 
-  ordemAnimacaoNo(no: NoFluxograma): number | null {
+  textoOrdensApresentacao(no: NoFluxograma): string {
+    return this.ordensDoNo(no).join(', ');
+  }
+
+  temOrdemApresentacao(no: NoFluxograma): boolean {
+    return this.ordensDoNo(no).length > 0;
+  }
+
+  ordemAnimacaoNo(no: NoFluxograma): string | null {
     if (!this.exibirTagsAnimacao) return null;
-    return this.mapaOrdemAnimacao().get(no.id) ?? null;
+    const ordens = this.mapaOrdemAnimacao().get(no.id);
+    return ordens?.length ? ordens.join(', ') : null;
   }
 
-  larguraTagAnimacao(ordem: number): number {
-    return Math.max(22, String(ordem).length * 8 + 14);
+  ordensAnimacaoNo(no: NoFluxograma): number[] {
+    if (!this.exibirTagsAnimacao) return [];
+    return this.mapaOrdemAnimacao().get(no.id) ?? [];
   }
 
-  private mapaOrdemAnimacao(): Map<string, number> {
+  larguraTagAnimacao(ordem: string | number): number {
+    return Math.max(22, String(ordem).length * 7 + 14);
+  }
+
+  abrirConfigAnimacaoOrdem(evento: MouseEvent, no: NoFluxograma, ordem: number): void {
+    evento.preventDefault();
+    evento.stopPropagation();
+    const wrap = this.svgCanvas?.nativeElement.closest('.fluxo-canvas-wrap') as HTMLElement | null;
+    const rect = wrap?.getBoundingClientRect();
+    const x = rect ? evento.clientX - rect.left : evento.offsetX;
+    const y = rect ? evento.clientY - rect.top : evento.offsetY;
+    this.configAnimacaoOrdem = {
+      noId: no.id,
+      ordem,
+      x: Math.max(12, Math.min((rect?.width ?? 420) - 260, x + 10)),
+      y: Math.max(12, Math.min((rect?.height ?? 260) - 158, y + 10)),
+    };
+    this.cdr.detectChanges();
+  }
+
+  fecharConfigAnimacaoOrdem(): void {
+    this.configAnimacaoOrdem = null;
+  }
+
+  noConfigAnimacao(cfg: ConfigAnimacaoOrdemPainel): NoFluxograma | null {
+    return this.nos.find((no) => no.id === cfg.noId) ?? null;
+  }
+
+  tituloConfigAnimacao(cfg: ConfigAnimacaoOrdemPainel): string {
+    const no = this.noConfigAnimacao(cfg);
+    return no?.texto?.trim() || `Ordem ${cfg.ordem}`;
+  }
+
+  zoomAnimacaoOrdemValor(cfg: ConfigAnimacaoOrdemPainel): number {
+    const no = this.noConfigAnimacao(cfg);
+    return no ? this.zoomAnimacaoDoPasso({ no, ordem: cfg.ordem }) : this.zoomApresentacaoDinamicaPadrao;
+  }
+
+  zoomAnimacaoOrdemPercentual(cfg: ConfigAnimacaoOrdemPainel): number {
+    return Math.round(this.zoomAnimacaoOrdemValor(cfg) * 100);
+  }
+
+  zoomAnimacaoOrdemConfigurado(no: NoFluxograma, ordem: number): boolean {
+    return no.animacaoApresentacao?.[String(ordem)]?.zoom != null;
+  }
+
+  setZoomAnimacaoOrdem(cfg: ConfigAnimacaoOrdemPainel, valor: unknown, percentual = true): void {
+    const no = this.noConfigAnimacao(cfg);
+    if (!no) return;
+    const bruto = percentual ? Number(valor) / 100 : Number(valor);
+    const zoom = this.normalizarZoomAnimacao(bruto);
+    if (Math.abs(zoom - this.zoomApresentacaoDinamicaPadrao) < 0.001) {
+      this.resetZoomAnimacaoOrdem(cfg);
+      return;
+    }
+    no.animacaoApresentacao = { ...(no.animacaoApresentacao ?? {}) };
+    no.animacaoApresentacao[String(cfg.ordem)] = { zoom };
+    this.salvar();
+  }
+
+  resetZoomAnimacaoOrdem(cfg: ConfigAnimacaoOrdemPainel): void {
+    const no = this.noConfigAnimacao(cfg);
+    if (!no?.animacaoApresentacao) return;
+    delete no.animacaoApresentacao[String(cfg.ordem)];
+    if (!Object.keys(no.animacaoApresentacao).length) no.animacaoApresentacao = undefined;
+    this.salvar();
+  }
+
+  private normalizarZoomAnimacao(v: unknown): number {
+    const n = typeof v === 'number' ? v : parseFloat(String(v ?? ''));
+    if (!Number.isFinite(n)) return this.zoomApresentacaoDinamicaPadrao;
+    return Math.round(Math.min(0.9, Math.max(0.15, n)) * 100) / 100;
+  }
+
+  private removerConfigsAnimacaoSemOrdem(no: NoFluxograma): void {
+    if (!no.animacaoApresentacao) return;
+    const ordens = new Set(this.ordensDoNo(no).map(String));
+    Object.keys(no.animacaoApresentacao).forEach((ordem) => {
+      if (!ordens.has(ordem)) delete no.animacaoApresentacao?.[ordem];
+    });
+    if (!Object.keys(no.animacaoApresentacao).length) no.animacaoApresentacao = undefined;
+    if (this.configAnimacaoOrdem?.noId === no.id && !ordens.has(String(this.configAnimacaoOrdem.ordem))) {
+      this.configAnimacaoOrdem = null;
+    }
+  }
+
+  private mapaOrdemAnimacao(): Map<string, number[]> {
     const sig = `${this.versaoDados}|${this.nos.length}|${this.conexoes.length}|${this.camadas.map((c) => `${c.id}:${c.visivel}`).join(',')}`;
     if (sig === this._ordemAnimacaoSig) return this._ordemAnimacaoMapa;
-    const mapa = new Map<string, number>();
-    const ordem = this.ordemApresentacao() ?? [];
-    ordem.forEach((n, i) => mapa.set(n.id, i + 1));
+    const mapa = new Map<string, number[]>();
+    for (const passo of this.passosApresentacaoOrdenados()) {
+      const atuais = mapa.get(passo.no.id) ?? [];
+      atuais.push(passo.ordem);
+      mapa.set(passo.no.id, atuais);
+    }
     this._ordemAnimacaoSig = sig;
     this._ordemAnimacaoMapa = mapa;
     return mapa;
@@ -3893,10 +4046,32 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
 
   private normalizarOrdensApresentacao(): void {
     this.nos.forEach((n) => {
-      const ordem = typeof n.ordemApresentacao === 'number' ? n.ordemApresentacao : parseInt(String(n.ordemApresentacao ?? ''), 10);
-      n.ordemApresentacao = Number.isFinite(ordem) && ordem >= 1 ? Math.min(999, Math.round(ordem)) : undefined;
+      n.ordensApresentacao = this.parseOrdensApresentacao(n.ordensApresentacao ?? n.ordemApresentacao);
+      n.ordemApresentacao = n.ordensApresentacao?.[0];
+      this.removerConfigsAnimacaoSemOrdem(n);
       n.papel = undefined;
     });
+  }
+
+  private parseOrdensApresentacao(v: unknown): number[] | undefined {
+    const valores = Array.isArray(v)
+      ? v
+      : typeof v === 'number'
+        ? [v]
+        : String(v ?? '')
+            .split(/[,\s;]+/)
+            .filter(Boolean);
+    const unicas = new Set<number>();
+    valores.forEach((valor) => {
+      const n = typeof valor === 'number' ? valor : parseInt(String(valor ?? ''), 10);
+      if (Number.isFinite(n) && n >= 1) unicas.add(Math.min(999, Math.round(n)));
+    });
+    const ordenadas = [...unicas].sort((a, b) => a - b);
+    return ordenadas.length ? ordenadas : undefined;
+  }
+
+  private ordensDoNo(no: NoFluxograma): number[] {
+    return this.parseOrdensApresentacao(no.ordensApresentacao ?? no.ordemApresentacao) ?? [];
   }
 
   private removerTagsAnimacaoDoClone(clone: SVGSVGElement): void {
@@ -3906,11 +4081,20 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   // ─────────────────────── Modo apresentação (▶) ───────────────────────
 
   apresentando = false;
+  apresentacaoDinamicaAtiva = false;
+  apresentacaoDinamicaPausada = false;
+  apresentacaoDinamicaFinalizada = false;
+  apresentacaoDinamicaIndice = 0;
+  apresentacaoDinamicaPassos: PassoApresentacao[] = [];
+  dinamicaNoFocoId: string | null = null;
   nosRevelados = new Set<string>();
   conexoesReveladas = new Set<string>();
   conexoesTracando = new Set<string>();
   /** Token que invalida apresentações anteriores (parar/reiniciar). */
   private apresentacaoToken = 0;
+  private dinamicaRaf: number | null = null;
+  private dinamicaViewInicial: { zoom: number; panX: number; panY: number } | null = null;
+  private dinamicaTimers: ReturnType<typeof setTimeout>[] = [];
   private readonly duracaoTraco = 560;
   private readonly duracaoNo = 420;
 
@@ -3920,6 +4104,7 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
       this.pararApresentacao();
       return;
     }
+    if (this.apresentacaoDinamicaAtiva) this.pararApresentacao();
     const ordem = this.ordemApresentacao();
     if (!ordem || !ordem.length) {
       this.avisar('Adicione ao menos uma forma ao diagrama para apresentar.');
@@ -3980,6 +4165,156 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
     }
   }
 
+  iniciarApresentacaoDinamica(): void {
+    if (this.apresentacaoDinamicaAtiva) {
+      this.pararApresentacao();
+      return;
+    }
+    if (this.apresentando) this.pararApresentacao();
+
+    const passos = this.passosApresentacaoOrdenados();
+    if (!passos.length) {
+      this.avisar('Defina ao menos uma tag de ordem para usar a apresentação dinâmica.');
+      return;
+    }
+
+    const token = ++this.apresentacaoToken;
+    this.apresentacaoDinamicaAtiva = true;
+    this.apresentacaoDinamicaPausada = true;
+    this.apresentacaoDinamicaFinalizada = false;
+    this.apresentacaoDinamicaIndice = 0;
+    this.apresentacaoDinamicaPassos = passos;
+    this.dinamicaViewInicial = { zoom: this.zoom, panX: this.panX, panY: this.panY };
+    this.limparSelecao();
+    this.cdr.detectChanges();
+    void this.executarPassoApresentacaoDinamica(0, false, token);
+  }
+
+  pausarApresentacaoDinamica(): void {
+    if (!this.apresentacaoDinamicaAtiva || this.apresentacaoDinamicaPausada) return;
+    this.apresentacaoDinamicaPausada = true;
+    this.apresentacaoToken += 1;
+    this.limparTimersApresentacaoDinamica();
+    this.cdr.detectChanges();
+  }
+
+  retomarApresentacaoDinamica(): void {
+    if (!this.apresentacaoDinamicaAtiva || !this.apresentacaoDinamicaPausada) return;
+    this.apresentacaoDinamicaPausada = false;
+    if (this.apresentacaoDinamicaFinalizada) {
+      this.apresentacaoDinamicaFinalizada = false;
+      this.apresentacaoDinamicaIndice = 0;
+    }
+    const token = ++this.apresentacaoToken;
+    void this.executarPassoApresentacaoDinamica(this.apresentacaoDinamicaIndice, true, token);
+  }
+
+  avancarApresentacaoDinamica(): void {
+    if (this.apresentacaoDinamicaFinalizada) return;
+    this.irParaPassoManualApresentacaoDinamica(this.apresentacaoDinamicaIndice + 1);
+  }
+
+  voltarApresentacaoDinamica(): void {
+    const indice = this.apresentacaoDinamicaFinalizada
+      ? this.apresentacaoDinamicaPassos.length - 1
+      : this.apresentacaoDinamicaIndice - 1;
+    this.irParaPassoManualApresentacaoDinamica(indice);
+  }
+
+  rotuloPassoApresentacaoDinamica(): string {
+    if (this.apresentacaoDinamicaFinalizada) return 'Fluxograma completo';
+    const passo = this.passoAtualApresentacaoDinamica();
+    if (!passo) return 'Sem passos';
+    return `Passo ${this.apresentacaoDinamicaIndice + 1} de ${this.apresentacaoDinamicaPassos.length} | ordem ${passo.ordem}`;
+  }
+
+  tituloPassoApresentacaoDinamica(): string {
+    if (this.apresentacaoDinamicaFinalizada) return 'Apresentação concluída';
+    const passo = this.passoAtualApresentacaoDinamica();
+    return passo?.no.texto?.trim() || (passo ? `Ordem ${passo.ordem}` : 'Apresentação dinâmica');
+  }
+
+  private irParaPassoManualApresentacaoDinamica(indice: number): void {
+    if (!this.apresentacaoDinamicaAtiva || !this.apresentacaoDinamicaPassos.length) return;
+    this.apresentacaoDinamicaPausada = true;
+    this.apresentacaoDinamicaFinalizada = false;
+    const token = ++this.apresentacaoToken;
+    this.limparTimersApresentacaoDinamica();
+    void this.executarPassoApresentacaoDinamica(indice, false, token);
+  }
+
+  private async executarPassoApresentacaoDinamica(indice: number, auto: boolean, token: number): Promise<void> {
+    this.limparTimersApresentacaoDinamica();
+    if (!this.apresentacaoDinamicaAtiva || token !== this.apresentacaoToken || !this.apresentacaoDinamicaPassos.length) return;
+
+    const total = this.apresentacaoDinamicaPassos.length;
+    if (indice >= total) {
+      await this.finalizarApresentacaoDinamica(token);
+      return;
+    }
+    this.apresentacaoDinamicaIndice = Math.max(0, indice);
+    const passo = this.apresentacaoDinamicaPassos[this.apresentacaoDinamicaIndice];
+    this.dinamicaNoFocoId = passo.no.id;
+    this.apresentacaoDinamicaFinalizada = false;
+    const zoomFoco = this.zoomAnimacaoDoPasso(passo);
+    const zoomSaida = this.zoomSaidaAnimacaoDoPasso(zoomFoco);
+    this.cdr.detectChanges();
+
+    await this.animarCameraDinamica(passo.no, zoomFoco, 980, token);
+    if (!auto || !this.apresentacaoDinamicaPodeRodar(token)) return;
+
+    this.agendarApresentacaoDinamica(async () => {
+      if (!this.apresentacaoDinamicaPodeRodar(token)) return;
+      await this.animarCameraDinamica(passo.no, zoomSaida, 520, token);
+      if (!this.apresentacaoDinamicaPodeRodar(token)) return;
+      this.agendarApresentacaoDinamica(() => {
+        if (!this.apresentacaoDinamicaPodeRodar(token)) return;
+        void this.executarPassoApresentacaoDinamica(this.apresentacaoDinamicaIndice + 1, true, token);
+      }, 120);
+    }, 430);
+  }
+
+  private async finalizarApresentacaoDinamica(token: number): Promise<void> {
+    this.limparTimersApresentacaoDinamica();
+    if (!this.apresentacaoDinamicaAtiva || token !== this.apresentacaoToken) return;
+    this.apresentacaoDinamicaPausada = true;
+    this.apresentacaoDinamicaFinalizada = true;
+    this.dinamicaNoFocoId = null;
+    this.cdr.detectChanges();
+    await this.animarCameraParaConteudo(920, token);
+    this.cdr.detectChanges();
+  }
+
+  private apresentacaoDinamicaPodeRodar(token: number): boolean {
+    return this.apresentacaoDinamicaAtiva && !this.apresentacaoDinamicaPausada && token === this.apresentacaoToken;
+  }
+
+  private zoomAnimacaoDoPasso(passo: PassoApresentacao): number {
+    return this.normalizarZoomAnimacao(passo.no.animacaoApresentacao?.[String(passo.ordem)]?.zoom);
+  }
+
+  private zoomSaidaAnimacaoDoPasso(zoomFoco: number): number {
+    const proporcaoAtual = this.zoomSaidaApresentacaoDinamicaPadrao / this.zoomApresentacaoDinamicaPadrao;
+    return this.normalizarZoomAnimacao(zoomFoco * proporcaoAtual);
+  }
+
+  private passoAtualApresentacaoDinamica(): PassoApresentacao | null {
+    return this.apresentacaoDinamicaPassos[this.apresentacaoDinamicaIndice] ?? null;
+  }
+
+  private agendarApresentacaoDinamica(callback: () => void, atraso: number): void {
+    const timer = setTimeout(() => {
+      this.dinamicaTimers = this.dinamicaTimers.filter((id) => id !== timer);
+      callback();
+    }, atraso);
+    this.dinamicaTimers.push(timer);
+  }
+
+  private limparTimersApresentacaoDinamica(): void {
+    this.dinamicaTimers.forEach((timer) => clearTimeout(timer));
+    this.dinamicaTimers = [];
+  }
+
   private resetarApresentacaoVisual(): void {
     this.nosRevelados = new Set<string>();
     this.conexoesReveladas = new Set<string>();
@@ -3993,11 +4328,113 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   /** Encerra a apresentação e restaura a exibição normal do diagrama. */
   pararApresentacao(): void {
     this.apresentacaoToken += 1;
+    this.encerrarApresentacaoDinamica(true);
     this.apresentando = false;
     this.nosRevelados.clear();
     this.conexoesReveladas.clear();
     this.conexoesTracando.clear();
     this.cdr.detectChanges();
+  }
+
+  private encerrarApresentacaoDinamica(restaurarView: boolean): void {
+    this.limparTimersApresentacaoDinamica();
+    this.dinamicaRaf = null;
+    this.apresentacaoDinamicaAtiva = false;
+    this.apresentacaoDinamicaPausada = false;
+    this.apresentacaoDinamicaFinalizada = false;
+    this.apresentacaoDinamicaIndice = 0;
+    this.apresentacaoDinamicaPassos = [];
+    this.dinamicaNoFocoId = null;
+    if (restaurarView && this.dinamicaViewInicial) {
+      this.zoom = this.dinamicaViewInicial.zoom;
+      this.panX = this.dinamicaViewInicial.panX;
+      this.panY = this.dinamicaViewInicial.panY;
+    }
+    this.dinamicaViewInicial = null;
+  }
+
+  private async animarCameraDinamica(no: NoFluxograma, ocupacaoViewport: number, duracao: number, token: number): Promise<void> {
+    await this.animarCameraPara(this.cameraParaNo(no, ocupacaoViewport), duracao, token);
+  }
+
+  private async animarCameraParaConteudo(duracao: number, token: number): Promise<void> {
+    const alvo = this.cameraParaConteudo();
+    if (!alvo) return;
+    await this.animarCameraPara(alvo, duracao, token);
+  }
+
+  private animarCameraPara(
+    alvo: { zoom: number; panX: number; panY: number },
+    duracao: number,
+    token: number,
+  ): Promise<void> {
+    if (typeof requestAnimationFrame === 'undefined') {
+      this.zoom = alvo.zoom;
+      this.panX = alvo.panX;
+      this.panY = alvo.panY;
+      this.cdr.detectChanges();
+      return this.esperar(duracao);
+    }
+
+    const inicio = { zoom: this.zoom, panX: this.panX, panY: this.panY };
+    const inicioTempo = performance.now();
+    return new Promise((resolve) => {
+      const passo = (agora: number) => {
+        if (token !== this.apresentacaoToken) {
+          resolve();
+          return;
+        }
+        const t = Math.max(0, Math.min(1, (agora - inicioTempo) / duracao));
+        const e = this.easeInOutCubic(t);
+        this.zoom = inicio.zoom + (alvo.zoom - inicio.zoom) * e;
+        this.panX = inicio.panX + (alvo.panX - inicio.panX) * e;
+        this.panY = inicio.panY + (alvo.panY - inicio.panY) * e;
+        this.cdr.detectChanges();
+        if (t >= 1) {
+          this.dinamicaRaf = null;
+          resolve();
+          return;
+        }
+        this.dinamicaRaf = requestAnimationFrame(passo);
+      };
+      this.dinamicaRaf = requestAnimationFrame(passo);
+    });
+  }
+
+  private easeInOutCubic(t: number): number {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  private cameraParaNo(no: NoFluxograma, ocupacaoViewport: number): { zoom: number; panX: number; panY: number } {
+    const rect = this.svgCanvas?.nativeElement.getBoundingClientRect();
+    const vw = rect?.width || 1000;
+    const vh = rect?.height || 700;
+    const alvoZoomX = (vw * ocupacaoViewport) / Math.max(1, no.largura);
+    const alvoZoomY = (vh * ocupacaoViewport) / Math.max(1, no.altura);
+    const alvoZoom = Math.min(3.4, Math.max(0.35, Math.min(alvoZoomX, alvoZoomY)));
+    return {
+      zoom: alvoZoom,
+      panX: vw / 2 - this.cx(no) * alvoZoom,
+      panY: vh / 2 - this.cy(no) * alvoZoom,
+    };
+  }
+
+  private cameraParaConteudo(margem = 34): { zoom: number; panX: number; panY: number } | null {
+    const lim = this.limitesConteudo();
+    if (!lim) return null;
+    const rect = this.svgCanvas?.nativeElement.getBoundingClientRect();
+    const vw = rect?.width || 1000;
+    const vh = rect?.height || 700;
+    const escala = Math.min(
+      (vw - margem * 2) / Math.max(1, lim.largura),
+      (vh - margem * 2) / Math.max(1, lim.altura),
+    );
+    const alvoZoom = Math.min(1, Math.max(0.15, escala));
+    return {
+      zoom: alvoZoom,
+      panX: vw / 2 - (lim.minX + lim.largura / 2) * alvoZoom,
+      panY: vh / 2 - (lim.minY + lim.altura / 2) * alvoZoom,
+    };
   }
 
   /**
@@ -4008,17 +4445,27 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
     const candidatos = this.nosVisiveis.filter((n) => !this.ehContainer(n.tipo));
     if (!candidatos.length) return null;
 
-    const indiceOriginal = new Map(candidatos.map((n, i) => [n.id, i]));
-    const ordenados = candidatos
-      .filter((n) => Number.isFinite(n.ordemApresentacao as number) && (n.ordemApresentacao as number) >= 1)
-      .sort(
-        (a, b) =>
-          (a.ordemApresentacao as number) - (b.ordemApresentacao as number) ||
-          (indiceOriginal.get(a.id) ?? 0) - (indiceOriginal.get(b.id) ?? 0),
-      );
-    const usados = new Set(ordenados.map((n) => n.id));
+    const ordenados: NoFluxograma[] = [];
+    const usados = new Set<string>();
+    for (const passo of this.passosApresentacaoOrdenados()) {
+      if (usados.has(passo.no.id)) continue;
+      ordenados.push(passo.no);
+      usados.add(passo.no.id);
+    }
     const restantes = this.ordemAutomatica(candidatos).filter((n) => !usados.has(n.id));
     return [...ordenados, ...restantes];
+  }
+
+  private passosApresentacaoOrdenados(): PassoApresentacao[] {
+    const candidatos = this.nosVisiveis.filter((n) => !this.ehContainer(n.tipo));
+    const indiceOriginal = new Map(candidatos.map((n, i) => [n.id, i]));
+    return candidatos
+      .flatMap((no) => this.ordensDoNo(no).map((ordem) => ({ no, ordem })))
+      .sort(
+        (a, b) =>
+          a.ordem - b.ordem ||
+          (indiceOriginal.get(a.no.id) ?? 0) - (indiceOriginal.get(b.no.id) ?? 0),
+      );
   }
 
   private ordemAutomatica(candidatos: NoFluxograma[]): NoFluxograma[] {
@@ -4285,6 +4732,365 @@ export class EditorFluxogramaComponent implements OnInit, OnDestroy {
   /** Abre a escolha do tipo de animação para exportar em GIF. */
   async baixarGif(): Promise<void> {
     this.abrirEscolhaAnimacao('gif');
+  }
+
+  baixarHtmlApresentacaoDinamica(): void {
+    const passos = this.passosApresentacaoOrdenados();
+    if (!passos.length) {
+      this.avisar('Defina ao menos uma tag de ordem para exportar a apresentação dinâmica.');
+      return;
+    }
+    const prep = this.prepararCloneExport(this.fundoExport);
+    if (!prep) {
+      this.avisar('Adicione ao menos uma forma ao diagrama.');
+      return;
+    }
+
+    prep.clone.setAttribute('id', 'fluxogramaSvg');
+    prep.clone.setAttribute('width', '100%');
+    prep.clone.setAttribute('height', '100%');
+    prep.clone.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+    const viewInicial = { x: prep.minX, y: prep.minY, width: prep.largura, height: prep.altura };
+    const passosExport = passos.map((passo) => ({
+      id: passo.no.id,
+      ordem: passo.ordem,
+      x: passo.no.x,
+      y: passo.no.y,
+      width: passo.no.largura,
+      height: passo.no.altura,
+      texto: passo.no.texto || `Passo ${passo.ordem}`,
+      zoom: this.zoomAnimacaoDoPasso(passo),
+    }));
+    const fundo = this.fundoExport;
+    const dadosJson = JSON.stringify({ viewInicial, passos: passosExport, fundo }).replace(/</g, '\\u003c');
+    const svg = new XMLSerializer().serializeToString(prep.clone);
+    const html = this.htmlApresentacaoDinamica(svg, dadosJson, fundo);
+    this.salvarBlob(new Blob([html], { type: 'text/html;charset=utf-8' }), 'fluxograma-apresentacao-dinamica.html');
+  }
+
+  private htmlApresentacaoDinamica(svg: string, dadosJson: string, fundo: string): string {
+    const temaClaro = fundo.trim().toLowerCase() === '#ffffff';
+    const colorScheme = temaClaro ? 'light' : 'dark';
+    const painel = temaClaro ? '#ffffff' : 'rgba(3,13,30,.88)';
+    const linha = temaClaro ? '#111827' : 'rgba(0,255,209,.32)';
+    const texto = temaClaro ? '#111827' : '#f4fbff';
+    const textoSuave = temaClaro ? '#475569' : '#9fb3c8';
+    const destaque = temaClaro ? '#111827' : '#00ffd1';
+    const hoverFundo = temaClaro ? '#f8fafc' : 'rgba(3,18,40,.96)';
+    const hoverFundoSuave = temaClaro ? '#f8fafc' : 'rgba(0,255,209,.11)';
+    const sombra = temaClaro ? '0 10px 24px rgba(15,23,42,.16)' : '0 12px 30px rgba(0,0,0,.32)';
+    return `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apresentação dinâmica do fluxograma</title>
+  <style>
+    :root{color-scheme:${colorScheme};--bg:${fundo};--panel:${painel};--line:${linha};--text:${texto};--muted:${textoSuave};--cyan:${destaque};--hover-bg:${hoverFundo};--hover-soft:${hoverFundoSuave};--shadow:${sombra}}
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--bg);font-family:Inter,Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--text)}
+    .board{position:fixed;inset:0;overflow:hidden;background:var(--bg)}
+    .stage{position:absolute;inset:0}
+    .stage svg{display:block;width:100%;height:100%}
+    .stage [data-no-id].dinamica-focus{filter:drop-shadow(0 0 16px rgba(255,45,178,.9)) drop-shadow(0 0 8px rgba(0,255,209,.7))}
+    .top-actions{position:absolute;top:18px;right:18px;z-index:3;display:inline-flex;gap:8px}
+    .top-actions button{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 13px;border:1.4px solid var(--line);border-radius:8px;color:var(--text);background:var(--panel);box-shadow:var(--shadow);font-weight:800;cursor:pointer}
+    .top-actions button:hover{border-color:var(--cyan);background:var(--hover-bg)}
+    .top-actions button[aria-pressed="true"]{border-color:var(--cyan);color:var(--cyan);background:var(--hover-soft)}
+    .top-actions svg,.controls svg{width:18px;height:18px;display:block;flex:0 0 auto;color:currentColor}
+    .controls{position:absolute;left:50%;bottom:20px;z-index:3;display:inline-flex;align-items:center;gap:8px;transform:translateX(-50%);padding:8px;border:1.4px solid var(--line);border-radius:10px;background:var(--panel);box-shadow:var(--shadow)}
+    .controls button{width:38px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1.4px solid var(--line);border-radius:8px;color:var(--text);background:var(--panel);font-size:16px;font-weight:900;cursor:pointer}
+    .controls button:hover{border-color:var(--cyan);color:var(--cyan);background:var(--hover-soft)}
+    .step-label{min-width:160px;padding:0 10px;color:var(--muted);font-size:12px;font-weight:800;text-align:center;white-space:nowrap}
+    .step-label strong{display:block;color:var(--text);font-size:13px;max-width:230px;overflow:hidden;text-overflow:ellipsis}
+    .energy-layer{pointer-events:none}
+    .energy-dot{opacity:.95;filter:drop-shadow(0 0 5px rgba(255,255,255,.65))}
+    @media (max-width:680px){.top-actions{top:10px;right:10px;left:10px;justify-content:flex-end}.controls{left:10px;right:10px;bottom:10px;transform:none;justify-content:center}.step-label{min-width:0;flex:1}.step-label strong{max-width:none}}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <div class="stage">${svg}</div>
+    <div class="top-actions">
+      <button id="exportJpg" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15V3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span>Exportar JPG</span>
+      </button>
+      <button id="toggleEnergy" type="button" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 10-13h-7l0-7z" fill="currentColor"/></svg>
+        <span>Energia: off</span>
+      </button>
+    </div>
+    <div class="controls" aria-label="Controles da apresentação">
+      <button id="prev" type="button" title="Recuar" aria-label="Recuar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18 9 12l6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="play" type="button" title="Play" aria-label="Play">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      </button>
+      <button id="pause" type="button" title="Pause" aria-label="Pause">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="5" width="3.5" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="3.5" height="14" rx="1.2" fill="currentColor"/></svg>
+      </button>
+      <button id="next" type="button" title="Avançar" aria-label="Avançar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="step-label"><span id="stepCount"></span><strong id="stepTitle"></strong></div>
+    </div>
+  </main>
+  <script>
+(() => {
+  const dados = ${dadosJson};
+  const svg = document.getElementById('fluxogramaSvg');
+  const board = document.querySelector('.board');
+  const stepCount = document.getElementById('stepCount');
+  const stepTitle = document.getElementById('stepTitle');
+  const btnPlay = document.getElementById('play');
+  const btnEnergy = document.getElementById('toggleEnergy');
+  let index = 0;
+  let playing = false;
+  let finished = false;
+  let raf = 0;
+  let energyRaf = 0;
+  let energyOn = false;
+  let energyPulses = [];
+  let timers = [];
+  let viewAtual = { ...dados.viewInicial };
+  const zoomPadrao = ${this.zoomApresentacaoDinamicaPadrao};
+  const zoomSaidaPadrao = ${this.zoomSaidaApresentacaoDinamicaPadrao};
+  const ns = 'http://www.w3.org/2000/svg';
+
+  function setView(view) {
+    viewAtual = { ...view };
+    svg.setAttribute('viewBox', [view.x, view.y, view.width, view.height].join(' '));
+  }
+
+  function clearTimers() {
+    timers.forEach((id) => clearTimeout(id));
+    timers = [];
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+  }
+
+  function delay(ms, fn) {
+    const id = setTimeout(fn, ms);
+    timers.push(id);
+  }
+
+  function cameraParaPasso(passo, ocupacao) {
+    const rect = board.getBoundingClientRect();
+    const ratio = Math.max(.2, rect.width / Math.max(1, rect.height));
+    let width = Math.max(passo.width / ocupacao, (passo.height / ocupacao) * ratio);
+    let height = width / ratio;
+    const minHeight = passo.height / ocupacao;
+    if (height < minHeight) {
+      height = minHeight;
+      width = height * ratio;
+    }
+    const cx = passo.x + passo.width / 2;
+    const cy = passo.y + passo.height / 2;
+    return { x: cx - width / 2, y: cy - height / 2, width, height };
+  }
+
+  function animarPara(alvo, duracao, done) {
+    if (raf) cancelAnimationFrame(raf);
+    const inicio = { ...viewAtual };
+    const t0 = performance.now();
+    function frame(now) {
+      const t = Math.min(1, Math.max(0, (now - t0) / duracao));
+      const e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      setView({
+        x: inicio.x + (alvo.x - inicio.x) * e,
+        y: inicio.y + (alvo.y - inicio.y) * e,
+        width: inicio.width + (alvo.width - inicio.width) * e,
+        height: inicio.height + (alvo.height - inicio.height) * e,
+      });
+      if (t >= 1) {
+        raf = 0;
+        if (done) done();
+        return;
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+  }
+
+  function elementoDoPasso(passo) {
+    return Array.from(svg.querySelectorAll('[data-no-id]')).find((el) => el.getAttribute('data-no-id') === passo.id);
+  }
+
+  function destacar(passo) {
+    svg.querySelectorAll('[data-no-id].dinamica-focus').forEach((el) => el.classList.remove('dinamica-focus'));
+    const el = elementoDoPasso(passo);
+    if (el) el.classList.add('dinamica-focus');
+  }
+
+  function prepararEnergia() {
+    let layer = svg.querySelector('.energy-layer');
+    if (!layer) {
+      layer = document.createElementNS(ns, 'g');
+      layer.setAttribute('class', 'energy-layer');
+      svg.appendChild(layer);
+    }
+    layer.textContent = '';
+    energyPulses = [];
+    Array.from(svg.querySelectorAll('.conexao-linha,.conexao-bloco')).forEach((path, i) => {
+      if (typeof path.getTotalLength !== 'function' || typeof path.getPointAtLength !== 'function') return;
+      let length = 0;
+      try {
+        length = path.getTotalLength();
+      } catch {
+        length = 0;
+      }
+      if (!Number.isFinite(length) || length <= 0) return;
+      const dot = document.createElementNS(ns, 'circle');
+      dot.setAttribute('class', 'energy-dot');
+      dot.setAttribute('r', '3.4');
+      dot.setAttribute('fill', path.getAttribute('stroke') || path.getAttribute('fill') || '#00ffd1');
+      layer.appendChild(dot);
+      energyPulses.push({ path, dot, length, offset: i * .17 });
+    });
+    layer.style.display = energyOn ? '' : 'none';
+  }
+
+  function moverEnergia(now) {
+    if (!energyOn) return;
+    const tempo = now / 1450;
+    energyPulses.forEach((pulse) => {
+      const progresso = (tempo + pulse.offset) % 1;
+      const pt = pulse.path.getPointAtLength(pulse.length * progresso);
+      pulse.dot.setAttribute('cx', String(pt.x));
+      pulse.dot.setAttribute('cy', String(pt.y));
+    });
+    energyRaf = requestAnimationFrame(moverEnergia);
+  }
+
+  function setEnergia(ativo) {
+    energyOn = ativo;
+    btnEnergy.setAttribute('aria-pressed', String(ativo));
+    btnEnergy.querySelector('span').textContent = ativo ? 'Energia: on' : 'Energia: off';
+    if (!energyPulses.length) prepararEnergia();
+    const layer = svg.querySelector('.energy-layer');
+    if (layer) layer.style.display = ativo ? '' : 'none';
+    if (energyRaf) cancelAnimationFrame(energyRaf);
+    energyRaf = 0;
+    if (ativo) energyRaf = requestAnimationFrame(moverEnergia);
+  }
+
+  function atualizarRotulo(passo) {
+    stepCount.textContent = 'Passo ' + (index + 1) + ' de ' + dados.passos.length + ' · ordem ' + passo.ordem;
+    stepTitle.textContent = passo.texto || ('Ordem ' + passo.ordem);
+  }
+
+  function finalizar() {
+    clearTimers();
+    playing = false;
+    finished = true;
+    btnPlay.setAttribute('aria-pressed', 'false');
+    svg.querySelectorAll('[data-no-id].dinamica-focus').forEach((el) => el.classList.remove('dinamica-focus'));
+    stepCount.textContent = 'Fluxograma completo';
+    stepTitle.textContent = 'Apresentação concluída';
+    animarPara(dados.viewInicial, 920);
+  }
+
+  function mostrar(i, auto) {
+    clearTimers();
+    if (!dados.passos.length) return;
+    if (i >= dados.passos.length) {
+      finalizar();
+      return;
+    }
+    index = Math.max(0, i);
+    finished = false;
+    const passo = dados.passos[index];
+    const zoomFoco = Number.isFinite(passo.zoom) ? passo.zoom : zoomPadrao;
+    const zoomSaida = Math.min(.9, Math.max(.15, zoomFoco * (zoomSaidaPadrao / zoomPadrao)));
+    destacar(passo);
+    atualizarRotulo(passo);
+    animarPara(cameraParaPasso(passo, zoomFoco), 980, () => {
+      if (!auto || !playing) return;
+      delay(430, () => {
+        animarPara(cameraParaPasso(passo, zoomSaida), 520, () => {
+          if (!playing) return;
+          delay(120, () => mostrar(index + 1, true));
+        });
+      });
+    });
+  }
+
+  function play() {
+    if (playing) return;
+    if (finished) {
+      index = 0;
+      finished = false;
+    }
+    playing = true;
+    btnPlay.setAttribute('aria-pressed', 'true');
+    mostrar(index, true);
+  }
+
+  function pause() {
+    playing = false;
+    btnPlay.setAttribute('aria-pressed', 'false');
+    clearTimers();
+  }
+
+  function baixarJpg() {
+    const clone = svg.cloneNode(true);
+    clone.querySelectorAll('.dinamica-focus').forEach((el) => el.classList.remove('dinamica-focus'));
+    clone.querySelectorAll('.energy-layer').forEach((el) => el.remove());
+    clone.setAttribute('viewBox', [dados.viewInicial.x, dados.viewInicial.y, dados.viewInicial.width, dados.viewInicial.height].join(' '));
+    clone.setAttribute('width', String(Math.round(dados.viewInicial.width)));
+    clone.setAttribute('height', String(Math.round(dados.viewInicial.height)));
+    const blob = new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const width = Math.max(1, Math.round(dados.viewInicial.width));
+      const height = Math.max(1, Math.round(dados.viewInicial.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = dados.fundo || getComputedStyle(document.documentElement).getPropertyValue('--bg') || '#061326';
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((jpg) => {
+        if (!jpg) return;
+        const jpgUrl = URL.createObjectURL(jpg);
+        const a = document.createElement('a');
+        a.href = jpgUrl;
+        a.download = 'fluxograma.jpg';
+        a.click();
+        URL.revokeObjectURL(jpgUrl);
+      }, 'image/jpeg', .92);
+    };
+    img.onerror = () => URL.revokeObjectURL(url);
+    img.src = url;
+  }
+
+  document.getElementById('prev').addEventListener('click', () => { pause(); mostrar(finished ? dados.passos.length - 1 : index - 1, false); });
+  document.getElementById('next').addEventListener('click', () => { pause(); if (!finished) mostrar(index + 1, false); });
+  btnPlay.addEventListener('click', play);
+  document.getElementById('pause').addEventListener('click', pause);
+  document.getElementById('exportJpg').addEventListener('click', baixarJpg);
+  btnEnergy.addEventListener('click', () => setEnergia(!energyOn));
+  window.addEventListener('keydown', (ev) => {
+    if (ev.key === 'ArrowRight') { pause(); if (!finished) mostrar(index + 1, false); }
+    if (ev.key === 'ArrowLeft') { pause(); mostrar(finished ? dados.passos.length - 1 : index - 1, false); }
+    if (ev.key === ' ') { ev.preventDefault(); playing ? pause() : play(); }
+    if (ev.key === 'Escape') pause();
+  });
+  window.addEventListener('resize', () => finished ? setView(dados.viewInicial) : mostrar(index, playing));
+
+  setView(dados.viewInicial);
+  prepararEnergia();
+  if (dados.passos.length) mostrar(0, false);
+})();
+  </script>
+</body>
+</html>`;
   }
 
   /** Baixa um SVG autônomo que reproduz a apresentação em loop (CSS embutido). */
