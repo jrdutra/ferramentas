@@ -16,7 +16,7 @@ export interface SeoRouteData {
 })
 export class SeoService {
   private readonly siteName = 'utily.tools';
-  private readonly siteUrl = 'https://utily.tools';
+  private readonly siteUrl = 'https://utility.tool';
   private readonly defaultImage = `${this.siteUrl}/assets/capa.png`;
   private initialized = false;
 

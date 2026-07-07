@@ -36,3 +36,99 @@
     border-top: 1px solid rgba(91, 124, 255, 0.28);
     box-shadow: 0 -12px 35px rgba(0, 0, 0, 0.26), 0 0 18px rgba(182, 37, 255, 0.1);
 }
+
+.privacy-consent-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2em;
+    background: rgba(2, 8, 23, 0.82);
+    backdrop-filter: blur(8px);
+}
+
+.privacy-consent-modal {
+    width: min(36em, 100%);
+    max-height: calc(100vh - 2.4em);
+    box-sizing: border-box;
+    overflow: auto;
+    padding: 1.4em;
+    border: 1px solid transparent;
+    border-radius: 0.6em;
+    color: var(--text-main);
+    background:
+        linear-gradient(145deg, rgba(7, 20, 43, 0.96), rgba(4, 12, 29, 0.98)) padding-box,
+        conic-gradient(from 135deg, rgba(0, 208, 255, 0.2), rgba(255, 45, 178, 0.48), rgba(182, 37, 255, 0.42), rgba(91, 124, 255, 0.5), rgba(0, 208, 255, 0.2)) border-box;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.54), 0 0 28px rgba(91, 124, 255, 0.18);
+}
+
+.privacy-consent-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    margin-bottom: 1em;
+    font-weight: 700;
+}
+
+.privacy-consent-logo {
+    width: 1.6em;
+    height: 1.6em;
+    filter: invert(100%);
+}
+
+.privacy-consent-modal h2 {
+    margin: 0 0 0.55em;
+    font-size: 1.45em;
+}
+
+.privacy-consent-modal h3 {
+    margin: 0 0 0.35em;
+    font-size: 1em;
+    color: #8ee8ff;
+}
+
+.privacy-consent-modal p {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+
+.privacy-consent-section {
+    margin-top: 1em;
+    padding: 0.9em;
+    border: 1px solid rgba(91, 124, 255, 0.22);
+    border-radius: 0.5em;
+    background: rgba(2, 8, 23, 0.34);
+}
+
+.privacy-consent-note {
+    margin-top: 1em !important;
+    font-size: 0.92em;
+}
+
+.privacy-consent-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.2em;
+}
+
+.privacy-consent-button {
+    min-width: 8.5em;
+    padding: 0.72em 1.2em;
+    border: 0;
+    border-radius: 0.45em;
+    color: #021a0d;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(135deg, #00ff88, #00ffd1);
+    box-shadow: 0 0 18px rgba(0, 255, 209, 0.28);
+}
+
+.privacy-consent-button:hover,
+.privacy-consent-button:focus-visible {
+    filter: brightness(1.08);
+    outline: 2px solid rgba(255, 255, 255, 0.72);
+    outline-offset: 2px;
+}
