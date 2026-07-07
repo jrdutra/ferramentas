@@ -24,7 +24,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
   private glowInterval: any;
 
   strStatusConexao: string = 'Disconnected';
-  strCaminhoIndicadorConexao: string = './assets/light-red-icon.png';
+  strCaminhoIndicadorConexao: string = '/assets/light-red-icon.png';
   strTexto: string = '';
   strGrupo: string = '';
   strCanal: string = '';
@@ -95,7 +95,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     this.strStatusConexao = 'Connecting...';
 
     this.socket.on('connect', () => this.ngZone.run(() => {
-      this.strCaminhoIndicadorConexao = './assets/light-green-icon.png';
+      this.strCaminhoIndicadorConexao = '/assets/light-green-icon.png';
       this.strStatusConexao = 'Connected';
       if (this.strGrupo.trim() && this.strCanal.trim()) {
         this.socket.emit('joinCanal', { grupo: this.strGrupo.trim(), canal: this.strCanal.trim() });
@@ -222,14 +222,14 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     }));
 
     this.socket.on('disconnect', () => this.ngZone.run(() => {
-      this.strCaminhoIndicadorConexao = './assets/light-red-icon.png';
+      this.strCaminhoIndicadorConexao = '/assets/light-red-icon.png';
       this.strStatusConexao = 'Disconnected';
       this.strStatusCanal = '';
       this.numConectados = 0;
     }));
 
     this.socket.on('connect_error', () => this.ngZone.run(() => {
-      this.strCaminhoIndicadorConexao = './assets/light-red-icon.png';
+      this.strCaminhoIndicadorConexao = '/assets/light-red-icon.png';
       this.strStatusConexao = 'Connection error';
       this.strStatusCanal = '';
     }));

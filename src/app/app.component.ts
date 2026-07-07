@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 
 import {MenuComponent} from './menu/menu.component'
 import {MatCardModule} from '@angular/material/card';
+import { SeoService } from './seo.service';
 
 @Component({
   selector: 'app-root',
@@ -14,4 +15,8 @@ import {MatCardModule} from '@angular/material/card';
 })
 export class AppComponent {
   title = 'utily.tools';
+
+  constructor(private readonly seoService: SeoService) {
+    this.seoService.init();
+  }
 }

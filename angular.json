@@ -59,6 +59,22 @@
               "src/styles.css"
             ],
             "scripts": [],
+            "allowedCommonJsDependencies": [
+              "debug",
+              "encoding",
+              "is-url",
+              "jszip",
+              "lie",
+              "node-forge",
+              "pako",
+              "qrcode",
+              "readable-stream",
+              "regenerator-runtime/runtime",
+              "setimmediate",
+              "tesseract.js",
+              "whatwg-url",
+              "xmlhttprequest-ssl"
+            ],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
@@ -70,7 +86,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "3mb",
                   "maximumError": "5mb"
                 },
                 {
