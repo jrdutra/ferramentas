@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "startnode": "node server.js",
+    "start": "node dist/server/server.mjs",
+    "startnode": "node dist/server/server.mjs",
+    "dev": "ng serve",
     "build": "ng build",
+    "postbuild": "node scripts/create-azure-startup-alias.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:ferramentas": "node dist/server/server.mjs"

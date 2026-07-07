@@ -16,22 +16,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configurar versão do Node.js
+      - name: Configure Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           cache: 'npm'
 
-      - name: Instalar dependencias do projeto
+      - name: Install project dependencies
         run: npm ci
-     
-      - name: Build do projeto angular para producao
+
+      - name: Build Angular project for production
         run: npm run build -- --configuration production
 
-      - name: Zipar artefato para deploy
-        run: zip -r ferramentas.zip dist/* # Aqui assumimos que seu diretório de build é 'dist', o padrão para aplicações Angular.
+      - name: Zip deploy artifact
+        run: zip -r ferramentas.zip dist package.json
 
-      - name: Upload de artefato para job de deploy
+      - name: Upload artifact for deploy job
         uses: actions/upload-artifact@v4
         with:
           name: ferramentas
@@ -44,7 +44,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
+      id-token: write # This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -52,9 +52,9 @@ jobs:
         with:
           name: ferramentas
 
-      - name: Descompactando artefato para deploy
+      - name: Unzip deploy artifact
         run: unzip ferramentas.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -62,7 +62,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_576A4E2DBABA44A3B01B1B921A199B72 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EEB1E380158D400B9D784EE8A4F03A9C }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
