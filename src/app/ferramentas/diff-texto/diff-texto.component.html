@@ -4,22 +4,22 @@
   <div class="painel-entradas" *ngIf="!modoComparacao">
     <div class="coluna-entrada">
       <div class="entrada-cabecalho">
-        <span class="entrada-titulo removido-label">Texto A</span>
+        <span class="entrada-titulo removido-label">Text A</span>
         <span class="entrada-hint">Original</span>
       </div>
       <mat-form-field appearance="outline" class="campo-completo">
-        <textarea matInput [(ngModel)]="textoA" placeholder="Cole o texto original aqui…"
+        <textarea matInput [(ngModel)]="textoA" placeholder="Paste the original text here..."
           rows="14" class="textarea-mono"></textarea>
       </mat-form-field>
     </div>
 
     <div class="coluna-entrada">
       <div class="entrada-cabecalho">
-        <span class="entrada-titulo adicionado-label">Texto B</span>
-        <span class="entrada-hint">Modificado</span>
+        <span class="entrada-titulo adicionado-label">Text B</span>
+        <span class="entrada-hint">Modified</span>
       </div>
       <mat-form-field appearance="outline" class="campo-completo">
-        <textarea matInput [(ngModel)]="textoB" placeholder="Cole o texto modificado aqui…"
+        <textarea matInput [(ngModel)]="textoB" placeholder="Paste the modified text here..."
           rows="14" class="textarea-mono"></textarea>
       </mat-form-field>
     </div>
@@ -29,15 +29,15 @@
   <div class="painel-entradas" *ngIf="modoComparacao">
     <div class="coluna-entrada">
       <div class="entrada-cabecalho">
-        <span class="entrada-titulo removido-label">Texto A</span>
+        <span class="entrada-titulo removido-label">Text A</span>
         <span class="entrada-hint">Original</span>
       </div>
       <div class="texto-destacado" [innerHTML]="htmlA"></div>
     </div>
     <div class="coluna-entrada">
       <div class="entrada-cabecalho">
-        <span class="entrada-titulo adicionado-label">Texto B</span>
-        <span class="entrada-hint">Modificado</span>
+        <span class="entrada-titulo adicionado-label">Text B</span>
+        <span class="entrada-hint">Modified</span>
       </div>
       <div class="texto-destacado" [innerHTML]="htmlB"></div>
     </div>
@@ -53,29 +53,29 @@
   <div class="acoes">
     <button mat-raised-button color="primary" (click)="comparar()" *ngIf="!modoComparacao" [disabled]="!temConteudo()">
       <mat-icon>compare</mat-icon>
-      Comparar
+      Compare
     </button>
     <button mat-raised-button (click)="editar()" *ngIf="modoComparacao" class="btn-editar">
       <mat-icon>edit</mat-icon>
-      Editar
+      Edit
     </button>
     <button mat-raised-button (click)="limpar()" [disabled]="!temConteudo() && !modoComparacao">
       <mat-icon>clear</mat-icon>
-      Limpar
+      Clear
     </button>
   </div>
 
   <!-- Sem diferenças -->
   <div class="sem-diferencas" *ngIf="modoComparacao && semDiferencas">
     <mat-icon>check_circle</mat-icon>
-    <span>Os textos são idênticos.</span>
+    <span>The texts are identical.</span>
   </div>
 
   <!-- Estatísticas -->
   <div class="estatisticas" *ngIf="modoComparacao && !semDiferencas">
     <div class="stat-chip diferenca-chip">
       <mat-icon>difference</mat-icon>
-      {{ chunks.length }} trecho{{ chunks.length !== 1 ? 's' : '' }} com diferença
+      {{ chunks.length }} chunk{{ chunks.length !== 1 ? 's' : '' }} with differences
     </div>
   </div>
 
@@ -84,10 +84,10 @@
 
     <div class="diff-header">
       <div class="diff-header-col removido-header">
-        <mat-icon>remove_circle_outline</mat-icon> Texto A — Original
+        <mat-icon>remove_circle_outline</mat-icon> Text A - Original
       </div>
       <div class="diff-header-col adicionado-header">
-        <mat-icon>add_circle_outline</mat-icon> Texto B — Modificado
+        <mat-icon>add_circle_outline</mat-icon> Text B - Modified
       </div>
     </div>
 
@@ -99,12 +99,12 @@
         <div class="chunk-lados">
           <div class="chunk-lado chunk-a">
             <span class="chunk-marcador">−</span>
-            <code class="chunk-texto">{{ chunk.trechoA || '(vazio)' }}</code>
+            <code class="chunk-texto">{{ chunk.trechoA || '(empty)' }}</code>
           </div>
           <div class="chunk-divisor"></div>
           <div class="chunk-lado chunk-b">
             <span class="chunk-marcador">+</span>
-            <code class="chunk-texto">{{ chunk.trechoB || '(vazio)' }}</code>
+            <code class="chunk-texto">{{ chunk.trechoB || '(empty)' }}</code>
           </div>
         </div>
 
@@ -116,19 +116,19 @@
 </div>
 
 <div class="instrucoes">
-  <h2>Instruções</h2>
+  <h2>Instructions</h2>
 
-  <h4 class="sublinhado">Como comparar dois textos</h4>
-  <p>Cole o texto original no campo <strong>Texto A</strong> e o texto modificado no campo <strong>Texto B</strong>, depois clique em <strong>Comparar</strong>. A ferramenta analisa os dois textos caractere a caractere e exibe o resultado diretamente nas caixas de texto, marcando em vermelho os trechos que diferem. Para editar os textos novamente, clique no botão <strong>Editar</strong>.</p>
+  <h4 class="sublinhado">How to compare two texts</h4>
+  <p>Paste the original text in <strong>Text A</strong> and the modified text in <strong>Text B</strong>, then click <strong>Compare</strong>. The tool analyzes both texts character by character and displays the result directly in the text boxes, marking differing snippets in red. To edit the texts again, click <strong>Edit</strong>.</p>
 
-  <h4 class="sublinhado">Interpretando o resultado</h4>
-  <p>Os caracteres em vermelho no <strong>Texto A</strong> representam o que foi removido ou alterado em relação ao Texto B. Os marcados em vermelho no <strong>Texto B</strong> representam o que foi adicionado ou substituído. Sequências iguais de pelo menos três caracteres consecutivos voltam à cor normal, facilitando a identificação de onde as diferenças efetivamente começam e terminam.</p>
+  <h4 class="sublinhado">Interpreting the result</h4>
+  <p>Red characters in <strong>Text A</strong> represent what was removed or changed compared with Text B. Red characters in <strong>Text B</strong> represent what was added or replaced. Equal sequences of at least three consecutive characters return to the normal color, making it easier to identify where differences actually begin and end.</p>
 
-  <h4 class="sublinhado">Seção de diferenças</h4>
-  <p>Abaixo do botão <strong>Comparar</strong> é exibida apenas a lista de trechos que diferem, com o conteúdo de A em vermelho e o de B em verde. Trechos idênticos não aparecem nessa seção, tornando mais fácil focar nas mudanças quando os textos são longos.</p>
+  <h4 class="sublinhado">Differences section</h4>
+  <p>Below the <strong>Compare</strong> button, only the list of differing snippets is shown, with A in red and B in green. Identical snippets do not appear in this section, making it easier to focus on changes when the texts are long.</p>
 
-  <h2>O que é um Diff de Texto</h2>
-  <p>Um diff é a representação das diferenças entre duas versões de um mesmo conteúdo. O nome vem do comando <code>diff</code> do Unix, criado na década de 1970, que compara dois arquivos linha a linha e exibe o que foi adicionado, removido ou mantido. Essa saída ficou conhecida como "unified diff" e é o formato usado até hoje por sistemas de controle de versão como o Git.</p>
+  <h2>What is a Text Diff</h2>
+  <p>A diff is a representation of the differences between two versions of the same content. The name comes from the Unix <code>diff</code> command, created in the 1970s, which compares two files line by line and shows what was added, removed or kept. This output became known as a "unified diff" and is still used today by version control systems such as Git.</p>
 
-  <p>Esta ferramenta usa o algoritmo LCS (Longest Common Subsequence — Maior Subsequência Comum) para encontrar a maior sequência de caracteres que aparece na mesma ordem nos dois textos. Tudo que não faz parte dessa sequência é considerado uma diferença. Para evitar falsos positivos causados por coincidências curtas, apenas sequências de três ou mais caracteres consecutivos iguais são tratadas como trecho em comum.</p>
+  <p>This tool uses the LCS (Longest Common Subsequence) algorithm to find the longest sequence of characters that appears in the same order in both texts. Everything outside that sequence is considered a difference. To avoid false positives caused by short coincidences, only sequences of three or more consecutive equal characters are treated as common snippets.</p>
 </div>

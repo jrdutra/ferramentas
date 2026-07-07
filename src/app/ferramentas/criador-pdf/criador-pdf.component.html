@@ -2,23 +2,23 @@
 
   <div class="upload-area" (click)="fileInput.click()">
     <mat-icon class="upload-icone">add_photo_alternate</mat-icon>
-    <p class="upload-texto">Clique para adicionar imagens</p>
-    <p class="upload-hint">JPG, PNG, GIF, WebP, BMP — cada imagem será uma página do PDF</p>
+    <p class="upload-texto">Click to add images</p>
+    <p class="upload-hint">JPG, PNG, GIF, WebP, BMP - each image becomes a PDF page</p>
     <input hidden multiple #fileInput type="file" accept="image/*" (change)="carregarImagens($event)">
   </div>
 
   <div class="acoes-topo" *ngIf="imagens.length > 0">
     <button mat-raised-button color="primary" (click)="fileInput2.click()">
-      <mat-icon>add_photo_alternate</mat-icon> Adicionar mais
+      <mat-icon>add_photo_alternate</mat-icon> Add more
     </button>
     <input hidden multiple #fileInput2 type="file" accept="image/*" (change)="carregarImagens($event)">
     <button mat-button (click)="limpar()">
-      <mat-icon>clear_all</mat-icon> Limpar tudo
+      <mat-icon>clear_all</mat-icon> Clear all
     </button>
   </div>
 
   <div class="lista-cabecalho" *ngIf="imagens.length > 0">
-    <span class="lista-info">{{ imagens.length }} imagem(ns) — arraste para reordenar as páginas</span>
+    <span class="lista-info">{{ imagens.length }} image(s) - drag to reorder pages</span>
   </div>
 
   <div cdkDropList class="grade-imagens" (cdkDropListDropped)="reordenar($event)" *ngIf="imagens.length > 0">
@@ -26,7 +26,7 @@
       <div class="imagem-preview-wrapper">
         <img class="imagem-preview" [src]="imagem.preview" [alt]="imagem.nome">
         <span class="posicao-badge">{{ i + 1 }}</span>
-        <button class="btn-remover-imagem" mat-mini-fab (click)="remover(i)" title="Remover">
+        <button class="btn-remover-imagem" mat-mini-fab (click)="remover(i)" title="Remove">
           <mat-icon>close</mat-icon>
         </button>
         <div class="drag-overlay">
@@ -42,7 +42,7 @@
     <button mat-raised-button color="primary" (click)="criarPdf()" [disabled]="processando">
       <mat-spinner *ngIf="processando" diameter="18" class="spinner-btn"></mat-spinner>
       <mat-icon *ngIf="!processando">picture_as_pdf</mat-icon>
-      {{ processando ? 'Gerando PDF…' : 'Criar PDF' }}
+      {{ processando ? 'Generating PDF...' : 'Create PDF' }}
     </button>
   </div>
 

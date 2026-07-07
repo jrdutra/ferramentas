@@ -23,7 +23,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
   private textoHotTimer: any;
   private glowInterval: any;
 
-  strStatusConexao: string = 'Desconectado';
+  strStatusConexao: string = 'Disconnected';
   strCaminhoIndicadorConexao: string = './assets/light-red-icon.png';
   strTexto: string = '';
   strGrupo: string = '';
@@ -81,7 +81,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.dataService.setTituloAplicacao("Compartilhador de Texto");
+    this.dataService.setTituloAplicacao("Text Sharer");
     if (!isPlatformBrowser(this.platformId)) return;
 
     const grupoParam = this.route.snapshot.paramMap.get('grupo');
@@ -92,11 +92,11 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
     const { io } = await import('socket.io-client');
     this.socket = io(this.url, { rejectUnauthorized: false });
-    this.strStatusConexao = 'Conectando...';
+    this.strStatusConexao = 'Connecting...';
 
     this.socket.on('connect', () => this.ngZone.run(() => {
       this.strCaminhoIndicadorConexao = './assets/light-green-icon.png';
-      this.strStatusConexao = 'Conectado';
+      this.strStatusConexao = 'Connected';
       if (this.strGrupo.trim() && this.strCanal.trim()) {
         this.socket.emit('joinCanal', { grupo: this.strGrupo.trim(), canal: this.strCanal.trim() });
       }
@@ -110,7 +110,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
     this.socket.on('canalInfo', (info: { conectados: number }) => this.ngZone.run(() => {
       this.numConectados = info.conectados;
-      this.strStatusCanal = `${info.conectados} tela(s) conectada(s)`;
+      this.strStatusCanal = `${info.conectados} screen(s) connected`;
     }));
 
     this.socket.on('historicoAtualizado', (hist: string[]) => this.ngZone.run(() => {
@@ -223,14 +223,14 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
     this.socket.on('disconnect', () => this.ngZone.run(() => {
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png';
-      this.strStatusConexao = 'Desconectado';
+      this.strStatusConexao = 'Disconnected';
       this.strStatusCanal = '';
       this.numConectados = 0;
     }));
 
     this.socket.on('connect_error', () => this.ngZone.run(() => {
       this.strCaminhoIndicadorConexao = './assets/light-red-icon.png';
-      this.strStatusConexao = 'Erro na conexão';
+      this.strStatusConexao = 'Connection error';
       this.strStatusCanal = '';
     }));
 

@@ -53,7 +53,7 @@ export class Base64Component {
   constructor(private dataService: DataService, private base64Service: Base64Service) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Conversor de Base64 Texto");
+    this.dataService.setTituloAplicacao("Base64 Text Converter");
   }
 
   codificaTexto() {

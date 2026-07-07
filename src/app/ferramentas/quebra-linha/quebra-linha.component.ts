@@ -26,7 +26,7 @@ export class QuebraLinhaComponent {
   constructor(private dataService: DataService, private manipulaStringService: ManipulaStringService) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Editor de Texto");
+    this.dataService.setTituloAplicacao("Text Editor");
   }
 
   onInputClick(event: MouseEvent) {

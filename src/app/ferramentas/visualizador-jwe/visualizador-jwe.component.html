@@ -2,15 +2,15 @@
     <div class="acoes-topo">
         <button mat-raised-button color="primary" type="button" (click)="inserirExemplo()">
             <mat-icon>science</mat-icon>
-            Carregar exemplo
+            Load example
         </button>
         <button mat-raised-button color="primary" type="button" (click)="criptografarJwe()" [disabled]="!podeCriptografar">
             <mat-icon>lock</mat-icon>
-            Criptografar
+            Encrypt
         </button>
         <button mat-raised-button color="primary" type="button" (click)="descriptografarJwe()" [disabled]="!podeDescriptografar">
             <mat-icon>lock_open</mat-icon>
-            Descriptografar
+            Decrypt
         </button>
         <span class="mensagem-erro" *ngIf="mensagemErro">{{ mensagemErro }}</span>
         <span class="mensagem-chave" *ngIf="mensagemChaves">{{ mensagemChaves }}</span>
@@ -32,7 +32,7 @@
 
         <div class="coluna2">
             <mat-form-field appearance="fill" class="campo-header campo-parte-header">
-                <mat-label>Protected Header decodificado</mat-label>
+                <mat-label>Decoded Protected Header</mat-label>
                 <textarea [(ngModel)]="strProtectedHeader" (ngModelChange)="atualizarDePartes()" matInput></textarea>
             </mat-form-field>
 
@@ -50,10 +50,10 @@
                 <mat-form-field appearance="fill" class="campo-ciphertext campo-parte-cipher"
                     [ngClass]="{'ciphertext-valido': ciphertextStatus === 'descriptografado', 'ciphertext-invalido': ciphertextStatus === 'criptografado' || ciphertextStatus === 'erro', 'ciphertext-processando': ciphertextStatus === 'processando'}">
                     <mat-label>{{ ciphertextLabel }}
-                        <span *ngIf="ciphertextStatus === 'descriptografado'" class="status-valida">- Descriptografado</span>
-                        <span *ngIf="ciphertextStatus === 'criptografado'" class="status-invalida">- Criptografado</span>
-                        <span *ngIf="ciphertextStatus === 'erro'" class="status-invalida">- Invalido</span>
-                        <span *ngIf="ciphertextStatus === 'processando'" class="status-verificando">- Processando...</span>
+                        <span *ngIf="ciphertextStatus === 'descriptografado'" class="status-valida">- Decrypted</span>
+                        <span *ngIf="ciphertextStatus === 'criptografado'" class="status-invalida">- Encrypted</span>
+                        <span *ngIf="ciphertextStatus === 'erro'" class="status-invalida">- Invalid</span>
+                        <span *ngIf="ciphertextStatus === 'processando'" class="status-verificando">- Processing...</span>
                     </mat-label>
                     <textarea [(ngModel)]="strCiphertext" (ngModelChange)="onCiphertextChange()" matInput></textarea>
                 </mat-form-field>
@@ -67,16 +67,16 @@
     </div>
 
     <div class="secao-chaves">
-        <h3>Chaves e Certificados</h3>
+        <h3>Keys and Certificates</h3>
         <div class="chaves-grid">
             <div class="chave-bloco">
                 <mat-form-field appearance="fill">
-                    <mat-label>Chave publica (Certificado PEM, Chave Publica PEM ou JWK)</mat-label>
+                    <mat-label>Public key (PEM Certificate, PEM Public Key or JWK)</mat-label>
                     <textarea [(ngModel)]="strChavePublica" (ngModelChange)="onChavePublicaChange()" matInput></textarea>
                 </mat-form-field>
                 <button mat-raised-button class="botao-carregar-chave" color="primary" type="button" (click)="arquivoPublicoInput.click()">
                     <mat-icon>upload_file</mat-icon>
-                    Carregar chave publica
+                    Load public key
                 </button>
                 <input hidden #arquivoPublicoInput type="file" accept=".pem,.cer,.crt,.txt,.json"
                     (change)="selecionarArquivoChavePublica($event)">
@@ -84,12 +84,12 @@
 
             <div class="chave-bloco">
                 <mat-form-field appearance="fill">
-                    <mat-label>Chave privada (Chave Privada PEM ou JWK)</mat-label>
+                    <mat-label>Private key (PEM Private Key or JWK)</mat-label>
                     <textarea [(ngModel)]="strChavePrivada" (ngModelChange)="onChavePrivadaChange()" matInput></textarea>
                 </mat-form-field>
                 <button mat-raised-button class="botao-carregar-chave" color="primary" type="button" (click)="arquivoPrivadoInput.click()">
                     <mat-icon>upload_file</mat-icon>
-                    Carregar chave privada
+                    Load private key
                 </button>
                 <input hidden #arquivoPrivadoInput type="file" accept=".pem,.key,.txt,.json"
                     (change)="selecionarArquivoChavePrivada($event)">
@@ -100,19 +100,19 @@
             <div class="pfx-linha">
                 <button mat-raised-button class="botao-carregar-chave" color="primary" type="button" (click)="pfxInput.click()">
                     <mat-icon>inventory_2</mat-icon>
-                    Carregar PFX / P12
+                    Load PFX / P12
                 </button>
                 <span class="pfx-nome" *ngIf="nomePfx">{{ nomePfx }}</span>
                 <input hidden #pfxInput type="file" accept=".pfx,.p12" (change)="selecionarPfx($event)">
             </div>
             <div class="pfx-senha" *ngIf="pfxSelecionado">
                 <mat-form-field appearance="outline">
-                    <mat-label>Senha do PFX/P12</mat-label>
+                    <mat-label>PFX/P12 password</mat-label>
                     <input matInput [(ngModel)]="senhaPfx" type="password" (keydown.enter)="extrairChavesDoPfx()">
                 </mat-form-field>
                 <button mat-raised-button class="botao-carregar-chave" color="primary" type="button" (click)="extrairChavesDoPfx()">
                     <mat-icon>lock_open</mat-icon>
-                    Extrair Chaves
+                    Extract Keys
                 </button>
             </div>
             <span class="pfx-erro" *ngIf="erroPfx">{{ erroPfx }}</span>
@@ -121,8 +121,8 @@
 
     <div class="secao-info">
         <h2>JWE Compact Serialization</h2>
-        <p>Um JWE compacto possui cinco partes separadas por pontos: Protected Header, Encrypted Key, Initialization Vector, Ciphertext e Authentication Tag. O header pode ser decodificado em JSON; as demais partes permanecem codificadas porque dependem das chaves e do algoritmo usados na criptografia.</p>
-        <p>A criptografia e descriptografia usam os algoritmos suportados pela WebCrypto API via biblioteca JOSE. O header define a combinacao de <code>alg</code> e <code>enc</code>; para chaves publicas/privadas PEM os fluxos mais comuns sao RSA-OAEP e ECDH-ES. Algoritmos simetricos como <code>dir</code>, AES-KW, AES-GCM-KW e PBES2 dependem de segredo/JWK compativel.</p>
+        <p>A compact JWE has five parts separated by dots: Protected Header, Encrypted Key, Initialization Vector, Ciphertext and Authentication Tag. The header can be decoded as JSON; the other parts remain encoded because they depend on the keys and algorithm used for encryption.</p>
+        <p>Encryption and decryption use algorithms supported by the WebCrypto API through the JOSE library. The header defines the <code>alg</code> and <code>enc</code> combination; for PEM public/private keys, the most common flows are RSA-OAEP and ECDH-ES. Symmetric algorithms such as <code>dir</code>, AES-KW, AES-GCM-KW and PBES2 depend on a compatible secret/JWK.</p>
 
         <div class="info-grid">
             <div class="info-card" *ngFor="let item of camposCabecalho">

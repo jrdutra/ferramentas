@@ -98,18 +98,30 @@
   flex: 1 1 auto;
 }
 
-.logo-direita {
-  height: 2em; /* Ajuste a altura conforme necessário */
+.marca-direita {
   position: absolute;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
   margin-right: 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+}
+
+.logo-direita {
+  height: 1.44em; /* Ajuste a altura conforme necessário */
 }
 
 .logo-cor-invertida {
   filter: invert(100%);
-  margin-right: 10px;
+}
+
+.nome-marca {
+  font-weight: 600;
+  letter-spacing: 0;
+  font-size: 0.95em;
+  white-space: nowrap;
 }
 
 @keyframes titulo-luz {
@@ -125,7 +137,7 @@
   .menu-grande {
     display: none;
   }
-  .logo-direita {
+  .marca-direita {
     display: none;
   }
 }

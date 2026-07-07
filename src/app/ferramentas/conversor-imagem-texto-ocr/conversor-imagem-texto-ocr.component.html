@@ -1,12 +1,12 @@
 <div class="principal">
     <div class="coluna1">
         <div class="linha-cabecalho">
-            <span class="texto-label">Imagem</span>
+            <span class="texto-label">Image</span>
         </div>
         <div class="upload-area" (click)="fileInput.click()" [class.tem-imagem]="!!selectedFile">
             <ng-container *ngIf="!selectedFile">
                 <mat-icon class="upload-icone">add_photo_alternate</mat-icon>
-                <span class="upload-texto">Clique para escolher uma imagem</span>
+                <span class="upload-texto">Click to choose an image</span>
                 <span class="upload-hint">JPG, PNG, GIF, BMP, WebP…</span>
             </ng-container>
             <img *ngIf="selectedFile" class="imagemCarregada" [src]="previewUrl" [alt]="selectedFile.name" />
@@ -16,7 +16,7 @@
         <button class="botao" mat-raised-button color="primary"
                 (click)="executarOcr()" [disabled]="!selectedFile || processando">
             <mat-icon>{{ processando ? 'hourglass_empty' : 'document_scanner' }}</mat-icon>
-            {{ processando ? 'Processando… ' + progresso + '%' : 'Executar OCR' }}
+            {{ processando ? 'Processing... ' + progresso + '%' : 'Run OCR' }}
         </button>
 
         <mat-progress-bar *ngIf="processando" mode="determinate" [value]="progresso" class="barra-progresso">
@@ -25,17 +25,17 @@
 
     <div class="coluna2">
         <div class="linha-cabecalho">
-            <span class="texto-label">Texto extraído</span>
+            <span class="texto-label">Extracted text</span>
             <button mat-button (click)="copiarTexto()" [disabled]="!strTextoExtraido" class="btn-copiar">
                 <mat-icon>{{ copiado ? 'check' : 'content_copy' }}</mat-icon>
-                {{ copiado ? 'Copiado!' : 'Copiar' }}
+                {{ copiado ? 'Copied!' : 'Copy' }}
             </button>
         </div>
 
         <textarea class="campo-texto"
                   [value]="strTextoExtraido"
                   readonly
-                  placeholder="O texto reconhecido aparecerá aqui…">
+                  placeholder="Recognized text will appear here...">
         </textarea>
 
         <div class="mensagem-erro" *ngIf="mensagemErro">
@@ -46,28 +46,28 @@
 </div>
 
 <div class="instrucoes">
-<h2>Instruções</h2>
+<h2>Instructions</h2>
 
-<h4 class="sublinhado">Como executar o OCR em uma imagem</h4>
-<p>Clique na área de upload e selecione um arquivo de imagem (JPG, PNG, GIF, BMP, WebP, entre outros). Após a imagem
-    ser carregada na tela, clique em "Executar OCR". Uma barra de progresso indicará o andamento do reconhecimento.
-    Ao concluir, o texto extraído aparecerá no campo à direita e pode ser copiado com o botão "Copiar".</p>
+<h4 class="sublinhado">How to run OCR on an image</h4>
+<p>Click the upload area and select an image file (JPG, PNG, GIF, BMP, WebP and others). After the image loads on
+    screen, click "Run OCR". A progress bar shows recognition progress. When it finishes, the extracted text appears
+    in the field on the right and can be copied with the "Copy" button.</p>
 
-<h4 class="sublinhado">Idiomas suportados</h4>
-<p>O reconhecimento é feito simultaneamente em Português e Inglês. Documentos em outros idiomas podem ser
-    reconhecidos parcialmente, dependendo da similaridade com o alfabeto latino.</p>
+<h4 class="sublinhado">Supported languages</h4>
+<p>Recognition runs simultaneously in Portuguese and English. Documents in other languages may be partially
+    recognized depending on their similarity to the Latin alphabet.</p>
 
-<h4 class="sublinhado">Privacidade</h4>
-<p>Todo o processamento é feito localmente no seu navegador usando a biblioteca Tesseract.js. Nenhuma imagem é
-    enviada a servidores externos.</p>
+<h4 class="sublinhado">Privacy</h4>
+<p>All processing happens locally in your browser using the Tesseract.js library. No image is sent to external
+    servers.</p>
 
-<h2>O que é OCR</h2>
-<p>OCR (Optical Character Recognition) é uma tecnologia que converte imagens de texto — documentos digitalizados,
-    fotos de placas, capturas de tela — em texto digital editável e pesquisável. O mecanismo identifica padrões de
-    pixels que correspondem a caracteres e os transcreve para texto.</p>
+<h2>What is OCR</h2>
+<p>OCR (Optical Character Recognition) is a technology that converts images of text - scanned documents, photos of
+    signs, screenshots - into editable and searchable digital text. The engine identifies pixel patterns that
+    correspond to characters and transcribes them into text.</p>
 
-<p>Esta ferramenta utiliza o Tesseract.js, a versão JavaScript do motor Tesseract, originalmente desenvolvido pela
-    HP e hoje mantido pelo Google. Ele funciona inteiramente no navegador, sem necessidade de conexão com APIs
-    externas ou servidores de processamento.</p>
+<p>This tool uses Tesseract.js, the JavaScript version of the Tesseract engine, originally developed by HP and now
+    maintained by Google. It runs entirely in the browser, with no need to connect to external APIs or processing
+    servers.</p>
 
 </div>

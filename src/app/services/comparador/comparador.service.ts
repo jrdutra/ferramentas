@@ -117,20 +117,20 @@ export class ComparadorService {
 
   parseEntrada(texto: string, formato: FormatoEntrada): ParseResultado {
     const t = (texto || '').trim();
-    if (!t) return { ok: false, valor: null, erro: 'Entrada vazia.' };
+    if (!t) return { ok: false, valor: null, erro: 'Empty input.' };
 
     const tentarJson = (): ParseResultado => {
       try {
         return { ok: true, valor: JSON.parse(t), erro: '' };
       } catch (e) {
-        return { ok: false, valor: null, erro: 'JSON inválido: ' + (e instanceof Error ? e.message : '') };
+        return { ok: false, valor: null, erro: 'Invalid JSON: ' + (e instanceof Error ? e.message : '') };
       }
     };
     const tentarYaml = (): ParseResultado => {
       try {
         return { ok: true, valor: this.parseYaml(t), erro: '' };
       } catch (e) {
-        return { ok: false, valor: null, erro: 'YAML inválido: ' + (e instanceof Error ? e.message : '') };
+        return { ok: false, valor: null, erro: 'Invalid YAML: ' + (e instanceof Error ? e.message : '') };
       }
     };
 
@@ -142,7 +142,7 @@ export class ComparadorService {
     if (j.ok) return j;
     const y = tentarYaml();
     if (y.ok) return y;
-    return { ok: false, valor: null, erro: 'Não foi possível interpretar como JSON nem YAML.' };
+    return { ok: false, valor: null, erro: 'Could not interpret as JSON or YAML.' };
   }
 
   /** Parser YAML enxuto (subconjunto comum: mapas, listas, escalares, fluxo JSON). */

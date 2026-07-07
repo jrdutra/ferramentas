@@ -1,75 +1,75 @@
 <div class="div-principal">
 
     <div class="div-menu-opcoes">
-        <button (click)="removeQuebraDeLinhaEmStrTexto()" mat-raised-button class="botao" color="primary">Remover Quebras 
+        <button (click)="removeQuebraDeLinhaEmStrTexto()" mat-raised-button class="botao" color="primary">Remove Breaks
         </button>
         <button (click)="executaTrimEmStrTexto()" mat-raised-button class="botao" color="primary">Trim
         </button>
-        <button (click)="quebraPorCaractere()" mat-raised-button class="botao" color="primary">Quebrar Por Caractere
+        <button (click)="quebraPorCaractere()" mat-raised-button class="botao" color="primary">Break by Character
             <input (click)="onInputClick($event)" [(ngModel)]="strCaractereQuebra" type="text" matInput
                 placeholder="0" value="." class="input-pequeno">
         </button>
-        <button (click)="quebraPorQuantidade()" mat-raised-button class="botao" color="primary">Quebrar Por Quantidade 
+        <button (click)="quebraPorQuantidade()" mat-raised-button class="botao" color="primary">Break by Quantity
             <input (click)="onInputClick($event)" [(ngModel)]="numQtQuebra" type="number" min="0" matInput
                 placeholder="0" value="0" class="input-pequeno">
         </button>
-        <button (click)="substituirTexto()" mat-raised-button class="botao" color="primary">Substituir 
+        <button (click)="substituirTexto()" mat-raised-button class="botao" color="primary">Replace
             <input [(ngModel)]="strSubstituir" (click)="onInputClick($event)" type="text" min="0" matInput
                 placeholder="0" value="" class="input-medio">
-                Por
+                With
                 <input [(ngModel)]="strSubstituirPor" (click)="onInputClick($event)" type="text" min="0" matInput
                 placeholder="0" value="" class="input-medio">
         </button>
-        <button (click)="todasMaiusculas()" mat-raised-button class="botao" color="primary">Todas Maiúsculas
+        <button (click)="todasMaiusculas()" mat-raised-button class="botao" color="primary">Uppercase
         </button>
-        <button (click)="todasMinusculas()" mat-raised-button class="botao" color="primary">Todas Minúsculas
+        <button (click)="todasMinusculas()" mat-raised-button class="botao" color="primary">Lowercase
         </button>
-        <button (click)="primeirasMaiusculas()" mat-raised-button class="botao" color="primary">Primeiras Maiúsculas
+        <button (click)="primeirasMaiusculas()" mat-raised-button class="botao" color="primary">Title Case
         </button>
-        <button (click)="numerarLinhas()" mat-raised-button class="botao" color="primary">Numerar Linhas
+        <button (click)="numerarLinhas()" mat-raised-button class="botao" color="primary">Number Lines
         </button>
-        <button (click)="tracoInicioLinhas()" mat-raised-button class="botao" color="primary">Traço no Início das Linhas
+        <button (click)="tracoInicioLinhas()" mat-raised-button class="botao" color="primary">Dash at Line Start
         </button>
     </div>
 
     <mat-form-field appearance="fill">
-        <mat-label>TEXTO</mat-label>
+        <mat-label>TEXT</mat-label>
         <textarea (input)="atualizaQtCaracterePalavra()"  [(ngModel)]="strTexto" matInput
             style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
         
-        <label> Quantidade de palavras: </label> <label class="texto-vermelho"> {{strQtPalavras}}</label> <br/>
-        <label> Quantidade de caracteres: </label> <label class="texto-vermelho"> {{strQtCaractere}}</label>  
+        <label> Word count: </label> <label class="texto-vermelho"> {{strQtPalavras}}</label> <br/>
+        <label> Character count: </label> <label class="texto-vermelho"> {{strQtCaractere}}</label>  
     </mat-form-field>
 
 </div>
 <div class="instrucoes">
-    <h2>Instruções</h2>
+    <h2>Instructions</h2>
 
-    <h4 class="sublinhado">Remover Quebras</h4>
-    <p>Cole o texto e clique neste botão para linearizar todo o texto colado.</p>
+    <h4 class="sublinhado">Remove Breaks</h4>
+    <p>Paste the text and click this button to turn the pasted content into a single line.</p>
 
     <h4 class="sublinhado">Trim</h4>
-    <p>Além de remover as quebras de linha, remove os espaços duplicados e tabulações.</p>
+    <p>Removes line breaks, duplicate spaces and tab characters.</p>
 
-    <h4 class="sublinhado">Quebra por Caractere</h4>
-    <p>Quebra linha depois do caractere especificado.</p>
+    <h4 class="sublinhado">Break by Character</h4>
+    <p>Inserts a line break after the specified character.</p>
 
-    <h4 class="sublinhado">Quebra por Quantidade</h4>
-    <p>Quebra linha por quantidade de caracteres. A cada n caracteres, o algoritmo insere uma quebra de linha.</p>
+    <h4 class="sublinhado">Break by Quantity</h4>
+    <p>Inserts a line break every n characters.</p>
 
-    <h4 class="sublinhado">Substituir</h4>
-    <p>Substitui o texto do primeiro input pelo texto do segundo input.</p>
+    <h4 class="sublinhado">Replace</h4>
+    <p>Replaces the text from the first input with the text from the second input.</p>
 
-    <h4 class="sublinhado">Todas Maiúsculas</h4>
-    <p>Coloca todas as letras do texto em maiúsculo.</p>
+    <h4 class="sublinhado">Uppercase</h4>
+    <p>Converts all letters in the text to uppercase.</p>
 
-    <h4 class="sublinhado">Todas Minúsculas</h4>
-    <p>Coloca todas as letras do texto em minúsculo.</p>
+    <h4 class="sublinhado">Lowercase</h4>
+    <p>Converts all letters in the text to lowercase.</p>
 
-    <h4 class="sublinhado">Primeiras Maiúsculas</h4>
-    <p>Coloca apenas as primeiras letras das palavras em maiúsculo.</p>
+    <h4 class="sublinhado">Title Case</h4>
+    <p>Capitalizes the first letter of each word.</p>
 
-    <h4 class="sublinhado">Numerar Linhas</h4>
-    <p>Coloca números ordenados no início de cada linha</p>
+    <h4 class="sublinhado">Number Lines</h4>
+    <p>Adds ordered numbers at the beginning of each line.</p>
 
 </div>

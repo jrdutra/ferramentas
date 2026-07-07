@@ -22,7 +22,7 @@ import {
 export class ComparadorJsonYamlComponent implements OnInit {
 
   readonly formatos: { id: FormatoEntrada; nome: string }[] = [
-    { id: 'auto', nome: 'Automático' },
+    { id: 'auto', nome: 'Automatic' },
     { id: 'json', nome: 'JSON' },
     { id: 'yaml', nome: 'YAML' },
   ];
@@ -37,7 +37,7 @@ export class ComparadorJsonYamlComponent implements OnInit {
   constructor(private dataService: DataService, private comparador: ComparadorService) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Comparador de JSON e YAML');
+    this.dataService.setTituloAplicacao('JSON & YAML Comparator');
   }
 
   temConteudo(): boolean {
@@ -63,28 +63,28 @@ export class ComparadorJsonYamlComponent implements OnInit {
   exemplo(): void {
     this.textoA = [
       '{',
-      '  "nome": "Serviço A",',
-      '  "versao": "1.2.0",',
-      '  "ativo": true,',
-      '  "porta": 8080,',
-      '  "banco": {',
+      '  "name": "Service A",',
+      '  "version": "1.2.0",',
+      '  "active": true,',
+      '  "port": 8080,',
+      '  "database": {',
       '    "host": "localhost",',
-      '    "porta": 5432',
+      '    "port": 5432',
       '  },',
-      '  "tags": ["api", "interno"]',
+      '  "tags": ["api", "internal"]',
       '}',
     ].join('\n');
     this.textoB = [
-      'nome: Serviço A',
-      'versao: 1.3.0',
-      'ativo: true',
-      'banco:',
+      'name: Service A',
+      'version: 1.3.0',
+      'active: true',
+      'database:',
       '  host: db.prod',
-      '  porta: 5432',
+      '  port: 5432',
       '  ssl: true',
       'tags:',
       '  - api',
-      '  - externo',
+      '  - external',
     ].join('\n');
     this.formato = 'auto';
     this.comparado = false;

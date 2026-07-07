@@ -59,7 +59,7 @@ export class CertificateService {
     const binaryCert = binaryArray.buffer;
     const asn1 = asn1js.fromBER(binaryCert);
     if (asn1.offset === -1) {
-      throw new Error('Erro ao decodificar o certificado ASN.1');
+      throw new Error('Error decoding ASN.1 certificate');
     }
 
     let blob = base64;
@@ -173,8 +173,8 @@ export class CertificateService {
     "1.2.840.10045.2.1.3": "ECIES",           
     "1.2.840.113549.1.5.12": "PKCS12",
     "1.2.840.113549.1.9.1": "Email",
-    "1.2.840.113549.1.9.3": "OID para o Certificado de Assinatura Digital",
-    "1.2.840.113549.1.9.4": "OID para o Certificado de Criptografia",
+    "1.2.840.113549.1.9.3": "OID for the Digital Signature Certificate",
+    "1.2.840.113549.1.9.4": "OID for the Encryption Certificate",
   };
 
 }

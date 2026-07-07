@@ -14,11 +14,11 @@
   </div>
 
   <div class="hist-cabecalho">
-    <span class="col-titulo">Histórico</span>
+    <span class="col-titulo">History</span>
   </div>
 
   <div class="dir-cabecalho">
-    <span class="col-titulo">Grupos e Canais ativos</span>
+    <span class="col-titulo">Active Groups and Channels</span>
   </div>
 
   <!-- ── Corpo esquerdo: inputs + textarea (linha 2, col 1) ── -->
@@ -26,27 +26,27 @@
   <div class="corpo-esquerdo">
 
     <mat-form-field appearance="fill" style="width: 100%">
-      <mat-label>Grupo</mat-label>
+      <mat-label>Group</mat-label>
       <input matInput [(ngModel)]="strGrupo" (input)="onGrupoOuCanalChange()"
-        placeholder="Digite o nome do grupo..." style="border: none; background: transparent;" />
+        placeholder="Enter the group name..." style="border: none; background: transparent;" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" style="width: 100%">
-      <mat-label>Canal</mat-label>
+      <mat-label>Channel</mat-label>
       <input matInput [(ngModel)]="strCanal" (input)="onGrupoOuCanalChange()"
-        placeholder="Digite o nome do canal..." style="border: none; background: transparent;" />
+        placeholder="Enter the channel name..." style="border: none; background: transparent;" />
     </mat-form-field>
 
     @if (urlCompartilhavel) {
       <div class="div-url-compartilhavel">
         <span class="url-texto" title="{{urlCompartilhavel}}">{{urlCompartilhavel}}</span>
-        <button class="btn-copiar" type="button" (click)="copiarUrl()" title="Copiar URL">📋</button>
+        <button class="btn-copiar" type="button" (click)="copiarUrl()" title="Copy URL">📋</button>
       </div>
     }
 
     <div class="div-caixa-texto" [class.caixa-ativa]="textoHot">
       <mat-form-field appearance="fill">
-        <mat-label>TEXTO</mat-label>
+        <mat-label>TEXT</mat-label>
         <textarea [(ngModel)]="strTexto" (input)="emiteTextoParaServidor()" matInput
           style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
       </mat-form-field>
@@ -58,7 +58,7 @@
 
   <div class="corpo-hist">
     @if (historico.length === 0) {
-      <div class="col-vazio">Sem alterações ainda.</div>
+      <div class="col-vazio">No changes yet.</div>
     } @else {
       <div class="hist-lista">
         @for (entry of historico; track entry) {
@@ -73,7 +73,7 @@
   <div class="corpo-dir">
 
     <mat-form-field appearance="fill" style="width: 100%">
-      <mat-label>Grupo</mat-label>
+      <mat-label>Group</mat-label>
       <mat-select [(ngModel)]="grupoSelecionado" (ngModelChange)="onGrupoSelecionadoChange()">
         @for (g of gruposAtivos; track g) {
           <mat-option [value]="g">{{g}}</mat-option>
@@ -82,27 +82,27 @@
     </mat-form-field>
 
     @if (gruposAtivos.length === 0) {
-      <div class="col-vazio">Nenhum grupo ativo no momento.</div>
+      <div class="col-vazio">No active groups right now.</div>
     }
 
-    <!-- Botão excluir grupo (apenas admin do grupo selecionado) -->
+    <!-- Delete group button (selected group admin only) -->
     @if (podeAdministrar) {
       <button class="btn-excluir-grupo" type="button" (click)="excluirGrupo()">
-        Excluir grupo
+        Delete group
       </button>
     }
 
     @if (grupoSelecionado) {
       <mat-form-field appearance="fill" style="width: 100%">
-        <mat-label>Buscar canal</mat-label>
+        <mat-label>Search channel</mat-label>
         <input matInput [(ngModel)]="filtroBuscaCanal"
-          placeholder="Filtrar..." style="border: none; background: transparent;" />
+          placeholder="Filter..." style="border: none; background: transparent;" />
       </mat-form-field>
 
       <!-- Canais ativos -->
       <div class="canais-lista">
-        <!-- Botão adicionar canal -->
-        <div class="canal-item canal-adicionar" (click)="abrirModalNovoCanal()" title="Adicionar canal">
+        <!-- Add channel button -->
+        <div class="canal-item canal-adicionar" (click)="abrirModalNovoCanal()" title="Add channel">
           <span class="canal-adicionar-icone">＋</span>
         </div>
         @for (c of canaisFiltrados; track c) {
@@ -115,7 +115,7 @@
             <span class="canal-nome"># {{c}}</span>
             @if (podeAdministrar) {
               <button class="btn-visibilidade-canal" type="button"
-                [title]="isCanalOculto(c) ? 'Exibir canal' : 'Ocultar canal'"
+                [title]="isCanalOculto(c) ? 'Show channel' : 'Hide channel'"
                 (click)="toggleVisibilidadeCanal(c, $event)">
                 @if (isCanalOculto(c)) {
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -130,17 +130,17 @@
                 }
               </button>
               <button class="btn-excluir-canal" type="button"
-                title="Excluir canal"
+                title="Delete channel"
                 (click)="excluirCanal(c, $event)">×</button>
             }
           </div>
         }
 
-        <!-- Canais excluídos não clicados (vermelho) -->
+        <!-- Deleted channels not clicked (red) -->
         @for (c of canaisExcluidosDoGrupo; track c) {
           <div class="canal-item canal-excluido" (click)="removerCanalExcluido(c)">
             <span class="canal-nome"># {{c}}</span>
-            <span class="canal-excluido-label">excluído</span>
+            <span class="canal-excluido-label">deleted</span>
           </div>
         }
       </div>
@@ -150,134 +150,133 @@
 
 </div>
 
-<!-- ── Popup: grupo excluído ── -->
+<!-- ── Popup: deleted group ── -->
 @if (mostrarPopupGrupoExcluido) {
   <div class="popup-fundo" (click)="fecharPopupGrupoExcluido()">
     <div class="popup-caixa" (click)="$event.stopPropagation()">
       <div class="popup-icone">⚠️</div>
-      <h3 class="popup-titulo">Grupo excluído</h3>
+      <h3 class="popup-titulo">Group deleted</h3>
       <p class="popup-msg">
-        O grupo <strong>{{grupoExcluidoNome}}</strong> foi excluído pelo administrador.
+        The group <strong>{{grupoExcluidoNome}}</strong> was deleted by the administrator.
       </p>
-      <button class="popup-btn" type="button" (click)="fecharPopupGrupoExcluido()">Entendido</button>
+      <button class="popup-btn" type="button" (click)="fecharPopupGrupoExcluido()">Got it</button>
     </div>
   </div>
 }
 
-<!-- ── Modal: novo canal ── -->
+<!-- ── Modal: new channel ── -->
 @if (mostrarModalNovoCanal) {
   <div class="popup-fundo" (click)="fecharModalNovoCanal()">
     <div class="popup-caixa modal-novo-canal" (click)="$event.stopPropagation()">
-      <h3 class="popup-titulo modal-titulo">Novo canal</h3>
-      <p class="popup-msg">Digite o nome do canal a ser criado no grupo <strong>{{grupoSelecionado}}</strong>.</p>
+      <h3 class="popup-titulo modal-titulo">New channel</h3>
+      <p class="popup-msg">Enter the name of the channel to create in group <strong>{{grupoSelecionado}}</strong>.</p>
       <input
         class="modal-input"
         type="text"
         [(ngModel)]="nomeNovoCanal"
-        placeholder="Nome do canal..."
+        placeholder="Channel name..."
         (keydown.enter)="confirmarNovoCanal()"
         (keydown.escape)="fecharModalNovoCanal()"
         autofocus />
       <div class="modal-acoes">
-        <button class="popup-btn popup-btn-secundario" type="button" (click)="fecharModalNovoCanal()">Cancelar</button>
-        <button class="popup-btn" type="button" (click)="confirmarNovoCanal()" [disabled]="!nomeNovoCanal.trim()">Entrar no canal</button>
+        <button class="popup-btn popup-btn-secundario" type="button" (click)="fecharModalNovoCanal()">Cancel</button>
+        <button class="popup-btn" type="button" (click)="confirmarNovoCanal()" [disabled]="!nomeNovoCanal.trim()">Enter channel</button>
       </div>
     </div>
   </div>
 }
 
-<!-- ── Modal: confirmação excluir grupo ── -->
+<!-- ── Modal: delete group confirmation ── -->
 @if (mostrarConfirmacaoExcluirGrupo) {
   <div class="popup-fundo" (click)="cancelarExcluirGrupo()">
     <div class="popup-caixa popup-confirmar" (click)="$event.stopPropagation()">
       <div class="popup-icone">⚠️</div>
-      <h3 class="popup-titulo popup-titulo-aviso">Excluir grupo</h3>
+      <h3 class="popup-titulo popup-titulo-aviso">Delete group</h3>
       <p class="popup-msg">
-        Tem certeza que deseja excluir o grupo <strong>{{strGrupo.trim()}}</strong>?<br>
-        <span class="popup-aviso-detalhe">Todos os canais e textos serão perdidos permanentemente.</span>
+        Are you sure you want to delete group <strong>{{strGrupo.trim()}}</strong>?<br>
+        <span class="popup-aviso-detalhe">All channels and texts will be permanently lost.</span>
       </p>
       <div class="modal-acoes">
-        <button class="popup-btn popup-btn-secundario" type="button" (click)="cancelarExcluirGrupo()">Cancelar</button>
-        <button class="popup-btn popup-btn-perigo" type="button" (click)="confirmarExcluirGrupo()">Excluir</button>
+        <button class="popup-btn popup-btn-secundario" type="button" (click)="cancelarExcluirGrupo()">Cancel</button>
+        <button class="popup-btn popup-btn-perigo" type="button" (click)="confirmarExcluirGrupo()">Delete</button>
       </div>
     </div>
   </div>
 }
 
-<!-- ── Overlay: banido ── -->
+<!-- ── Overlay: banned ── -->
 @if (estaBanido) {
   <div class="ban-overlay">
     <div class="ban-caixa">
       <div class="ban-icone">🚫</div>
-      <h3 class="ban-titulo">Sessão bloqueada</h3>
+      <h3 class="ban-titulo">Session blocked</h3>
       <p class="ban-msg">{{motivoBan}}</p>
-      <p class="ban-dica">Feche e reabra a aba para obter uma nova sessão.</p>
+      <p class="ban-dica">Close and reopen the tab to get a new session.</p>
     </div>
   </div>
 }
 
-<!-- ── Seção de instruções ── -->
+<!-- ── Instructions section ── -->
 <div class="instrucoes-compartilhador">
-  <h2>Instruções</h2>
+  <h2>Instructions</h2>
 
   <p>
-    O Compartilhador de Texto permite sincronizar texto em tempo real entre múltiplas telas, sem cadastro ou login.
-    Basta definir um <strong>Grupo</strong> e um <strong>Canal</strong> e qualquer pessoa com o mesmo par verá
-    as alterações instantaneamente.
+    Text Sharer lets you synchronize text in real time across multiple screens, without registration or login.
+    Define a <strong>Group</strong> and a <strong>Channel</strong>, and anyone using the same pair will see
+    changes instantly.
   </p>
 
-  <h2>Como usar</h2>
+  <h2>How to use</h2>
 
-  <h4 class="sublinhado">Definir Grupo e Canal</h4>
+  <h4 class="sublinhado">Set Group and Channel</h4>
   <p>
-    Digite um nome de grupo e um nome de canal nos campos à esquerda. Assim que ambos estiverem preenchidos,
-    você entra automaticamente naquele canal. Qualquer texto digitado na caixa é transmitido em tempo real para
-    todas as outras telas conectadas ao mesmo grupo e canal.
+    Type a group name and a channel name in the fields on the left. As soon as both are filled in, you automatically
+    join that channel. Any text typed in the box is transmitted in real time to all other screens connected to the
+    same group and channel.
   </p>
 
-  <h4 class="sublinhado">Compartilhar a URL</h4>
+  <h4 class="sublinhado">Share the URL</h4>
   <p>
-    Quando grupo e canal estão preenchidos, uma URL compartilhável aparece abaixo dos campos. Clique no ícone 📋
-    para copiá-la. Ao abrir essa URL em outro dispositivo ou aba, o grupo e o canal já chegam preenchidos e a
-    conexão é estabelecida automaticamente.
+    When group and channel are filled in, a shareable URL appears below the fields. Click the 📋 icon to copy it.
+    When this URL is opened on another device or tab, the group and channel are already filled in and the connection
+    is established automatically.
   </p>
 
-  <h4 class="sublinhado">Navegar pelo Diretório</h4>
+  <h4 class="sublinhado">Browse the Directory</h4>
   <p>
-    A coluna da direita exibe todos os grupos e canais com conexões ativas no momento. Selecione um grupo no
-    combobox e use o campo de busca para filtrar os canais. Clique em qualquer canal para entrar nele e carregar
-    o texto atual.
+    The right column displays all groups and channels with active connections right now. Select a group in the
+    combo box and use the search field to filter channels. Click any channel to join it and load the current text.
   </p>
 
-  <h4 class="sublinhado">Histórico de Alterações</h4>
+  <h4 class="sublinhado">Change History</h4>
   <p>
-    A coluna central registra o horário de cada alteração significativa no texto do canal. Um novo registro é
-    criado após <strong>10 segundos</strong> sem edições, marcando o momento em que aquela versão foi considerada
-    estável. O histórico é mantido apenas enquanto o canal estiver ativo.
+    The center column records the time of each significant change to the channel text. A new entry is created after
+    <strong>10 seconds</strong> without edits, marking the moment when that version was considered stable. History is
+    kept only while the channel is active.
   </p>
 
-  <h4 class="sublinhado">Administrador do Grupo</h4>
+  <h4 class="sublinhado">Group Administrator</h4>
   <p>
-    A primeira tela a entrar em um grupo torna-se automaticamente o administrador (<strong>ADM</strong>).
-    O administrador pode excluir canais individualmente — as outras telas naquele canal migram automaticamente
-    para o canal adjacente — e também pode excluir o grupo inteiro, o que notifica todas as telas conectadas.
-    Se o administrador sair, o próximo membro mais antigo herda o papel.
+    The first screen to enter a group automatically becomes the administrator (<strong>ADM</strong>).
+    The administrator can delete channels individually - other screens in that channel automatically move to an
+    adjacent channel - and can also delete the entire group, which notifies all connected screens. If the
+    administrator leaves, the next oldest member inherits the role.
   </p>
 
   <div class="instrucoes-aviso">
-    <strong>Atenção:</strong> o texto e o histórico de um canal são mantidos em memória por até
-    <strong>5 minutos</strong> após a última tela se desconectar. Depois disso, o canal é encerrado e os dados
-    são descartados permanentemente. Não há persistência em banco de dados.
+    <strong>Attention:</strong> a channel's text and history are kept in memory for up to
+    <strong>5 minutes</strong> after the last screen disconnects. After that, the channel is closed and the data
+    is permanently discarded. There is no database persistence.
   </div>
 
-  <h2>Grupos e Canais</h2>
+  <h2>Groups and Channels</h2>
   <p>
-    Um <strong>grupo</strong> é um espaço de trabalho que agrupa vários canais. Use grupos para separar projetos,
-    times ou contextos diferentes. Um <strong>canal</strong> é a unidade de compartilhamento: cada canal tem seu
-    próprio texto e histórico independentes.
+    A <strong>group</strong> is a workspace that contains multiple channels. Use groups to separate projects, teams
+    or different contexts. A <strong>channel</strong> is the sharing unit: each channel has its own independent text
+    and history.
   </p>
   <p>
-    Qualquer combinação de grupo e canal é válida — não há cadastro prévio. O canal passa a existir assim que
-    a primeira tela entra nele e deixa de existir 5 minutos depois que a última tela sai.
+    Any group and channel combination is valid - there is no prior registration. The channel starts existing as soon
+    as the first screen enters it and stops existing 5 minutes after the last screen leaves.
   </p>
 </div>

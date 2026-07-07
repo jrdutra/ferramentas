@@ -52,12 +52,12 @@ export class UnixTimestampComponent {
 
   exibeDataHora(): void {
     this.dia = this.data.getDate();
-    this.mes = this.data.getMonth() + 1; // Os meses começam de 0, então adicionamos 1
+    this.mes = this.data.getMonth() + 1; // Months are zero-based, so add 1.
     this.ano = this.data.getFullYear();
     this.hora = this.data.getHours();
     this.minuto = this.data.getMinutes();
     this.segundo = this.data.getSeconds();
-    this.unixTimestamp = Math.floor(this.data.getTime() / 1000); // Convertendo para timestamp UNIX em segundos
+    this.unixTimestamp = Math.floor(this.data.getTime() / 1000); // Convert to UNIX timestamp in seconds.
   }
 
 }

@@ -37,7 +37,7 @@ export function carregarPdfJsBrowser(): Promise<PdfJsLib> {
 
       const falhar = () => {
         pdfjsLibPromise = undefined;
-        reject(new Error('Erro ao carregar PDF.js.'));
+        reject(new Error('Error loading PDF.js.'));
       };
 
       let script = document.querySelector<HTMLScriptElement>(PDFJS_SCRIPT_SELECTOR);

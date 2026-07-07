@@ -8,7 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:ferramentas": "node dist/ferramentas/server/server.mjs"
+    "serve:ssr:ferramentas": "node dist/server/server.mjs"
   },
   "private": true,
   "dependencies": {

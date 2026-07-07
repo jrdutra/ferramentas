@@ -18,7 +18,7 @@ export class TemplateDeTextoComponent {
 
   strTemplate = ""
   strTexto = ""
-  strTipoTexto = "TEMPLATE DE TEXTO"
+  strTipoTexto = "TEXT TEMPLATE"
   strQtCaractere: string = "0";
   strQtPalavras: string = "0";
   variaveisTemplate: VariavelTemplateTexto[] = []; 
@@ -26,7 +26,7 @@ export class TemplateDeTextoComponent {
   constructor(private dataService: DataService, private manipulaStringService: ManipulaStringService) {  }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Template de Texto");
+    this.dataService.setTituloAplicacao("Text Template");
   }
 
   atualizaQtCaracterePalavra(){
@@ -60,7 +60,7 @@ export class TemplateDeTextoComponent {
   carregaTemplate(){
     this.strTemplate = this.strTexto
     this.variaveisTemplate = this.extraiVariaveisDoTexto(this.strTemplate)
-    this.strTipoTexto = "TEMPLATE DE TEXTO";
+    this.strTipoTexto = "TEXT TEMPLATE";
   }
 
   gerarTexto(){
@@ -71,12 +71,12 @@ export class TemplateDeTextoComponent {
       textoGerado = this.manipulaStringService.substituiStr(textoGerado, textoSubstituir, variavelTemplateTexto.conteudoVariavel);
     }
     this.strTexto = textoGerado
-    this.strTipoTexto = "TEXTO FINAL";
+    this.strTipoTexto = "FINAL TEXT";
   }
 
   visualizarTemplate(){
     this.strTexto = this.strTemplate;
-    this.strTipoTexto = "TEMPLATE DE TEXTO";
+    this.strTipoTexto = "TEXT TEMPLATE";
   }
 
 }

@@ -53,7 +53,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
   @ViewChild('previewCanvas') previewCanvas?: ElementRef<HTMLCanvasElement>;
 
   texto: string = 'www.google.com.br';
-  tituloQrCode: string = 'Meu QRCode';
+  tituloQrCode: string = 'My QR Code';
   tamanho: number = 256;
   tamanhoTexto: number = 26;
   tamanhoLogotipo: number = 100;
@@ -73,8 +73,8 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
 
   estilos: EstiloQrCode[] = [
     {
-      nome: 'Básico',
-      descricao: 'Preto no branco, simples e direto.',
+      nome: 'Basic',
+      descricao: 'Black on white, simple and direct.',
       classe: 'estilo-basico',
       colorDark: '#000000',
       colorLight: '#ffffff',
@@ -98,8 +98,8 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       exibirLogo: true
     },
     {
-      nome: 'Básico Escuro',
-      descricao: 'Branco sobre azul-marinho, com alto contraste.',
+      nome: 'Dark Basic',
+      descricao: 'White on navy blue, with high contrast.',
       classe: 'estilo-basico-escuro',
       colorDark: '#ffffff',
       colorLight: '#07152f',
@@ -132,7 +132,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Texto para QrCode');
+    this.dataService.setTituloAplicacao('Text to QR Code');
     this.carregarEstilosPersonalizados();
   }
 
@@ -273,7 +273,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
       ...base,
       id: this.gerarIdEstilo(),
       nome,
-      descricao: 'Estilo criado por você.',
+      descricao: 'Style created by you.',
       classe: 'estilo-personalizado',
       icone: 'palette',
       personalizado: true,
@@ -292,7 +292,7 @@ export class TextoQrcodeComponent implements AfterViewInit, OnDestroy {
   private criarEstiloInicial(): EstiloQrCode {
     return {
       nome: '',
-      descricao: 'Estilo criado por você.',
+      descricao: 'Style created by you.',
       classe: 'estilo-personalizado',
       colorDark: '#7c3aed',
       colorLight: '#fff7ff',

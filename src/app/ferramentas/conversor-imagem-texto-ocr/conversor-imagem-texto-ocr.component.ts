@@ -34,7 +34,7 @@ export class ConversorImagemTextoOcrComponent {
   ) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Conversor OCR');
+    this.dataService.setTituloAplicacao('OCR Converter');
   }
 
   carregaArquivo(event: Event): void {
@@ -66,7 +66,7 @@ export class ConversorImagemTextoOcrComponent {
       );
     } catch (e) {
       console.error(e);
-      this.mensagemErro = 'Erro ao executar OCR. Tente novamente com outra imagem.';
+      this.mensagemErro = 'Error running OCR. Try again with another image.';
     } finally {
       this.processando = false;
       this.progresso = 0;

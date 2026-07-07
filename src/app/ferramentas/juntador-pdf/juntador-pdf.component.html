@@ -2,23 +2,23 @@
 
   <div class="upload-area" (click)="fileInput.click()" (dragover)="$event.preventDefault()" (drop)="carregarArquivos($event)">
     <mat-icon class="upload-icone">upload_file</mat-icon>
-    <p class="upload-texto">Clique ou arraste arquivos aqui</p>
-    <p class="upload-hint">PDFs e imagens (JPG, PNG, GIF, WebP, BMP…)</p>
+    <p class="upload-texto">Click or drag files here</p>
+    <p class="upload-hint">PDFs and images (JPG, PNG, GIF, WebP, BMP...)</p>
     <input hidden multiple #fileInput type="file" accept=".pdf,image/*" (change)="carregarArquivos($event)">
   </div>
 
   <div class="acoes-topo" *ngIf="arquivos.length > 0">
     <button mat-raised-button color="primary" (click)="fileInput2.click()">
-      <mat-icon>add</mat-icon> Adicionar mais
+      <mat-icon>add</mat-icon> Add more
     </button>
     <input hidden multiple #fileInput2 type="file" accept=".pdf,image/*" (change)="carregarArquivos($event)">
     <button mat-button (click)="limpar()">
-      <mat-icon>clear_all</mat-icon> Limpar tudo
+      <mat-icon>clear_all</mat-icon> Clear all
     </button>
   </div>
 
   <div class="lista-cabecalho" *ngIf="arquivos.length > 0">
-    <span class="lista-info">{{ arquivos.length }} arquivo(s) — arraste para reordenar</span>
+    <span class="lista-info">{{ arquivos.length }} file(s) - drag to reorder</span>
   </div>
 
   <div cdkDropList class="lista-arquivos" (cdkDropListDropped)="reordenar($event)" *ngIf="arquivos.length > 0">
@@ -31,11 +31,11 @@
       <span class="nome-arquivo" [title]="arquivo.nome">{{ arquivo.nome }}</span>
       <button *ngIf="arquivo.tipo === 'imagem'" mat-icon-button class="btn-preview"
         (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation(); abrirPreviewImagem(arquivo)"
-        title="Pré-visualizar imagem" aria-label="Pré-visualizar imagem">
+        title="Preview image" aria-label="Preview image">
         <mat-icon>visibility</mat-icon>
       </button>
-      <span class="tipo-badge">{{ arquivo.tipo === 'pdf' ? 'PDF' : 'Imagem' }}</span>
-      <button mat-icon-button class="btn-remover" (click)="remover(i)" title="Remover">
+      <span class="tipo-badge">{{ arquivo.tipo === 'pdf' ? 'PDF' : 'Image' }}</span>
+      <button mat-icon-button class="btn-remover" (click)="remover(i)" title="Remove">
         <mat-icon>close</mat-icon>
       </button>
       <div class="drag-placeholder" *cdkDragPlaceholder></div>
@@ -46,12 +46,12 @@
     <button mat-raised-button color="primary" (click)="juntar()" [disabled]="processando || processandoImg">
       <mat-spinner *ngIf="processando" diameter="18" class="spinner-btn"></mat-spinner>
       <mat-icon *ngIf="!processando">merge_type</mat-icon>
-      {{ processando ? 'Processando…' : 'Juntar e Baixar PDF' }}
+      {{ processando ? 'Processing...' : 'Merge and Download PDF' }}
     </button>
     <button mat-raised-button color="primary" (click)="baixarComoImagem()" [disabled]="processando || processandoImg">
       <mat-spinner *ngIf="processandoImg" diameter="18" class="spinner-btn"></mat-spinner>
       <mat-icon *ngIf="!processandoImg">image</mat-icon>
-      {{ processandoImg ? 'Gerando imagem…' : 'Baixar como Imagem' }}
+      {{ processandoImg ? 'Generating image...' : 'Download as Image' }}
     </button>
   </div>
 
@@ -64,7 +64,7 @@
 
 <div class="preview-fundo" *ngIf="previewImagem as preview" (click)="fecharPreviewImagem()">
   <div class="preview-balao" (click)="$event.stopPropagation()">
-    <button mat-icon-button class="preview-fechar" (click)="fecharPreviewImagem()" aria-label="Fechar prévia">
+    <button mat-icon-button class="preview-fechar" (click)="fecharPreviewImagem()" aria-label="Close preview">
       <mat-icon>close</mat-icon>
     </button>
     <div class="preview-topo">
@@ -72,40 +72,39 @@
       <span [title]="preview.nome">{{ preview.nome }}</span>
     </div>
     <div class="preview-moldura">
-      <img [src]="preview.url" [alt]="'Prévia de ' + preview.nome">
+      <img [src]="preview.url" [alt]="'Preview of ' + preview.nome">
     </div>
   </div>
 </div>
 
 <div class="instrucoes">
-  <h2>Instruções</h2>
+  <h2>Instructions</h2>
 
-  <h4 class="sublinhado">Como juntar PDFs e imagens</h4>
-  <p>Clique na área de upload ou arraste arquivos diretamente para ela. Você pode carregar PDFs e imagens de qualquer
-    formato (JPG, PNG, GIF, WebP, BMP) ao mesmo tempo e em qualquer combinação. Após carregar os arquivos, eles
-    aparecem em uma lista ordenada. Clique em "Juntar e Baixar PDF" para gerar o documento final.</p>
+  <h4 class="sublinhado">How to merge PDFs and images</h4>
+  <p>Click the upload area or drag files directly onto it. You can load PDFs and images in any format (JPG, PNG, GIF,
+    WebP, BMP) at the same time and in any combination. After loading, the files appear in an ordered list. Click
+    "Merge and Download PDF" to generate the final document.</p>
 
-  <h4 class="sublinhado">Como reordenar os arquivos</h4>
-  <p>Arraste qualquer item da lista pela alça (ícone de seis pontos à esquerda) e solte na posição desejada. A ordem
-    exibida na lista é exatamente a ordem das páginas no PDF final. Para remover um arquivo específico, clique no
-    ícone "X" à direita do item. Para remover todos de uma vez, use o botão "Limpar tudo".</p>
+  <h4 class="sublinhado">How to reorder files</h4>
+  <p>Drag any item in the list by the handle (six-dot icon on the left) and drop it in the desired position. The order
+    shown in the list is exactly the page order in the final PDF. To remove a specific file, click the "X" icon on
+    the right side of the item. To remove all files at once, use the "Clear all" button.</p>
 
-  <h4 class="sublinhado">Baixar como Imagem</h4>
-  <p>O botão "Baixar como Imagem" empilha verticalmente todos os arquivos carregados (PDFs e imagens) em uma única
-    imagem JPG. Cada página de PDF e cada imagem ocupa uma faixa horizontal, e a largura final é a maior largura
-    entre todos os itens — os demais são escalados proporcionalmente. O resultado é baixado como um único arquivo
-    .jpg.</p>
+  <h4 class="sublinhado">Download as Image</h4>
+  <p>The "Download as Image" button stacks all loaded files (PDFs and images) vertically into a single JPG image.
+    Each PDF page and each image occupies a horizontal band, and the final width is the largest width among all
+    items - the others are scaled proportionally. The result is downloaded as a single .jpg file.</p>
 
-  <h4 class="sublinhado">Formatos suportados e privacidade</h4>
-  <p>O Juntador suporta nativamente JPEG e PNG, incorporados diretamente ao PDF. Outros formatos (GIF, WebP, BMP e
-    similares) são convertidos automaticamente para JPEG via canvas antes de serem inseridos. Todo o processamento
-    acontece inteiramente no seu navegador — nenhum arquivo é enviado a servidores externos.</p>
+  <h4 class="sublinhado">Supported formats and privacy</h4>
+  <p>The merger natively supports JPEG and PNG, embedding them directly into the PDF. Other formats (GIF, WebP, BMP
+    and similar) are automatically converted to JPEG via canvas before being inserted. All processing happens entirely
+    in your browser - no file is sent to external servers.</p>
 
-  <h2>O que é um PDF</h2>
-  <p>PDF (Portable Document Format) é um formato criado pela Adobe que preserva a formatação de um documento
-    independentemente do sistema operacional ou aplicativo usado para visualizá-lo. É o padrão para compartilhamento
-    de documentos, contratos e relatórios que precisam manter sua aparência original em diferentes dispositivos.</p>
+  <h2>What is a PDF</h2>
+  <p>PDF (Portable Document Format) is a format created by Adobe that preserves a document's formatting regardless of
+    the operating system or application used to view it. It is the standard for sharing documents, contracts and
+    reports that need to keep their original appearance across different devices.</p>
 
-  <p>A junção realizada por esta ferramenta usa a biblioteca pdf-lib, que lê as páginas de cada arquivo de entrada e
-    as copia para um novo documento PDF mantendo resolução, fontes e layout originais de cada página.</p>
+  <p>The merge performed by this tool uses the pdf-lib library, which reads the pages from each input file and copies
+    them into a new PDF document while preserving the original resolution, fonts and layout of each page.</p>
 </div>

@@ -19,13 +19,13 @@ export class EditorJsonComponent {
 
   strJson: string = '';
   strResultado: string = ''
-  strJsonValido = 'Validade do Json';
+  strJsonValido = 'JSON validity';
   textoVermelho: boolean = false;
 
   constructor(private dataService: DataService, private jsonService: JsonService) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Editor de Json");
+    this.dataService.setTituloAplicacao("JSON Editor");
   }
 
   minificaJson() {

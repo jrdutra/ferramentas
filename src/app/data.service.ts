@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class DataService {
-  private readonly tituloAplicacaoSubject = new BehaviorSubject<string>('Inicio');
+  private readonly tituloAplicacaoSubject = new BehaviorSubject<string>('Home');
   readonly tituloAplicacao$ = this.tituloAplicacaoSubject.asObservable();
 
   constructor() { }

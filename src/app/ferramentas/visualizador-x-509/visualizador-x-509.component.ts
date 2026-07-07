@@ -54,7 +54,7 @@ export class VisualizadorX509Component {
     private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Visualizador de Certificado X.509");
+    this.dataService.setTituloAplicacao("X.509 Certificate Viewer");
   }
 
   carregaArquivo(event: any): void {
@@ -68,7 +68,7 @@ export class VisualizadorX509Component {
         this.cdr.detectChanges();
       };
       reader.onerror = (error) => {
-        console.error('Erro ao ler o arquivo:', error);
+        console.error('Error reading file:', error);
       };
       reader.readAsText(this.arquivoCertificado);
     }
@@ -107,7 +107,7 @@ export class VisualizadorX509Component {
 
       this.mostraDados = true;
     } catch (e) {
-      console.error('Erro ao ler certificado:', e);
+      console.error('Error reading certificate:', e);
     }
   }
 

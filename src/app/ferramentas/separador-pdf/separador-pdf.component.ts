@@ -32,7 +32,7 @@ export class SeparadorPdfComponent {
   ) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Separador de PDFs');
+    this.dataService.setTituloAplicacao('PDF Splitter');
   }
 
   async carregarArquivo(event: Event): Promise<void> {
@@ -48,7 +48,7 @@ export class SeparadorPdfComponent {
       const pdf = await PDFDocument.load(bytes);
       this.numeroPaginas = pdf.getPageCount();
     } catch (e) {
-      this.mensagem = 'Erro ao ler o PDF. O arquivo pode estar corrompido ou protegido.';
+      this.mensagem = 'Error reading the PDF. The file may be corrupted or protected.';
       this.erro = true;
       this.arquivo = null;
     }
@@ -70,15 +70,15 @@ export class SeparadorPdfComponent {
         const [pagina] = await novoPdf.copyPages(pdfOriginal, [i]);
         novoPdf.addPage(pagina);
         const pdfBytes = await novoPdf.save();
-        zip.file(`pagina-${String(i + 1).padStart(3, '0')}.pdf`, pdfBytes);
+        zip.file(`page-${String(i + 1).padStart(3, '0')}.pdf`, pdfBytes);
       }
 
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      this.download(zipBlob, 'paginas-separadas.zip');
-      this.mensagem = `ZIP gerado com ${this.numeroPaginas} arquivo(s) PDF.`;
+      this.download(zipBlob, 'split-pages.zip');
+      this.mensagem = `ZIP generated with ${this.numeroPaginas} PDF file(s).`;
     } catch (e) {
       console.error(e);
-      this.mensagem = 'Erro ao separar as páginas.';
+      this.mensagem = 'Error splitting the pages.';
       this.erro = true;
     } finally {
       this.processandoPdf = false;
@@ -118,17 +118,17 @@ export class SeparadorPdfComponent {
             blob = await this.canvasParaJpgBlob(canvas);
           }
 
-          zip.file(`pagina-${String(i).padStart(3, '0')}.jpg`, blob);
+          zip.file(`page-${String(i).padStart(3, '0')}.jpg`, blob);
         }
 
         return zip.generateAsync({ type: 'blob' });
       });
 
-      this.download(zipBlob, 'paginas-jpg.zip');
-      this.mensagem = `ZIP gerado com ${this.numeroPaginas} imagem(ns) JPG.`;
+      this.download(zipBlob, 'jpg-pages.zip');
+      this.mensagem = `ZIP generated with ${this.numeroPaginas} JPG image(s).`;
     } catch (e) {
       console.error(e);
-      this.mensagem = 'Erro ao converter as páginas para JPG.';
+      this.mensagem = 'Error converting pages to JPG.';
       this.erro = true;
     } finally {
       this.processandoJpg = false;
@@ -155,7 +155,7 @@ export class SeparadorPdfComponent {
   private canvasParaJpgBlob(canvas: HTMLCanvasElement): Promise<Blob> {
     return new Promise((resolve, reject) => {
       canvas.toBlob(
-        blob => blob ? resolve(blob) : reject(new Error('Falha ao gerar JPG')),
+        blob => blob ? resolve(blob) : reject(new Error('Failed to generate JPG')),
         'image/jpeg',
         0.92
       );

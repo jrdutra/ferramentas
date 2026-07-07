@@ -20,7 +20,7 @@ export class UrlcodecComponent {
   constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Codec de URL");
+    this.dataService.setTituloAplicacao("URL Codec");
   }
 
   codificarUrl(){

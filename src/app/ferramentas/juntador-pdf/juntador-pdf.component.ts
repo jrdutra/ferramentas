@@ -43,7 +43,7 @@ export class JuntadorPdfComponent {
   ) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Juntador de PDFs e Imagens');
+    this.dataService.setTituloAplicacao('PDF & Image Merger');
   }
 
   carregarArquivos(event: Event): void {
@@ -112,11 +112,11 @@ export class JuntadorPdfComponent {
       }
 
       const pdfBytes = await pdfFinal.save();
-      this.download(new Blob([pdfBytes], { type: 'application/pdf' }), 'documento-juntado.pdf');
-      this.mensagem = `PDF gerado com sucesso! (${this.arquivos.length} arquivo(s) juntado(s))`;
+      this.download(new Blob([pdfBytes], { type: 'application/pdf' }), 'merged-document.pdf');
+      this.mensagem = `PDF generated successfully! (${this.arquivos.length} file(s) merged)`;
     } catch (e) {
       console.error(e);
-      this.mensagem = 'Erro ao processar os arquivos. Verifique se os PDFs não estão protegidos.';
+      this.mensagem = 'Error processing files. Check whether the PDFs are protected.';
       this.erro = true;
     } finally {
       this.processando = false;
@@ -186,15 +186,15 @@ export class JuntadorPdfComponent {
         }
 
         return new Promise<Blob>((resolve, reject) => {
-          final.toBlob(b => b ? resolve(b) : reject(new Error('Falha ao gerar blob')), 'image/jpeg', 0.92);
+          final.toBlob(b => b ? resolve(b) : reject(new Error('Failed to generate blob')), 'image/jpeg', 0.92);
         });
       });
 
-      this.download(blob, 'imagens-juntadas.jpg');
-      this.mensagem = `Imagem gerada com sucesso!`;
+      this.download(blob, 'merged-images.jpg');
+      this.mensagem = `Image generated successfully!`;
     } catch (e) {
       console.error(e);
-      this.mensagem = 'Erro ao gerar a imagem.';
+      this.mensagem = 'Error generating the image.';
       this.erro = true;
     } finally {
       this.processandoImg = false;
@@ -214,7 +214,7 @@ export class JuntadorPdfComponent {
         URL.revokeObjectURL(url);
         resolve(canvas);
       };
-      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Imagem inválida')); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Invalid image')); };
       img.src = url;
     });
   }
@@ -237,11 +237,11 @@ export class JuntadorPdfComponent {
         canvas.getContext('2d')!.drawImage(img, 0, 0);
         canvas.toBlob(async (blob) => {
           URL.revokeObjectURL(url);
-          if (!blob) { reject(new Error('Falha na conversão da imagem')); return; }
+          if (!blob) { reject(new Error('Image conversion failed')); return; }
           try { resolve(await pdfDoc.embedJpg(await blob.arrayBuffer())); } catch (e) { reject(e); }
         }, 'image/jpeg', 0.95);
       };
-      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Imagem inválida')); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Invalid image')); };
       img.src = url;
     });
   }

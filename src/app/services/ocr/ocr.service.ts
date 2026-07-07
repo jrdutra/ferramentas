@@ -13,7 +13,7 @@ export class OcrService {
     onProgresso?: (porcentagem: number) => void
   ): Promise<string> {
     if (!isPlatformBrowser(this.platformId)) {
-      throw new Error('OCR só pode ser executado no navegador.');
+      throw new Error('OCR can only run in the browser.');
     }
 
     const { createWorker } = await import('tesseract.js');

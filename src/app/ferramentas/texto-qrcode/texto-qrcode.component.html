@@ -2,16 +2,16 @@
     <section class="painel-controles">
         <div class="campos-qrcode">
             <mat-form-field appearance="outline" class="campo-qrcode">
-                <mat-label>Texto para conversao em QRCode</mat-label>
+                <mat-label>Text to convert into QR Code</mat-label>
                 <input [(ngModel)]="texto" (ngModelChange)="agendarRenderizacao()" matInput
-                    placeholder="URL, texto ou codigo para gerar">
+                    placeholder="URL, text or code to generate">
                 <mat-icon matSuffix>abc</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="campo-qrcode">
-                <mat-label>Titulo do QRCode</mat-label>
+                <mat-label>QR Code title</mat-label>
                 <input [(ngModel)]="tituloQrCode" (ngModelChange)="agendarRenderizacao()" matInput
-                    placeholder="Ex.: Cardapio, Pix, Convite">
+                    placeholder="E.g. Menu, Payment, Invitation">
                 <mat-icon matSuffix>title</mat-icon>
             </mat-form-field>
         </div>
@@ -24,8 +24,8 @@
                             <mat-icon>aspect_ratio</mat-icon>
                         </span>
                         <span>
-                            <label id="tamanho-label" for="tamanho-qrcode">Tamanho</label>
-                            <small>Resolução do arquivo final</small>
+                            <label id="tamanho-label" for="tamanho-qrcode">Size</label>
+                            <small>Final file resolution</small>
                         </span>
                     </div>
                     <output class="controle-tamanho-valor" for="tamanho-qrcode" aria-live="polite">
@@ -50,8 +50,8 @@
                             <mat-icon>format_size</mat-icon>
                         </span>
                         <span>
-                            <label id="tamanho-texto-label" for="tamanho-texto">Tamanho do texto</label>
-                            <small>Ajuste o título do QRCode</small>
+                            <label id="tamanho-texto-label" for="tamanho-texto">Text size</label>
+                            <small>Adjust the QR Code title</small>
                         </span>
                     </div>
                     <output class="controle-tamanho-valor" for="tamanho-texto" aria-live="polite">
@@ -76,8 +76,8 @@
                             <mat-icon>photo_size_select_large</mat-icon>
                         </span>
                         <span>
-                            <label id="tamanho-logo-label" for="tamanho-logo">Tamanho do logotipo</label>
-                            <small>Redimensione a proporção</small>
+                            <label id="tamanho-logo-label" for="tamanho-logo">Logo size</label>
+                            <small>Resize the proportion</small>
                         </span>
                     </div>
                     <output class="controle-tamanho-valor" for="tamanho-logo" aria-live="polite">
@@ -89,7 +89,7 @@
                     <mat-slider class="slide-container" min="25" max="200" step="5" discrete>
                         <input id="tamanho-logo" matSliderThumb [(ngModel)]="tamanhoLogotipo"
                             (ngModelChange)="agendarRenderizacao()" aria-labelledby="tamanho-logo-label"
-                            [attr.aria-valuetext]="tamanhoLogotipo + ' por cento'">
+                            [attr.aria-valuetext]="tamanhoLogotipo + ' percent'">
                     </mat-slider>
                     <span aria-hidden="true">200</span>
                 </div>
@@ -97,13 +97,13 @@
         </div>
 
         <div class="secao-estilos">
-            <h3>Estilo do QRCode</h3>
+            <h3>QR Code Style</h3>
             <div class="grade-estilos">
                 <button class="botao-estilo botao-criar-estilo" type="button" (click)="abrirModalEstilo()"
-                    aria-label="Criar um novo estilo de QRCode">
+                    aria-label="Create a new QR Code style">
                     <mat-icon>add</mat-icon>
-                    <strong>Criar estilo</strong>
-                    <span>Monte e salve seu próprio visual.</span>
+                    <strong>Create style</strong>
+                    <span>Build and save your own look.</span>
                 </button>
                 <div class="botao-estilo" role="button" tabindex="0" *ngFor="let estilo of estilos"
                     [class.estilo-selecionado]="estilo === estiloSelecionado"
@@ -112,11 +112,11 @@
                     <div class="botao-estilo-controles">
                         <button #menuTrigger="matMenuTrigger" mat-icon-button class="botao-menu-estilo" type="button"
                             [matMenuTriggerFor]="menuEstilo"
-                            (click)="$event.stopPropagation()" aria-label="Personalizar estilo do QRCode">
+                            (click)="$event.stopPropagation()" aria-label="Customize QR Code style">
                             <mat-icon>tune</mat-icon>
                         </button>
                         <button *ngIf="estilo.personalizado" mat-icon-button class="botao-excluir-estilo" type="button"
-                            (click)="excluirEstiloPersonalizado(estilo, $event)" aria-label="Excluir estilo personalizado">
+                            (click)="excluirEstiloPersonalizado(estilo, $event)" aria-label="Delete custom style">
                             <mat-icon>close</mat-icon>
                         </button>
                     </div>
@@ -131,18 +131,18 @@
                             <!-- Visibilidade -->
                             <div class="menu-grupo">
                                 <span class="menu-grupo-titulo">
-                                    <mat-icon>visibility</mat-icon>Visibilidade
+                                    <mat-icon>visibility</mat-icon>Visibility
                                 </span>
                                 <label class="controle-checkbox">
-                                    Título
+                                    Title
                                     <input type="checkbox" [(ngModel)]="estilo.exibirTitulo" (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
                                 <label class="controle-checkbox">
-                                    Retângulo
+                                    Rectangle
                                     <input type="checkbox" [(ngModel)]="estilo.exibirRetangulo" (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
                                 <label class="controle-checkbox">
-                                    Logotipo
+                                    Logo
                                     <input type="checkbox" [(ngModel)]="estilo.exibirLogo" (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
                             </div>
@@ -153,22 +153,22 @@
                                     <mat-icon>qr_code_2</mat-icon>QR Code
                                 </span>
                                 <label>
-                                    Cor dos módulos
+                                    Module color
                                     <input type="color" [(ngModel)]="estilo.colorDark" (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
                                 <label>
-                                    Cor de fundo
+                                    Background color
                                     <input type="color" [(ngModel)]="estilo.colorLight" (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
                                 <label>
-                                    Formato
+                                    Shape
                                     <select [(ngModel)]="estilo.formatoModulo" (ngModelChange)="atualizarEstilo(estilo)">
-                                        <option value="quadrado">Quadrados</option>
-                                        <option value="redondo">Bolinhas</option>
+                                        <option value="quadrado">Squares</option>
+                                        <option value="redondo">Dots</option>
                                     </select>
                                 </label>
                                 <label class="controle-checkbox">
-                                    Cantos arredondados
+                                    Rounded corners
                                     <input type="checkbox" [(ngModel)]="estilo.cantosQrCodeArredondados"
                                         (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
@@ -177,15 +177,15 @@
                             <!-- Fundo -->
                             <div class="menu-grupo">
                                 <span class="menu-grupo-titulo">
-                                    <mat-icon>wallpaper</mat-icon>Fundo
+                                    <mat-icon>wallpaper</mat-icon>Background
                                 </span>
                                 <label>
-                                    Cor de fundo
+                                    Background color
                                     <input type="color" [(ngModel)]="estilo.corFundoRetangulo"
                                         (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
                                 <label class="controle-checkbox">
-                                    Cantos arredondados
+                                    Rounded corners
                                     <input type="checkbox" [(ngModel)]="estilo.cantosArredondados"
                                         (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
@@ -194,27 +194,27 @@
                             <!-- Borda -->
                             <div class="menu-grupo">
                                 <span class="menu-grupo-titulo">
-                                    <mat-icon>border_outer</mat-icon>Borda
+                                    <mat-icon>border_outer</mat-icon>Border
                                 </span>
                                 <label class="controle-checkbox">
-                                    Exibir bordas
+                                    Show borders
                                     <input type="checkbox" [(ngModel)]="estilo.exibirBorda" (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
                                 <label>
-                                    Quantidade
+                                    Quantity
                                     <select [(ngModel)]="estilo.quantidadeBordas" (ngModelChange)="atualizarEstilo(estilo)"
                                         [disabled]="!estilo.exibirBorda">
-                                        <option [ngValue]="1">Uma</option>
-                                        <option [ngValue]="2">Duas</option>
+                                        <option [ngValue]="1">One</option>
+                                        <option [ngValue]="2">Two</option>
                                     </select>
                                 </label>
                                 <label>
-                                    Cor externa
+                                    Outer color
                                     <input type="color" [(ngModel)]="estilo.corBorda" (ngModelChange)="atualizarEstilo(estilo)"
                                         [disabled]="!estilo.exibirBorda">
                                 </label>
                                 <label>
-                                    Cor interna
+                                    Inner color
                                     <input type="color" [(ngModel)]="estilo.corBordaSecundaria" (ngModelChange)="atualizarEstilo(estilo)"
                                         [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1">
                                 </label>
@@ -223,25 +223,25 @@
                             <!-- Iluminação -->
                             <div class="menu-grupo">
                                 <span class="menu-grupo-titulo">
-                                    <mat-icon>flare</mat-icon>Iluminação
+                                    <mat-icon>flare</mat-icon>Glow
                                 </span>
                                 <label class="controle-checkbox">
-                                    Principal
+                                    Primary
                                     <input type="checkbox" [(ngModel)]="estilo.iluminarBordaPrincipal" (ngModelChange)="atualizarEstilo(estilo)"
                                         [disabled]="!estilo.exibirBorda">
                                 </label>
                                 <label>
-                                    Cor principal
+                                    Primary color
                                     <input type="color" [(ngModel)]="estilo.glow" (ngModelChange)="atualizarEstilo(estilo)"
                                         [disabled]="!estilo.exibirBorda || !estilo.iluminarBordaPrincipal">
                                 </label>
                                 <label class="controle-checkbox">
-                                    Secundária
+                                    Secondary
                                     <input type="checkbox" [(ngModel)]="estilo.iluminarBordaSecundaria" (ngModelChange)="atualizarEstilo(estilo)"
                                         [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1">
                                 </label>
                                 <label>
-                                    Cor secundária
+                                    Secondary color
                                     <input type="color" [(ngModel)]="estilo.glowSecundario" (ngModelChange)="atualizarEstilo(estilo)"
                                         [disabled]="!estilo.exibirBorda || estilo.quantidadeBordas === 1 || !estilo.iluminarBordaSecundaria">
                                 </label>
@@ -250,14 +250,14 @@
                             <!-- Título -->
                             <div class="menu-grupo">
                                 <span class="menu-grupo-titulo">
-                                    <mat-icon>title</mat-icon>Título
+                                    <mat-icon>title</mat-icon>Title
                                 </span>
                                 <label>
-                                    Cor do texto
+                                    Text color
                                     <input type="color" [(ngModel)]="estilo.textoTitulo" (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
                                 <label class="controle-checkbox">
-                                    Iluminar
+                                    Glow
                                     <input type="checkbox" [(ngModel)]="estilo.iluminarTitulo"
                                         (ngModelChange)="atualizarEstilo(estilo)">
                                 </label>
@@ -268,7 +268,7 @@
                                 <button mat-raised-button color="primary" type="button"
                                     (click)="abrirModalSalvarEstilo(estilo); menuTrigger.closeMenu()">
                                     <mat-icon>save</mat-icon>
-                                    Salvar estilo
+                                    Save style
                                 </button>
                             </footer>
                         </div>
@@ -296,11 +296,11 @@
             <div class="botoes-preview">
                 <button mat-raised-button color="primary" type="button" (click)="logoInput.click()">
                     <mat-icon>upload</mat-icon>
-                    {{ nomeLogotipo ? 'Trocar logotipo' : 'Adicionar logotipo' }}
+                    {{ nomeLogotipo ? 'Change logo' : 'Add logo' }}
                 </button>
                 <button mat-raised-button color="primary" type="button" (click)="baixarPng()">
                     <mat-icon>download</mat-icon>
-                    Baixar PNG
+                    Download PNG
                 </button>
             </div>
         </div>
@@ -311,26 +311,26 @@
     (mousedown)="fecharModalPeloFundo($event)">
     <section class="modal-estilo modal-janela" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-estilo">
 
-        <!-- Barra de título estilo janela -->
+        <!-- Window-style title bar -->
         <header class="modal-barra-titulo">
             <div class="modal-barra-controles">
-                <span class="janela-dot dot-fechar" (click)="fecharModalEstilo()" title="Fechar"></span>
+                <span class="janela-dot dot-fechar" (click)="fecharModalEstilo()" title="Close"></span>
                 <span class="janela-dot dot-minimizar"></span>
                 <span class="janela-dot dot-expandir"></span>
             </div>
-            <span id="titulo-modal-estilo" class="modal-barra-nome">Criar estilo personalizado</span>
+            <span id="titulo-modal-estilo" class="modal-barra-nome">Create custom style</span>
             <div class="modal-barra-espaco"></div>
         </header>
 
         <!-- Corpo: sidebar + conteúdo -->
         <div class="modal-janela-corpo">
 
-            <!-- Sidebar de navegação -->
-            <nav class="modal-nav" aria-label="Seções do estilo">
+            <!-- Navigation sidebar -->
+            <nav class="modal-nav" aria-label="Style sections">
                 <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'geral'"
                     type="button" (click)="secaoModalAtiva = 'geral'">
                     <mat-icon>tune</mat-icon>
-                    <span>Geral</span>
+                    <span>General</span>
                 </button>
                 <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'qrcode'"
                     type="button" (click)="secaoModalAtiva = 'qrcode'">
@@ -340,107 +340,107 @@
                 <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'fundo'"
                     type="button" (click)="secaoModalAtiva = 'fundo'">
                     <mat-icon>wallpaper</mat-icon>
-                    <span>Fundo</span>
+                    <span>Background</span>
                 </button>
                 <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'borda'"
                     type="button" (click)="secaoModalAtiva = 'borda'">
                     <mat-icon>border_outer</mat-icon>
-                    <span>Borda</span>
+                    <span>Border</span>
                 </button>
                 <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'iluminacao'"
                     type="button" (click)="secaoModalAtiva = 'iluminacao'">
                     <mat-icon>flare</mat-icon>
-                    <span>Iluminação</span>
+                    <span>Glow</span>
                 </button>
                 <button class="modal-nav-item" [class.ativo]="secaoModalAtiva === 'titulo'"
                     type="button" (click)="secaoModalAtiva = 'titulo'">
                     <mat-icon>title</mat-icon>
-                    <span>Título</span>
+                    <span>Title</span>
                 </button>
             </nav>
 
-            <!-- Área de conteúdo da seção -->
+            <!-- Section content area -->
             <div class="modal-secao">
 
                 <!-- Geral -->
                 <div *ngIf="secaoModalAtiva === 'geral'" class="modal-grupo-campos menu-estilo-conteudo">
-                    <p class="modal-secao-descricao">Configure o nome e o que será exibido no QRCode.</p>
+                    <p class="modal-secao-descricao">Configure the name and what will be shown in the QR Code.</p>
                     <label class="campo-nome-estilo">
-                        Nome do estilo
+                        Style name
                         <input type="text" [(ngModel)]="novoEstilo.nome" maxlength="40"
-                            placeholder="Ex.: Meu estilo roxo" (keydown.enter)="salvarNovoEstilo()">
+                            placeholder="E.g. My purple style" (keydown.enter)="salvarNovoEstilo()">
                     </label>
                     <label class="controle-checkbox">
-                        Exibir título
+                        Show title
                         <input type="checkbox" [(ngModel)]="novoEstilo.exibirTitulo">
                     </label>
                     <label class="controle-checkbox">
-                        Exibir retângulo
+                        Show rectangle
                         <input type="checkbox" [(ngModel)]="novoEstilo.exibirRetangulo">
                     </label>
                     <label class="controle-checkbox">
-                        Exibir logotipo
+                        Show logo
                         <input type="checkbox" [(ngModel)]="novoEstilo.exibirLogo">
                     </label>
                 </div>
 
                 <!-- QR Code -->
                 <div *ngIf="secaoModalAtiva === 'qrcode'" class="modal-grupo-campos menu-estilo-conteudo">
-                    <p class="modal-secao-descricao">Defina as cores e o formato dos módulos do QRCode.</p>
+                    <p class="modal-secao-descricao">Set the colors and shape of the QR Code modules.</p>
                     <label>
-                        Cor dos módulos (escura)
+                        Module color (dark)
                         <input type="color" [(ngModel)]="novoEstilo.colorDark">
                     </label>
                     <label>
-                        Cor de fundo do QR (clara)
+                        QR background color (light)
                         <input type="color" [(ngModel)]="novoEstilo.colorLight">
                     </label>
                     <label>
-                        Formato dos módulos
+                        Module shape
                         <select [(ngModel)]="novoEstilo.formatoModulo">
-                            <option value="quadrado">Quadrados</option>
-                            <option value="redondo">Bolinhas</option>
+                            <option value="quadrado">Squares</option>
+                            <option value="redondo">Dots</option>
                         </select>
                     </label>
                     <label class="controle-checkbox">
-                        Cantos do QRCode arredondados
+                        Rounded QR Code corners
                         <input type="checkbox" [(ngModel)]="novoEstilo.cantosQrCodeArredondados">
                     </label>
                 </div>
 
                 <!-- Fundo -->
                 <div *ngIf="secaoModalAtiva === 'fundo'" class="modal-grupo-campos menu-estilo-conteudo">
-                    <p class="modal-secao-descricao">Configure o retângulo de fundo do cartão.</p>
+                    <p class="modal-secao-descricao">Configure the card background rectangle.</p>
                     <label>
-                        Cor de preenchimento
+                        Fill color
                         <input type="color" [(ngModel)]="novoEstilo.corFundoRetangulo">
                     </label>
                     <label class="controle-checkbox">
-                        Cantos arredondados
+                        Rounded corners
                         <input type="checkbox" [(ngModel)]="novoEstilo.cantosArredondados">
                     </label>
                 </div>
 
                 <!-- Borda -->
                 <div *ngIf="secaoModalAtiva === 'borda'" class="modal-grupo-campos menu-estilo-conteudo">
-                    <p class="modal-secao-descricao">Adicione uma ou duas bordas ao redor do cartão.</p>
+                    <p class="modal-secao-descricao">Add one or two borders around the card.</p>
                     <label class="controle-checkbox">
-                        Exibir bordas
+                        Show borders
                         <input type="checkbox" [(ngModel)]="novoEstilo.exibirBorda">
                     </label>
                     <label>
-                        Quantidade de bordas
+                        Number of borders
                         <select [(ngModel)]="novoEstilo.quantidadeBordas" [disabled]="!novoEstilo.exibirBorda">
-                            <option [ngValue]="1">Uma borda</option>
-                            <option [ngValue]="2">Duas bordas</option>
+                            <option [ngValue]="1">One border</option>
+                            <option [ngValue]="2">Two borders</option>
                         </select>
                     </label>
                     <label>
-                        Cor da borda externa
+                        Outer border color
                         <input type="color" [(ngModel)]="novoEstilo.corBorda" [disabled]="!novoEstilo.exibirBorda">
                     </label>
                     <label>
-                        Cor da borda interna
+                        Inner border color
                         <input type="color" [(ngModel)]="novoEstilo.corBordaSecundaria"
                             [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1">
                     </label>
@@ -448,24 +448,24 @@
 
                 <!-- Iluminação -->
                 <div *ngIf="secaoModalAtiva === 'iluminacao'" class="modal-grupo-campos menu-estilo-conteudo">
-                    <p class="modal-secao-descricao">Controle o brilho e a cor ao redor das bordas.</p>
+                    <p class="modal-secao-descricao">Control the glow and color around the borders.</p>
                     <label class="controle-checkbox">
-                        Iluminação principal
+                        Primary glow
                         <input type="checkbox" [(ngModel)]="novoEstilo.iluminarBordaPrincipal"
                             [disabled]="!novoEstilo.exibirBorda">
                     </label>
                     <label>
-                        Cor da iluminação principal
+                        Primary glow color
                         <input type="color" [(ngModel)]="novoEstilo.glow"
                             [disabled]="!novoEstilo.exibirBorda || !novoEstilo.iluminarBordaPrincipal">
                     </label>
                     <label class="controle-checkbox">
-                        Iluminação secundária
+                        Secondary glow
                         <input type="checkbox" [(ngModel)]="novoEstilo.iluminarBordaSecundaria"
                             [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1">
                     </label>
                     <label>
-                        Cor da iluminação secundária
+                        Secondary glow color
                         <input type="color" [(ngModel)]="novoEstilo.glowSecundario"
                             [disabled]="!novoEstilo.exibirBorda || novoEstilo.quantidadeBordas === 1 || !novoEstilo.iluminarBordaSecundaria">
                     </label>
@@ -473,13 +473,13 @@
 
                 <!-- Título -->
                 <div *ngIf="secaoModalAtiva === 'titulo'" class="modal-grupo-campos menu-estilo-conteudo">
-                    <p class="modal-secao-descricao">Configure a aparência do título do QRCode.</p>
+                    <p class="modal-secao-descricao">Configure the appearance of the QR Code title.</p>
                     <label>
-                        Cor do texto do título
+                        Title text color
                         <input type="color" [(ngModel)]="novoEstilo.textoTitulo">
                     </label>
                     <label class="controle-checkbox">
-                        Iluminar título
+                        Add title glow
                         <input type="checkbox" [(ngModel)]="novoEstilo.iluminarTitulo">
                     </label>
                 </div>
@@ -488,11 +488,11 @@
         </div>
 
         <footer class="modal-estilo-acoes">
-            <button mat-button type="button" (click)="fecharModalEstilo()">Cancelar</button>
+            <button mat-button type="button" (click)="fecharModalEstilo()">Cancel</button>
             <button mat-raised-button color="primary" type="button" (click)="salvarNovoEstilo()"
                 [disabled]="!novoEstilo.nome.trim()">
                 <mat-icon>save</mat-icon>
-                Salvar estilo
+                Save style
             </button>
         </footer>
     </section>
@@ -504,42 +504,41 @@
         aria-labelledby="titulo-modal-salvar-estilo">
         <header class="modal-estilo-cabecalho">
             <div>
-                <span class="modal-estilo-etiqueta">Salvar como novo</span>
-                <h2 id="titulo-modal-salvar-estilo">Nome do estilo</h2>
-                <p>A configuração atual será salva como um novo estilo.</p>
+                <span class="modal-estilo-etiqueta">Save as new</span>
+                <h2 id="titulo-modal-salvar-estilo">Style name</h2>
+                <p>The current configuration will be saved as a new style.</p>
             </div>
-            <button mat-icon-button type="button" (click)="fecharModalSalvarEstilo()" aria-label="Fechar modal">
+            <button mat-icon-button type="button" (click)="fecharModalSalvarEstilo()" aria-label="Close modal">
                 <mat-icon>close</mat-icon>
             </button>
         </header>
 
         <div class="modal-nome-estilo-conteudo menu-estilo-conteudo">
             <label class="campo-nome-estilo">
-                Nome do estilo
+                Style name
                 <input type="text" [(ngModel)]="nomeNovoEstilo" maxlength="40"
-                    placeholder="Ex.: Minha versão neon" (keydown.enter)="salvarCopiaEstilo()" autofocus>
+                    placeholder="E.g. My neon version" (keydown.enter)="salvarCopiaEstilo()" autofocus>
             </label>
         </div>
 
         <footer class="modal-estilo-acoes">
-            <button mat-button type="button" (click)="fecharModalSalvarEstilo()">Cancelar</button>
+            <button mat-button type="button" (click)="fecharModalSalvarEstilo()">Cancel</button>
             <button mat-raised-button color="primary" type="button" (click)="salvarCopiaEstilo()"
                 [disabled]="!nomeNovoEstilo.trim()">
                 <mat-icon>save</mat-icon>
-                Salvar
+                Save
             </button>
         </footer>
     </section>
 </div>
 
 <div class="instrucoes-qrcode">
-    <h2>Instrucoes</h2>
-    <h4 class="sublinhado">Como gerar um QrCode a partir de um texto/URL</h4>
-    <p>Basta digitar o texto na caixa indicada, escolher um titulo, adicionar um logotipo se desejar e selecionar um
-        estilo. O QRCode atualiza automaticamente.</p>
-    <h2>Um Pouco Sobre o QrCode</h2>
-    <p>O QR Code e um codigo bidimensional criado para armazenar informacoes de forma compacta e acessivel por
-        leitores ou cameras de smartphones.</p>
-    <p>Ele pode compartilhar links, contatos, informacoes de produtos, pagamentos, ingressos, menus, cupons e muito
-        mais.</p>
+    <h2>Instructions</h2>
+    <h4 class="sublinhado">How to generate a QR Code from text or a URL</h4>
+    <p>Type the text in the indicated box, choose a title, add a logo if desired and select a style. The QR Code
+        updates automatically.</p>
+    <h2>A Bit About QR Code</h2>
+    <p>A QR Code is a two-dimensional code created to store information compactly and make it accessible to readers
+        or smartphone cameras.</p>
+    <p>It can share links, contacts, product information, payments, tickets, menus, coupons and much more.</p>
 </div>

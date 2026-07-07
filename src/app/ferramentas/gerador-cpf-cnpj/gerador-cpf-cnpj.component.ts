@@ -29,7 +29,7 @@ export class GeradorCpfCnpjComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Gerador de CPF e CNPJ');
+    this.dataService.setTituloAplicacao('CPF & CNPJ Generator');
     this.gerar();
   }
 

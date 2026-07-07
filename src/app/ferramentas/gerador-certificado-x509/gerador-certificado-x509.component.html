@@ -2,17 +2,17 @@
     <div class="gerador-acoes">
         <button mat-raised-button color="primary" (click)="gerarAleatoriamente()" [disabled]="gerando">
             <mat-icon>casino</mat-icon>
-            Gerar Aleatoriamente
+            Generate Randomly
         </button>
         <button mat-raised-button color="primary" (click)="abrirModal()" [disabled]="gerando">
             <mat-icon>edit_note</mat-icon>
-            Preencher Manualmente
+            Fill Manually
         </button>
     </div>
 
     <div *ngIf="gerando" class="gerador-loading">
         <mat-spinner diameter="36"></mat-spinner>
-        <span>Gerando certificado e chaves RSA...</span>
+        <span>Generating certificate and RSA keys...</span>
     </div>
 
     <div *ngIf="certificado && !gerando" class="certificado-resultado">
@@ -20,78 +20,78 @@
             <section class="coluna-downloads">
                 <h3>Downloads</h3>
                 <mat-form-field appearance="outline" class="campo-senha-pfx">
-                    <mat-label>Senha do PFX/P12 (opcional)</mat-label>
+                    <mat-label>PFX/P12 password (optional)</mat-label>
                     <input matInput [(ngModel)]="senhaPfx" type="password">
                 </mat-form-field>
                 <div class="downloads-grid">
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarPfx()">
                         <mat-icon>download</mat-icon>
-                        Certificado .pfx
+                        Certificate .pfx
                     </button>
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarP12()">
                         <mat-icon>download</mat-icon>
-                        Certificado .p12
+                        Certificate .p12
                     </button>
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarCer()">
                         <mat-icon>download</mat-icon>
-                        Certificado .cer
+                        Certificate .cer
                     </button>
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarCertPem()">
                         <mat-icon>download</mat-icon>
-                        Certificado .pem
+                        Certificate .pem
                     </button>
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePublicaPem()">
                         <mat-icon>download</mat-icon>
-                        Chave Publica .pem
+                        Public Key .pem
                     </button>
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePrivadaPem()">
                         <mat-icon>download</mat-icon>
-                        Chave Privada RSA .pem
+                        RSA Private Key .pem
                     </button>
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePrivadaPkcs8Pem()">
                         <mat-icon>download</mat-icon>
-                        Chave Privada PKCS8 .pem
+                        PKCS8 Private Key .pem
                     </button>
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePublicaJwk()">
                         <mat-icon>download</mat-icon>
-                        Chave Publica .jwk
+                        Public Key .jwk
                     </button>
                     <button mat-raised-button color="primary" class="btn-sobrio" (click)="baixarChavePrivadaJwk()">
                         <mat-icon>download</mat-icon>
-                        Chave Privada .jwk
+                        Private Key .jwk
                     </button>
                     <button mat-raised-button color="primary" class="botao-baixar-tudo" (click)="baixarTudo()">
                         <mat-icon>folder_zip</mat-icon>
-                        Baixar Tudo (.zip)
+                        Download All (.zip)
                     </button>
                 </div>
             </section>
 
             <section class="coluna-info">
-                <h3>Certificado Gerado</h3>
+                <h3>Generated Certificate</h3>
                 <div class="certificado-info-grid">
                     <div class="certificado-info-item">
                         <span class="info-label">Common Name (CN)</span>
                         <span class="info-valor">{{ certificado.dados.commonName }}</span>
                     </div>
                     <div class="certificado-info-item" *ngIf="certificado.dados.organization">
-                        <span class="info-label">Organizacao (O)</span>
+                        <span class="info-label">Organization (O)</span>
                         <span class="info-valor">{{ certificado.dados.organization }}</span>
                     </div>
                     <div class="certificado-info-item" *ngIf="certificado.dados.organizationalUnit">
-                        <span class="info-label">Unidade (OU)</span>
+                        <span class="info-label">Unit (OU)</span>
                         <span class="info-valor">{{ certificado.dados.organizationalUnit }}</span>
                     </div>
                     <div class="certificado-info-item" *ngIf="certificado.dados.country">
-                        <span class="info-label">Pais (C)</span>
+                        <span class="info-label">Country (C)</span>
                         <span class="info-valor">{{ certificado.dados.country }}</span>
                     </div>
                     <div class="certificado-info-item" *ngIf="certificado.dados.state">
-                        <span class="info-label">Estado (ST)</span>
+                        <span class="info-label">State (ST)</span>
                         <span class="info-valor">{{ certificado.dados.state }}</span>
                     </div>
                     <div class="certificado-info-item" *ngIf="certificado.dados.locality">
-                        <span class="info-label">Localidade (L)</span>
+                        <span class="info-label">Locality (L)</span>
                         <span class="info-valor">{{ certificado.dados.locality }}</span>
                     </div>
                     <div class="certificado-info-item" *ngIf="certificado.dados.email">
@@ -99,11 +99,11 @@
                         <span class="info-valor">{{ certificado.dados.email }}</span>
                     </div>
                     <div class="certificado-info-item">
-                        <span class="info-label">Validade</span>
-                        <span class="info-valor">{{ certificado.dados.validadeDias }} dias</span>
+                        <span class="info-label">Validity</span>
+                        <span class="info-valor">{{ certificado.dados.validadeDias }} days</span>
                     </div>
                     <div class="certificado-info-item">
-                        <span class="info-label">Tamanho da Chave</span>
+                        <span class="info-label">Key Size</span>
                         <span class="info-valor">{{ certificado.dados.tamanhoBits }} bits</span>
                     </div>
                 </div>
@@ -113,171 +113,172 @@
 </div>
 
 <div class="instrucoes">
-    <h2>Instruções</h2>
+    <h2>Instructions</h2>
 
     <p>
-        Esta ferramenta gera um par de chaves RSA e um certificado X.509 autoassinado diretamente no navegador,
-        sem enviar dados ou chaves para servidores externos. Depois da geração, o certificado e as chaves podem ser
-        baixados nos formatos mais comuns.
+        This tool generates an RSA key pair and a self-signed X.509 certificate directly in the browser,
+        without sending data or keys to external servers. After generation, the certificate and keys can be
+        downloaded in the most common formats.
     </p>
 
     <div class="instrucoes-aviso">
-        <strong>Importante:</strong> o certificado gerado é autoassinado. Ele é indicado para desenvolvimento,
-        testes, redes internas e aprendizado, mas não é reconhecido automaticamente pelos navegadores como um
-        certificado público confiável.
+        <strong>Important:</strong> the generated certificate is self-signed. It is suitable for development,
+        testing, internal networks and learning, but browsers do not automatically recognize it as a trusted
+        public certificate.
     </div>
 
-    <h2>Como gerar o certificado</h2>
+    <h2>How to generate the certificate</h2>
 
-    <h4 class="sublinhado">Gerar Aleatoriamente</h4>
+    <h4 class="sublinhado">Generate Randomly</h4>
     <p>
-        Gera o certificado imediatamente com dados fictícios, validade de 365 dias e chave RSA de 2048 bits.
-        É a opção mais rápida para testes nos quais os dados de identidade não precisam ser personalizados.
+        Generates the certificate immediately with fictional data, 365-day validity and a 2048-bit RSA key.
+        This is the fastest option for tests where identity data does not need to be customized.
     </p>
 
-    <h4 class="sublinhado">Preencher Manualmente</h4>
+    <h4 class="sublinhado">Fill Manually</h4>
     <p>
-        Abre o formulário de personalização. Preencha os dados desejados e clique em
-        <strong>Gerar Certificado</strong>. O <strong>Common Name (CN)</strong> é obrigatório; os demais dados de
-        identidade são opcionais. Você também pode definir a validade e escolher uma chave RSA de 2048 ou 4096 bits.
+        Opens the customization form. Fill in the desired data and click
+        <strong>Generate Certificate</strong>. The <strong>Common Name (CN)</strong> is required; the other identity
+        fields are optional. You can also set the validity and choose a 2048- or 4096-bit RSA key.
     </p>
 
-    <h2>Campos do formulário manual</h2>
+    <h2>Manual form fields</h2>
 
     <h4 class="sublinhado">Common Name (CN) *</h4>
     <p>
-        Campo obrigatório que identifica o titular do certificado. Para um servidor, normalmente é o domínio ou
-        nome do host, como <em>api.empresa.com.br</em>. Nesta ferramenta, o CN também é incluído como nome DNS
-        alternativo do certificado.
+        Required field that identifies the certificate holder. For a server, this is usually the domain or host name,
+        such as <em>api.example.com</em>. In this tool, the CN is also included as an alternative DNS name in the
+        certificate.
     </p>
 
-    <h4 class="sublinhado">Organização (O)</h4>
+    <h4 class="sublinhado">Organization (O)</h4>
     <p>
-        Nome da empresa ou organização responsável pelo certificado. Exemplo: <em>Empresa Ltda.</em>
+        Name of the company or organization responsible for the certificate. Example: <em>Example Inc.</em>
     </p>
 
-    <h4 class="sublinhado">Unidade Organizacional (OU)</h4>
+    <h4 class="sublinhado">Organizational Unit (OU)</h4>
     <p>
-        Setor ou departamento dentro da organização. Exemplo: <em>Tecnologia da Informação</em>.
+        Sector or department inside the organization. Example: <em>Information Technology</em>.
     </p>
 
-    <h4 class="sublinhado">País (C)</h4>
+    <h4 class="sublinhado">Country (C)</h4>
     <p>
-        Código de duas letras do país segundo o padrão ISO 3166-1. Exemplo: <em>BR</em> para Brasil,
-        <em>US</em> para Estados Unidos.
+        Two-letter country code according to ISO 3166-1. Example: <em>BR</em> for Brazil,
+        <em>US</em> for United States.
     </p>
 
-    <h4 class="sublinhado">Estado (ST)</h4>
+    <h4 class="sublinhado">State (ST)</h4>
     <p>
-        Nome do estado ou província. Exemplo: <em>São Paulo</em>.
+        Name of the state or province. Example: <em>California</em>.
     </p>
 
-    <h4 class="sublinhado">Localidade (L)</h4>
+    <h4 class="sublinhado">Locality (L)</h4>
     <p>
-        Cidade onde a organização está localizada. Exemplo: <em>Campinas</em>.
+        City where the organization is located. Example: <em>San Francisco</em>.
     </p>
 
     <h4 class="sublinhado">Email</h4>
     <p>
-        Endereço de e-mail associado ao titular do certificado. Campo opcional.
+        Email address associated with the certificate holder. Optional field.
     </p>
 
-    <h4 class="sublinhado">Validade (dias)</h4>
+    <h4 class="sublinhado">Validity (days)</h4>
     <p>
-        Define por quantos dias o certificado será válido a partir da geração. A ferramenta aceita de 1 a 7300 dias,
-        com 365 dias como valor inicial.
+        Defines how many days the certificate will be valid after generation. The tool accepts 1 to 7300 days,
+        with 365 days as the initial value.
     </p>
 
-    <h4 class="sublinhado">Tamanho da Chave</h4>
+    <h4 class="sublinhado">Key Size</h4>
     <p>
-        <strong>2048 bits</strong> oferece boa segurança e geração mais rápida para a maioria dos testes.
-        <strong>4096 bits</strong> cria uma chave maior, mas leva mais tempo para gerar e processar.
+        <strong>2048 bits</strong> offers good security and faster generation for most tests.
+        <strong>4096 bits</strong> creates a larger key, but takes longer to generate and process.
     </p>
 
-    <h2>Botões e formatos de download</h2>
+    <h2>Download buttons and formats</h2>
     <p>
-        Após a geração, os botões de download aparecem junto aos dados do certificado. Cada botão exporta o mesmo
-        certificado ou o mesmo par de chaves em uma representação diferente.
+        After generation, the download buttons appear next to the certificate data. Each button exports the same
+        certificate or the same key pair in a different representation.
     </p>
 
-    <h4 class="sublinhado">Certificado .pfx e Certificado .p12</h4>
+    <h4 class="sublinhado">Certificate .pfx and Certificate .p12</h4>
     <p>
-        São duas extensões para o formato binário PKCS#12. Cada arquivo reúne o certificado e a chave privada em um
-        único pacote, útil para importação no Windows/IIS, navegadores, Java e outras plataformas. Os dois botões
-        geram o mesmo conteúdo, alterando apenas a extensão do arquivo.
+        These are two extensions for the PKCS#12 binary format. Each file bundles the certificate and private key in a
+        single package, useful for import into Windows/IIS, browsers, Java and other platforms. Both buttons generate
+        the same content, changing only the file extension.
     </p>
     <p>
-        Antes de baixar, preencha <strong>Senha do PFX/P12</strong> para proteger esses dois arquivos. Se o campo
-        ficar vazio, eles serão gerados sem senha.
-    </p>
-
-    <h4 class="sublinhado">Certificado .cer</h4>
-    <p>
-        Exporta somente o certificado público em formato binário DER. Não contém a chave privada e pode ser usado
-        para distribuir a identidade e a chave pública a sistemas que precisam validar assinaturas ou confiança.
+        Before downloading, fill in <strong>PFX/P12 password</strong> to protect these two files. If the field is
+        empty, they are generated without a password.
     </p>
 
-    <h4 class="sublinhado">Certificado .pem</h4>
+    <h4 class="sublinhado">Certificate .cer</h4>
     <p>
-        Exporta somente o certificado em texto Base64, entre os marcadores <em>BEGIN CERTIFICATE</em> e
-        <em>END CERTIFICATE</em>. É muito usado em servidores Linux, como Nginx e Apache, balanceadores e APIs.
+        Exports only the public certificate in binary DER format. It does not contain the private key and can be used
+        to distribute the identity and public key to systems that need to validate signatures or trust.
     </p>
 
-    <h4 class="sublinhado">Chave Pública .pem</h4>
+    <h4 class="sublinhado">Certificate .pem</h4>
     <p>
-        Exporta a parte pública da chave RSA em texto PEM. Ela pode ser compartilhada para verificar assinaturas ou
-        para criptografar dados destinados ao detentor da chave privada.
+        Exports only the certificate as Base64 text between the <em>BEGIN CERTIFICATE</em> and
+        <em>END CERTIFICATE</em> markers. It is widely used on Linux servers such as Nginx and Apache, load balancers
+        and APIs.
     </p>
 
-    <h4 class="sublinhado">Chave Privada RSA .pem</h4>
+    <h4 class="sublinhado">Public Key .pem</h4>
     <p>
-        Exporta a chave privada no formato tradicional PKCS#1, identificado pelo marcador
-        <em>BEGIN RSA PRIVATE KEY</em>. É comum em ferramentas e integrações baseadas em OpenSSL.
+        Exports the public part of the RSA key as PEM text. It can be shared to verify signatures or encrypt data
+        intended for the private key holder.
     </p>
 
-    <h4 class="sublinhado">Chave Privada PKCS8 .pem</h4>
+    <h4 class="sublinhado">RSA Private Key .pem</h4>
     <p>
-        Exporta a mesma chave privada no formato PKCS#8, identificado pelo marcador <em>BEGIN PRIVATE KEY</em>.
-        É uma representação mais genérica e interoperável, amplamente aceita por Java, Node.js, Python e outras
-        bibliotecas modernas.
+        Exports the private key in the traditional PKCS#1 format, identified by the
+        <em>BEGIN RSA PRIVATE KEY</em> marker. It is common in OpenSSL-based tools and integrations.
     </p>
 
-    <h4 class="sublinhado">Chave Pública .jwk</h4>
+    <h4 class="sublinhado">PKCS8 Private Key .pem</h4>
     <p>
-        Exporta a chave pública como JSON Web Key, formato comum em JWT, OAuth 2.0 e OpenID Connect. Pode ser usada
-        por outros sistemas para validar assinaturas e pode compor um conjunto público JWKS.
+        Exports the same private key in PKCS#8 format, identified by the <em>BEGIN PRIVATE KEY</em> marker.
+        It is a more generic and interoperable representation, widely accepted by Java, Node.js, Python and other
+        modern libraries.
     </p>
 
-    <h4 class="sublinhado">Chave Privada .jwk</h4>
+    <h4 class="sublinhado">Public Key .jwk</h4>
     <p>
-        Exporta em JSON todos os parâmetros privados da chave RSA. Apesar do formato legível, continua sendo uma
-        chave privada e nunca deve ser publicada ou enviada a terceiros.
+        Exports the public key as a JSON Web Key, a common format in JWT, OAuth 2.0 and OpenID Connect. It can be
+        used by other systems to validate signatures and can be part of a public JWKS set.
     </p>
 
-    <h4 class="sublinhado">Baixar Tudo (.zip)</h4>
+    <h4 class="sublinhado">Private Key .jwk</h4>
     <p>
-        Reúne todos os formatos acima em um único arquivo ZIP. A senha informada protege apenas os arquivos PFX e P12:
-        o ZIP, os arquivos PEM privados e a chave privada JWK não são criptografados por essa senha.
+        Exports all private RSA key parameters as JSON. Despite the readable format, it is still a private key and
+        must never be published or sent to third parties.
+    </p>
+
+    <h4 class="sublinhado">Download All (.zip)</h4>
+    <p>
+        Bundles all formats above into a single ZIP file. The provided password protects only the PFX and P12 files:
+        the ZIP, private PEM files and private JWK are not encrypted by that password.
     </p>
 
     <div class="instrucoes-aviso instrucoes-aviso-seguranca">
-        <strong>Proteja as chaves privadas:</strong> quem obtiver uma chave privada poderá se passar pelo titular,
-        assinar dados ou acessar informações protegidas pelo par de chaves. Guarde os arquivos privados em local
-        seguro e evite compartilhá-los.
+        <strong>Protect private keys:</strong> anyone who obtains a private key can impersonate the holder, sign data
+        or access information protected by the key pair. Keep private files in a secure location and avoid sharing
+        them.
     </div>
 
-    <h2>Sobre o certificado X.509 autoassinado</h2>
+    <h2>About the self-signed X.509 certificate</h2>
     <p>
-        Um certificado X.509 associa uma identidade a uma chave pública. Nesta ferramenta, o próprio certificado é
-        assinado pela chave privada que acabou de ser gerada, sem validação por uma Autoridade Certificadora externa.
-        Por isso, ele pode ser usado quando os participantes configuram a confiança manualmente, por exemplo em:
+        An X.509 certificate associates an identity with a public key. In this tool, the certificate itself is signed
+        by the private key that was just generated, without validation by an external Certificate Authority. Therefore,
+        it can be used when participants configure trust manually, for example in:
     </p>
     <ul>
-        <li>ambientes de desenvolvimento e testes internos;</li>
-        <li>comunicação TLS entre serviços de uma rede privada;</li>
-        <li>assinatura e validação de JWTs em APIs internas;</li>
-        <li>autenticação mútua (mTLS) entre serviços controlados;</li>
-        <li>estudo de certificados, criptografia RSA e infraestrutura de chaves públicas.</li>
+        <li>development environments and internal tests;</li>
+        <li>TLS communication between services on a private network;</li>
+        <li>JWT signing and validation in internal APIs;</li>
+        <li>mutual authentication (mTLS) between controlled services;</li>
+        <li>study of certificates, RSA cryptography and public key infrastructure.</li>
     </ul>
 </div>
 
@@ -285,11 +286,11 @@
     <section class="modal-estilo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-cert">
         <header class="modal-estilo-cabecalho">
             <div>
-                <span class="modal-estilo-etiqueta">Novo certificado</span>
-                <h2 id="titulo-modal-cert">Dados do Certificado</h2>
-                <p>Preencha os campos para gerar o certificado X.509.</p>
+                <span class="modal-estilo-etiqueta">New certificate</span>
+                <h2 id="titulo-modal-cert">Certificate Data</h2>
+                <p>Fill in the fields to generate the X.509 certificate.</p>
             </div>
-            <button mat-icon-button type="button" (click)="fecharModal()" aria-label="Fechar modal">
+            <button mat-icon-button type="button" (click)="fecharModal()" aria-label="Close modal">
                 <mat-icon>close</mat-icon>
             </button>
         </header>
@@ -300,35 +301,35 @@
                 <input type="text" [(ngModel)]="dadosManuais.commonName" placeholder="Ex.: meusite.com.br">
             </label>
             <label class="campo-cert">
-                Organizacao (O)
-                <input type="text" [(ngModel)]="dadosManuais.organization" placeholder="Ex.: Minha Empresa">
+                Organization (O)
+                <input type="text" [(ngModel)]="dadosManuais.organization" placeholder="E.g. My Company">
             </label>
             <label class="campo-cert">
-                Unidade Organizacional (OU)
-                <input type="text" [(ngModel)]="dadosManuais.organizationalUnit" placeholder="Ex.: TI">
+                Organizational Unit (OU)
+                <input type="text" [(ngModel)]="dadosManuais.organizationalUnit" placeholder="E.g. IT">
             </label>
             <label class="campo-cert">
-                Pais (C)
-                <input type="text" [(ngModel)]="dadosManuais.country" maxlength="2" placeholder="Ex.: BR">
+                Country (C)
+                <input type="text" [(ngModel)]="dadosManuais.country" maxlength="2" placeholder="E.g. US">
             </label>
             <label class="campo-cert">
-                Estado (ST)
-                <input type="text" [(ngModel)]="dadosManuais.state" placeholder="Ex.: Sao Paulo">
+                State (ST)
+                <input type="text" [(ngModel)]="dadosManuais.state" placeholder="E.g. California">
             </label>
             <label class="campo-cert">
-                Localidade (L)
-                <input type="text" [(ngModel)]="dadosManuais.locality" placeholder="Ex.: Sao Paulo">
+                Locality (L)
+                <input type="text" [(ngModel)]="dadosManuais.locality" placeholder="E.g. San Francisco">
             </label>
             <label class="campo-cert">
                 Email
-                <input type="text" [(ngModel)]="dadosManuais.email" placeholder="Ex.: admin@empresa.com">
+                <input type="text" [(ngModel)]="dadosManuais.email" placeholder="E.g. admin@example.com">
             </label>
             <label class="campo-cert">
-                Validade (dias)
+                Validity (days)
                 <input type="number" [(ngModel)]="dadosManuais.validadeDias" min="1" max="7300">
             </label>
             <label class="campo-cert">
-                Tamanho da Chave
+                Key Size
                 <select [(ngModel)]="dadosManuais.tamanhoBits">
                     <option [ngValue]="2048">2048 bits</option>
                     <option [ngValue]="4096">4096 bits</option>
@@ -337,11 +338,11 @@
         </div>
 
         <footer class="modal-estilo-acoes">
-            <button mat-button type="button" (click)="fecharModal()">Cancelar</button>
+            <button mat-button type="button" (click)="fecharModal()">Cancel</button>
             <button mat-raised-button color="primary" type="button" (click)="gerarManualmente()"
                 [disabled]="!dadosManuais.commonName.trim()">
                 <mat-icon>verified_user</mat-icon>
-                Gerar Certificado
+                Generate Certificate
             </button>
         </footer>
     </section>

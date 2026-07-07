@@ -56,77 +56,77 @@ export class VisualizadorJwtComponent {
   cabecalhoEditando = false;
 
   private readonly claimsDocumentadas: { [key: string]: string } = {
-    'iss': 'Issuer — Identifica quem emitiu o token.',
-    'sub': 'Subject — Identifica o sujeito (usuario) do token.',
-    'aud': 'Audience — Identifica o destinatario esperado do token.',
-    'exp': 'Expiration Time — Data/hora em que o token expira.',
-    'nbf': 'Not Before — Data/hora antes da qual o token nao e valido.',
-    'iat': 'Issued At — Data/hora em que o token foi emitido.',
-    'jti': 'JWT ID — Identificador unico do token para evitar reutilizacao.',
-    'name': 'Name — Nome do usuario associado ao token.',
-    'email': 'Email — Endereco de email do usuario.',
-    'scope': 'Scope — Permissoes ou escopos concedidos ao token.',
-    'role': 'Role — Papel ou funcao do usuario no sistema.'
+    'iss': 'Issuer - Identifies who issued the token.',
+    'sub': 'Subject - Identifies the token subject (user).',
+    'aud': 'Audience - Identifies the expected recipient of the token.',
+    'exp': 'Expiration Time - Date/time when the token expires.',
+    'nbf': 'Not Before - Date/time before which the token is not valid.',
+    'iat': 'Issued At - Date/time when the token was issued.',
+    'jti': 'JWT ID - Unique token identifier to prevent reuse.',
+    'name': 'Name - Name of the user associated with the token.',
+    'email': 'Email - User email address.',
+    'scope': 'Scope - Permissions or scopes granted to the token.',
+    'role': 'Role - User role or function in the system.'
   };
 
   private readonly claimsDeTempo = new Set(['exp', 'nbf', 'iat']);
 
   private readonly camposCabecalhoDocumentados: { [key: string]: { descricao: string; valoresPadrao: string } } = {
     'alg': {
-      descricao: 'Algorithm — Algoritmo usado para assinar ou proteger o token.',
-      valoresPadrao: 'none, HS256, HS384, HS512, RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384, ES512 ou EdDSA.'
+      descricao: 'Algorithm - Algorithm used to sign or protect the token.',
+      valoresPadrao: 'none, HS256, HS384, HS512, RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384, ES512 or EdDSA.'
     },
     'typ': {
-      descricao: 'Type — Declara o tipo do objeto representado pelo token.',
-      valoresPadrao: 'JWT é o valor mais comum. Perfis específicos também usam valores como at+jwt.'
+      descricao: 'Type - Declares the type of object represented by the token.',
+      valoresPadrao: 'JWT is the most common value. Specific profiles also use values such as at+jwt.'
     },
     'cty': {
-      descricao: 'Content Type — Informa o tipo do conteúdo transportado pelo token.',
-      valoresPadrao: 'JWT para tokens aninhados; também pode receber outro media type conhecido pela aplicação.'
+      descricao: 'Content Type - Indicates the type of content carried by the token.',
+      valoresPadrao: 'JWT for nested tokens; it may also receive another media type known by the application.'
     },
     'kid': {
-      descricao: 'Key ID — Identificador da chave utilizada para assinar ou criptografar.',
-      valoresPadrao: 'String definida pelo emissor; normalmente corresponde ao kid publicado em um JWKS.'
+      descricao: 'Key ID - Identifier of the key used to sign or encrypt.',
+      valoresPadrao: 'String defined by the issuer; usually matches the kid published in a JWKS.'
     },
     'jku': {
-      descricao: 'JWK Set URL — Endereço do conjunto de chaves usado para validar o token.',
-      valoresPadrao: 'URL HTTPS que aponta para um documento JWKS.'
+      descricao: 'JWK Set URL - Address of the key set used to validate the token.',
+      valoresPadrao: 'HTTPS URL that points to a JWKS document.'
     },
     'jwk': {
-      descricao: 'JSON Web Key — Chave pública incluída diretamente no cabeçalho.',
-      valoresPadrao: 'Objeto JWK válido, com campos como kty, kid, use, alg e os parâmetros da chave.'
+      descricao: 'JSON Web Key - Public key included directly in the header.',
+      valoresPadrao: 'Valid JWK object, with fields such as kty, kid, use, alg and key parameters.'
     },
     'x5u': {
-      descricao: 'X.509 URL — Endereço da cadeia de certificados X.509 associada à chave.',
-      valoresPadrao: 'URL HTTPS que retorna uma cadeia de certificados codificados em PEM.'
+      descricao: 'X.509 URL - Address of the X.509 certificate chain associated with the key.',
+      valoresPadrao: 'HTTPS URL that returns a PEM-encoded certificate chain.'
     },
     'x5c': {
-      descricao: 'X.509 Certificate Chain — Cadeia de certificados usada na assinatura.',
-      valoresPadrao: 'Array de certificados X.509 em Base64 DER, começando pelo certificado do signatário.'
+      descricao: 'X.509 Certificate Chain - Certificate chain used in the signature.',
+      valoresPadrao: 'Array of Base64 DER X.509 certificates, starting with the signer certificate.'
     },
     'x5t': {
-      descricao: 'X.509 SHA-1 Thumbprint — Impressão digital SHA-1 do certificado.',
-      valoresPadrao: 'String Base64URL sem preenchimento contendo o hash SHA-1.'
+      descricao: 'X.509 SHA-1 Thumbprint - SHA-1 fingerprint of the certificate.',
+      valoresPadrao: 'Base64URL string without padding containing the SHA-1 hash.'
     },
     'x5t#S256': {
-      descricao: 'X.509 SHA-256 Thumbprint — Impressão digital SHA-256 do certificado.',
-      valoresPadrao: 'String Base64URL sem preenchimento contendo o hash SHA-256.'
+      descricao: 'X.509 SHA-256 Thumbprint - SHA-256 fingerprint of the certificate.',
+      valoresPadrao: 'Base64URL string without padding containing the SHA-256 hash.'
     },
     'crit': {
-      descricao: 'Critical — Lista extensões do cabeçalho que precisam ser entendidas pelo destinatário.',
-      valoresPadrao: 'Array de nomes de parâmetros presentes no header. Exemplo: ["b64"].'
+      descricao: 'Critical - Lists header extensions that must be understood by the recipient.',
+      valoresPadrao: 'Array of parameter names present in the header. Example: ["b64"].'
     },
     'b64': {
-      descricao: 'Base64url-Encode Payload — Define se o payload do JWS foi codificado em Base64URL.',
-      valoresPadrao: 'true (padrão) ou false. Quando false, normalmente deve aparecer também em crit.'
+      descricao: 'Base64url-Encode Payload - Defines whether the JWS payload was Base64URL encoded.',
+      valoresPadrao: 'true (default) or false. When false, it should usually also appear in crit.'
     },
     'enc': {
-      descricao: 'Encryption Algorithm — Algoritmo usado para criptografar o conteúdo de um JWE.',
-      valoresPadrao: 'A128GCM, A192GCM, A256GCM, A128CBC-HS256, A192CBC-HS384 ou A256CBC-HS512.'
+      descricao: 'Encryption Algorithm - Algorithm used to encrypt the content of a JWE.',
+      valoresPadrao: 'A128GCM, A192GCM, A256GCM, A128CBC-HS256, A192CBC-HS384 or A256CBC-HS512.'
     },
     'zip': {
-      descricao: 'Compression Algorithm — Algoritmo aplicado para comprimir o conteúdo antes da criptografia.',
-      valoresPadrao: 'DEF (DEFLATE) é o valor registrado mais comum.'
+      descricao: 'Compression Algorithm - Algorithm applied to compress the content before encryption.',
+      valoresPadrao: 'DEF (DEFLATE) is the most common registered value.'
     }
   };
 
@@ -138,7 +138,7 @@ export class VisualizadorJwtComponent {
     private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Manipulador de JWT");
+    this.dataService.setTituloAplicacao("JWT Manipulator");
   }
 
   definirDisposicao(disposicao: 'vertical' | 'horizontal'): void {
@@ -212,7 +212,7 @@ export class VisualizadorJwtComponent {
         this.atualizandoInterno = false;
       } catch (e) {
         this.atualizandoInterno = false;
-        console.error('Erro ao decodificar JWT:', e);
+        console.error('Error decoding JWT:', e);
         this.strJwtCabecalho = '';
         this.strJwtCorpo = '';
         this.strJwtAssinatura = signature || '';
@@ -251,7 +251,7 @@ export class VisualizadorJwtComponent {
       this.extrairClaims();
       this.verificarOuAssinar();
     } catch {
-      // JSON inválido durante edição, ignora
+      // Invalid JSON while editing, ignore.
     }
   }
 
@@ -311,7 +311,7 @@ export class VisualizadorJwtComponent {
       this.assinaturaStatus = 'valida';
       return true;
     } catch (e) {
-      console.error('Erro ao assinar JWT:', e);
+      console.error('Error signing JWT:', e);
       this.assinaturaStatus = 'invalida';
       return false;
     }
@@ -334,7 +334,7 @@ export class VisualizadorJwtComponent {
       const valido = await crypto.subtle.verify(algParams, cryptoKey, assinaturaBytes, dadosBytes);
       this.assinaturaStatus = valido ? 'valida' : 'invalida';
     } catch (e) {
-      console.error('Erro ao verificar assinatura:', e);
+      console.error('Error verifying signature:', e);
       this.assinaturaStatus = 'invalida';
     }
   }
@@ -372,7 +372,7 @@ export class VisualizadorJwtComponent {
           valoresPadrao: documentacao.valoresPadrao
         });
       }
-    } catch { /* cabecalho nao e JSON valido */ }
+    } catch { /* header is not valid JSON */ }
     this.gerarCabecalhoSegmentos();
   }
 
@@ -459,7 +459,7 @@ export class VisualizadorJwtComponent {
           });
         }
       }
-    } catch { /* corpo nao e JSON valido */ }
+    } catch { /* payload is not valid JSON */ }
     this.gerarCorpoSegmentos();
   }
 
@@ -586,9 +586,9 @@ export class VisualizadorJwtComponent {
       this.verificarOuAssinar();
       this.cdr.detectChanges();
     } catch (e) {
-      this.erroPfx = 'Erro ao abrir o arquivo. Verifique a senha.';
+      this.erroPfx = 'Error opening the file. Check the password.';
       this.cdr.detectChanges();
-      console.error('Erro ao extrair chaves do PFX:', e);
+      console.error('Error extracting keys from PFX:', e);
     }
   }
 
@@ -617,7 +617,7 @@ export class VisualizadorJwtComponent {
 
       return null;
     } catch (e) {
-      console.error('Erro ao importar chave privada:', e);
+      console.error('Error importing private key:', e);
       return null;
     }
   }
@@ -652,7 +652,7 @@ export class VisualizadorJwtComponent {
 
       return null;
     } catch (e) {
-      console.error('Erro ao importar chave publica:', e);
+      console.error('Error importing public key:', e);
       return null;
     }
   }
@@ -738,11 +738,11 @@ export class VisualizadorJwtComponent {
   validaJwt(strJwt: string): boolean {
     if (this.jwtService.validaFormatoJwt(strJwt)) {
       this.textoValidadeVermelho = false;
-      this.textoValidade = 'Válido';
+      this.textoValidade = 'Valid';
       return true;
     } else {
       this.textoValidadeVermelho = true;
-      this.textoValidade = 'Inválido';
+      this.textoValidade = 'Invalid';
       if (!strJwt.trim()) {
         this.textoValidadeVermelho = false;
         this.textoValidade = '';

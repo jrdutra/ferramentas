@@ -13,5 +13,5 @@ import {MatCardModule} from '@angular/material/card';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  title = 'ferramentas';
+  title = 'utily.tools';
 }

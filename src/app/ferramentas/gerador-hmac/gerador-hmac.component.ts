@@ -41,12 +41,12 @@ export class GeradorHmacComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Gerador de HMAC');
+    this.dataService.setTituloAplicacao('HMAC Generator');
   }
 
   async calcular(): Promise<void> {
     if (!this.mensagem || !this.chave) {
-      this.erro = 'Preencha a mensagem e a chave antes de calcular.';
+      this.erro = 'Fill in the message and key before calculating.';
       this.resultado = '';
       return;
     }
@@ -63,7 +63,7 @@ export class GeradorHmacComponent implements OnInit {
       const sig = await crypto.subtle.sign('HMAC', keyMaterial, enc.encode(this.mensagem));
       this.resultado = this.codificar(new Uint8Array(sig));
     } catch (e: any) {
-      this.erro = 'Erro ao calcular HMAC: ' + (e?.message ?? String(e));
+      this.erro = 'Error calculating HMAC: ' + (e?.message ?? String(e));
     } finally {
       this.calculando = false;
     }

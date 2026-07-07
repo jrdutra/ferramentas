@@ -1,5 +1,4 @@
-# Ferramentas
+# utily.tools
 
-OBS: Depois de configurar a esteira e a azure, é preciso fazer esta configuração para que a aplicação levante ao iniciar o servidor:
-
-Dentro do WebApp ir em "configuration" e adicionar o comando "node ./dist/ferramentas/server/server.mjs" no campo "Startup Command".
+Note: after configuring the pipeline and Azure, add the command `node ./dist/server/server.mjs` to the
+WebApp "Startup Command" field under "configuration" so the application starts with the server.

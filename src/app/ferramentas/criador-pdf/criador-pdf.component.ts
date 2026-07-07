@@ -29,7 +29,7 @@ export class CriadorPdfComponent {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Criador de PDF');
+    this.dataService.setTituloAplicacao('PDF Creator');
   }
 
   carregarImagens(event: Event): void {
@@ -94,14 +94,14 @@ export class CriadorPdfComponent {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'imagens-para-pdf.pdf';
+      a.download = 'images-to-pdf.pdf';
       a.click();
       URL.revokeObjectURL(url);
 
-      this.mensagem = `PDF criado com ${this.imagens.length} página(s)!`;
+      this.mensagem = `PDF created with ${this.imagens.length} page(s)!`;
     } catch (e) {
       console.error(e);
-      this.mensagem = 'Erro ao criar o PDF. Verifique se as imagens são válidas.';
+      this.mensagem = 'Error creating the PDF. Check whether the images are valid.';
       this.erro = true;
     } finally {
       this.processando = false;
@@ -119,13 +119,13 @@ export class CriadorPdfComponent {
         canvas.getContext('2d')!.drawImage(img, 0, 0);
         canvas.toBlob(async (blob) => {
           URL.revokeObjectURL(url);
-          if (!blob) { reject(new Error('Falha ao converter imagem')); return; }
+          if (!blob) { reject(new Error('Failed to convert image')); return; }
           try {
             resolve(await pdfDoc.embedJpg(await blob.arrayBuffer()));
           } catch (e) { reject(e); }
         }, 'image/jpeg', 0.95);
       };
-      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Imagem inválida')); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Invalid image')); };
       img.src = url;
     });
   }

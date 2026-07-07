@@ -9,9 +9,9 @@ import { DataService } from '../../data.service';
 type Versao = 'v4' | 'v7' | 'v1';
 
 const VERSOES: { id: Versao; nome: string; desc: string }[] = [
-  { id: 'v4', nome: 'UUID v4', desc: 'Aleatório — o mais comum' },
-  { id: 'v7', nome: 'UUID v7', desc: 'Ordenável por tempo (RFC 9562)' },
-  { id: 'v1', nome: 'UUID v1', desc: 'Baseado em timestamp + nó' },
+  { id: 'v4', nome: 'UUID v4', desc: 'Random - the most common' },
+  { id: 'v7', nome: 'UUID v7', desc: 'Time-sortable (RFC 9562)' },
+  { id: 'v1', nome: 'UUID v1', desc: 'Timestamp + node based' },
 ];
 
 @Component({
@@ -37,7 +37,7 @@ export class GeradorUuidComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Gerador de UUID');
+    this.dataService.setTituloAplicacao('UUID Generator');
     this.gerar();
   }
 

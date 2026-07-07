@@ -17,6 +17,6 @@ export class SobreComponent {
   constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("Sobre");
+    this.dataService.setTituloAplicacao("About");
   }
 }

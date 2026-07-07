@@ -36,14 +36,14 @@ export class DiffTextoComponent implements OnInit {
   constructor(private dataService: DataService, private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Diff de Texto');
+    this.dataService.setTituloAplicacao('Text Diff');
   }
 
   comparar(): void {
     const a = this.textoA.slice(0, this.LIMITE);
     const b = this.textoB.slice(0, this.LIMITE);
     this.aviso = (this.textoA.length > this.LIMITE || this.textoB.length > this.LIMITE)
-      ? `Texto truncado em ${this.LIMITE.toLocaleString('pt-BR')} caracteres para melhor performance.`
+      ? `Text truncated to ${this.LIMITE.toLocaleString('en-US')} characters for better performance.`
       : '';
 
     const { inLcsA, inLcsB, runs } = this.computeDiff(a, b);

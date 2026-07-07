@@ -39,7 +39,7 @@ export class GeradorHashComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Gerador de Hash');
+    this.dataService.setTituloAplicacao('Hash Generator');
   }
 
   async calcularHashes(): Promise<void> {

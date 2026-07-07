@@ -46,12 +46,12 @@ export class VisualizadorJweComponent {
   private versaoCriptografia = 0;
 
   readonly camposCabecalho = [
-    { campo: 'alg', descricao: 'Algoritmo usado para proteger a Content Encryption Key (CEK).' },
-    { campo: 'enc', descricao: 'Algoritmo usado para criptografar o payload.' },
-    { campo: 'kid', descricao: 'Identificador da chave usada na criptografia.' },
-    { campo: 'typ', descricao: 'Tipo do token ou do objeto JOSE.' },
-    { campo: 'cty', descricao: 'Tipo do conteudo interno, por exemplo JWT em tokens aninhados.' },
-    { campo: 'zip', descricao: 'Compressao aplicada antes da criptografia, normalmente DEF.' }
+    { campo: 'alg', descricao: 'Algorithm used to protect the Content Encryption Key (CEK).' },
+    { campo: 'enc', descricao: 'Algorithm used to encrypt the payload.' },
+    { campo: 'kid', descricao: 'Identifier of the key used for encryption.' },
+    { campo: 'typ', descricao: 'Type of the token or JOSE object.' },
+    { campo: 'cty', descricao: 'Type of the inner content, for example JWT in nested tokens.' },
+    { campo: 'zip', descricao: 'Compression applied before encryption, usually DEF.' }
   ];
 
   readonly algoritmosJwe = {
@@ -73,7 +73,7 @@ export class VisualizadorJweComponent {
   ) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Manipulador de JWE');
+    this.dataService.setTituloAplicacao('JWE Manipulator');
   }
 
   lerTokenJwe(): void {
@@ -97,7 +97,7 @@ export class VisualizadorJweComponent {
       this.mensagemErro = '';
     } catch {
       this.strProtectedHeader = '';
-      this.mensagemErro = 'Nao foi possivel decodificar o Protected Header.';
+      this.mensagemErro = 'Could not decode the Protected Header.';
     }
 
     this.strEncryptedKey = jwePartes.encryptedKey;
@@ -134,7 +134,7 @@ export class VisualizadorJweComponent {
       this.atualizarValidade();
       this.atualizarPartesColoridas();
     } catch {
-      this.mensagemErro = 'O Protected Header precisa ser um JSON valido para atualizar o JWE.';
+      this.mensagemErro = 'The Protected Header must be valid JSON to update the JWE.';
     }
   }
 
@@ -156,7 +156,7 @@ export class VisualizadorJweComponent {
     const versaoAtual = ++this.versaoCriptografia;
     if (!this.strChavePublica.trim()) {
       this.ciphertextStatus = 'erro';
-      this.mensagemErro = 'Informe ou carregue uma chave publica para criptografar.';
+      this.mensagemErro = 'Enter or load a public key to encrypt.';
       return;
     }
 
@@ -167,7 +167,7 @@ export class VisualizadorJweComponent {
       header.enc = header.enc || 'A256GCM';
     } catch {
       this.ciphertextStatus = 'erro';
-      this.mensagemErro = 'O Protected Header precisa ser um JSON valido para criptografar.';
+      this.mensagemErro = 'The Protected Header must be valid JSON to encrypt.';
       return;
     }
 
@@ -176,7 +176,7 @@ export class VisualizadorJweComponent {
       const chave = await this.importarChaveParaJose(this.strChavePublica.trim(), header.alg, 'publica');
       const token = await this.comTimeout(new CompactEncrypt(new TextEncoder().encode(payloadClaro))
         .setProtectedHeader(header)
-        .encrypt(chave as any), 'Tempo excedido ao criptografar. Verifique se o algoritmo do header combina com a chave.');
+        .encrypt(chave as any), 'Timed out while encrypting. Check whether the header algorithm matches the key.');
 
       if (versaoAtual !== this.versaoCriptografia) return;
 
@@ -191,9 +191,9 @@ export class VisualizadorJweComponent {
     } catch (e) {
       if (versaoAtual !== this.versaoCriptografia) return;
       this.ciphertextStatus = 'erro';
-      this.mensagemErro = this.mensagemErroCriptografia('Nao foi possivel criptografar o JWE.', e);
+      this.mensagemErro = this.mensagemErroCriptografia('Could not encrypt the JWE.', e);
       this.cdr.detectChanges();
-      console.error('Erro ao criptografar JWE:', e);
+      console.error('Error encrypting JWE:', e);
     }
   }
 
@@ -204,7 +204,7 @@ export class VisualizadorJweComponent {
     try {
       const header = JSON.parse(this.strProtectedHeader || '{}');
       const chave = await this.importarChaveParaJose(this.strChavePrivada.trim(), header.alg || 'RSA-OAEP-256', 'privada');
-      const { plaintext } = await this.comTimeout(compactDecrypt(this.strJwe, chave as any), 'Tempo excedido ao descriptografar. Verifique se o algoritmo do header combina com a chave.');
+      const { plaintext } = await this.comTimeout(compactDecrypt(this.strJwe, chave as any), 'Timed out while decrypting. Check whether the header algorithm matches the key.');
 
       this.strCiphertext = this.formatarPayload(new TextDecoder().decode(plaintext));
       this.ciphertextStatus = 'descriptografado';
@@ -217,19 +217,19 @@ export class VisualizadorJweComponent {
       } else {
         this.ciphertextStatus = 'erro';
       }
-      this.mensagemErro = this.mensagemErroCriptografia('A chave privada nao conseguiu descriptografar o ciphertext.', e);
+      this.mensagemErro = this.mensagemErroCriptografia('The private key could not decrypt the ciphertext.', e);
       this.cdr.detectChanges();
-      console.error('Erro ao descriptografar JWE:', e);
+      console.error('Error decrypting JWE:', e);
     }
   }
 
   onChavePublicaChange(): void {
-    this.mensagemChaves = this.strChavePublica.trim() ? 'Chave publica carregada. Edite o payload no campo Ciphertext e criptografe o JWE.' : '';
+    this.mensagemChaves = this.strChavePublica.trim() ? 'Public key loaded. Edit the payload in the Ciphertext field and encrypt the JWE.' : '';
     this.atualizarStatusCiphertextPeloConteudo();
   }
 
   onChavePrivadaChange(): void {
-    this.mensagemChaves = this.strChavePrivada.trim() ? 'Chave privada carregada. O JWE pode ser descriptografado.' : '';
+    this.mensagemChaves = this.strChavePrivada.trim() ? 'Private key loaded. The JWE can be decrypted.' : '';
     if (this.strChavePrivada.trim()) {
       this.descriptografarJwe();
     } else {
@@ -257,7 +257,7 @@ export class VisualizadorJweComponent {
   selecionarArquivoChavePublica(event: Event): void {
     this.lerArquivoTexto(event, (conteudo, nome) => {
       this.strChavePublica = conteudo;
-      this.mensagemChaves = `Chave publica carregada: ${nome}`;
+      this.mensagemChaves = `Public key loaded: ${nome}`;
       this.onChavePublicaChange();
     });
   }
@@ -265,7 +265,7 @@ export class VisualizadorJweComponent {
   selecionarArquivoChavePrivada(event: Event): void {
     this.lerArquivoTexto(event, (conteudo, nome) => {
       this.strChavePrivada = conteudo;
-      this.mensagemChaves = `Chave privada carregada: ${nome}`;
+      this.mensagemChaves = `Private key loaded: ${nome}`;
       this.onChavePrivadaChange();
     });
   }
@@ -316,14 +316,14 @@ export class VisualizadorJweComponent {
       }
 
       this.pfxSelecionado = false;
-      this.mensagemChaves = 'Chaves extraidas do PFX/P12.';
+      this.mensagemChaves = 'Keys extracted from PFX/P12.';
       this.onChavePublicaChange();
       this.onChavePrivadaChange();
       this.cdr.detectChanges();
     } catch (e) {
-      this.erroPfx = 'Erro ao abrir o arquivo. Verifique a senha.';
+      this.erroPfx = 'Error opening the file. Check the password.';
       this.cdr.detectChanges();
-      console.error('Erro ao extrair chaves do PFX:', e);
+      console.error('Error extracting keys from PFX:', e);
     }
   }
 
@@ -347,7 +347,7 @@ export class VisualizadorJweComponent {
     }
 
     const valido = this.jweService.validaFormatoJwe(this.strJwe);
-    this.textoValidade = valido ? 'Valido' : 'Invalido';
+    this.textoValidade = valido ? 'Valid' : 'Invalid';
     this.textoValidadeVermelho = !valido;
     return valido;
   }
@@ -437,9 +437,9 @@ export class VisualizadorJweComponent {
     }
 
     if (tipo === 'publica') {
-      throw new Error('Formato de chave publica nao reconhecido.');
+      throw new Error('Unrecognized public key format.');
     }
-    throw new Error('Formato de chave privada nao reconhecido.');
+    throw new Error('Unrecognized private key format.');
   }
 
   private formatarPayload(payload: string): string {

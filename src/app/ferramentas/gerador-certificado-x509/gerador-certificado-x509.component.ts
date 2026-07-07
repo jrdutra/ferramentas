@@ -42,7 +42,7 @@ export class GeradorCertificadoX509Component {
   ) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Gerador de Chaves e Certificados X.509');
+    this.dataService.setTituloAplicacao('X.509 Key & Certificate Generator');
   }
 
   gerarAleatoriamente() {
@@ -53,7 +53,7 @@ export class GeradorCertificadoX509Component {
         const dados = this.generatorService.gerarDadosAleatorios();
         this.certificado = this.generatorService.gerarCertificado(dados);
       } catch (e) {
-        console.error('Erro ao gerar certificado:', e);
+        console.error('Error generating certificate:', e);
       }
       this.gerando = false;
       this.cdr.detectChanges();
@@ -83,7 +83,7 @@ export class GeradorCertificadoX509Component {
       try {
         this.certificado = this.generatorService.gerarCertificado(this.dadosManuais);
       } catch (e) {
-        console.error('Erro ao gerar certificado:', e);
+        console.error('Error generating certificate:', e);
       }
       this.gerando = false;
       this.cdr.detectChanges();

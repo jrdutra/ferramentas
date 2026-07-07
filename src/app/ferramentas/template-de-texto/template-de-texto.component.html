@@ -5,18 +5,18 @@
             <mat-label>{{strTipoTexto}}</mat-label>
             <textarea (input)="atualizaQtCaracterePalavra()" [(ngModel)]="strTexto" matInput
                 style="height: 30em; box-sizing: border-box; resize: none; border: none; font-family: 'Courier New', monospace;"></textarea>
-            <label> Quantidade de palavras: </label> <label class="texto-vermelho"> {{strQtPalavras}}</label> <br />
-            <label> Quantidade de caracteres: </label> <label class="texto-vermelho"> {{strQtCaractere}}</label>
+            <label> Word count: </label> <label class="texto-vermelho"> {{strQtPalavras}}</label> <br />
+            <label> Character count: </label> <label class="texto-vermelho"> {{strQtCaractere}}</label>
         </mat-form-field>
     </div>
 
     <div class="div-coluna-campos">
         <div class="div-botoes">
-            <button (click)="carregaTemplate()" mat-raised-button class="botao botao-esqueda" color="primary">Carregar
+            <button (click)="carregaTemplate()" mat-raised-button class="botao botao-esqueda" color="primary">Load
                 Template
             </button>
             <button (click)="visualizarTemplate()" mat-raised-button class="botao botao-direita"
-                color="primary">Visualizar Template
+                color="primary">View Template
             </button>
         </div>
         @for(variavel of variaveisTemplate; track variavel){
@@ -25,32 +25,32 @@
             <input [(ngModel)]="variavel.conteudoVariavel" (ngModelChange)="gerarTexto()" matInput>
         </mat-form-field>
         }@empty {
-        <label>Insira um template válido. Um template válido deve ter pelo menos uma variável indicada desta forma:
+        <label>Enter a valid template. A valid template must have at least one variable indicated like this:
             [[nome_da_variavel]]</label>
         }
     </div>
 
 </div>
 <div class="instrucoes">
-    <h2>Instruções</h2>
+    <h2>Instructions</h2>
 
-    <h4 class="sublinhado">Carregar Template</h4>
-    <p>Cole o template de texto no campo de texto. As variáveis devem estar indicadas como <code>[[variavel]]</code>.
-        Clique neste botão para identificar as variáveis e gerar campos de entrada exclusivos para cada uma. Após
-        preencher os valores nos campos gerados, esses valores serão automaticamente substituídos no template onde as
-        variáveis aparecem.</p>
+    <h4 class="sublinhado">Load Template</h4>
+    <p>Paste the text template in the text field. Variables must be indicated as <code>[[variable]]</code>.
+        Click this button to identify the variables and generate dedicated input fields for each one. After
+        filling in the generated fields, those values are automatically substituted wherever the variables appear
+        in the template.</p>
 
-    <h4 class="sublinhado">Visualizar Template</h4>
-    <p>Exibe o template de texto original que foi colado no campo de texto <code>textarea</code>, sem as substituições.
-        Útil para revisar o template antes de gerar o texto final.</p>
+    <h4 class="sublinhado">View Template</h4>
+    <p>Shows the original text template pasted into the <code>textarea</code>, without substitutions.
+        Useful for reviewing the template before generating the final text.</p>
 
-    <h4 class="sublinhado">Campo de Texto (Textarea)</h4>
-    <p>Use este campo para colar o template de texto. Insira as variáveis no formato <code>[[variavel]]</code> para que
-        sejam identificadas e processadas pela ferramenta. Esse template servirá como base para a geração de textos
-        personalizados.</p>
+    <h4 class="sublinhado">Text Field (Textarea)</h4>
+    <p>Use this field to paste the text template. Insert variables in the <code>[[variable]]</code> format so they
+        can be identified and processed by the tool. This template is used as the base for generating customized
+        texts.</p>
 
-    <h4 class="sublinhado">Objetivo</h4>
-    <p>Essa ferramenta permite criar textos padronizados com trechos personalizados de forma rápida e segura,
-        substituindo automaticamente as variáveis indicadas no template com os valores inseridos nos campos gerados.</p>
+    <h4 class="sublinhado">Purpose</h4>
+    <p>This tool lets you create standardized texts with customized snippets quickly and safely, automatically
+        replacing the variables indicated in the template with the values entered in the generated fields.</p>
 
 </div>

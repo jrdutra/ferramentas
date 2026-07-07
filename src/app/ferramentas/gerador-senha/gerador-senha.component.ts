@@ -41,7 +41,7 @@ export class GeradorSenhaComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Gerador de Senhas');
+    this.dataService.setTituloAplicacao('Password Generator');
     this.gerar();
   }
 
@@ -88,7 +88,7 @@ export class GeradorSenhaComponent implements OnInit {
   }
 
   get labelForca(): string {
-    return { fraca: 'Fraca', media: 'Média', forte: 'Forte', 'muito-forte': 'Muito forte' }[this.forca];
+    return { fraca: 'Weak', media: 'Medium', forte: 'Strong', 'muito-forte': 'Very strong' }[this.forca];
   }
 
   private gerarSenha(pool: string): string {

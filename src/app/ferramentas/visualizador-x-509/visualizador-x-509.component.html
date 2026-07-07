@@ -2,7 +2,7 @@
     <div class="seleciona-arquivo">
         <button mat-raised-button type="button" color="primary" (click)="fileInput.click()">
             <mat-icon>upload_file</mat-icon>
-            Escolher Arquivo
+            Choose File
         </button>
         <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
     </div>
@@ -10,10 +10,10 @@
     @if(mostraDados){
     <div class="certificado-resultado">
         <section class="cert-secao">
-            <h3>Arquivo</h3>
+            <h3>File</h3>
             <div class="cert-info-grid">
                 <div class="cert-info-item">
-                    <span class="info-label">Nome do arquivo</span>
+                    <span class="info-label">File name</span>
                     <span class="info-valor">{{fileName}}</span>
                 </div>
                 <div class="cert-info-item cert-item-largo">
@@ -24,14 +24,14 @@
         </section>
 
         <section class="cert-secao">
-            <h3>Identidade</h3>
+            <h3>Identity</h3>
             <div class="cert-info-grid">
                 <div class="cert-info-item">
-                    <span class="info-label">Issuer (Emissor)</span>
+                    <span class="info-label">Issuer</span>
                     <span class="info-valor">{{issuer}}</span>
                 </div>
                 <div class="cert-info-item">
-                    <span class="info-label">Subject (Sujeito)</span>
+                    <span class="info-label">Subject</span>
                     <span class="info-valor">{{subject}}</span>
                 </div>
                 <div class="cert-info-item">
@@ -42,7 +42,7 @@
         </section>
 
         <section class="cert-secao">
-            <h3>Validade</h3>
+            <h3>Validity</h3>
             <div class="cert-info-grid">
                 <div class="cert-info-item">
                     <span class="info-label">Not Before</span>
@@ -56,39 +56,39 @@
         </section>
 
         <section class="cert-secao">
-            <h3>Chave Publica</h3>
+            <h3>Public Key</h3>
             <div class="cert-info-grid">
                 <div class="cert-info-item">
-                    <span class="info-label">Algoritmo</span>
+                    <span class="info-label">Algorithm</span>
                     <span class="info-valor">{{chavePublicaAlgoritmo}}</span>
                 </div>
                 <div class="cert-info-item cert-item-largo">
-                    <span class="info-label">Valor</span>
+                    <span class="info-label">Value</span>
                     <span class="info-valor info-mono">{{chavePublicaValor}}</span>
                 </div>
             </div>
         </section>
 
         <section class="cert-secao">
-            <h3>Assinatura</h3>
+            <h3>Signature</h3>
             <div class="cert-info-grid">
                 <div class="cert-info-item">
-                    <span class="info-label">Algoritmo</span>
+                    <span class="info-label">Algorithm</span>
                     <span class="info-valor">{{assinaturaAlgoritmo}}</span>
                 </div>
                 <div class="cert-info-item cert-item-largo">
-                    <span class="info-label">Valor (Hexadecimal)</span>
+                    <span class="info-label">Value (Hexadecimal)</span>
                     <span class="info-valor info-mono">{{assinaturaValor}}</span>
                 </div>
                 <div class="cert-info-item cert-item-largo">
-                    <span class="info-label">Valor (Base64)</span>
+                    <span class="info-label">Value (Base64)</span>
                     <span class="info-valor info-mono">{{assinaturaValorBase64}}</span>
                 </div>
             </div>
         </section>
 
         <section class="cert-secao">
-            <h3>Extensoes</h3>
+            <h3>Extensions</h3>
             <div class="cert-info-grid">
                 <div class="cert-info-item">
                     <span class="info-label">Id</span>
@@ -99,11 +99,11 @@
                     <span class="info-valor">{{extensoesCritical}}</span>
                 </div>
                 <div class="cert-info-item cert-item-largo">
-                    <span class="info-label">Valor</span>
+                    <span class="info-label">Value</span>
                     <span class="info-valor info-mono">{{extensoesValor}}</span>
                 </div>
                 <div class="cert-info-item cert-item-largo">
-                    <span class="info-label">Nome Alternativo</span>
+                    <span class="info-label">Alternative Name</span>
                     <span class="info-valor">{{nomeAlternativo}}</span>
                 </div>
             </div>
@@ -149,83 +149,83 @@
 </div>
 
 <div>
-    <h2>Instrucoes</h2>
+    <h2>Instructions</h2>
 
-    <p>O certificado deve ser selecionado no botao "Escolher Arquivo".</p>
+    <p>Select the certificate using the "Choose File" button.</p>
 
-    <h2>O que e um certificado x.509</h2>
-    <p>O certificado x.509 e um padrao amplamente utilizado para a infraestrutura de chaves publicas (PKI). Ele fornece
-        um meio confiavel de associar uma chave publica a uma identidade, garantindo autenticidade, integridade e
-        confidencialidade em comunicacoes digitais. O certificado contem informacoes detalhadas, como o emissor, o
-        sujeito, o periodo de validade, a chave publica, extensoes e assinaturas que comprovam sua legitimidade.</p>
+    <h2>What is an X.509 certificate</h2>
+    <p>An X.509 certificate is a widely used standard for public key infrastructure (PKI). It provides a trusted way to
+        associate a public key with an identity, ensuring authenticity, integrity and confidentiality in digital
+        communications. The certificate contains detailed information such as issuer, subject, validity period, public
+        key, extensions and signatures that prove its legitimacy.</p>
 
-    <h2>Explicacao dos Campos</h2>
+    <h2>Field Explanation</h2>
 
-    <h4 class="sublinhado">Nome do arquivo</h4>
-    <p>O nome do arquivo onde o certificado X.509 esta armazenado, geralmente com extensoes como .crt, .pem ou .cer.</p>
+    <h4 class="sublinhado">File name</h4>
+    <p>The file name where the X.509 certificate is stored, usually with extensions such as .crt, .pem or .cer.</p>
 
     <h4 class="sublinhado">Blob</h4>
-    <p>Representacao binaria ou textual (em Base64) do conteudo completo do certificado, encapsulado entre "BEGIN
-        CERTIFICATE" e "END CERTIFICATE".</p>
+    <p>Binary or textual representation (in Base64) of the full certificate content, wrapped between "BEGIN
+        CERTIFICATE" and "END CERTIFICATE".</p>
 
     <h4 class="sublinhado">Fingerprint (MD5)</h4>
-    <p>Um hash MD5 calculado a partir do certificado, usado para identifica-lo rapidamente. Atualmente considerado
-        inseguro.</p>
+    <p>An MD5 hash calculated from the certificate, used for quick identification. It is currently considered
+        insecure.</p>
 
     <h4 class="sublinhado">Fingerprint (Sha1)</h4>
-    <p>Um hash SHA-1 calculado a partir do certificado. Foi amplamente utilizado no passado, mas esta depreciado.</p>
+    <p>A SHA-1 hash calculated from the certificate. It was widely used in the past, but is now deprecated.</p>
 
     <h4 class="sublinhado">Fingerprint (Sha256)</h4>
-    <p>Hash SHA-256 do certificado, considerado o padrao seguro atualmente para identificacao.</p>
+    <p>SHA-256 hash of the certificate, currently considered the secure standard for identification.</p>
 
     <h4 class="sublinhado">Fingerprint (Sha384)</h4>
-    <p>Uma impressao digital mais robusta usando o algoritmo SHA-384, adequada para sistemas que exigem maior seguranca.
+    <p>A stronger fingerprint using the SHA-384 algorithm, suitable for systems that require higher security.
     </p>
 
     <h4 class="sublinhado">Fingerprint (Sha512)</h4>
-    <p>Hash SHA-512, usado para garantir seguranca maxima em identificacao.</p>
+    <p>SHA-512 hash, used to provide maximum security for identification.</p>
 
     <h4 class="sublinhado">Issuer (Emissor)</h4>
-    <p>Identifica a entidade que emitiu o certificado, contendo campos como Nome Comum (CN), Organizacao (O) e Pais (C).
+    <p>Identifies the entity that issued the certificate, containing fields such as Common Name (CN), Organization (O)
+        and Country (C).
     </p>
 
     <h4 class="sublinhado">Subject (Sujeito)</h4>
-    <p>Identifica a entidade a qual o certificado foi emitido, usando campos semelhantes ao do emissor.</p>
+    <p>Identifies the entity to which the certificate was issued, using fields similar to the issuer.</p>
 
-    <h4 class="sublinhado">Validade (Not Before)</h4>
-    <p>Data e hora em que o certificado comeca a ser valido.</p>
+    <h4 class="sublinhado">Validity (Not Before)</h4>
+    <p>Date and time when the certificate becomes valid.</p>
 
-    <h4 class="sublinhado">Validade (Not After)</h4>
-    <p>Data e hora em que o certificado expira.</p>
+    <h4 class="sublinhado">Validity (Not After)</h4>
+    <p>Date and time when the certificate expires.</p>
 
     <h4 class="sublinhado">Serial number</h4>
-    <p>Numero unico atribuido pelo emissor para identificar o certificado de forma exclusiva.</p>
+    <p>Unique number assigned by the issuer to identify the certificate exclusively.</p>
 
-    <h4 class="sublinhado">Algoritmo da Assinatura</h4>
-    <p>Algoritmo utilizado para gerar a assinatura do certificado, como SHA256WithRSA.</p>
+    <h4 class="sublinhado">Signature Algorithm</h4>
+    <p>Algorithm used to generate the certificate signature, such as SHA256WithRSA.</p>
 
-    <h4 class="sublinhado">Assinatura</h4>
-    <p>O valor da assinatura, gerado com a chave privada do emissor, garantindo a autenticidade e integridade do
-        certificado. Exibido em hexadecimal e Base64.</p>
+    <h4 class="sublinhado">Signature</h4>
+    <p>The signature value, generated with the issuer's private key, ensuring the authenticity and integrity of the
+        certificate. Displayed in hexadecimal and Base64.</p>
 
-    <h4 class="sublinhado">Algoritmo da Chave Publica</h4>
-    <p>Algoritmo usado para a chave publica do certificado, como RSA ou ECDSA.</p>
+    <h4 class="sublinhado">Public Key Algorithm</h4>
+    <p>Algorithm used for the certificate public key, such as RSA or ECDSA.</p>
 
-    <h4 class="sublinhado">Chave Publica (Valor)</h4>
-    <p>A chave publica associada ao sujeito do certificado, usada para verificar assinaturas digitais ou criptografar
-        dados.</p>
+    <h4 class="sublinhado">Public Key (Value)</h4>
+    <p>The public key associated with the certificate subject, used to verify digital signatures or encrypt data.</p>
 
-    <h4 class="sublinhado">Extensoes (Id)</h4>
-    <p>Identificador da extensao, como 2.5.29.19 para restricoes de uso de chave.</p>
+    <h4 class="sublinhado">Extensions (Id)</h4>
+    <p>Extension identifier, such as 2.5.29.19 for key usage constraints.</p>
 
-    <h4 class="sublinhado">Extensoes (Critical)</h4>
-    <p>Indica se a extensao e critica. Extensoes criticas que nao podem ser interpretadas pelo sistema levam ao
-        rejeitamento do certificado.</p>
+    <h4 class="sublinhado">Extensions (Critical)</h4>
+    <p>Indicates whether the extension is critical. Critical extensions that cannot be interpreted by the system cause
+        the certificate to be rejected.</p>
 
-    <h4 class="sublinhado">Extensoes (Valor)</h4>
-    <p>O valor associado a extensao, como restricoes de uso de chave, restricoes de caminho ou identificadores de uso
-        estendido.</p>
+    <h4 class="sublinhado">Extensions (Value)</h4>
+    <p>The value associated with the extension, such as key usage constraints, path constraints or extended usage
+        identifiers.</p>
 
-    <h4 class="sublinhado">Extensoes (Nome Alternativo)</h4>
-    <p>Especifica nomes alternativos para o sujeito, como nomes de dominio (DNS), enderecos IP ou e-mails.</p>
+    <h4 class="sublinhado">Extensions (Alternative Name)</h4>
+    <p>Specifies alternative names for the subject, such as domain names (DNS), IP addresses or emails.</p>
 </div>
