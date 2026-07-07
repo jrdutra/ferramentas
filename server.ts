@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
-const CANONICAL_HOST = 'utility.tools';
+const CANONICAL_HOST = 'utily.tools';
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1']);
 
 function normalizeHost(host: string | undefined): string {
