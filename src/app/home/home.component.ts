@@ -46,7 +46,8 @@ export class HomeComponent {
         { titulo: 'Manipulador de JWE', descricao: 'Separar header, chave criptografada, IV, ciphertext e tag de tokens JWE.', icone: 'vpn_key', rota: 'visualizador-jwe', novo: false },
         { titulo: 'Gerador de HMAC', descricao: 'Calcular HMAC com SHA-256, SHA-512 e outros algoritmos.', icone: 'vpn_lock', rota: 'gerador-hmac', novo: true },
         { titulo: 'Visualizador de Certificado X.509', descricao: 'Ler informacoes de certificados digitais X.509.', icone: 'verified_user', rota: 'visualizador-x-509', novo: false },
-        { titulo: 'Gerador de Chaves e Certificados X.509', descricao: 'Gerar certificados digitais X.509 com chaves RSA.', icone: 'add_moderator', rota: 'gerador-certificado-x509', novo: false }
+        { titulo: 'Gerador de Chaves e Certificados X.509', descricao: 'Gerar certificados digitais X.509 com chaves RSA.', icone: 'add_moderator', rota: 'gerador-certificado-x509', novo: false },
+        { titulo: 'KanbanApp', descricao: 'Quadro kanban para organizar tarefas e projetos.', icone: 'view_kanban', rota: 'https://kanbanapp.io', novo: true }
       ]
     },
     {
@@ -59,7 +60,7 @@ export class HomeComponent {
     {
       titulo: 'Ferramentas de Imagens, Gráficas e PDF',
       ferramentas: [
-        { titulo: 'Editor de Fluxograma', descricao: 'Desenhar fluxogramas com formas, setas e cores; importar e exportar em Mermaid e XML.', icone: 'account_tree', rota: 'editor-fluxograma', novo: true },
+        { titulo: 'Editor de Fluxograma', descricao: 'Desenhar fluxogramas com formas, setas e cores; importar e exportar em Mermaid e XML.', icone: 'account_tree', rota: 'https://praebere.com', novo: true },
         { titulo: 'Juntador de PDFs e Imagens', descricao: 'Juntar varios PDFs e imagens em um unico arquivo PDF ou imagem, com reordenacao.', icone: 'merge_type', rota: 'juntador-pdf', novo: false },
         { titulo: 'Separador de PDFs', descricao: 'Separar um PDF em paginas individuais, baixar como ZIP de PDFs ou JPGs.', icone: 'call_split', rota: 'separador-pdf', novo: false },
         { titulo: 'Conversor OCR', descricao: 'Extrair texto de imagens usando OCR local com Tesseract.js.', icone: 'document_scanner', rota: 'conversor-imagem-texto-ocr', novo: false }
@@ -92,6 +93,10 @@ export class HomeComponent {
   }
 
   navegaFerramenta(rota: string) {
+    if (rota.startsWith('http')) {
+      window.open(rota, '_blank', 'noopener');
+      return;
+    }
     this.router.navigate(['/' + rota]);
   }
 

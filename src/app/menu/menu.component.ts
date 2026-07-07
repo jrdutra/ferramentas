@@ -118,10 +118,6 @@ export class MenuComponent {
       this.router.navigate(['/gerador-cpf-cnpj']);
       this.dataService.setTituloAplicacao('Gerador de CPF e CNPJ');
     }
-    if (tag === 'editor-fluxograma') {
-      this.router.navigate(['/editor-fluxograma']);
-      this.dataService.setTituloAplicacao('Editor de Fluxograma');
-    }
     if (tag === 'comparador-json-yaml') {
       this.router.navigate(['/comparador-json-yaml']);
       this.dataService.setTituloAplicacao('Comparador de JSON e YAML');
