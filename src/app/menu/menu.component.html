@@ -4,11 +4,11 @@
             <div class="menu-grande">
                 <button mat-button (click)="navegaMenu('home')">
                     <mat-icon>home</mat-icon>
-                    Inicio
+                    Home
                 </button>
-                <button mat-button (click)="navegaMenu('sobre')">
+                <button mat-button (click)="navegaMenu('about')">
                     <mat-icon>info</mat-icon>
-                    Sobre
+                    About
                 </button>
             </div>
 
@@ -19,14 +19,14 @@
                     <mat-icon>menu</mat-icon>
                 </button>
                 <mat-menu #menuHamburger="matMenu">
-                    <button mat-menu-item (click)="navegaMenu('home')">Inicio</button>
-                    <button mat-menu-item (click)="navegaMenu('sobre')">Sobre</button>
+                    <button mat-menu-item (click)="navegaMenu('home')">Home</button>
+                    <button mat-menu-item (click)="navegaMenu('about')">About</button>
                 </mat-menu>
             </div>
-            <span class="menu-hamburger">Ferramentas</span>
+            <span class="menu-hamburger">Tools</span>
             <span class="example-spacer menu-hamburger"></span>
             <button mat-icon-button class="example-icon home-icon menu-hamburger"
-                aria-label="Ir para a pagina inicial" (click)="navegaMenu('home')">
+                aria-label="Go to home page" (click)="navegaMenu('home')">
                 <mat-icon>home</mat-icon>
             </button>
         </mat-toolbar>

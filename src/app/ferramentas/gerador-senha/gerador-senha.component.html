@@ -1,9 +1,9 @@
 <div class="senha-layout">
 
-  <!-- Comprimento -->
+  <!-- Length -->
   <div class="secao-comprimento">
     <div class="comprimento-header">
-      <span class="opcao-label">Comprimento</span>
+      <span class="opcao-label">Length</span>
       <span class="comprimento-valor">{{ comprimento }}</span>
     </div>
     <mat-slider min="4" max="128" step="1" class="slider-comprimento">
@@ -14,9 +14,9 @@
     </div>
   </div>
 
-  <!-- Conjuntos de caracteres -->
+  <!-- Character sets -->
   <div class="secao-opcao">
-    <span class="opcao-label">Caracteres</span>
+    <span class="opcao-label">Characters</span>
     <div class="toggle-group">
       <button *ngFor="let c of conjuntos"
         class="toggle-btn"
@@ -26,16 +26,16 @@
       </button>
       <button class="toggle-btn" [class.toggle-on]="excluirAmbiguos"
         (click)="excluirAmbiguos = !excluirAmbiguos; gerar()"
-        matTooltip="Exclui: I l 1 O 0 o">
+        matTooltip="Excludes: I l 1 O 0 o">
         <mat-icon>visibility_off</mat-icon>
-        Sem ambíguos
+        No ambiguous
       </button>
     </div>
   </div>
 
-  <!-- Quantidade -->
+  <!-- Quantity -->
   <div class="secao-opcao">
-    <span class="opcao-label">Quantidade</span>
+    <span class="opcao-label">Quantity</span>
     <div class="chip-group">
       <button *ngFor="let n of opcQtd"
         class="chip-qtd" [class.chip-ativo]="quantidade === n"
@@ -43,38 +43,38 @@
     </div>
   </div>
 
-  <!-- Indicador de força -->
+  <!-- Strength indicator -->
   <div class="forca-container" *ngIf="senhas.length > 0">
-    <span class="forca-label">Força</span>
+    <span class="forca-label">Strength</span>
     <div class="forca-barra-bg">
       <div class="forca-barra" [style.width.%]="barraForca" [class]="'forca-' + forca"></div>
     </div>
     <span class="forca-texto" [class]="'forca-' + forca">{{ labelForca }}</span>
   </div>
 
-  <!-- Ações -->
+  <!-- Actions -->
   <div class="acoes">
     <button mat-raised-button color="primary" (click)="gerar()">
       <mat-icon>autorenew</mat-icon>
-      Gerar
+      Generate
     </button>
     <button mat-raised-button class="btn-copiar-todos" [class.btn-copiado]="todosCopiados"
       [disabled]="senhas.length === 0" (click)="copiarTodos()">
       <mat-icon>{{ todosCopiados ? 'check' : 'copy_all' }}</mat-icon>
-      {{ todosCopiados ? 'Copiado!' : 'Copiar todos' }}
+      {{ todosCopiados ? 'Copied!' : 'Copy all' }}
     </button>
     <button mat-raised-button class="btn-limpar" [disabled]="senhas.length === 0" (click)="limpar()">
       <mat-icon>clear</mat-icon>
-      Limpar
+      Clear
     </button>
   </div>
 
-  <!-- Lista de senhas -->
+  <!-- Password list -->
   <div class="lista-senhas" *ngIf="senhas.length > 0">
     <div class="senha-item" *ngFor="let s of senhas; let i = index">
       <code class="senha-valor">{{ s }}</code>
       <button mat-icon-button class="btn-copiar-item" [class.copiado]="foiCopiado(i)"
-        (click)="copiar(s, i)" [matTooltip]="foiCopiado(i) ? 'Copiado!' : 'Copiar'">
+        (click)="copiar(s, i)" [matTooltip]="foiCopiado(i) ? 'Copied!' : 'Copy'">
         <mat-icon>{{ foiCopiado(i) ? 'check' : 'content_copy' }}</mat-icon>
       </button>
     </div>
@@ -83,19 +83,19 @@
 </div>
 
 <div class="instrucoes">
-  <h2>Instruções</h2>
+  <h2>Instructions</h2>
 
-  <h4 class="sublinhado">Como gerar senhas</h4>
-  <p>Ajuste o comprimento pelo controle deslizante, selecione os conjuntos de caracteres desejados e clique em <strong>Gerar</strong>. As senhas são geradas automaticamente a cada alteração de configuração. Use o botão de cópia ao lado de cada senha ou <strong>Copiar todos</strong> para copiar a lista completa.</p>
+  <h4 class="sublinhado">How to generate passwords</h4>
+  <p>Adjust the length with the slider, select the desired character sets and click <strong>Generate</strong>. Passwords are generated automatically whenever a setting changes. Use the copy button next to each password or <strong>Copy all</strong> to copy the complete list.</p>
 
-  <h4 class="sublinhado">Conjuntos de caracteres</h4>
-  <p><strong>A–Z</strong> e <strong>a–z</strong> incluem as letras maiúsculas e minúsculas do alfabeto. <strong>0–9</strong> adiciona os dígitos numéricos. <strong>!&#64;#…</strong> adiciona símbolos especiais. Pelo menos um conjunto deve estar ativo. A opção <strong>Sem ambíguos</strong> remove caracteres visualmente parecidos como <code>I</code>, <code>l</code>, <code>1</code>, <code>O</code>, <code>0</code> e <code>o</code>, reduzindo erros ao digitar a senha manualmente.</p>
+  <h4 class="sublinhado">Character sets</h4>
+  <p><strong>A–Z</strong> and <strong>a–z</strong> include the uppercase and lowercase letters of the alphabet. <strong>0–9</strong> adds the numeric digits. <strong>!&#64;#…</strong> adds special symbols. At least one set must be active. The <strong>No ambiguous</strong> option removes visually similar characters such as <code>I</code>, <code>l</code>, <code>1</code>, <code>O</code>, <code>0</code> and <code>o</code>, reducing errors when typing the password manually.</p>
 
-  <h4 class="sublinhado">Indicador de força</h4>
-  <p>A força estimada considera o comprimento da senha e a diversidade de conjuntos de caracteres ativos. Senhas com 16 ou mais caracteres usando todos os quatro conjuntos são classificadas como <strong>Muito forte</strong>. Para contas críticas recomenda-se no mínimo 20 caracteres.</p>
+  <h4 class="sublinhado">Strength indicator</h4>
+  <p>The estimated strength takes into account the password length and the diversity of active character sets. Passwords with 16 or more characters using all four sets are rated as <strong>Very strong</strong>. For critical accounts, at least 20 characters are recommended.</p>
 
-  <h2>Boas práticas de senhas</h2>
-  <p>Uma senha segura combina comprimento elevado com aleatoriedade real. Senhas geradas por algoritmos criptográficos, como as produzidas por esta ferramenta, são muito mais seguras do que senhas criadas por humanos, que tendem a seguir padrões previsíveis como substituições de letras por números (<em>a→4, e→3</em>) ou o uso de palavras do dicionário.</p>
+  <h2>Password best practices</h2>
+  <p>A secure password combines high length with real randomness. Passwords generated by cryptographic algorithms, like those produced by this tool, are much more secure than passwords created by humans, which tend to follow predictable patterns such as replacing letters with numbers (<em>a→4, e→3</em>) or using dictionary words.</p>
 
-  <p>Nunca reutilize senhas entre serviços diferentes. Utilize um gerenciador de senhas para armazenar senhas únicas e complexas para cada conta. Esta ferramenta realiza toda a geração localmente no navegador, sem transmitir nenhum dado para servidores externos.</p>
+  <p>Never reuse passwords across different services. Use a password manager to store unique and complex passwords for each account. This tool performs all generation locally in the browser, without transmitting any data to external servers.</p>
 </div>

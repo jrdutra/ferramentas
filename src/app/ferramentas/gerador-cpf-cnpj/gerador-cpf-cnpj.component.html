@@ -1,45 +1,45 @@
 <div class="cpf-layout">
 
-  <!-- Tipo -->
+  <!-- Type -->
   <div class="secao-opcao">
-    <span class="opcao-label">Documento</span>
+    <span class="opcao-label">Document</span>
     <div class="tipo-grupo">
       <button class="tipo-btn" [class.tipo-ativo]="tipo === 'cpf'" (click)="selecionarTipo('cpf')">
         <mat-icon>person</mat-icon>
         CPF
-        <span class="tipo-desc">Pessoa Física</span>
+        <span class="tipo-desc">Individual</span>
       </button>
       <button class="tipo-btn" [class.tipo-ativo]="tipo === 'cnpj'" (click)="selecionarTipo('cnpj')">
         <mat-icon>business</mat-icon>
         CNPJ
-        <span class="tipo-desc">Pessoa Jurídica</span>
+        <span class="tipo-desc">Company</span>
       </button>
       <button class="tipo-btn" [class.tipo-ativo]="tipo === 'cnpj-alfa'" (click)="selecionarTipo('cnpj-alfa')">
         <mat-icon>badge</mat-icon>
-        CNPJ Alfa
-        <span class="tipo-desc">Alfanumérico</span>
+        CNPJ Alpha
+        <span class="tipo-desc">Alphanumeric</span>
       </button>
     </div>
   </div>
 
-  <!-- Formato -->
+  <!-- Format -->
   <div class="secao-opcao">
-    <span class="opcao-label">Formato</span>
+    <span class="opcao-label">Format</span>
     <div class="chip-group">
       <button class="chip-qtd" [class.chip-ativo]="formatado" (click)="formatado = true; gerar()">
-        Com formatação
+        Formatted
         <span class="chip-exemplo">{{ exemploFormato() }}</span>
       </button>
       <button class="chip-qtd" [class.chip-ativo]="!formatado" (click)="formatado = false; gerar()">
-        Sem formatação
+        Unformatted
         <span class="chip-exemplo">{{ exemploSemFormato() }}</span>
       </button>
     </div>
   </div>
 
-  <!-- Quantidade -->
+  <!-- Quantity -->
   <div class="secao-opcao">
-    <span class="opcao-label">Quantidade</span>
+    <span class="opcao-label">Quantity</span>
     <div class="chip-group">
       <button *ngFor="let n of opcQtd"
         class="chip-qtd" [class.chip-ativo]="quantidade === n"
@@ -47,29 +47,29 @@
     </div>
   </div>
 
-  <!-- Ações -->
+  <!-- Actions -->
   <div class="acoes">
     <button mat-raised-button color="primary" (click)="gerar()">
       <mat-icon>refresh</mat-icon>
-      Gerar
+      Generate
     </button>
     <button mat-raised-button class="btn-copiar-todos" [class.btn-copiado]="todosCopiados"
       [disabled]="!resultados.length" (click)="copiarTodos()">
       <mat-icon>{{ todosCopiados ? 'check' : 'copy_all' }}</mat-icon>
-      {{ todosCopiados ? 'Copiado!' : 'Copiar todos' }}
+      {{ todosCopiados ? 'Copied!' : 'Copy all' }}
     </button>
     <button mat-raised-button class="btn-limpar" [disabled]="!resultados.length" (click)="limpar()">
       <mat-icon>clear</mat-icon>
-      Limpar
+      Clear
     </button>
   </div>
 
-  <!-- Lista -->
+  <!-- List -->
   <div class="lista-resultados" *ngIf="resultados.length > 0">
     <div class="item-resultado" *ngFor="let r of resultados; let i = index">
       <code class="valor-resultado">{{ r }}</code>
       <button mat-icon-button class="btn-copiar-item" [class.copiado]="foiCopiado(i)"
-        (click)="copiar(r, i)" [matTooltip]="foiCopiado(i) ? 'Copiado!' : 'Copiar'">
+        (click)="copiar(r, i)" [matTooltip]="foiCopiado(i) ? 'Copied!' : 'Copy'">
         <mat-icon>{{ foiCopiado(i) ? 'check' : 'content_copy' }}</mat-icon>
       </button>
     </div>
@@ -78,25 +78,25 @@
 </div>
 
 <div class="instrucoes">
-  <h2>Instruções</h2>
+  <h2>Instructions</h2>
 
-  <h4 class="sublinhado">Como gerar CPF ou CNPJ</h4>
-  <p>Selecione o tipo de documento, escolha o formato de saída e a quantidade desejada, depois clique em <strong>Gerar</strong>. Os números são gerados automaticamente ao trocar qualquer opção. Todos os documentos gerados são matematicamente válidos — os dígitos verificadores são calculados seguindo os algoritmos oficiais da Receita Federal.</p>
+  <h4 class="sublinhado">How to generate a CPF or CNPJ</h4>
+  <p>Select the document type, choose the output format and the desired quantity, then click <strong>Generate</strong>. The numbers are generated automatically whenever you change any option. All generated documents are mathematically valid — the check digits are calculated following the official algorithms of the Brazilian Federal Revenue Service (Receita Federal).</p>
 
-  <h4 class="sublinhado">Formatos de saída</h4>
-  <p><strong>Com formatação</strong> exibe o CPF no padrão <code>000.000.000-00</code> e o CNPJ no padrão <code>00.000.000/0001-00</code>, conforme usados em documentos e sistemas. <strong>Sem formatação</strong> retorna apenas os caracteres sem pontuação, útil para popular bancos de dados ou campos que não aceitam máscara.</p>
+  <h4 class="sublinhado">Output formats</h4>
+  <p><strong>Formatted</strong> displays the CPF in the <code>000.000.000-00</code> pattern and the CNPJ in the <code>00.000.000/0001-00</code> pattern, as used in documents and systems. <strong>Unformatted</strong> returns only the characters without punctuation, useful for populating databases or fields that do not accept a mask.</p>
 
-  <h2>Sobre CPF e CNPJ</h2>
+  <h2>About CPF and CNPJ</h2>
 
-  <h4 class="sublinhado">CPF — Cadastro de Pessoas Físicas</h4>
-  <p>O CPF é composto por 11 dígitos: 9 dígitos base seguidos de 2 dígitos verificadores calculados pelo Módulo 11. O primeiro dígito verificador é obtido a partir dos 9 primeiros dígitos e o segundo a partir dos 10 primeiros. Esse mecanismo permite detectar erros de digitação e impede que qualquer número aleatório de 11 dígitos seja considerado um CPF válido.</p>
+  <h4 class="sublinhado">CPF — Individual Taxpayer Registry</h4>
+  <p>The CPF is made up of 11 digits: 9 base digits followed by 2 check digits calculated with Modulo 11. The first check digit is obtained from the first 9 digits and the second from the first 10. This mechanism allows typing errors to be detected and prevents any random 11-digit number from being considered a valid CPF.</p>
 
-  <h4 class="sublinhado">CNPJ — Cadastro Nacional da Pessoa Jurídica</h4>
-  <p>O CNPJ é composto por 14 dígitos: 8 dígitos identificam a empresa (raiz), 4 dígitos identificam a filial (normalmente <code>0001</code> para a matriz) e os últimos 2 são dígitos verificadores calculados pelo Módulo 11. Os CNPJs gerados usam <code>0001</code> como número de filial, representando a matriz da empresa.</p>
+  <h4 class="sublinhado">CNPJ — National Registry of Legal Entities</h4>
+  <p>The CNPJ is made up of 14 digits: 8 digits identify the company (root), 4 digits identify the branch (usually <code>0001</code> for the headquarters) and the last 2 are check digits calculated with Modulo 11. The generated CNPJs use <code>0001</code> as the branch number, representing the company's headquarters.</p>
 
-  <h4 class="sublinhado">CNPJ Alfanumérico — nova modalidade</h4>
-  <p>A partir de julho de 2026, a Receita Federal passa a emitir CNPJs alfanuméricos conforme a Instrução Normativa RFB nº 2.229/2024. Os 8 primeiros caracteres da raiz podem conter letras maiúsculas (A–Z) além de dígitos (0–9), enquanto o código de filial (<code>0001</code>) e os dois dígitos verificadores continuam numéricos. O cálculo dos dígitos verificadores usa o mesmo Módulo 11, com o valor numérico de cada letra definido pelo seu código ASCII menos 55 (A = 10, B = 11 … Z = 35).</p>
+  <h4 class="sublinhado">Alphanumeric CNPJ — new format</h4>
+  <p>Starting in July 2026, the Receita Federal will begin issuing alphanumeric CNPJs in accordance with RFB Normative Instruction No. 2,229/2024. The first 8 characters of the root can contain uppercase letters (A–Z) as well as digits (0–9), while the branch code (<code>0001</code>) and the two check digits remain numeric. The check digit calculation uses the same Modulo 11, with the numeric value of each letter defined by its ASCII code minus 55 (A = 10, B = 11 … Z = 35).</p>
 
-  <h4 class="sublinhado">Uso para testes</h4>
-  <p>Esta ferramenta destina-se exclusivamente a fins de desenvolvimento e testes de software. Os documentos gerados são matematicamente válidos mas não pertencem a nenhuma pessoa física ou jurídica real. Nunca utilize CPFs ou CNPJs gerados para fins fraudulentos ou ilegais.</p>
+  <h4 class="sublinhado">Use for testing</h4>
+  <p>This tool is intended exclusively for software development and testing purposes. The generated documents are mathematically valid but do not belong to any real individual or company. Never use generated CPFs or CNPJs for fraudulent or illegal purposes.</p>
 </div>

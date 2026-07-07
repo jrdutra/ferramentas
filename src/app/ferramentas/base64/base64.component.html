@@ -3,7 +3,7 @@
     <div class="div-interna-texto-esqueda">
 
         <mat-form-field appearance="fill">
-            <mat-label>TEXTO</mat-label>
+            <mat-label>TEXT</mat-label>
             <textarea [(ngModel)]="strTexto" (ngModelChange)="codificaTexto()" matInput
                 style="height: 10em; box-sizing: border-box; resize: none; border: none;"></textarea>
         </mat-form-field>
@@ -21,10 +21,10 @@
 </div>
 
 <div class="mapeamento-visual" *ngIf="segmentos.length > 0">
-    <p class="mapeamento-legenda">As cores indicam blocos de bytes correspondentes entre o texto original e o Base64.</p>
+    <p class="mapeamento-legenda">The colors indicate matching blocks of bytes between the original text and the Base64.</p>
     <div class="mapeamento-container">
         <div class="mapeamento-coluna">
-            <span class="mapeamento-label">Texto</span>
+            <span class="mapeamento-label">Text</span>
             <div class="mapeamento-blocos">
                 <span *ngFor="let seg of segmentos; let i = index"
                     class="mapeamento-bloco"
@@ -47,34 +47,32 @@
 </div>
 
 <div class="instrucoes">
-    <h2>Instruções</h2>
+    <h2>Instructions</h2>
 
-    <h4 class="sublinhado">Codificando um texto em base64</h4>
-    <p>Para codificar um texto em base64, basta colocar o texto na caixa de texto à esqueda ou acima, dependendo da
-        resolução da sua tela. O fato de alterar o conteúdo da caixa de texto de nome "texto" já executa a função de
-        codificar o conteúdo em base64.</p>
+    <h4 class="sublinhado">Encoding text to Base64</h4>
+    <p>To encode text to Base64, simply type the text in the text box on the left or above, depending on your screen
+        resolution. Changing the content of the text box named "text" automatically runs the function that encodes the
+        content to Base64.</p>
 
-    <h4 class="sublinhado">Decodificando um conteúdo em base64 para texto</h4>
-    <p>Para decodificar um conteúdo em base64 para texto, basta colar o conteúdo em base64 na caixa de texto à direita
-        ou abaixo, dependendo da resolução da sua tela. Quando a caixa de texto "base64" tem seu conteúdo alterado, a
-        função de decodificação de base64 já é executada.</p>
+    <h4 class="sublinhado">Decoding Base64 content to text</h4>
+    <p>To decode Base64 content to text, simply paste the Base64 content in the text box on the right or below,
+        depending on your screen resolution. When the "base64" text box has its content changed, the Base64 decoding
+        function runs automatically.</p>
 
-    <h2>O que é o Base64</h2>
-    <p>Base64 é um método para codificar dados usando apenas 64 caracteres, tipicamente escolhidos de um conjunto que é
-        comum aos sistemas de codificação de e-mail e páginas web. Os 64 caracteres incluem letras maiúsculas e
-        minúsculas (A-Z, a-z), números (0-9), além de dois símbolos especiais (+ e /). Em algumas variantes de Base64, o
-        sinal de igual (=) é usado como um caractere de preenchimento para garantir que a cadeia de caracteres final
-        tenha um tamanho múltiplo de 4.</p>
+    <h2>What is Base64</h2>
+    <p>Base64 is a method for encoding data using only 64 characters, typically chosen from a set that is common to
+        email and web page encoding systems. The 64 characters include uppercase and lowercase letters (A-Z, a-z),
+        numbers (0-9), plus two special symbols (+ and /). In some Base64 variants, the equals sign (=) is used as a
+        padding character to ensure that the final string has a length that is a multiple of 4.</p>
 
-    <p>O processo de codificação Base64 pega dados binários e os divide em strings de 6 bits. Cada string de 6 bits é
-        então mapeada para um dos 64 caracteres no conjunto de Base64. Como cada caractere em Base64 representa 6 bits
-        de dados, ele é eficiente para codificar grandes quantidades de informações que precisam ser transferidas ou
-        armazenadas de maneira mais legível.</p>
+    <p>The Base64 encoding process takes binary data and splits it into 6-bit strings. Each 6-bit string is then mapped
+        to one of the 64 characters in the Base64 set. Since each Base64 character represents 6 bits of data, it is
+        efficient for encoding large amounts of information that need to be transferred or stored in a more readable
+        way.</p>
 
-    <p>O Base64 é comumente usado em diversas aplicações, como na codificação de anexos de e-mail para garantir que
-        passem corretamente pelos sistemas de correio, na codificação de dados em URLs, e para converter imagens ou
-        outros tipos de arquivos em strings para incorporação em documentos XML ou JSON. Embora o Base64 seja útil para
-        essas finalidades, é importante notar que ele não é uma forma de criptografia e não deve ser usado para proteger
-        dados sensíveis.</p>
+    <p>Base64 is commonly used in various applications, such as encoding email attachments to ensure they pass
+        correctly through mail systems, encoding data in URLs, and converting images or other types of files into
+        strings for embedding in XML or JSON documents. Although Base64 is useful for these purposes, it is important to
+        note that it is not a form of encryption and should not be used to protect sensitive data.</p>
 
 </div>

@@ -6,7 +6,7 @@
     <div class="div-externa-texto">
         <div class="div-interna-esqueda">
             <mat-form-field appearance="fill">
-                <mat-label>Json de Entrada</mat-label>
+                <mat-label>Input Json</mat-label>
                 <textarea [(ngModel)]="strJson" matInput
                     style="height: 15em; box-sizing: border-box; resize: none; border: none;">
                 </textarea>
@@ -14,7 +14,7 @@
         </div>
         <div class="div-interna-direita">
             <mat-form-field appearance="fill">
-                <mat-label>Json Processado</mat-label>
+                <mat-label>Processed Json</mat-label>
                 <textarea [(ngModel)]="strResultado" matInput
                     style="height: 15em; box-sizing: border-box; resize: none; border: none;">
                 </textarea>
@@ -24,45 +24,45 @@
     <div class="div-externa-texto">
         <div class="div-interna-esqueda">
             <button style="margin-bottom: 0.5em;" mat-raised-button (click)="copiaJsonProcessadoEntrada()" class="botao botao-flutuante"
-                color="primary">Copiar Json Processado</button>
+                color="primary">Copy Processed Json</button>
         </div>
     </div>
     <div class="caixa-botoes">
-        <button mat-raised-button (click)="minificaJson()" class="botao" color="primary">Minificar</button>
-        <button mat-raised-button (click)="stringficaJson()" class="botao" color="primary">Stringficar</button>
-        <button mat-raised-button (click)="formataJson()" class="botao" color="primary">Formatar</button>
+        <button mat-raised-button (click)="minificaJson()" class="botao" color="primary">Minify</button>
+        <button mat-raised-button (click)="stringficaJson()" class="botao" color="primary">Stringify</button>
+        <button mat-raised-button (click)="formataJson()" class="botao" color="primary">Format</button>
     </div>
 </div>
 <div class="instrucoes">
-    <h2>Instruções</h2>
+    <h2>Instructions</h2>
 
-    <h4 class="sublinhado">Minificar</h4>
-    <p>Funcionalidade de remover toda quebra de linha do JSON, bem como espaços que não fazem parte das informações dos
-        campos do JSON.</p>
+    <h4 class="sublinhado">Minify</h4>
+    <p>Feature that removes every line break from the JSON, as well as spaces that are not part of the JSON field
+        values.</p>
 
-    <h4 class="sublinhado">Stringficar</h4>
-    <p>Funcionalidade de converter um json em um formato stringficado, em resumo essa funcionalidade converte quebras de
-        linhas em "\n" e " em \".</p>
+    <h4 class="sublinhado">Stringify</h4>
+    <p>Feature that converts a JSON into a stringified format; in short, this feature converts line breaks into "\n" and
+        " into \".</p>
 
-    <h4 class="sublinhado">Formatar</h4>
-    <p>Funcionalide chamada de beautify em ingles, onde estrutura um json minificado ou stringficado em um json
-        formatado, com quebras de linhas e identações.</p>
+    <h4 class="sublinhado">Format</h4>
+    <p>Feature also called beautify, which structures a minified or stringified JSON into a formatted JSON, with line
+        breaks and indentation.</p>
 
-    <h2>O que é JSON</h2>
-    <p>JSON (JavaScript Object Notation) é um formato leve de troca de dados que é fácil de ler e escrever para humanos,
-        além de ser fácil para máquinas interpretarem e gerarem. Ele é baseado em um subconjunto da linguagem de
-        programação JavaScript, embora seja independente de linguagem. JSON é frequentemente utilizado para transmitir
-        dados estruturados através da internet entre um servidor e um cliente da web, mas também é amplamente utilizado
-        em muitas outras situações de armazenamento e troca de dados.</p>
+    <h2>What is JSON</h2>
+    <p>JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and
+        write, as well as easy for machines to parse and generate. It is based on a subset of the JavaScript programming
+        language, although it is language-independent. JSON is often used to transmit structured data over the internet
+        between a server and a web client, but it is also widely used in many other data storage and exchange
+        situations.</p>
 
-    <p>JSON foi derivado de uma linguagem de programação chamada JavaScript, que é comumente usada para criar páginas da
-        web interativas. Foi formalizado por Douglas Crockford na especificação RFC 4627 em 2006. Desde então, tornou-se
-        um formato de dados popular e amplamente adotado em diversas áreas, como desenvolvimento de software, análise de
-        dados, Internet das Coisas (IoT) e muito mais.</p>
+    <p>JSON was derived from a programming language called JavaScript, which is commonly used to create interactive web
+        pages. It was formalized by Douglas Crockford in the RFC 4627 specification in 2006. Since then, it has become a
+        popular and widely adopted data format across many areas, such as software development, data analysis, the
+        Internet of Things (IoT) and much more.</p>
 
-    <p>Sua simplicidade e capacidade de representar dados de forma estruturada e legível fazem do JSON uma escolha comum
-        para muitas aplicações. Um objeto JSON consiste em pares chave/valor, onde as chaves são strings e os valores
-        podem ser strings, números, booleanos, arrays, objetos ou null. Isso o torna extremamente flexível para
-        representar uma ampla variedade de dados.</p>
+    <p>Its simplicity and ability to represent data in a structured and readable way make JSON a common choice for many
+        applications. A JSON object consists of key/value pairs, where the keys are strings and the values can be
+        strings, numbers, booleans, arrays, objects or null. This makes it extremely flexible for representing a wide
+        variety of data.</p>
 
 </div>

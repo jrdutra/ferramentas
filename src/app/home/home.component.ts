@@ -22,48 +22,48 @@ export class HomeComponent {
 
   gruposFerramentas = [
     {
-      titulo: 'Ferramentas de Texto',
+      titulo: 'Text Tools',
       ferramentas: [
-        { titulo: 'Editor de Texto', descricao: 'Limpar, quebrar, substituir e transformar textos.', icone: 'notes', rota: 'quebra-linha', novo: false },
-        { titulo: 'Template de Texto', descricao: 'Preencher textos usando variaveis reutilizaveis.', icone: 'article', rota: 'template-de-texto', novo: false },
-        { titulo: 'Compartilhador de Texto', descricao: 'Compartilhar texto em tempo real pela aplicacao.', icone: 'public', rota: 'texto-global', novo: false },
-        { titulo: 'Texto para QRCode', descricao: 'Gerar QRCode a partir de textos e URLs.', icone: 'qr_code_2', rota: 'texto-qrcode', novo: false },
-        { titulo: 'Conversor OCR', descricao: 'Extrair texto de imagens usando OCR.', icone: 'document_scanner', rota: 'conversor-imagem-texto-ocr', novo: false },
-        { titulo: 'Diff de Texto', descricao: 'Comparar dois blocos de texto e destacar as diferencas.', icone: 'difference', rota: 'diff-texto', novo: true }
+        { titulo: 'Text Editor', descricao: 'Clean, split, replace and transform text.', icone: 'notes', rota: 'text-editor', novo: false },
+        { titulo: 'Text Template', descricao: 'Fill in text using reusable variables.', icone: 'article', rota: 'text-template', novo: false },
+        { titulo: 'Text Sharer', descricao: 'Share text in real time through the app.', icone: 'public', rota: 'shared-text', novo: false },
+        { titulo: 'Text to QR Code', descricao: 'Generate QR codes from text and URLs.', icone: 'qr_code_2', rota: 'text-to-qrcode', novo: false },
+        { titulo: 'OCR Converter', descricao: 'Extract text from images using OCR.', icone: 'document_scanner', rota: 'image-to-text-ocr', novo: false },
+        { titulo: 'Text Diff', descricao: 'Compare two blocks of text and highlight the differences.', icone: 'difference', rota: 'text-diff', novo: true }
       ]
     },
     {
-      titulo: 'Ferramentas de Desenvolvimento',
+      titulo: 'Developer Tools',
       ferramentas: [
-        { titulo: 'Conversor de Base64 Texto', descricao: 'Codificar e decodificar textos em Base64.', icone: 'data_object', rota: 'base64', novo: false },
-        { titulo: 'Codec de URL', descricao: 'Codificar e decodificar URLs rapidamente.', icone: 'link', rota: 'codec-de-url', novo: false },
-        { titulo: 'Editor de Json', descricao: 'Formatar, minificar e stringificar JSON.', icone: 'integration_instructions', rota: 'editor-json', novo: false },
-        { titulo: 'Gerador de Hash', descricao: 'Gerar hashes MD5, SHA-1, SHA-256 e SHA-512.', icone: 'tag', rota: 'gerador-hash', novo: true },
-        { titulo: 'Comparador de JSON e YAML', descricao: 'Comparar campos de dois JSON ou YAML: faltantes em cada lado e valores diferentes.', icone: 'compare_arrows', rota: 'comparador-json-yaml', novo: true },
-        { titulo: 'Gerador de UUID', descricao: 'Gerar UUIDs v4, v7 e v1 com opcoes de formato.', icone: 'fingerprint', rota: 'gerador-uuid', novo: true },
-        { titulo: 'Unix Timestamp', descricao: 'Converter datas e horarios para timestamp Unix.', icone: 'schedule', rota: 'unix-timestamp', novo: false },
-        { titulo: 'Manipulador de JWT', descricao: 'Inspecionar cabecalho, corpo e assinatura de tokens JWT.', icone: 'token', rota: 'visualizador-jwt', novo: false },
-        { titulo: 'Manipulador de JWE', descricao: 'Separar header, chave criptografada, IV, ciphertext e tag de tokens JWE.', icone: 'vpn_key', rota: 'visualizador-jwe', novo: false },
-        { titulo: 'Gerador de HMAC', descricao: 'Calcular HMAC com SHA-256, SHA-512 e outros algoritmos.', icone: 'vpn_lock', rota: 'gerador-hmac', novo: true },
-        { titulo: 'Visualizador de Certificado X.509', descricao: 'Ler informacoes de certificados digitais X.509.', icone: 'verified_user', rota: 'visualizador-x-509', novo: false },
-        { titulo: 'Gerador de Chaves e Certificados X.509', descricao: 'Gerar certificados digitais X.509 com chaves RSA.', icone: 'add_moderator', rota: 'gerador-certificado-x509', novo: false },
-        { titulo: 'KanbanApp', descricao: 'Quadro kanban para organizar tarefas e projetos.', icone: 'view_kanban', rota: 'https://kanbanapp.io', novo: true }
+        { titulo: 'Base64 Text Converter', descricao: 'Encode and decode text in Base64.', icone: 'data_object', rota: 'base64', novo: false },
+        { titulo: 'URL Codec', descricao: 'Encode and decode URLs quickly.', icone: 'link', rota: 'url-codec', novo: false },
+        { titulo: 'JSON Editor', descricao: 'Format, minify and stringify JSON.', icone: 'integration_instructions', rota: 'json-editor', novo: false },
+        { titulo: 'Hash Generator', descricao: 'Generate MD5, SHA-1, SHA-256 and SHA-512 hashes.', icone: 'tag', rota: 'hash-generator', novo: true },
+        { titulo: 'JSON & YAML Comparator', descricao: 'Compare fields of two JSON or YAML files: missing on each side and differing values.', icone: 'compare_arrows', rota: 'json-yaml-compare', novo: true },
+        { titulo: 'UUID Generator', descricao: 'Generate v4, v7 and v1 UUIDs with formatting options.', icone: 'fingerprint', rota: 'uuid-generator', novo: true },
+        { titulo: 'Unix Timestamp', descricao: 'Convert dates and times to Unix timestamps.', icone: 'schedule', rota: 'unix-timestamp', novo: false },
+        { titulo: 'JWT Manipulator', descricao: 'Inspect header, payload and signature of JWT tokens.', icone: 'token', rota: 'jwt-viewer', novo: false },
+        { titulo: 'JWE Manipulator', descricao: 'Split header, encrypted key, IV, ciphertext and tag of JWE tokens.', icone: 'vpn_key', rota: 'jwe-viewer', novo: false },
+        { titulo: 'HMAC Generator', descricao: 'Compute HMAC with SHA-256, SHA-512 and other algorithms.', icone: 'vpn_lock', rota: 'hmac-generator', novo: true },
+        { titulo: 'X.509 Certificate Viewer', descricao: 'Read information from X.509 digital certificates.', icone: 'verified_user', rota: 'x509-viewer', novo: false },
+        { titulo: 'X.509 Key & Certificate Generator', descricao: 'Generate X.509 digital certificates with RSA keys.', icone: 'add_moderator', rota: 'x509-generator', novo: false },
+        { titulo: 'KanbanApp', descricao: 'Kanban board to organize tasks and projects.', icone: 'view_kanban', rota: 'https://kanbanapp.io', novo: true }
       ]
     },
     {
-      titulo: 'Geradores',
+      titulo: 'Generators',
       ferramentas: [
-        { titulo: 'Gerador de Senhas', descricao: 'Gerar senhas seguras com configuracoes de comprimento e caracteres.', icone: 'password', rota: 'gerador-senha', novo: true },
-        { titulo: 'Gerador de CPF e CNPJ', descricao: 'Gerar CPFs e CNPJs validos para testes de software.', icone: 'badge', rota: 'gerador-cpf-cnpj', novo: true }
+        { titulo: 'Password Generator', descricao: 'Generate secure passwords with length and character options.', icone: 'password', rota: 'password-generator', novo: true },
+        { titulo: 'CPF & CNPJ Generator', descricao: 'Generate valid CPF and CNPJ numbers for software testing.', icone: 'badge', rota: 'cpf-cnpj-generator', novo: true }
       ]
     },
     {
-      titulo: 'Ferramentas de Imagens, Gráficas e PDF',
+      titulo: 'Image, Graphics & PDF Tools',
       ferramentas: [
-        { titulo: 'Editor de Fluxograma', descricao: 'Desenhar fluxogramas com formas, setas e cores; importar e exportar em Mermaid e XML.', icone: 'account_tree', rota: 'https://praebere.com', novo: true },
-        { titulo: 'Juntador de PDFs e Imagens', descricao: 'Juntar varios PDFs e imagens em um unico arquivo PDF ou imagem, com reordenacao.', icone: 'merge_type', rota: 'juntador-pdf', novo: false },
-        { titulo: 'Separador de PDFs', descricao: 'Separar um PDF em paginas individuais, baixar como ZIP de PDFs ou JPGs.', icone: 'call_split', rota: 'separador-pdf', novo: false },
-        { titulo: 'Conversor OCR', descricao: 'Extrair texto de imagens usando OCR local com Tesseract.js.', icone: 'document_scanner', rota: 'conversor-imagem-texto-ocr', novo: false }
+        { titulo: 'Flowchart Editor', descricao: 'Draw flowcharts with shapes, arrows and colors; import and export as Mermaid and XML.', icone: 'account_tree', rota: 'https://praebere.com', novo: true },
+        { titulo: 'PDF & Image Merger', descricao: 'Merge multiple PDFs and images into a single PDF or image file, with reordering.', icone: 'merge_type', rota: 'pdf-merger', novo: false },
+        { titulo: 'PDF Splitter', descricao: 'Split a PDF into individual pages, download as a ZIP of PDFs or JPGs.', icone: 'call_split', rota: 'pdf-splitter', novo: false },
+        { titulo: 'OCR Converter', descricao: 'Extract text from images using local OCR with Tesseract.js.', icone: 'document_scanner', rota: 'image-to-text-ocr', novo: false }
       ]
     }
   ];
@@ -89,7 +89,7 @@ export class HomeComponent {
   constructor(private dataService: DataService, private router: Router) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Inicio');
+    this.dataService.setTituloAplicacao('Home');
   }
 
   navegaFerramenta(rota: string) {

@@ -1,13 +1,13 @@
 <div class="hash-layout">
 
-  <!-- Entrada -->
+  <!-- Input -->
   <div class="painel-entrada">
     <mat-form-field appearance="outline" class="campo-texto-completo">
-      <mat-label>Texto de entrada</mat-label>
+      <mat-label>Input text</mat-label>
       <textarea matInput
         [(ngModel)]="textoEntrada"
         (ngModelChange)="calcularHashes()"
-        placeholder="Digite ou cole o texto aqui..."
+        placeholder="Type or paste the text here..."
         rows="6"
         class="textarea-mono">
       </textarea>
@@ -16,18 +16,18 @@
     <div class="acoes-entrada">
       <button mat-raised-button color="primary" (click)="alternarMaiusculas()"
         [class.ativo]="maiusculas"
-        matTooltip="Alternar maiúsculas/minúsculas nos hashes">
+        matTooltip="Toggle uppercase/lowercase in the hashes">
         <mat-icon>text_fields</mat-icon>
-        {{ maiusculas ? 'MAIÚSCULAS' : 'minúsculas' }}
+        {{ maiusculas ? 'UPPERCASE' : 'lowercase' }}
       </button>
       <button mat-raised-button color="primary" (click)="limpar()" class="btn-sobrio">
         <mat-icon>clear</mat-icon>
-        Limpar
+        Clear
       </button>
     </div>
   </div>
 
-  <!-- Resultados -->
+  <!-- Results -->
   <div class="painel-resultados">
     <div *ngFor="let r of resultados" class="card-hash">
       <div class="hash-cabecalho">
@@ -38,7 +38,7 @@
         <button mat-icon-button
           (click)="copiar(r.algoritmo, r.valor)"
           [disabled]="!r.valor"
-          [matTooltip]="copiado === r.algoritmo ? 'Copiado!' : 'Copiar hash'"
+          [matTooltip]="copiado === r.algoritmo ? 'Copied!' : 'Copy hash'"
           class="botao-copiar">
           <mat-icon>{{ copiado === r.algoritmo ? 'check' : 'content_copy' }}</mat-icon>
         </button>
@@ -55,25 +55,25 @@
 </div>
 
 <div class="instrucoes">
-  <h2>Instruções</h2>
+  <h2>Instructions</h2>
 
-  <h4 class="sublinhado">Como gerar o hash de um texto</h4>
-  <p>Basta digitar ou colar o texto no campo acima. Os quatro hashes são calculados automaticamente em tempo real, sem necessidade de clicar em nenhum botão. Use o ícone de cópia ao lado de cada resultado para copiar o valor para a área de transferência.</p>
+  <h4 class="sublinhado">How to generate the hash of a text</h4>
+  <p>Simply type or paste the text in the field above. The four hashes are calculated automatically in real time, with no need to click any button. Use the copy icon next to each result to copy the value to the clipboard.</p>
 
-  <h4 class="sublinhado">Alternar entre maiúsculas e minúsculas</h4>
-  <p>Por padrão os hashes são exibidos em letras minúsculas. Clique no botão de alternância no canto superior direito do painel para exibir os valores em letras maiúsculas, que é o formato exigido por algumas APIs e sistemas legados.</p>
+  <h4 class="sublinhado">Toggle between uppercase and lowercase</h4>
+  <p>By default the hashes are shown in lowercase letters. Click the toggle button in the top right corner of the panel to display the values in uppercase letters, which is the format required by some APIs and legacy systems.</p>
 
-  <h2>O que é uma Função de Hash Criptográfico</h2>
-  <p>Uma função de hash criptográfico é um algoritmo matemático que transforma qualquer quantidade de dados em uma sequência de tamanho fixo, chamada de hash ou digest. A mesma entrada sempre produz o mesmo hash, mas qualquer alteração mínima na entrada — mesmo um único caractere — resulta em um hash completamente diferente. Essa propriedade é conhecida como efeito avalanche.</p>
+  <h2>What is a Cryptographic Hash Function</h2>
+  <p>A cryptographic hash function is a mathematical algorithm that transforms any amount of data into a fixed-length sequence, called a hash or digest. The same input always produces the same hash, but any minimal change to the input — even a single character — results in a completely different hash. This property is known as the avalanche effect.</p>
 
-  <p>Funções de hash são amplamente usadas para verificar a integridade de arquivos, armazenar senhas de forma segura, assinar digitalmente documentos e garantir a autenticidade de mensagens. É importante diferenciar hash de criptografia: o hash é uma operação unidirecional, ou seja, não é possível recuperar o texto original a partir do hash.</p>
+  <p>Hash functions are widely used to verify the integrity of files, store passwords securely, digitally sign documents and ensure the authenticity of messages. It is important to distinguish hashing from encryption: hashing is a one-way operation, meaning it is not possible to recover the original text from the hash.</p>
 
   <h4 class="sublinhado">MD5</h4>
-  <p>Criado em 1991 por Ronald Rivest, o MD5 produz um hash de 128 bits, representado por 32 caracteres hexadecimais. Apesar de ainda ser usado para verificação de integridade de arquivos, não é recomendado para fins de segurança, pois vulnerabilidades conhecidas permitem criar colisões — entradas diferentes que geram o mesmo hash.</p>
+  <p>Created in 1991 by Ronald Rivest, MD5 produces a 128-bit hash, represented by 32 hexadecimal characters. Although it is still used for file integrity verification, it is not recommended for security purposes, since known vulnerabilities allow the creation of collisions — different inputs that generate the same hash.</p>
 
   <h4 class="sublinhado">SHA-1</h4>
-  <p>Desenvolvido pela NSA e publicado em 1995, o SHA-1 produz um hash de 160 bits (40 caracteres hex). Foi o padrão dominante por anos em certificados SSL e assinaturas digitais, mas em 2017 pesquisadores demonstraram a primeira colisão prática, tornando-o obsoleto para uso criptográfico. Ainda é encontrado em sistemas legados.</p>
+  <p>Developed by the NSA and published in 1995, SHA-1 produces a 160-bit hash (40 hex characters). It was the dominant standard for years in SSL certificates and digital signatures, but in 2017 researchers demonstrated the first practical collision, making it obsolete for cryptographic use. It is still found in legacy systems.</p>
 
-  <h4 class="sublinhado">SHA-256 e SHA-512</h4>
-  <p>Ambos pertencem à família SHA-2, publicada pela NSA em 2001. O SHA-256 produz 256 bits (64 caracteres hex) e é o padrão recomendado para a maioria das aplicações de segurança, sendo usado em certificados TLS, Bitcoin e assinaturas de código. O SHA-512 produz 512 bits (128 caracteres hex) e oferece maior margem de segurança, sendo preferido em contextos que exigem resistência extra a ataques de força bruta.</p>
+  <h4 class="sublinhado">SHA-256 and SHA-512</h4>
+  <p>Both belong to the SHA-2 family, published by the NSA in 2001. SHA-256 produces 256 bits (64 hex characters) and is the recommended standard for most security applications, being used in TLS certificates, Bitcoin and code signing. SHA-512 produces 512 bits (128 hex characters) and offers a greater security margin, being preferred in contexts that require extra resistance to brute-force attacks.</p>
 </div>

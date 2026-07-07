@@ -28,100 +28,99 @@ export class MenuComponent {
   navegaMenu(tag: string) {
     if (tag === 'home') {
       this.router.navigate(['/home']);
-      this.dataService.setTituloAplicacao('Inicio');
+      this.dataService.setTituloAplicacao('Home');
     }
-    if (tag === 'sobre') {
-      this.router.navigate(['/sobre']);
-      this.dataService.setTituloAplicacao('Sobre');
+    if (tag === 'about') {
+      this.router.navigate(['/about']);
+      this.dataService.setTituloAplicacao('About');
     }
     if (tag === 'base64') {
       this.router.navigate(['/base64']);
-      this.dataService.setTituloAplicacao('Conversor de Base64');
+      this.dataService.setTituloAplicacao('Base64 Converter');
     }
-    if (tag === 'editor-json') {
-      this.router.navigate(['/editor-json']);
-      this.dataService.setTituloAplicacao('Editor de Json');
+    if (tag === 'json-editor') {
+      this.router.navigate(['/json-editor']);
+      this.dataService.setTituloAplicacao('JSON Editor');
     }
-    if (tag === 'visualizador-jwt') {
-      this.router.navigate(['/visualizador-jwt']);
-      this.dataService.setTituloAplicacao('Manipulador de JWT');
+    if (tag === 'jwt-viewer') {
+      this.router.navigate(['/jwt-viewer']);
+      this.dataService.setTituloAplicacao('JWT Manipulator');
     }
-    if (tag === 'visualizador-jwe') {
-      this.router.navigate(['/visualizador-jwe']);
-      this.dataService.setTituloAplicacao('Manipulador de JWE');
+    if (tag === 'jwe-viewer') {
+      this.router.navigate(['/jwe-viewer']);
+      this.dataService.setTituloAplicacao('JWE Manipulator');
     }
-    if (tag === 'codec-de-url') {
-      this.router.navigate(['/codec-de-url']);
-      this.dataService.setTituloAplicacao('Codec de URL');
+    if (tag === 'url-codec') {
+      this.router.navigate(['/url-codec']);
+      this.dataService.setTituloAplicacao('URL Codec');
     }
-    if (tag === 'conversor-imagem-texto-ocr') {
-      this.router.navigate(['/conversor-imagem-texto-ocr']);
-      this.dataService.setTituloAplicacao('Conversor OCR');
+    if (tag === 'image-to-text-ocr') {
+      this.router.navigate(['/image-to-text-ocr']);
+      this.dataService.setTituloAplicacao('OCR Converter');
     }
     if (tag === 'unix-timestamp') {
       this.router.navigate(['/unix-timestamp']);
       this.dataService.setTituloAplicacao('Unix Timestamp');
     }
-    if (tag === 'texto-qrcode') {
-      this.router.navigate(['/texto-qrcode']);
-      this.dataService.setTituloAplicacao('Texto para QrCode');
+    if (tag === 'text-to-qrcode') {
+      this.router.navigate(['/text-to-qrcode']);
+      this.dataService.setTituloAplicacao('Text to QR Code');
     }
-    if (tag === 'quebra-linha') {
-      this.router.navigate(['/quebra-linha']);
-      this.dataService.setTituloAplicacao('Editor de Texto');
+    if (tag === 'text-editor') {
+      this.router.navigate(['/text-editor']);
+      this.dataService.setTituloAplicacao('Text Editor');
     }
-    if (tag === 'texto-global') {
-      this.router.navigate(['/texto-global']);
-      this.dataService.setTituloAplicacao('Compartilhador de Texto');
+    if (tag === 'shared-text') {
+      this.router.navigate(['/shared-text']);
+      this.dataService.setTituloAplicacao('Text Sharer');
     }
-    if (tag === 'template-de-texto') {
-      this.router.navigate(['/template-de-texto']);
-      this.dataService.setTituloAplicacao('Template de Texto');
+    if (tag === 'text-template') {
+      this.router.navigate(['/text-template']);
+      this.dataService.setTituloAplicacao('Text Template');
     }
-    if (tag === 'visualizador-x-509') {
-      this.router.navigate(['/visualizador-x-509']);
-      this.dataService.setTituloAplicacao('Visualizador de Certificado X.509');
+    if (tag === 'x509-viewer') {
+      this.router.navigate(['/x509-viewer']);
+      this.dataService.setTituloAplicacao('X.509 Certificate Viewer');
     }
-    if (tag === 'gerador-certificado-x509') {
-      this.router.navigate(['/gerador-certificado-x509']);
-      this.dataService.setTituloAplicacao('Gerador de Chaves e Certificados X.509');
+    if (tag === 'x509-generator') {
+      this.router.navigate(['/x509-generator']);
+      this.dataService.setTituloAplicacao('X.509 Key & Certificate Generator');
     }
-    if (tag === 'juntador-pdf') {
-      this.router.navigate(['/juntador-pdf']);
-      this.dataService.setTituloAplicacao('Juntador de PDFs e Imagens');
+    if (tag === 'pdf-merger') {
+      this.router.navigate(['/pdf-merger']);
+      this.dataService.setTituloAplicacao('PDF & Image Merger');
     }
-    if (tag === 'separador-pdf') {
-      this.router.navigate(['/separador-pdf']);
-      this.dataService.setTituloAplicacao('Separador de PDFs');
+    if (tag === 'pdf-splitter') {
+      this.router.navigate(['/pdf-splitter']);
+      this.dataService.setTituloAplicacao('PDF Splitter');
     }
-    if (tag === 'gerador-hash') {
-      this.router.navigate(['/gerador-hash']);
-      this.dataService.setTituloAplicacao('Gerador de Hash');
+    if (tag === 'hash-generator') {
+      this.router.navigate(['/hash-generator']);
+      this.dataService.setTituloAplicacao('Hash Generator');
     }
-    if (tag === 'diff-texto') {
-      this.router.navigate(['/diff-texto']);
-      this.dataService.setTituloAplicacao('Diff de Texto');
+    if (tag === 'text-diff') {
+      this.router.navigate(['/text-diff']);
+      this.dataService.setTituloAplicacao('Text Diff');
     }
-    if (tag === 'gerador-uuid') {
-      this.router.navigate(['/gerador-uuid']);
-      this.dataService.setTituloAplicacao('Gerador de UUID');
+    if (tag === 'uuid-generator') {
+      this.router.navigate(['/uuid-generator']);
+      this.dataService.setTituloAplicacao('UUID Generator');
     }
-    if (tag === 'gerador-senha') {
-      this.router.navigate(['/gerador-senha']);
-      this.dataService.setTituloAplicacao('Gerador de Senhas');
+    if (tag === 'password-generator') {
+      this.router.navigate(['/password-generator']);
+      this.dataService.setTituloAplicacao('Password Generator');
     }
-    if (tag === 'gerador-hmac') {
-      this.router.navigate(['/gerador-hmac']);
-      this.dataService.setTituloAplicacao('Gerador de HMAC');
+    if (tag === 'hmac-generator') {
+      this.router.navigate(['/hmac-generator']);
+      this.dataService.setTituloAplicacao('HMAC Generator');
     }
-    if (tag === 'gerador-cpf-cnpj') {
-      this.router.navigate(['/gerador-cpf-cnpj']);
-      this.dataService.setTituloAplicacao('Gerador de CPF e CNPJ');
+    if (tag === 'cpf-cnpj-generator') {
+      this.router.navigate(['/cpf-cnpj-generator']);
+      this.dataService.setTituloAplicacao('CPF & CNPJ Generator');
     }
-    if (tag === 'comparador-json-yaml') {
-      this.router.navigate(['/comparador-json-yaml']);
-      this.dataService.setTituloAplicacao('Comparador de JSON e YAML');
+    if (tag === 'json-yaml-compare') {
+      this.router.navigate(['/json-yaml-compare']);
+      this.dataService.setTituloAplicacao('JSON & YAML Comparator');
     }
   }
 }
-
