@@ -26,7 +26,6 @@ export class HomeComponent {
       ferramentas: [
         { titulo: 'Text Editor', descricao: 'Clean, split, replace and transform text.', icone: 'notes', rota: 'text-editor', novo: false },
         { titulo: 'Text Template', descricao: 'Fill in text using reusable variables.', icone: 'article', rota: 'text-template', novo: false },
-        { titulo: 'Text Sharer', descricao: 'Share text in real time through the app.', icone: 'public', rota: 'shared-text', novo: false },
         { titulo: 'Text to QR Code', descricao: 'Generate QR codes from text and URLs.', icone: 'qr_code_2', rota: 'text-to-qrcode', novo: false },
         { titulo: 'OCR Converter', descricao: 'Extract text from images using OCR.', icone: 'document_scanner', rota: 'image-to-text-ocr', novo: false },
         { titulo: 'Text Diff', descricao: 'Compare two blocks of text and highlight the differences.', icone: 'difference', rota: 'text-diff', novo: true }
@@ -47,6 +46,7 @@ export class HomeComponent {
         { titulo: 'HMAC Generator', descricao: 'Compute HMAC with SHA-256, SHA-512 and other algorithms.', icone: 'vpn_lock', rota: 'hmac-generator', novo: true },
         { titulo: 'X.509 Certificate Viewer', descricao: 'Read information from X.509 digital certificates.', icone: 'verified_user', rota: 'x509-viewer', novo: false },
         { titulo: 'X.509 Key & Certificate Generator', descricao: 'Generate X.509 digital certificates with RSA keys.', icone: 'add_moderator', rota: 'x509-generator', novo: false },
+        { titulo: 'Certificate & Key Validator', descricao: 'Validate certificate expiry and match certificates, public and private keys. Supports PEM, CRT, CER, DER, PFX and P12.', icone: 'fact_check', rota: 'certificate-validator', novo: true },
         { titulo: 'KanbanApp', descricao: 'Kanban board to organize tasks and projects.', icone: 'view_kanban', rota: 'https://kanbanapp.io', novo: true }
       ]
     },

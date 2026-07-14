@@ -4,8 +4,28 @@
             <mat-icon>upload_file</mat-icon>
             Choose File
         </button>
-        <input hidden (change)="carregaArquivo($event)" #fileInput type="file">
+        <input hidden (change)="carregaArquivo($event)" #fileInput type="file" accept=".crt,.cer,.pem,.txt">
     </div>
+
+    <div class="entrada-certificado">
+        <mat-form-field appearance="fill">
+            <mat-label>Certificate (PEM or Base64)</mat-label>
+            <textarea matInput [(ngModel)]="certificadoColado" (ngModelChange)="aoAlterarCertificadoColado()"
+                rows="9" spellcheck="false"
+                placeholder="Paste the certificate with or without BEGIN CERTIFICATE and END CERTIFICATE"></textarea>
+            <mat-hint>Line breaks are optional.</mat-hint>
+        </mat-form-field>
+
+        <button mat-raised-button type="button" color="primary" (click)="lerCertificadoColado()"
+            [disabled]="!certificadoColado.trim()">
+            <mat-icon>description</mat-icon>
+            Read Certificate
+        </button>
+    </div>
+
+    @if(mensagemErro){
+    <div class="mensagem-erro" role="alert">{{mensagemErro}}</div>
+    }
 
     @if(mostraDados){
     <div class="certificado-resultado">
@@ -151,7 +171,8 @@
 <div>
     <h2>Instructions</h2>
 
-    <p>Select the certificate using the "Choose File" button.</p>
+    <p>Select the certificate using the "Choose File" button or paste its PEM/Base64 content into the certificate
+        field. PEM headers and line breaks are optional.</p>
 
     <h2>What is an X.509 certificate</h2>
     <p>An X.509 certificate is a widely used standard for public key infrastructure (PKI). It provides a trusted way to

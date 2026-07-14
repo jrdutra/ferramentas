@@ -18,7 +18,9 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class VisualizadorX509Component {
 
-  arquivoCertificado: File = new File([], "", { type: "text/plain" });
+  arquivoCertificado: File = new File([], '', { type: 'text/plain' });
+  certificadoColado = '';
+  mensagemErro = '';
 
   mostraDados: boolean = false;
 
@@ -54,29 +56,44 @@ export class VisualizadorX509Component {
     private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao("X.509 Certificate Viewer");
+    this.dataService.setTituloAplicacao('X.509 Certificate Viewer');
   }
 
   carregaArquivo(event: any): void {
-    if (event.target != null) {
+    if (event.target?.files?.length) {
       this.arquivoCertificado = event.target.files[0];
       this.fileName = this.arquivoCertificado.name;
+      this.mensagemErro = '';
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const stringCertificado = e.target.result;
+        this.certificadoColado = stringCertificado;
         this.leCertificado(stringCertificado);
         this.cdr.detectChanges();
       };
       reader.onerror = (error) => {
         console.error('Error reading file:', error);
+        this.mostraDados = false;
+        this.mensagemErro = 'The selected file could not be read.';
+        this.cdr.detectChanges();
       };
       reader.readAsText(this.arquivoCertificado);
     }
   }
 
-  leCertificado(pem: string) {
+  lerCertificadoColado(): void {
+    this.fileName = 'Pasted certificate';
+    this.leCertificado(this.certificadoColado);
+  }
+
+  aoAlterarCertificadoColado(): void {
+    this.mensagemErro = '';
+  }
+
+  leCertificado(pem: string): void {
     try {
-      let dadosCertificado = this.certificateService.extraiInformacoesCertificado(pem);
+      const certificadoNormalizado = this.normalizaCertificado(pem);
+      const dadosCertificado = this.certificateService.extraiInformacoesCertificado(certificadoNormalizado);
 
       this.blob = dadosCertificado.blob;
       this.issuer = dadosCertificado.issuer;
@@ -106,9 +123,27 @@ export class VisualizadorX509Component {
       this.fingerPrintSha512Hex = this.formatarHex(dadosCertificado.fingerPrintSha512);
 
       this.mostraDados = true;
+      this.mensagemErro = '';
     } catch (e) {
       console.error('Error reading certificate:', e);
+      this.mostraDados = false;
+      this.mensagemErro = 'Invalid certificate. Paste a Base64 X.509 certificate, with or without the PEM headers.';
     }
+  }
+
+  private normalizaCertificado(valor: string): string {
+    const base64 = valor
+      .trim()
+      .replace(/-----BEGIN CERTIFICATE-----/gi, '')
+      .replace(/-----END CERTIFICATE-----/gi, '')
+      .replace(/\s/g, '');
+
+    if (!base64 || !/^[A-Za-z0-9+/]+={0,2}$/.test(base64) || base64.length % 4 !== 0) {
+      throw new Error('Invalid certificate Base64');
+    }
+
+    const linhas = base64.match(/.{1,64}/g) || [];
+    return `-----BEGIN CERTIFICATE-----\n${linhas.join('\n')}\n-----END CERTIFICATE-----`;
   }
 
   private formatarHex(hex: string): string {

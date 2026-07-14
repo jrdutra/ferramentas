@@ -1,0 +1,224 @@
+<div class="validador">
+
+  <!-- Área de upload -->
+  <section class="painel upload-painel">
+    <div class="dropzone"
+         [class.arrastando]="arrastando"
+         (dragover)="aoArrastarSobre($event)"
+         (dragleave)="aoSairArrasto($event)"
+         (drop)="aoSoltar($event)">
+      <mat-icon class="dropzone-icone">cloud_upload</mat-icon>
+      <p class="dropzone-titulo">Drop certificate or key files here</p>
+      <p class="dropzone-sub">or</p>
+      <button mat-raised-button color="primary" (click)="fileInput.click()">
+        <mat-icon>folder_open</mat-icon>
+        Choose files
+      </button>
+      <input #fileInput type="file" multiple hidden
+             (change)="aoSelecionarArquivos($event)"
+             accept=".pem,.crt,.cer,.der,.pfx,.p12,.key,.pub,.p7b,.p7c,.jwk,.json,.txt,application/x-pkcs12,application/x-x509-ca-cert,application/json">
+      <p class="dropzone-formatos">PEM · CRT · CER · DER · PFX · P12 · JWK/JWKS · public/private keys</p>
+    </div>
+
+    <div class="upload-lateral">
+      <mat-form-field appearance="outline" class="campo-senha">
+        <mat-label>Encrypted PEM key password</mat-label>
+        <input matInput type="password" [(ngModel)]="senha" placeholder="Leave empty if none">
+        <mat-icon matSuffix>lock</mat-icon>
+      </mat-form-field>
+      <p class="dica-senha">PFX/P12 passwords are requested in a dialog when you load the file.</p>
+      <button mat-stroked-button color="warn" (click)="limpar()" [disabled]="!temResultado">
+        <mat-icon>delete_sweep</mat-icon>
+        Clear all
+      </button>
+      <p class="nota-privacidade">
+        <mat-icon>shield</mat-icon>
+        Everything runs locally in your browser. No file is uploaded.
+      </p>
+    </div>
+  </section>
+
+  <!-- Erros e avisos -->
+  <div class="mensagens" *ngIf="erros.length || avisos.length">
+    <div class="msg msg-erro" *ngFor="let e of erros">
+      <mat-icon>error</mat-icon><span>{{ e }}</span>
+    </div>
+    <div class="msg msg-aviso" *ngFor="let a of avisos">
+      <mat-icon>info</mat-icon><span>{{ a }}</span>
+    </div>
+  </div>
+
+  <!-- Certificados -->
+  <section *ngIf="certificados.length" class="painel">
+    <h3 class="titulo-secao"><mat-icon>verified_user</mat-icon> Certificates ({{ certificados.length }})</h3>
+
+    <div class="cert-lista">
+      <article class="cert-card" *ngFor="let c of certificados; let ci = index; trackBy: trackById">
+        <header class="cert-cabecalho" [ngClass]="classeStatus(c)">
+          <span class="card-num">{{ ci + 1 }}</span>
+          <mat-icon>{{ iconeStatus(c) }}</mat-icon>
+          <div class="cert-cabecalho-texto">
+            <span class="cert-cn">{{ c.subjectCN || c.subject || 'Certificate' }}</span>
+            <span class="cert-badge">{{ rotuloStatus(c) }}</span>
+          </div>
+          <div class="cert-tags">
+            <span class="tag" *ngIf="c.autoAssinado">Self-signed</span>
+            <span class="tag" *ngIf="c.temChavePrivada">Has private key</span>
+            <span class="tag tag-neutra">{{ c.formato }}</span>
+          </div>
+        </header>
+
+        <div class="cert-grid">
+          <div class="cert-item"><span class="rot">Source</span><span class="val">{{ c.origem }}</span></div>
+          <div class="cert-item"><span class="rot">Subject</span><span class="val">{{ c.subject || '—' }}</span></div>
+          <div class="cert-item"><span class="rot">Issuer</span><span class="val">{{ c.issuer || '—' }}</span></div>
+          <div class="cert-item"><span class="rot">Serial</span><span class="val">{{ c.serial }}</span></div>
+          <div class="cert-item data-item" [ngClass]="validFromOk(c) ? 'data-ok' : 'data-ruim'">
+            <span class="rot">Valid from</span>
+            <span class="val">
+              <mat-icon class="data-icone">{{ validFromOk(c) ? 'check_circle' : 'cancel' }}</mat-icon>
+              {{ formataData(c.notBefore) }}
+            </span>
+            <span class="data-obs">{{ validFromOk(c) ? 'Already in effect' : 'Not yet valid' }}</span>
+          </div>
+          <div class="cert-item data-item" [ngClass]="validUntilOk(c) ? 'data-ok' : 'data-ruim'">
+            <span class="rot">Valid until</span>
+            <span class="val">
+              <mat-icon class="data-icone">{{ validUntilOk(c) ? 'check_circle' : 'cancel' }}</mat-icon>
+              {{ formataData(c.notAfter) }}
+            </span>
+            <span class="data-obs">{{ validUntilOk(c) ? 'Not expired' : 'Expired' }}</span>
+          </div>
+          <div class="cert-item"><span class="rot">Public key</span><span class="val">{{ c.algoritmoChave }}<ng-container *ngIf="c.tamanhoChaveBits"> · {{ c.tamanhoChaveBits }} bits</ng-container></span></div>
+          <div class="cert-item"><span class="rot">Signature</span><span class="val">{{ c.algoritmoAssinatura }}</span></div>
+          <div class="cert-item" *ngIf="c.sans.length"><span class="rot">SAN</span><span class="val">{{ c.sans.join('; ') }}</span></div>
+          <div class="cert-item" *ngIf="c.keyUsage.length"><span class="rot">Key usage</span><span class="val">{{ c.keyUsage.join(', ') }}</span></div>
+          <div class="cert-item cert-item-full"><span class="rot">SHA-256 fingerprint</span><span class="val mono">{{ c.fingerprintSha256 }}</span></div>
+          <div class="cert-item cert-item-full"><span class="rot">SHA-1 fingerprint</span><span class="val mono">{{ c.fingerprintSha1 }}</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Chaves -->
+  <section *ngIf="chaves.length" class="painel">
+    <h3 class="titulo-secao"><mat-icon>key</mat-icon> Keys ({{ chaves.length }})</h3>
+    <div class="chave-lista">
+      <article class="chave-card" *ngFor="let k of chaves; let ki = index; trackBy: trackById">
+        <span class="card-num">{{ certificados.length + ki + 1 }}</span>
+        <mat-icon class="chave-icone">{{ k.tipo === 'private' ? 'vpn_key' : 'key' }}</mat-icon>
+        <div class="chave-info">
+          <span class="chave-titulo">
+            {{ k.tipo === 'private' ? 'Private key' : 'Public key' }}
+            <span class="chave-formato" *ngIf="k.formatoChave">{{ k.formatoChave }}</span>
+          </span>
+          <span class="chave-arquivo">{{ k.origem }}</span>
+          <span class="chave-detalhe">
+            {{ k.algoritmo }}<ng-container *ngIf="k.tamanhoBits"> · {{ k.tamanhoBits }} bits</ng-container>
+            <ng-container *ngIf="k.criptografada"> · was encrypted</ng-container>
+          </span>
+          <span class="chave-kid" *ngIf="k.kid">
+            <span class="kid-rot">kid</span>
+            <span class="kid-val">{{ k.kid }}</span>
+            <span class="kid-flag kid-ok" *ngIf="k.kidValido === true"><mat-icon>check</mat-icon> matches key</span>
+            <span class="kid-flag kid-bad" *ngIf="k.kidValido === false"><mat-icon>close</mat-icon> does not match key</span>
+          </span>
+          <span class="chave-kid" *ngIf="k.thumbprint">
+            <span class="kid-rot">thumbprint</span>
+            <span class="kid-val">{{ k.thumbprint }}</span>
+          </span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Matriz de pareamento -->
+  <section *ngIf="temMatriz" class="painel">
+    <h3 class="titulo-secao"><mat-icon>hub</mat-icon> Key-pair compatibility</h3>
+    <p class="secao-sub">Each cell shows whether the two items share the same key pair (compared by RSA modulus, then confirmed by sign/verify when a private key is present). JWK keys are matched by key and their <strong>kid</strong> is validated against the key.</p>
+
+    <div class="legenda">
+      <span class="legenda-item"><span class="pin pin-match"></span> Match — same key pair</span>
+      <span class="legenda-item"><span class="pin pin-mismatch"></span> No match</span>
+      <span class="legenda-item"><span class="pin pin-na"></span> N/A — not comparable (non-RSA)</span>
+    </div>
+
+    <div class="matriz-wrap">
+      <div class="matriz-grid"
+           [class.hl-match]="hoverResultado === 'match'"
+           [class.hl-mismatch]="hoverResultado === 'mismatch'"
+           [class.hl-na]="hoverResultado === 'na'"
+           [style.grid-template-columns]="'minmax(150px, 240px) repeat(' + portadores.length + ', var(--cell-size))'">
+        <div class="mg-corner"></div>
+        <div class="mg-colhead" *ngFor="let p of portadores; let i = index; trackBy: trackById" [title]="p.rotulo" [class.destaque]="hoverCol === i">
+          <span class="mg-num">{{ i + 1 }}</span>
+          <mat-icon>{{ iconePortador(p.tipo) }}</mat-icon>
+          <span class="mg-colhead-txt">{{ p.rotulo }}</span>
+        </div>
+
+        <ng-container *ngFor="let linha of matriz; let i = index; trackBy: trackByLinha">
+          <div class="mg-rowhead" [title]="linha.portador.rotulo" [class.destaque]="hoverRow === i">
+            <span class="mg-num">{{ i + 1 }}</span>
+            <mat-icon>{{ iconePortador(linha.portador.tipo) }}</mat-icon>
+            <span class="mg-rowhead-txt">{{ linha.portador.rotulo }}</span>
+          </div>
+          <div *ngFor="let cel of linha.celulas; let j = index"
+               class="mg-cell"
+               (mouseenter)="aoEntrarCelula(i, j, cel.resultado)"
+               (mouseleave)="aoSairCelula()"
+               [class.realce]="hoverRow === i || hoverCol === j"
+               [class.diagonal]="cel.diagonal"
+               [class.c-match]="cel.resultado === 'match' && !cel.diagonal"
+               [class.c-mismatch]="cel.resultado === 'mismatch' && !cel.diagonal"
+               [class.c-na]="cel.resultado === 'na' && !cel.diagonal">
+            <mat-icon *ngIf="!cel.diagonal">{{ iconeCelula(cel.resultado) }}</mat-icon>
+            <span *ngIf="cel.diagonal" class="ponto">•</span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instruções -->
+  <section class="painel instrucoes">
+    <h3 class="titulo-secao"><mat-icon>help_outline</mat-icon> How to use</h3>
+    <ol>
+      <li>Drag &amp; drop or choose one or more files. You can mix certificates and keys — the tool loads them together.</li>
+      <li>When you load a <strong>PFX/P12</strong> file, a dialog asks for its password; type it and click <em>Load</em> to extract the certificate and its keys.</li>
+      <li>For an <strong>encrypted PEM private key</strong>, type the password in the side field before loading the file.</li>
+      <li>Each certificate is checked for <strong>validity dates</strong> (not-yet-valid, valid, expiring soon, expired), self-signed status, key algorithm/size, signature, SAN and key usage.</li>
+      <li>Load any combination of certificates, public keys, private keys and <strong>JWK/JWKS</strong> to see the <strong>key-pair matrix</strong> — it tells you which items belong to the same pair. For JWK keys, the <strong>kid</strong> is validated against the key.</li>
+    </ol>
+    <p class="instrucoes-nota">
+      <mat-icon>info</mat-icon>
+      Pair matching supports RSA keys. EC and other algorithms are parsed and displayed, but marked <em>N/A</em> in the compatibility matrix.
+    </p>
+  </section>
+
+  <!-- Modal de senha PFX / P12 -->
+  <div class="modal-senha-fundo" *ngIf="modalSenhaAberto" (click)="fecharModalPeloFundo($event)">
+    <div class="modal-senha" role="dialog" aria-modal="true" aria-labelledby="modal-senha-titulo">
+      <div class="modal-senha-cabecalho">
+        <mat-icon>lock</mat-icon>
+        <div>
+          <h3 id="modal-senha-titulo">Password required</h3>
+          <p>{{ filaP12.length }} PKCS#12 file(s): {{ nomesP12 }}</p>
+        </div>
+      </div>
+      <mat-form-field appearance="outline" class="campo-senha-modal">
+        <mat-label>PFX / P12 password</mat-label>
+        <input matInput type="password" [(ngModel)]="senhaModal" (keyup.enter)="confirmarSenhaP12()" autofocus>
+        <mat-icon matSuffix>vpn_key</mat-icon>
+      </mat-form-field>
+      <p class="modal-senha-dica">Leave empty if the file has no password.</p>
+      <div class="modal-senha-acoes">
+        <button mat-stroked-button (click)="cancelarSenhaP12()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="confirmarSenhaP12()">
+          <mat-icon>lock_open</mat-icon>
+          Load
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

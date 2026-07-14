@@ -9,7 +9,6 @@ import { ConversorImagemTextoOcrComponent } from './ferramentas/conversor-imagem
 import { UnixTimestampComponent } from './ferramentas/unix-timestamp/unix-timestamp.component';
 import { TextoQrcodeComponent } from './ferramentas/texto-qrcode/texto-qrcode.component';
 import { QuebraLinhaComponent } from './ferramentas/quebra-linha/quebra-linha.component';
-import { TextoGlobalComponent } from './ferramentas/texto-global/texto-global.component';
 import { TemplateDeTextoComponent } from './ferramentas/template-de-texto/template-de-texto.component';
 import { VisualizadorX509Component } from './ferramentas/visualizador-x-509/visualizador-x-509.component';
 import { GeradorCertificadoX509Component } from './ferramentas/gerador-certificado-x509/gerador-certificado-x509.component';
@@ -24,6 +23,7 @@ import { GeradorSenhaComponent } from './ferramentas/gerador-senha/gerador-senha
 import { GeradorHmacComponent } from './ferramentas/gerador-hmac/gerador-hmac.component';
 import { GeradorCpfCnpjComponent } from './ferramentas/gerador-cpf-cnpj/gerador-cpf-cnpj.component';
 import { ComparadorJsonYamlComponent } from './ferramentas/comparador-json-yaml/comparador-json-yaml.component';
+import { ValidadorCertificadoComponent } from './ferramentas/validador-certificado/validador-certificado.component';
 
 const seo = {
   home: {
@@ -148,6 +148,11 @@ const seo = {
     title: 'JSON and YAML Comparator',
     description: 'Compare JSON and YAML files structurally to find missing fields and different values side by side.',
     keywords: 'json compare, yaml compare, json diff, yaml diff, compare json online, compare yaml online, structural diff'
+  },
+  certificateValidator: {
+    title: 'Certificate and Key Validator',
+    description: 'Validate X.509 certificates and keys: check expiry dates and match certificates, public keys and private keys. Supports PEM, CRT, CER, DER, PFX and P12.',
+    keywords: 'certificate validator, key pair checker, pfx validator, p12 validator, x509 validator, certificate expiry check, match private key certificate, verify key pair'
   }
 };
 
@@ -164,8 +169,6 @@ export const routes: Routes = [
   { path: 'unix-timestamp', component: UnixTimestampComponent, data: { seo: seo.unixTimestamp } },
   { path: 'text-to-qrcode', component: TextoQrcodeComponent, data: { seo: seo.qrCode } },
   { path: 'text-editor', component: QuebraLinhaComponent, data: { seo: seo.textEditor } },
-  { path: 'shared-text', component: TextoGlobalComponent, data: { seo: seo.sharedText } },
-  { path: 'shared-text/:grupo/:canal', component: TextoGlobalComponent, data: { seo: seo.sharedText } },
   { path: 'text-template', component: TemplateDeTextoComponent, data: { seo: seo.textTemplate } },
   { path: 'x509-viewer', component: VisualizadorX509Component, data: { seo: seo.x509Viewer } },
   { path: 'x509-generator', component: GeradorCertificadoX509Component, data: { seo: seo.x509Generator } },
@@ -178,4 +181,5 @@ export const routes: Routes = [
   { path: 'hmac-generator', component: GeradorHmacComponent, data: { seo: seo.hmacGenerator } },
   { path: 'cpf-cnpj-generator', component: GeradorCpfCnpjComponent, data: { seo: seo.cpfCnpjGenerator } },
   { path: 'json-yaml-compare', component: ComparadorJsonYamlComponent, data: { seo: seo.jsonYamlCompare } },
+  { path: 'certificate-validator', component: ValidadorCertificadoComponent, data: { seo: seo.certificateValidator } },
 ];

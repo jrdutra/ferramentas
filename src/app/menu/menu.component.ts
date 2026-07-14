@@ -70,10 +70,6 @@ export class MenuComponent {
       this.router.navigate(['/text-editor']);
       this.dataService.setTituloAplicacao('Text Editor');
     }
-    if (tag === 'shared-text') {
-      this.router.navigate(['/shared-text']);
-      this.dataService.setTituloAplicacao('Text Sharer');
-    }
     if (tag === 'text-template') {
       this.router.navigate(['/text-template']);
       this.dataService.setTituloAplicacao('Text Template');
@@ -121,6 +117,10 @@ export class MenuComponent {
     if (tag === 'json-yaml-compare') {
       this.router.navigate(['/json-yaml-compare']);
       this.dataService.setTituloAplicacao('JSON & YAML Comparator');
+    }
+    if (tag === 'certificate-validator') {
+      this.router.navigate(['/certificate-validator']);
+      this.dataService.setTituloAplicacao('Certificate & Key Validator');
     }
   }
 }
