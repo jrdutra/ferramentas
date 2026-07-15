@@ -34,6 +34,10 @@ export class MenuComponent {
       this.router.navigate(['/about']);
       this.dataService.setTituloAplicacao('About');
     }
+    if (tag === 'articles') {
+      this.router.navigate(['/articles']);
+      this.dataService.setTituloAplicacao('Articles');
+    }
     if (tag === 'base64') {
       this.router.navigate(['/base64']);
       this.dataService.setTituloAplicacao('Base64 Converter');
@@ -61,6 +65,10 @@ export class MenuComponent {
     if (tag === 'unix-timestamp') {
       this.router.navigate(['/unix-timestamp']);
       this.dataService.setTituloAplicacao('Unix Timestamp');
+    }
+    if (tag === 'ipv4-range-calculator') {
+      this.router.navigate(['/ipv4-range-calculator']);
+      this.dataService.setTituloAplicacao('IPv4 CIDR Range Calculator');
     }
     if (tag === 'text-to-qrcode') {
       this.router.navigate(['/text-to-qrcode']);

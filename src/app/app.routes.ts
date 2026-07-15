@@ -24,6 +24,13 @@ import { GeradorHmacComponent } from './ferramentas/gerador-hmac/gerador-hmac.co
 import { GeradorCpfCnpjComponent } from './ferramentas/gerador-cpf-cnpj/gerador-cpf-cnpj.component';
 import { ComparadorJsonYamlComponent } from './ferramentas/comparador-json-yaml/comparador-json-yaml.component';
 import { ValidadorCertificadoComponent } from './ferramentas/validador-certificado/validador-certificado.component';
+import { ArticlesComponent } from './articles/articles.component';
+import { WhatIsUtilyToolsComponent } from './articles/what-is-utily-tools/what-is-utily-tools.component';
+import { ToolArticleComponent } from './articles/tool-article/tool-article.component';
+import { ARTICLE_SUMMARIES, TOOL_ARTICLES } from './articles/articles.data';
+import { CriadorPdfComponent } from './ferramentas/criador-pdf/criador-pdf.component';
+import { TextoGlobalComponent } from './ferramentas/texto-global/texto-global.component';
+import { CalculadoraRangeIpComponent } from './ferramentas/calculadora-range-ip/calculadora-range-ip.component';
 
 const seo = {
   home: {
@@ -37,6 +44,35 @@ const seo = {
     description: 'Learn about utily.tools, a collection of practical browser-based tools for developers and technology professionals.',
     keywords: 'utily.tools, developer utilities, browser tools, online developer tools',
     canonicalPath: '/about'
+  },
+  articles: {
+    title: 'Articles for Developers',
+    description: 'Read practical articles about developer tools, data formats, security, productivity and the features available on utily.tools.',
+    keywords: 'developer articles, programming tools, developer productivity, utily.tools guides',
+    canonicalPath: '/articles',
+    pageType: 'collection',
+    imagePath: '/assets/articles/what-is-utily-tools-cover.png',
+    imageWidth: 1731,
+    imageHeight: 909,
+    articleItems: ARTICLE_SUMMARIES.map((article) => ({
+      title: article.title,
+      path: article.route,
+      imagePath: article.image
+    }))
+  },
+  whatIsUtilyTools: {
+    title: 'What Is utily.tools?',
+    description: 'Discover what utily.tools is, which browser-based developer utilities it provides and how it helps with everyday technical tasks.',
+    keywords: 'what is utily.tools, online developer tools, browser developer utilities, free developer tools',
+    canonicalPath: '/articles/what-is-utily-tools',
+    pageType: 'article',
+    imagePath: '/assets/articles/what-is-utily-tools-cover.png',
+    imageWidth: 1731,
+    imageHeight: 909,
+    publishedTime: '2026-07-15T00:00:00-03:00',
+    modifiedTime: '2026-07-15T00:00:00-03:00',
+    author: 'João Ricardo Dutra',
+    section: 'About utily.tools'
   },
   base64: {
     title: 'Base64 Encoder and Decoder Online',
@@ -72,6 +108,12 @@ const seo = {
     title: 'Unix Timestamp Converter',
     description: 'Convert Unix timestamps to readable dates and convert dates back to epoch time in seconds or milliseconds.',
     keywords: 'unix timestamp converter, epoch converter, timestamp to date, date to timestamp, epoch time, unix time'
+  },
+  ipv4Range: {
+    title: 'IPv4 CIDR Range and Subnet Calculator',
+    description: 'Calculate IPv4 CIDR ranges, subnet masks, network and broadcast addresses, usable hosts and wildcard masks for prefixes from /0 to /32.',
+    keywords: 'IP range calculator, CIDR calculator, subnet calculator, IPv4 calculator, subnet mask calculator, network address, broadcast address',
+    canonicalPath: '/ipv4-range-calculator'
   },
   qrCode: {
     title: 'Text to QR Code Generator',
@@ -113,6 +155,11 @@ const seo = {
     title: 'PDF Splitter Online',
     description: 'Split PDF files into pages and download individual PDFs or JPG images in a ZIP file.',
     keywords: 'split pdf, pdf splitter, extract pdf pages, pdf to jpg pages, separate pdf, online pdf splitter'
+  },
+  pdfCreator: {
+    title: 'Create PDF from Images Online',
+    description: 'Arrange JPG, PNG and other browser-supported images and create one PDF locally in your browser.',
+    keywords: 'create pdf from images, images to pdf, jpg to pdf, png to pdf, online pdf creator'
   },
   hashGenerator: {
     title: 'Hash Generator for MD5, SHA-1 and SHA-256',
@@ -156,30 +203,74 @@ const seo = {
   }
 };
 
+const toolData = (seoData: object, articleSlug: string, toolName: string) => {
+  const article = TOOL_ARTICLES.find((item) => item.slug === articleSlug);
+
+  return {
+    seo: seoData,
+    relatedArticle: {
+      title: article?.title ?? toolName,
+      path: `/articles/${articleSlug}`,
+      toolName,
+      image: article?.image ?? '/assets/articles/what-is-utily-tools-cover.png',
+      imageAlt: article?.imageAlt ?? `Illustration for the ${toolName} article`
+    }
+  };
+};
+
+const toolArticleRoutes: Routes = TOOL_ARTICLES.map((article) => ({
+  path: `articles/${article.slug}`,
+  component: ToolArticleComponent,
+  data: {
+    articleSlug: article.slug,
+    seo: {
+      title: article.title,
+      description: article.description,
+      keywords: article.keywords,
+      canonicalPath: `/articles/${article.slug}`,
+      pageType: 'article',
+      imagePath: article.image,
+      imageWidth: article.imageWidth ?? 1731,
+      imageHeight: article.imageHeight ?? 909,
+      publishedTime: `${article.publishedIso}T00:00:00-03:00`,
+      modifiedTime: article.modifiedIso,
+      author: 'João Ricardo Dutra',
+      section: article.category
+    }
+  }
+}));
+
 export const routes: Routes = [
   { path: '', component: HomeComponent, data: { seo: seo.home } },
   { path: 'home', component: HomeComponent, data: { seo: seo.home } },
   { path: 'about', component: SobreComponent, data: { seo: seo.about } },
-  { path: 'base64', component: Base64Component, data: { seo: seo.base64 } },
-  { path: 'json-editor', component: EditorJsonComponent, data: { seo: seo.jsonEditor } },
-  { path: 'jwt-viewer', component: VisualizadorJwtComponent, data: { seo: seo.jwtViewer } },
-  { path: 'jwe-viewer', component: VisualizadorJweComponent, data: { seo: seo.jweViewer } },
-  { path: 'url-codec', component: UrlcodecComponent, data: { seo: seo.urlCodec } },
-  { path: 'image-to-text-ocr', component: ConversorImagemTextoOcrComponent, data: { seo: seo.ocr } },
-  { path: 'unix-timestamp', component: UnixTimestampComponent, data: { seo: seo.unixTimestamp } },
-  { path: 'text-to-qrcode', component: TextoQrcodeComponent, data: { seo: seo.qrCode } },
-  { path: 'text-editor', component: QuebraLinhaComponent, data: { seo: seo.textEditor } },
-  { path: 'text-template', component: TemplateDeTextoComponent, data: { seo: seo.textTemplate } },
-  { path: 'x509-viewer', component: VisualizadorX509Component, data: { seo: seo.x509Viewer } },
-  { path: 'x509-generator', component: GeradorCertificadoX509Component, data: { seo: seo.x509Generator } },
-  { path: 'pdf-merger', component: JuntadorPdfComponent, data: { seo: seo.pdfMerger } },
-  { path: 'pdf-splitter', component: SeparadorPdfComponent, data: { seo: seo.pdfSplitter } },
-  { path: 'hash-generator', component: GeradorHashComponent, data: { seo: seo.hashGenerator } },
-  { path: 'text-diff', component: DiffTextoComponent, data: { seo: seo.textDiff } },
-  { path: 'uuid-generator', component: GeradorUuidComponent, data: { seo: seo.uuidGenerator } },
-  { path: 'password-generator', component: GeradorSenhaComponent, data: { seo: seo.passwordGenerator } },
-  { path: 'hmac-generator', component: GeradorHmacComponent, data: { seo: seo.hmacGenerator } },
-  { path: 'cpf-cnpj-generator', component: GeradorCpfCnpjComponent, data: { seo: seo.cpfCnpjGenerator } },
-  { path: 'json-yaml-compare', component: ComparadorJsonYamlComponent, data: { seo: seo.jsonYamlCompare } },
-  { path: 'certificate-validator', component: ValidadorCertificadoComponent, data: { seo: seo.certificateValidator } },
+  { path: 'articles', component: ArticlesComponent, data: { seo: seo.articles } },
+  { path: 'articles/what-is-utily-tools', component: WhatIsUtilyToolsComponent, data: { seo: seo.whatIsUtilyTools } },
+  ...toolArticleRoutes,
+  { path: 'base64', component: Base64Component, data: toolData(seo.base64, 'base64-encoding-decoding-guide', 'Base64 Text Converter') },
+  { path: 'json-editor', component: EditorJsonComponent, data: toolData(seo.jsonEditor, 'json-formatting-minification-and-validation', 'JSON Editor') },
+  { path: 'jwt-viewer', component: VisualizadorJwtComponent, data: toolData(seo.jwtViewer, 'jwt-structure-signing-and-validation', 'JWT Manipulator') },
+  { path: 'jwe-viewer', component: VisualizadorJweComponent, data: toolData(seo.jweViewer, 'jwe-encryption-compact-serialization', 'JWE Manipulator') },
+  { path: 'url-codec', component: UrlcodecComponent, data: toolData(seo.urlCodec, 'url-encoding-percent-encoding-guide', 'URL Codec') },
+  { path: 'image-to-text-ocr', component: ConversorImagemTextoOcrComponent, data: toolData(seo.ocr, 'ocr-image-to-text-technology', 'OCR Converter') },
+  { path: 'unix-timestamp', component: UnixTimestampComponent, data: toolData(seo.unixTimestamp, 'unix-timestamp-epoch-time-conversion', 'Unix Timestamp') },
+  { path: 'ipv4-range-calculator', component: CalculadoraRangeIpComponent, data: toolData(seo.ipv4Range, 'ipv4-cidr-subnet-range-calculation-guide', 'IPv4 CIDR Range Calculator') },
+  { path: 'text-to-qrcode', component: TextoQrcodeComponent, data: toolData(seo.qrCode, 'qr-code-generation-error-correction', 'Text to QR Code') },
+  { path: 'text-editor', component: QuebraLinhaComponent, data: toolData(seo.textEditor, 'online-text-editor-text-transformation-guide', 'Text Editor') },
+  { path: 'text-template', component: TemplateDeTextoComponent, data: toolData(seo.textTemplate, 'text-templates-variables-and-automation', 'Text Template') },
+  { path: 'x509-viewer', component: VisualizadorX509Component, data: toolData(seo.x509Viewer, 'x509-certificate-fields-and-decoding', 'X.509 Certificate Viewer') },
+  { path: 'x509-generator', component: GeradorCertificadoX509Component, data: toolData(seo.x509Generator, 'generate-self-signed-x509-certificates', 'X.509 Key & Certificate Generator') },
+  { path: 'pdf-merger', component: JuntadorPdfComponent, data: toolData(seo.pdfMerger, 'merge-pdf-and-images-in-browser', 'PDF & Image Merger') },
+  { path: 'pdf-splitter', component: SeparadorPdfComponent, data: toolData(seo.pdfSplitter, 'split-pdf-pages-and-export-jpg', 'PDF Splitter') },
+  { path: 'pdf-creator', component: CriadorPdfComponent, data: toolData(seo.pdfCreator, 'create-pdf-from-images-browser', 'PDF Creator') },
+  { path: 'hash-generator', component: GeradorHashComponent, data: toolData(seo.hashGenerator, 'cryptographic-hash-functions-md5-sha', 'Hash Generator') },
+  { path: 'text-diff', component: DiffTextoComponent, data: toolData(seo.textDiff, 'text-diff-algorithms-and-comparison', 'Text Diff') },
+  { path: 'uuid-generator', component: GeradorUuidComponent, data: toolData(seo.uuidGenerator, 'uuid-v1-v4-v7-generation-guide', 'UUID Generator') },
+  { path: 'password-generator', component: GeradorSenhaComponent, data: toolData(seo.passwordGenerator, 'secure-password-generation-entropy', 'Password Generator') },
+  { path: 'hmac-generator', component: GeradorHmacComponent, data: toolData(seo.hmacGenerator, 'hmac-message-authentication-guide', 'HMAC Generator') },
+  { path: 'cpf-cnpj-generator', component: GeradorCpfCnpjComponent, data: toolData(seo.cpfCnpjGenerator, 'cpf-cnpj-check-digit-generation-for-testing', 'CPF & CNPJ Generator') },
+  { path: 'json-yaml-compare', component: ComparadorJsonYamlComponent, data: toolData(seo.jsonYamlCompare, 'compare-json-yaml-structural-diff', 'JSON & YAML Comparator') },
+  { path: 'certificate-validator', component: ValidadorCertificadoComponent, data: toolData(seo.certificateValidator, 'validate-certificates-and-key-pairs', 'Certificate & Key Validator') },
+  { path: 'shared-text', component: TextoGlobalComponent, data: toolData(seo.sharedText, 'real-time-text-sharing-websockets', 'Text Sharer') },
+  { path: 'shared-text/:grupo/:canal', component: TextoGlobalComponent, data: toolData(seo.sharedText, 'real-time-text-sharing-websockets', 'Text Sharer') },
 ];

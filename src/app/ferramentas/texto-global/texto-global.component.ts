@@ -177,7 +177,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
         this.textoHot    = false;
         this.strStatusCanal = '';
         this.numConectados  = 0;
-        this.location.replaceState('/texto-global');
+        this.location.replaceState('/shared-text');
       }
 
       // Limpar painel direito se mostrava este grupo
@@ -462,7 +462,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
 
   private atualizarUrl(grupo: string, canal: string): void {
     this.location.replaceState(
-      `/texto-global/${encodeURIComponent(grupo)}/${encodeURIComponent(canal)}`
+      `/shared-text/${encodeURIComponent(grupo)}/${encodeURIComponent(canal)}`
     );
   }
 
@@ -470,7 +470,7 @@ export class TextoGlobalComponent implements OnInit, OnDestroy {
     const grupo = this.strGrupo.trim(), canal = this.strCanal.trim();
     if (!grupo || !canal) return '';
     const base = typeof window !== 'undefined' ? window.location.origin : '';
-    return `${base}/texto-global/${encodeURIComponent(grupo)}/${encodeURIComponent(canal)}`;
+    return `${base}/shared-text/${encodeURIComponent(grupo)}/${encodeURIComponent(canal)}`;
   }
 
   copiarUrl(): void {

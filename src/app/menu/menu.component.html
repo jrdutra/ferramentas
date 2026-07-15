@@ -10,6 +10,10 @@
                     <mat-icon>info</mat-icon>
                     About
                 </button>
+                <button mat-button (click)="navegaMenu('articles')">
+                    <mat-icon>article</mat-icon>
+                    Articles
+                </button>
             </div>
 
             <div class="marca-direita">
@@ -24,6 +28,7 @@
                 <mat-menu #menuHamburger="matMenu">
                     <button mat-menu-item (click)="navegaMenu('home')">Home</button>
                     <button mat-menu-item (click)="navegaMenu('about')">About</button>
+                    <button mat-menu-item (click)="navegaMenu('articles')">Articles</button>
                 </mat-menu>
             </div>
             <span class="menu-hamburger">Tools</span>

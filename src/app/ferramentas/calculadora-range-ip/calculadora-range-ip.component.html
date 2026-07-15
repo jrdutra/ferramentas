@@ -1,0 +1,153 @@
+<div class="cidr-tool">
+  <section class="calculator-panel" aria-labelledby="cidr-title">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">IPv4 networking</span>
+        <h1 id="cidr-title">IPv4 CIDR Range Calculator</h1>
+        <p>Enter an IPv4 address followed by a CIDR prefix to calculate its complete subnet range.</p>
+      </div>
+      <mat-icon aria-hidden="true">lan</mat-icon>
+    </div>
+
+    <mat-form-field appearance="outline" class="cidr-field" [class.valid-field]="result">
+      <mat-label>IPv4 address and prefix</mat-label>
+      <mat-icon matPrefix>language</mat-icon>
+      <input
+        matInput
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        spellcheck="false"
+        maxlength="18"
+        aria-describedby="cidr-help"
+        [attr.aria-invalid]="errorMessage ? 'true' : 'false'"
+        [value]="cidr"
+        (input)="onCidrInput($event)"
+        placeholder="192.168.1.10/24"
+      />
+      @if (result) {
+        <mat-icon matSuffix class="valid-icon">check_circle</mat-icon>
+      }
+      <mat-hint id="cidr-help">Format: four octets from 0 to 255, followed by a prefix from /0 to /32.</mat-hint>
+    </mat-form-field>
+
+    @if (errorMessage) {
+      <p class="input-error" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        {{ errorMessage }}
+      </p>
+    }
+
+    <div class="prefix-row" aria-label="Common CIDR prefixes">
+      <span>Common prefixes</span>
+      <div class="prefix-buttons">
+        @for (prefix of commonPrefixes; track prefix) {
+          <button
+            type="button"
+            class="prefix-button"
+            [class.active]="result?.prefix === prefix"
+            (click)="applyPrefix(prefix)"
+          >
+            /{{ prefix }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="button" (click)="copyResult()" [disabled]="!result">
+        <mat-icon>{{ copied ? 'check' : 'content_copy' }}</mat-icon>
+        {{ copied ? 'Copied!' : 'Copy result' }}
+      </button>
+      <button mat-button type="button" class="clear-button" (click)="clear()">
+        <mat-icon>clear</mat-icon>
+        Clear
+      </button>
+    </div>
+  </section>
+
+  @if (result) {
+    <section class="result-panel" aria-labelledby="result-title" aria-live="polite">
+      <div class="result-heading">
+        <div>
+          <span class="eyebrow">Calculated subnet</span>
+          <h2 id="result-title">{{ result.networkAddress }}/{{ result.prefix }}</h2>
+        </div>
+        <span class="address-count">{{ result.totalAddresses | number }} addresses</span>
+      </div>
+
+      <div class="range-highlight">
+        <span>Complete address range</span>
+        <strong>{{ result.networkAddress }}</strong>
+        <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+        <strong>{{ result.broadcastAddress }}</strong>
+      </div>
+
+      <div class="result-grid">
+        <article class="result-card primary-card">
+          <mat-icon>hub</mat-icon>
+          <span>Network address</span>
+          <strong>{{ result.networkAddress }}</strong>
+        </article>
+        <article class="result-card">
+          <mat-icon>wifi_tethering</mat-icon>
+          <span>Broadcast address</span>
+          <strong>{{ result.broadcastAddress }}</strong>
+        </article>
+        <article class="result-card">
+          <mat-icon>filter_1</mat-icon>
+          <span>First usable address</span>
+          <strong>{{ result.firstUsableAddress }}</strong>
+        </article>
+        <article class="result-card">
+          <mat-icon>last_page</mat-icon>
+          <span>Last usable address</span>
+          <strong>{{ result.lastUsableAddress }}</strong>
+        </article>
+        <article class="result-card">
+          <mat-icon>grid_4x4</mat-icon>
+          <span>Subnet mask</span>
+          <strong>{{ result.subnetMask }}</strong>
+        </article>
+        <article class="result-card">
+          <mat-icon>contrast</mat-icon>
+          <span>Wildcard mask</span>
+          <strong>{{ result.wildcardMask }}</strong>
+        </article>
+      </div>
+
+      <dl class="result-details">
+        <div>
+          <dt>Host bits</dt>
+          <dd>{{ result.hostBits }}</dd>
+        </div>
+        <div>
+          <dt>Total addresses</dt>
+          <dd>{{ result.totalAddresses | number }}</dd>
+        </div>
+        <div>
+          <dt>Usable addresses</dt>
+          <dd>{{ result.usableAddresses | number }}</dd>
+        </div>
+      </dl>
+
+      <p class="policy-note">
+        <mat-icon aria-hidden="true">info</mat-icon>
+        {{ result.hostPolicy }}
+      </p>
+    </section>
+  }
+
+  <section class="instrucoes" aria-labelledby="cidr-about-title">
+    <h2 id="cidr-about-title">How IPv4 CIDR ranges work</h2>
+    <p>
+      CIDR prefixes describe how many of the 32 IPv4 bits identify the network. A <strong>/24</strong> leaves 8 host
+      bits and contains 256 addresses. A <strong>/22</strong> leaves 10 host bits and contains 1,024 addresses.
+    </p>
+    <p>
+      The network address is the first address in the calculated block and the broadcast address is the last. In
+      traditional subnets from /0 through /30, those two addresses are reserved and the usable host range lies between
+      them. /31 networks are commonly used for point-to-point links, while /32 identifies one individual host.
+    </p>
+  </section>
+</div>

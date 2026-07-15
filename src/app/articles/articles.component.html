@@ -1,0 +1,43 @@
+<section class="articles-page">
+  <header class="articles-hero">
+    <span class="eyebrow">utily.tools knowledge base</span>
+    <h1>Articles</h1>
+    <p>Guides, explanations and practical ideas to help you get more from developer tools.</p>
+  </header>
+
+  <div class="articles-grid" aria-label="Published articles">
+    @for (article of articles; track article.route) {
+      <article class="article-card">
+        <a class="article-card-image" [routerLink]="article.route" tabindex="-1" aria-hidden="true">
+          <img
+            [src]="article.image"
+            [alt]="article.imageAlt"
+            [attr.width]="article.imageWidth"
+            [attr.height]="article.imageHeight"
+            loading="lazy"
+          />
+        </a>
+
+        <div class="article-card-content">
+          <div class="article-card-meta">
+            <span>{{ article.category }}</span>
+            <span>{{ article.readingTime }}</span>
+          </div>
+
+          <h2>
+            <a [routerLink]="article.route">{{ article.title }}</a>
+          </h2>
+          <p>{{ article.excerpt }}</p>
+
+          <footer>
+            <time [attr.datetime]="article.publishedIso">{{ article.publishedAt }}</time>
+            <a class="read-link" [routerLink]="article.route" [attr.aria-label]="'Read ' + article.title">
+              Read article
+              <mat-icon>arrow_forward</mat-icon>
+            </a>
+          </footer>
+        </div>
+      </article>
+    }
+  </div>
+</section>

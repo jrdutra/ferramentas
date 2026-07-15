@@ -6,11 +6,12 @@ import {MenuComponent} from './menu/menu.component'
 import {MatCardModule} from '@angular/material/card';
 import { SeoService } from './seo.service';
 import { CommonModule } from '@angular/common';
+import { ArticleInviteComponent } from './articles/article-invite/article-invite.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MenuComponent, MatCardModule],
+  imports: [CommonModule, RouterOutlet, MenuComponent, MatCardModule, ArticleInviteComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

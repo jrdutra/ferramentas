@@ -1,0 +1,33 @@
+@if (relatedArticle) {
+  <aside class="article-invite" aria-labelledby="related-article-title">
+    <a
+      class="article-invite-image"
+      [routerLink]="relatedArticle.path"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <img
+        [src]="relatedArticle.image"
+        [alt]="relatedArticle.imageAlt"
+        width="1731"
+        height="909"
+        loading="lazy"
+      />
+    </a>
+    <div class="article-invite-content">
+      <span>Understand the technology</span>
+      <h2 id="related-article-title">Want to learn how {{ relatedArticle.toolName }} works?</h2>
+      <p>
+        Read the theory, technical foundations and real-world applications behind this tool.
+      </p>
+    </div>
+    <a
+      class="article-invite-action"
+      [routerLink]="relatedArticle.path"
+      [attr.aria-label]="'Read ' + relatedArticle.title"
+    >
+      Read the article
+      <mat-icon>arrow_forward</mat-icon>
+    </a>
+  </aside>
+}

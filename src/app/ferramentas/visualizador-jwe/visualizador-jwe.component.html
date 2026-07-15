@@ -120,6 +120,11 @@
     </div>
 
     <div class="secao-info">
+        <section class="seo-intro" aria-labelledby="jwe-seo-title">
+            <h1 id="jwe-seo-title">Online JWE Decoder, Encryptor and Decryptor</h1>
+            <p>Inspect JSON Web Encryption compact tokens and work with their protected header, encrypted key, initialization vector, ciphertext and authentication tag. The tool supports debugging encrypted tokens with compatible PEM keys, JWK data and selected PFX/P12 containers.</p>
+            <p>JWE protects confidentiality, while JWS and signed JWT workflows focus on integrity and authenticity. Successful decryption requires a key and algorithms compatible with the token header.</p>
+        </section>
         <h2>JWE Compact Serialization</h2>
         <p>A compact JWE has five parts separated by dots: Protected Header, Encrypted Key, Initialization Vector, Ciphertext and Authentication Tag. The header can be decoded as JSON; the other parts remain encoded because they depend on the keys and algorithm used for encryption.</p>
         <p>Encryption and decryption use algorithms supported by the WebCrypto API through the JOSE library. The header defines the <code>alg</code> and <code>enc</code> combination; for PEM public/private keys, the most common flows are RSA-OAEP and ECDH-ES. Symmetric algorithms such as <code>dir</code>, AES-KW, AES-GCM-KW and PBES2 depend on a compatible secret/JWK.</p>

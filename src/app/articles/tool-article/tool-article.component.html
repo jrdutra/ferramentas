@@ -1,0 +1,162 @@
+<article class="article-page">
+  <a class="back-link" routerLink="/articles">
+    <mat-icon>arrow_back</mat-icon>
+    All articles
+  </a>
+
+  <header class="article-header">
+    <span class="article-category">{{ article.category }}</span>
+    <h1>{{ article.title }}</h1>
+    <p class="article-lead">{{ article.description }}</p>
+    <div class="article-meta">
+      <span>By João Ricardo Dutra</span>
+      <span aria-hidden="true">•</span>
+      <time [attr.datetime]="article.publishedIso">Published {{ article.publishedAt }}</time>
+      <span aria-hidden="true">•</span>
+      <span>{{ article.readingTime }}</span>
+    </div>
+  </header>
+
+  <figure class="article-cover">
+    <img
+      [src]="article.image"
+      [alt]="article.imageAlt"
+      [attr.width]="article.imageWidth ?? 1731"
+      [attr.height]="article.imageHeight ?? 909"
+      fetchpriority="high"
+    />
+  </figure>
+
+  <div class="article-body">
+    <section aria-labelledby="introduction-title">
+      <h2 id="introduction-title">Introduction</h2>
+      @for (paragraph of article.introduction; track $index) {
+        <p>{{ paragraph }}</p>
+      }
+    </section>
+
+    <aside class="tool-callout">
+      <mat-icon>build</mat-icon>
+      <div>
+        <strong>Put the concept into practice</strong>
+        <p>
+          Open the <a [routerLink]="article.toolRoute">utily.tools {{ article.toolName }}</a>
+          to experiment with the technology described in this article directly in your browser.
+        </p>
+      </div>
+    </aside>
+
+    <section aria-labelledby="theory-title">
+      <h2 id="theory-title">{{ article.theoryTitle }}</h2>
+      @for (paragraph of article.theory; track $index) {
+        <p>{{ paragraph }}</p>
+      }
+    </section>
+
+    <section aria-labelledby="technical-title">
+      <h2 id="technical-title">Technical foundations and behavior</h2>
+      @for (paragraph of article.technicalIntroduction; track $index) {
+        <p>{{ paragraph }}</p>
+      }
+
+      @for (point of article.technicalPoints; track point.title) {
+        <h3>{{ point.title }}</h3>
+        @for (paragraph of point.paragraphs; track $index) {
+          <p>{{ paragraph }}</p>
+        }
+      }
+
+    </section>
+
+    <section aria-labelledby="examples-title">
+      <h2 id="examples-title">Real-world applications</h2>
+      <div class="examples-grid">
+        @for (example of article.examples; track example.title) {
+          <article class="example-card">
+            <h3>{{ example.title }}</h3>
+            <p>{{ example.description }}</p>
+          </article>
+        }
+      </div>
+    </section>
+
+    @if (article.deepDiveSections?.length) {
+      <section class="deep-dive" aria-labelledby="deep-dive-title">
+        <h2 id="deep-dive-title">Standards and deeper technical reference</h2>
+
+        @for (detail of article.deepDiveSections; track detail.title) {
+          <section class="deep-dive-section">
+            <h3>{{ detail.title }}</h3>
+            @for (paragraph of detail.paragraphs; track $index) {
+              <p>{{ paragraph }}</p>
+            }
+
+            @if (detail.items?.length) {
+              <dl class="technical-definitions">
+                @for (item of detail.items; track item.name) {
+                  <div>
+                    <dt>{{ item.name }}</dt>
+                    <dd>{{ item.description }}</dd>
+                  </div>
+                }
+              </dl>
+            }
+
+            @if (detail.table) {
+              <div class="technical-table-wrap">
+                <table class="technical-table">
+                  <caption>{{ detail.table.caption }}</caption>
+                  <thead>
+                    <tr>
+                      @for (header of detail.table.headers; track header) {
+                        <th scope="col">{{ header }}</th>
+                      }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of detail.table.rows; track $index) {
+                      <tr>
+                        @for (cell of row; track $index) {
+                          <td>{{ cell }}</td>
+                        }
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </section>
+        }
+      </section>
+    }
+
+    @if (article.references?.length) {
+      <section class="article-references" aria-labelledby="references-title">
+        <h2 id="references-title">Primary specifications and references</h2>
+        <ul>
+          @for (reference of article.references; track reference.url) {
+            <li>
+              <a [href]="reference.url" target="_blank" rel="noopener noreferrer">{{ reference.title }}</a>
+              <span>{{ reference.publisher }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section aria-labelledby="conclusion-title">
+      <h2 id="conclusion-title">Conclusion</h2>
+      @for (paragraph of article.conclusion; track $index) {
+        <p>{{ paragraph }}</p>
+      }
+    </section>
+
+    <div class="article-actions">
+      <a class="primary-link" [routerLink]="article.toolRoute">
+        Open {{ article.toolName }}
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+      <a class="secondary-link" routerLink="/articles">Read more articles</a>
+    </div>
+  </div>
+</article>

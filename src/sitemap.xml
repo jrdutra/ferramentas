@@ -7,6 +7,12 @@
     <loc>https://utily.tools/about</loc>
   </url>
   <url>
+    <loc>https://utily.tools/articles</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/what-is-utily-tools</loc>
+  </url>
+  <url>
     <loc>https://utily.tools/base64</loc>
   </url>
   <url>
@@ -26,6 +32,9 @@
   </url>
   <url>
     <loc>https://utily.tools/unix-timestamp</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/ipv4-range-calculator</loc>
   </url>
   <url>
     <loc>https://utily.tools/text-to-qrcode</loc>
@@ -71,5 +80,86 @@
   </url>
   <url>
     <loc>https://utily.tools/certificate-validator</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/pdf-creator</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/shared-text</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/online-text-editor-text-transformation-guide</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/text-templates-variables-and-automation</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/text-diff-algorithms-and-comparison</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/base64-encoding-decoding-guide</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/url-encoding-percent-encoding-guide</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/json-formatting-minification-and-validation</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/compare-json-yaml-structural-diff</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/uuid-v1-v4-v7-generation-guide</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/unix-timestamp-epoch-time-conversion</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/cpf-cnpj-check-digit-generation-for-testing</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/jwt-structure-signing-and-validation</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/jwe-encryption-compact-serialization</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/cryptographic-hash-functions-md5-sha</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/hmac-message-authentication-guide</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/secure-password-generation-entropy</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/x509-certificate-fields-and-decoding</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/generate-self-signed-x509-certificates</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/validate-certificates-and-key-pairs</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/ocr-image-to-text-technology</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/qr-code-generation-error-correction</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/merge-pdf-and-images-in-browser</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/split-pdf-pages-and-export-jpg</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/create-pdf-from-images-browser</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/real-time-text-sharing-websockets</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/ipv4-cidr-subnet-range-calculation-guide</loc>
   </url>
 </urlset>
