@@ -30,12 +30,26 @@
             <button class="atalho-ferramenta" type="button" *ngFor="let ferramenta of grupo.ferramentas; trackBy: trackByFerramenta"
                 (click)="navegaFerramenta(ferramenta.rota)">
                 <span class="faixa-novo" *ngIf="ferramenta.novo" aria-label="New">New</span>
-                <span class="icone-ferramenta">
-                    <mat-icon>{{ ferramenta.icone }}</mat-icon>
+                <span class="imagem-ferramenta">
+                    <img
+                        [src]="ferramenta.image"
+                        [alt]="ferramenta.imageAlt"
+                        [attr.width]="ferramenta.imageWidth"
+                        [attr.height]="ferramenta.imageHeight"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                    <span class="icone-ferramenta" aria-hidden="true">
+                        <mat-icon>{{ ferramenta.icone }}</mat-icon>
+                    </span>
                 </span>
                 <span class="conteudo-ferramenta">
                     <strong>{{ ferramenta.titulo }}</strong>
                     <span class="descricao-ferramenta">{{ ferramenta.descricao }}</span>
+                    <span class="acao-ferramenta">
+                        {{ ferramenta.external ? 'Open external tool' : 'Open tool' }}
+                        <mat-icon>{{ ferramenta.external ? 'open_in_new' : 'arrow_forward' }}</mat-icon>
+                    </span>
                 </span>
             </button>
         </div>

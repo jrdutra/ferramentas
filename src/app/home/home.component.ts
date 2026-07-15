@@ -7,6 +7,66 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { DataService } from '../data.service';
+import { TOOL_ARTICLES } from '../articles/articles.data';
+
+interface BaseHomeTool {
+  titulo: string;
+  descricao: string;
+  icone: string;
+  rota: string;
+  novo: boolean;
+}
+
+interface HomeTool extends BaseHomeTool {
+  image: string;
+  imageAlt: string;
+  imageWidth: number;
+  imageHeight: number;
+  external: boolean;
+}
+
+interface BaseHomeToolGroup {
+  titulo: string;
+  ferramentas: BaseHomeTool[];
+}
+
+interface HomeToolGroup {
+  titulo: string;
+  ferramentas: HomeTool[];
+}
+
+const ARTICLES_BY_TOOL_ROUTE = new Map(
+  TOOL_ARTICLES.map((article) => [article.toolRoute.replace(/^\//, ''), article])
+);
+
+const EXTERNAL_TOOL_IMAGES: Record<string, { image: string; imageAlt: string; imageWidth: number; imageHeight: number }> = {
+  'https://kanbanapp.io': {
+    image: '/assets/articles/kanbanapp-card-cover.png',
+    imageAlt: 'Neon Kanban board with organized task columns, progress indicators and completed cards',
+    imageWidth: 1672,
+    imageHeight: 941
+  },
+  'https://praebere.com': {
+    image: '/assets/articles/flowchart-editor-card-cover.png',
+    imageAlt: 'Neon flowchart with connected process nodes, decisions and directional paths',
+    imageWidth: 1672,
+    imageHeight: 941
+  }
+};
+
+function decorateHomeTool(tool: BaseHomeTool): HomeTool {
+  const article = ARTICLES_BY_TOOL_ROUTE.get(tool.rota);
+  const externalImage = EXTERNAL_TOOL_IMAGES[tool.rota];
+
+  return {
+    ...tool,
+    image: article?.image ?? externalImage?.image ?? '/assets/articles/what-is-utily-tools-cover.png',
+    imageAlt: article?.imageAlt ?? externalImage?.imageAlt ?? `Illustration for ${tool.titulo}`,
+    imageWidth: article?.imageWidth ?? externalImage?.imageWidth ?? 1731,
+    imageHeight: article?.imageHeight ?? externalImage?.imageHeight ?? 909,
+    external: tool.rota.startsWith('http')
+  };
+}
 
 @Component({
   selector: 'app-home',
@@ -20,7 +80,7 @@ export class HomeComponent {
 
   filtro = '';
 
-  gruposFerramentas = [
+  gruposFerramentas: HomeToolGroup[] = ([
     {
       titulo: 'Text Tools',
       ferramentas: [
@@ -69,7 +129,10 @@ export class HomeComponent {
         { titulo: 'OCR Converter', descricao: 'Extract text from images using local OCR with Tesseract.js.', icone: 'document_scanner', rota: 'image-to-text-ocr', novo: false }
       ]
     }
-  ];
+  ] as BaseHomeToolGroup[]).map((group) => ({
+    ...group,
+    ferramentas: group.ferramentas.map(decorateHomeTool)
+  }));
 
   get gruposFiltrados() {
     const termo = this.filtro.trim().toLowerCase();
