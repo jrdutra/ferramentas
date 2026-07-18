@@ -36,6 +36,23 @@ body {
     radial-gradient(circle at 86% 16%, rgba(79, 38, 120, 0.11), transparent 30rem),
     linear-gradient(135deg, #020713, #071427 52%, #060d1c);
   color: var(--text-main);
+  background-color: #020713;
+}
+
+/*
+ * Long Learn articles can extend for tens of thousands of pixels. The generic
+ * card decoration creates a document-sized gradient layer that may not be
+ * rasterized quickly enough during a fast scroll. Keep an opaque, inexpensive
+ * paint layer behind article content so the browser never exposes its default
+ * white canvas while new tiles are rendered.
+ */
+.container-card-principal .mat-mdc-card:has(.learn-article),
+.container-card-principal .mat-mdc-card-content:has(.learn-article) {
+  background: #030b1b !important;
+}
+
+.container-card-principal .mat-mdc-card:has(.learn-article)::before {
+  content: none;
 }
 
 body {
@@ -845,29 +862,6 @@ input:not([type="hidden"]):not([type="file"]):not([type="range"]):not(.mat-mdc-i
 .atalho-ferramenta:hover .acao-ferramenta mat-icon,
 .atalho-ferramenta:focus-visible .acao-ferramenta mat-icon {
   transform: translateX(3px);
-}
-
-/* Faixa diagonal "Novo" no canto superior direito dos cards */
-.faixa-novo {
-  position: absolute;
-  top: 1.25em;
-  right: -3em;
-  z-index: 10;
-  width: 11em;
-  padding: 0.22em 0;
-  text-align: center;
-  font-size: 0.58em;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #021a0d;
-  background: linear-gradient(135deg, #00ff88, #00e676);
-  box-shadow:
-    0 0 8px rgba(0, 255, 136, 0.7),
-    0 0 18px rgba(0, 255, 136, 0.35);
-  transform: rotate(38deg);
-  pointer-events: none;
-  user-select: none;
 }
 
 .qrcode-layout {

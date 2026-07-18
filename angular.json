@@ -75,7 +75,8 @@
               "setimmediate",
               "tesseract.js",
               "whatwg-url",
-              "xmlhttprequest-ssl"
+              "xmlhttprequest-ssl",
+              "yaml"
             ],
             "server": "src/main.server.ts",
             "prerender": true,

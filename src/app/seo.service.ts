@@ -18,6 +18,11 @@ export interface SeoRouteData {
   author?: string;
   section?: string;
   articleItems?: SeoArticleListItem[];
+  language?: string;
+  locale?: string;
+  imageAlt?: string;
+  tags?: string[];
+  alternateLanguages?: Array<{ language: string; path: string; locale?: string }>;
 }
 
 export interface SeoArticleListItem {
@@ -66,20 +71,20 @@ export class SeoService {
     const fullTitle = `${seo.title} | ${this.siteName}`;
     const imageUrl = seo.imagePath ? `${this.siteUrl}${seo.imagePath}` : this.defaultImage;
     const imageWidth = seo.imageWidth ?? 1200;
-    const imageHeight = seo.imageHeight ?? 1200;
+    const imageHeight = seo.imageHeight ?? 630;
     const openGraphType = seo.pageType === 'article' ? 'article' : 'website';
 
     this.title.setTitle(fullTitle);
+    this.document.documentElement.lang = seo.language ?? 'en';
     this.setCanonical(canonicalUrl);
-    this.setAlternate('en', canonicalUrl);
-    this.setAlternate('x-default', canonicalUrl);
+    this.setAlternates(seo, canonicalUrl);
 
     this.meta.updateTag({ name: 'description', content: seo.description });
     this.meta.updateTag({ name: 'keywords', content: seo.keywords });
     this.meta.updateTag({ name: 'robots', content: this.robotsDirective });
     this.meta.updateTag({ name: 'googlebot', content: this.robotsDirective });
     this.meta.updateTag({ name: 'bingbot', content: this.robotsDirective });
-    this.meta.updateTag({ name: 'author', content: this.siteName });
+    this.meta.updateTag({ name: 'author', content: seo.author ?? this.siteName });
     this.meta.updateTag({ name: 'application-name', content: this.siteName });
 
     this.meta.updateTag({ property: 'og:title', content: fullTitle });
@@ -92,9 +97,9 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:image:type', content: 'image/png' });
     this.meta.updateTag({ property: 'og:image:width', content: String(imageWidth) });
     this.meta.updateTag({ property: 'og:image:height', content: String(imageHeight) });
-    this.meta.updateTag({ property: 'og:image:alt', content: `${seo.title} on ${this.siteName}` });
+    this.meta.updateTag({ property: 'og:image:alt', content: seo.imageAlt ?? `${seo.title} on ${this.siteName}` });
     this.meta.updateTag({ property: 'og:site_name', content: this.siteName });
-    this.meta.updateTag({ property: 'og:locale', content: 'en_US' });
+    this.meta.updateTag({ property: 'og:locale', content: seo.locale ?? 'en_US' });
 
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.meta.updateTag({ name: 'twitter:title', content: fullTitle });
@@ -102,7 +107,7 @@ export class SeoService {
     this.meta.updateTag({ name: 'twitter:url', content: canonicalUrl });
     this.meta.updateTag({ name: 'twitter:domain', content: 'utily.tools' });
     this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
-    this.meta.updateTag({ name: 'twitter:image:alt', content: `${seo.title} on ${this.siteName}` });
+    this.meta.updateTag({ name: 'twitter:image:alt', content: seo.imageAlt ?? `${seo.title} on ${this.siteName}` });
 
     this.setArticleMeta(seo);
     this.setJsonLd(seo, canonicalUrl, imageUrl, imageWidth, imageHeight);
@@ -126,15 +131,33 @@ export class SeoService {
     link.setAttribute('href', url);
   }
 
-  private setAlternate(language: string, url: string): void {
-    let link = this.document.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${language}"]`);
-    if (!link) {
-      link = this.document.createElement('link');
+  private setAlternates(seo: SeoRouteData, canonicalUrl: string): void {
+    this.document.querySelectorAll('link[rel="alternate"][hreflang]').forEach((link) => link.remove());
+    this.document.querySelectorAll('meta[property="og:locale:alternate"]').forEach((tag) => tag.remove());
+
+    const alternates = seo.alternateLanguages ?? [{ language: seo.language ?? 'en', path: canonicalUrl }];
+    for (const alternate of alternates) {
+      const link = this.document.createElement('link');
       link.setAttribute('rel', 'alternate');
-      link.setAttribute('hreflang', language);
+      link.setAttribute('hreflang', alternate.language);
+      link.setAttribute('href', alternate.path.startsWith('http') ? alternate.path : `${this.siteUrl}${alternate.path}`);
+      this.document.head.appendChild(link);
+
+      if (alternate.locale && alternate.locale !== seo.locale) {
+        const meta = this.document.createElement('meta');
+        meta.setAttribute('property', 'og:locale:alternate');
+        meta.setAttribute('content', alternate.locale);
+        this.document.head.appendChild(meta);
+      }
+    }
+
+    if (!alternates.some((alternate) => alternate.language === 'x-default')) {
+      const link = this.document.createElement('link');
+      link.setAttribute('rel', 'alternate');
+      link.setAttribute('hreflang', 'x-default');
+      link.setAttribute('href', canonicalUrl);
       this.document.head.appendChild(link);
     }
-    link.setAttribute('href', url);
   }
 
   private setArticleMeta(seo: SeoRouteData): void {
@@ -150,6 +173,16 @@ export class SeoService {
         this.meta.updateTag({ property: item.property, content: item.content });
       } else {
         this.meta.removeTag(`property='${item.property}'`);
+      }
+    }
+
+    this.document.querySelectorAll('meta[property="article:tag"]').forEach((tag) => tag.remove());
+    if (seo.pageType === 'article') {
+      for (const tag of seo.tags ?? []) {
+        const meta = this.document.createElement('meta');
+        meta.setAttribute('property', 'article:tag');
+        meta.setAttribute('content', tag);
+        this.document.head.appendChild(meta);
       }
     }
   }
@@ -178,7 +211,7 @@ export class SeoService {
         url: canonicalUrl,
         name: seo.title,
         description: seo.description,
-        inLanguage: 'en',
+        inLanguage: seo.language ?? 'en',
         isPartOf: { '@id': `${this.siteUrl}/#website` },
         primaryImageOfPage: { '@id': `${imageUrl}#primaryimage` }
       },
@@ -189,7 +222,7 @@ export class SeoService {
         contentUrl: imageUrl,
         width: imageWidth,
         height: imageHeight,
-        caption: `${seo.title} on ${this.siteName}`
+        caption: seo.imageAlt ?? `${seo.title} on ${this.siteName}`
       },
       {
         '@type': 'Organization',
@@ -200,7 +233,7 @@ export class SeoService {
           '@type': 'ImageObject',
           url: this.defaultImage,
           width: 1200,
-          height: 1200
+          height: 630
         }
       }
     ];
@@ -217,7 +250,9 @@ export class SeoService {
         datePublished: seo.publishedTime,
         dateModified: seo.modifiedTime ?? seo.publishedTime,
         articleSection: seo.section,
-        inLanguage: 'en',
+        keywords: seo.keywords,
+        isAccessibleForFree: true,
+        inLanguage: seo.language ?? 'en',
         author: {
           '@type': 'Person',
           name: seo.author ?? this.siteName,

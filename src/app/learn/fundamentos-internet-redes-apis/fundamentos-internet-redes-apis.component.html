@@ -1,0 +1,131 @@
+<article class="learn-article">
+  <a class="back-link" routerLink="/learn">
+    <mat-icon>arrow_back</mat-icon>
+    Voltar para Learn
+  </a>
+
+  <header class="article-header">
+    <div class="chapter-mark">
+      <span>FAAC</span>
+      <span>Capítulo 1</span>
+    </div>
+    <p class="series-name">Fundamentos e Arquitetura de APIs Corporativas</p>
+    <h1>Fundamentos da Internet, Redes e APIs</h1>
+    <p class="article-lead">Da comunicação em rede ao processamento de uma requisição em um API Gateway</p>
+    <p class="edition-note">Edição aprofundada - material de estudo e consulta profissional</p>
+    <div class="article-meta">
+      <span>Por João Ricardo Dutra</span>
+      <span aria-hidden="true">•</span>
+      <time datetime="2026-07-16">16 de julho de 2026</time>
+      <span aria-hidden="true">•</span>
+      <span>Material integral</span>
+    </div>
+    <div class="article-read-actions">
+      <app-article-read-toggle [blocks]="blocks"></app-article-read-toggle>
+    </div>
+  </header>
+
+  <figure class="article-cover">
+    <img src="/assets/learn/fundamentos-internet-redes-apis-cover.png" alt="Fluxo de uma chamada de API atravessando camadas de rede e um API Gateway" width="1536" height="1024" fetchpriority="high">
+  </figure>
+
+  <div class="article-layout">
+    <aside class="toc" aria-label="Neste capítulo">
+      <strong>Neste capítulo</strong>
+      <ol>
+        <li><a href="#por-que-importa">Por que redes importam</a></li>
+        <li><a href="#conceitos">Internet, Web e API</a></li>
+        <li><a href="#evolucao">Evolução histórica</a></li>
+        <li><a href="#padroes">Padronização</a></li>
+        <li><a href="#rfcs">RFCs</a></li>
+        <li><a href="#camadas">Encapsulamento</a></li>
+        <li><a href="#modelos">OSI e TCP/IP</a></li>
+        <li><a href="#enderecamento">Endereçamento IP</a></li>
+        <li><a href="#dns">DNS</a></li>
+        <li><a href="#transporte">TCP, UDP e sockets</a></li>
+        <li><a href="#intermediarios">NAT e intermediários</a></li>
+        <li><a href="#seguranca">TLS e HTTPS</a></li>
+        <li><a href="#http">HTTP</a></li>
+        <li><a href="#rest">REST</a></li>
+        <li><a href="#gateway">API Gateway</a></li>
+        <li><a href="#jornada">Jornada ponta a ponta</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+        <li><a href="#pratica">Ambientes corporativos</a></li>
+      </ol>
+    </aside>
+
+    <main class="article-body">
+      @for (block of blocks; track $index) {
+        @switch (block.kind) {
+          @case ('heading') {
+            @if (block.level === 2) {
+              <h2 class="chapter-heading has-topic-check" [id]="block.id ?? null"><app-topic-read-toggle class="topic-check-slot" [block]="block" [blocks]="blocks"></app-topic-read-toggle><app-glossary-text [text]="block.text" [glossary]="glossary"></app-glossary-text></h2>
+            } @else {
+              <h3><app-glossary-text [text]="block.text" [glossary]="glossary"></app-glossary-text></h3>
+            }
+          }
+          @case ('subhead') {
+            <h4 class="subhead"><app-glossary-text [text]="block.text" [glossary]="glossary"></app-glossary-text></h4>
+          }
+          @case ('paragraph') {
+            <p><app-glossary-text [text]="block.text" [glossary]="glossary"></app-glossary-text></p>
+          }
+          @case ('list') {
+            @if (block.ordered) {
+              <ol class="content-list ordered-list">
+                @for (item of block.items; track $index) {
+                  <li><app-glossary-text [text]="item" [glossary]="glossary"></app-glossary-text></li>
+                }
+              </ol>
+            } @else {
+              <ul class="content-list">
+                @for (item of block.items; track $index) {
+                  <li><app-glossary-text [text]="item" [glossary]="glossary"></app-glossary-text></li>
+                }
+              </ul>
+            }
+          }
+          @case ('code') {
+            <pre><code>{{ block.text }}</code></pre>
+          }
+          @case ('figure') {
+            <figure class="diagram">
+              <img [src]="block.src" [alt]="block.alt" loading="lazy">
+              <figcaption><app-glossary-text [text]="block.caption" [glossary]="glossary"></app-glossary-text></figcaption>
+            </figure>
+          }
+          @case ('table') {
+            <div class="table-wrap">
+              <table>
+                @if (block.caption) {
+                  <caption>{{ block.caption }}</caption>
+                }
+                <thead>
+                  <tr>
+                    @for (header of block.headers; track header) {
+                      <th scope="col">{{ header }}</th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of block.rows; track $index) {
+                    <tr>
+                      @for (cell of row; track $index) {
+                        <td>{{ cell }}</td>
+                      }
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+      }
+
+      <footer class="article-footer">
+        <p>Fim do Capítulo 1 de Fundamentos e Arquitetura de APIs Corporativas.</p>
+        <a routerLink="/learn">Voltar para todos os conteúdos Learn <mat-icon>arrow_forward</mat-icon></a>
+      </footer>
+    </main>
+  </div>
+</article>

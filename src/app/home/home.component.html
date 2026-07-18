@@ -29,7 +29,6 @@
         <div class="grade-ferramentas">
             <button class="atalho-ferramenta" type="button" *ngFor="let ferramenta of grupo.ferramentas; trackBy: trackByFerramenta"
                 (click)="navegaFerramenta(ferramenta.rota)">
-                <span class="faixa-novo" *ngIf="ferramenta.novo" aria-label="New">New</span>
                 <span class="imagem-ferramenta">
                     <img
                         [src]="ferramenta.image"

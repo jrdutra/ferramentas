@@ -1,0 +1,444 @@
+<div class="sw-layout">
+
+  <!-- ─── Toolbar ─── -->
+  <div class="sw-toolbar">
+    <div class="sw-tb-group">
+      <span class="sw-tb-label">Specification</span>
+      <select class="sw-select" [ngModel]="version" (ngModelChange)="setVersion($event)"
+        matTooltip="Convert the document to another Swagger/OpenAPI version">
+        <option *ngFor="let v of versions" [value]="v.id">{{ v.nome }}</option>
+      </select>
+    </div>
+
+    <div class="sw-tb-group">
+      <span class="sw-tb-label">Format</span>
+      <div class="seg-group">
+        <button *ngFor="let f of formats" class="seg-btn" [class.seg-ativo]="format === f.id"
+          (click)="setFormat(f.id)">{{ f.nome }}</button>
+      </div>
+    </div>
+
+    <div class="sw-tb-actions">
+      <button mat-raised-button class="btn-neutro" (click)="downloadYaml()" [disabled]="!spec"
+        matTooltip="Download the specification as YAML">
+        <mat-icon>download</mat-icon> YAML
+      </button>
+      <button mat-raised-button class="btn-neutro" (click)="downloadJson()" [disabled]="!spec"
+        matTooltip="Download the specification as JSON">
+        <mat-icon>download</mat-icon> JSON
+      </button>
+      <button mat-raised-button class="btn-neutro" (click)="downloadHtml()" [disabled]="!model"
+        matTooltip="Download a standalone HTML page with the read-only documentation and request console">
+        <mat-icon>language</mat-icon> HTML
+      </button>
+      <button mat-raised-button class="btn-limpar" (click)="loadPetstore()"
+        matTooltip="Replace the document with the classic Petstore example">
+        <mat-icon>pets</mat-icon> Petstore
+      </button>
+    </div>
+  </div>
+
+  <div class="sw-erro" *ngIf="convertError"><mat-icon>error_outline</mat-icon> {{ convertError }}</div>
+
+  <!-- ─── Split: code (left) / preview (right) ─── -->
+  <div class="sw-split">
+
+    <!-- Left: code -->
+    <div class="sw-code-pane">
+      <div class="sw-pane-head">
+        <mat-icon>code</mat-icon>
+        <span>Specification code</span>
+        <span class="sw-pane-hint">paste a Swagger 2.0 / OpenAPI 3.x document (YAML or JSON)</span>
+      </div>
+      <div class="sw-erro" *ngIf="parseError"><mat-icon>error_outline</mat-icon> {{ parseError }}</div>
+      <div class="sw-ok" *ngIf="!parseError && model">
+        <mat-icon>check_circle</mat-icon> Valid document — changes are saved in your browser.
+      </div>
+      <div class="sw-editor-wrap">
+        <pre class="sw-highlight" #hl aria-hidden="true"><code [innerHTML]="highlightedCode"></code></pre>
+        <textarea #ta class="sw-code" [(ngModel)]="editorText" (ngModelChange)="onEditorInput()"
+          (scroll)="hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft"
+          spellcheck="false" wrap="off" placeholder="Paste your Swagger / OpenAPI document here..."></textarea>
+      </div>
+    </div>
+
+    <!-- Right: preview / editor / console -->
+    <div class="sw-preview-pane" *ngIf="model">
+
+      <!-- API header -->
+      <div class="sw-api-head">
+        <div class="sw-api-title-row">
+          <h2 class="sw-api-title">{{ model.title }}</h2>
+          <button class="sw-mini-btn sw-mini-edit" (click)="toggleAttrEditor('info', rawInfo(), infoAttrSuggestions())"
+            matTooltip="Edit the info attributes (title, version, description, contact...)">
+            <mat-icon>tune</mat-icon>
+          </button>
+        </div>
+        <div class="sw-chips">
+          <span class="sw-chip">{{ version === '2.0' ? 'Swagger 2.0' : (version === '3.0' ? 'OpenAPI 3.0' : 'OpenAPI 3.1') }}</span>
+          <span class="sw-chip" *ngIf="model.apiVersion">v{{ model.apiVersion }}</span>
+        </div>
+        <ng-container *ngIf="attrKey === 'info'" [ngTemplateOutlet]="attrPanel"></ng-container>
+        <p class="sw-api-desc" *ngIf="model.description">{{ model.description }}</p>
+      </div>
+
+      <!-- Server bar -->
+      <div class="sw-server-bar">
+        <mat-icon class="sw-server-icon">dns</mat-icon>
+        <span class="sw-tb-label">Server</span>
+        <select class="sw-select sw-server-select" [(ngModel)]="serverChoice">
+          <option *ngFor="let s of model.servers; trackBy: trackValue" [value]="s">{{ s }}</option>
+          <option value="__custom__">Custom…</option>
+        </select>
+        <input *ngIf="serverChoice === '__custom__'" class="sw-input sw-server-input" type="text"
+          [(ngModel)]="customServer" placeholder="https://api.example.com">
+      </div>
+
+      <!-- Add endpoint -->
+      <div class="sw-add-block">
+        <button class="sw-add-btn" (click)="showAddEndpoint = !showAddEndpoint">
+          <mat-icon>{{ showAddEndpoint ? 'remove' : 'add' }}</mat-icon> Add endpoint
+        </button>
+        <div class="sw-add-form" *ngIf="showAddEndpoint">
+          <select class="sw-select" [(ngModel)]="newMethod">
+            <option *ngFor="let m of methods" [value]="m">{{ m.toUpperCase() }}</option>
+          </select>
+          <input class="sw-input sw-grow" type="text" [(ngModel)]="newPath" placeholder="/pets/{petId}">
+          <input class="sw-input" type="text" [(ngModel)]="newTag" placeholder="tag (optional)">
+          <input class="sw-input sw-grow" type="text" [(ngModel)]="newSummary" placeholder="summary (optional)">
+          <button class="sw-mini-btn sw-mini-add" (click)="addEndpoint()" matTooltip="Add this endpoint">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <div class="sw-erro sw-erro-inline" *ngIf="showAddEndpoint && addEndpointError">
+          <mat-icon>error_outline</mat-icon> {{ addEndpointError }}
+        </div>
+      </div>
+
+      <!-- Tag groups -->
+      <div class="sw-group" *ngFor="let group of model.groups; trackBy: trackGroup">
+        <div class="sw-tag-head" (click)="toggleTag(group.tag)">
+          <mat-icon class="sw-caret">{{ isTagOpen(group.tag) ? 'expand_less' : 'expand_more' }}</mat-icon>
+          <h3 class="sw-tag-title">{{ group.tag }}</h3>
+          <span class="sw-tag-count">{{ group.ops.length }}</span>
+        </div>
+        <p class="sw-tag-desc" *ngIf="group.description && isTagOpen(group.tag)">{{ group.description }}</p>
+
+        <ng-container *ngIf="isTagOpen(group.tag)">
+        <div class="sw-op" *ngFor="let op of group.ops; trackBy: trackOp"
+          [class.sw-open]="isOpen(op)" [attr.data-method]="op.method">
+
+          <!-- Operation header -->
+          <div class="sw-op-head" (click)="toggle(op)">
+            <span class="sw-m" [ngClass]="'sw-m-' + op.method">{{ op.method }}</span>
+            <span class="sw-op-path">{{ op.path }}</span>
+            <span class="sw-op-sum">{{ op.summary }}</span>
+            <button class="sw-mini-btn sw-mini-del" (click)="removeOperation(op); $event.stopPropagation()"
+              matTooltip="Remove this operation from the specification">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <mat-icon class="sw-caret">{{ isOpen(op) ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </div>
+
+          <!-- Operation body -->
+          <div class="sw-op-body" *ngIf="isOpen(op)">
+            <p class="sw-op-desc" *ngIf="op.description">{{ op.description }}</p>
+            <p class="sw-deprecated" *ngIf="op.deprecated"><mat-icon>warning</mat-icon> Deprecated</p>
+
+            <!-- Operation attributes -->
+            <div class="sw-sec-head">
+              <span class="sw-sec-title">Operation attributes</span>
+              <button class="sw-mini-btn sw-mini-edit"
+                (click)="toggleAttrEditor('op:' + op.id, rawOpNode(op), opAttrSuggestions())"
+                matTooltip="Edit, add or remove any attribute of this operation">
+                <mat-icon>tune</mat-icon>
+              </button>
+            </div>
+            <ng-container *ngIf="attrKey === 'op:' + op.id" [ngTemplateOutlet]="attrPanel"></ng-container>
+
+            <!-- Parameters -->
+            <div class="sw-sec-head sw-sec-head-toggle" (click)="toggleParams(op)">
+              <mat-icon class="sw-caret sw-caret-sm">{{ isParamsOpen(op) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              <span class="sw-sec-title">Parameters</span>
+              <span class="sw-tag-count" *ngIf="op.params.length">{{ op.params.length }}</span>
+              <button class="sw-mini-btn sw-mini-add" (click)="t(op).showAddParam = !t(op).showAddParam; $event.stopPropagation()"
+                matTooltip="Add a parameter">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <ng-container *ngIf="isParamsOpen(op)">
+            <div class="sw-add-form" *ngIf="t(op).showAddParam">
+              <input class="sw-input sw-grow" type="text" [(ngModel)]="t(op).newParamName" placeholder="name">
+              <select class="sw-select" [(ngModel)]="t(op).newParamIn">
+                <option *ngFor="let loc of paramLocations" [value]="loc">{{ loc }}</option>
+              </select>
+              <select class="sw-select" [(ngModel)]="t(op).newParamType">
+                <option *ngFor="let pt of paramTypes" [value]="pt">{{ pt }}</option>
+              </select>
+              <button class="sw-mini-btn sw-mini-add" (click)="addParam(op)"><mat-icon>add</mat-icon></button>
+            </div>
+            <p class="sw-vazio" *ngIf="!op.params.length && !t(op).showAddParam">No parameters.</p>
+            <table class="sw-table" *ngIf="op.params.length">
+              <tr>
+                <th>Name</th><th>Type</th><th>Description</th><th>Value</th><th></th>
+              </tr>
+              <ng-container *ngFor="let p of op.params; trackBy: trackParam">
+                <tr>
+                  <td>
+                    <span class="sw-p-name">{{ p.name }}</span>
+                    <span class="sw-req" *ngIf="p.required">required</span>
+                    <div class="sw-p-loc">({{ p.location }})</div>
+                  </td>
+                  <td class="sw-p-type">{{ p.type }}</td>
+                  <td class="sw-p-desc">{{ p.description }}</td>
+                  <td>
+                    <select *ngIf="p.enumVals" class="sw-select sw-cell-input" [(ngModel)]="t(op).values[paramKey(p)]">
+                      <option value="">—</option>
+                      <option *ngFor="let v of p.enumVals; trackBy: trackValue" [value]="v">{{ v }}</option>
+                    </select>
+                    <input *ngIf="!p.enumVals" class="sw-input sw-cell-input" type="text"
+                      [(ngModel)]="t(op).values[paramKey(p)]" [placeholder]="p.name">
+                  </td>
+                  <td class="sw-cell-actions">
+                    <button class="sw-mini-btn sw-mini-edit"
+                      (click)="toggleAttrEditor('param:' + op.id + ':' + paramKey(p), rawParamNode(op, p), paramAttrSuggestions())"
+                      matTooltip="Edit the attributes of this parameter">
+                      <mat-icon>tune</mat-icon>
+                    </button>
+                    <button class="sw-mini-btn sw-mini-del" (click)="removeParam(op, p)"
+                      matTooltip="Remove this parameter">
+                      <mat-icon>remove</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="attrKey === 'param:' + op.id + ':' + paramKey(p)">
+                  <td colspan="5"><ng-container [ngTemplateOutlet]="attrPanel"></ng-container></td>
+                </tr>
+              </ng-container>
+            </table>
+            </ng-container>
+
+            <!-- Request body -->
+            <div class="sw-sec-head">
+              <span class="sw-sec-title">Request body<span class="sw-sec-note" *ngIf="op.hasBody"> ({{ op.bodyContentType }})</span></span>
+              <button *ngIf="!op.hasBody" class="sw-mini-btn sw-mini-add" (click)="addBody(op)"
+                matTooltip="Add a request body">
+                <mat-icon>add</mat-icon>
+              </button>
+              <button *ngIf="op.hasBody" class="sw-mini-btn sw-mini-del" (click)="removeBody(op)"
+                matTooltip="Remove the request body">
+                <mat-icon>remove</mat-icon>
+              </button>
+            </div>
+            <textarea *ngIf="op.hasBody" class="sw-body-area" [(ngModel)]="t(op).body" spellcheck="false"
+              placeholder='{ "example": "payload" }'></textarea>
+            <p class="sw-vazio" *ngIf="!op.hasBody">No request body.</p>
+
+            <!-- Responses -->
+            <div class="sw-sec-head sw-sec-head-toggle" (click)="toggleResponses(op)">
+              <mat-icon class="sw-caret sw-caret-sm">{{ isResponsesOpen(op) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              <span class="sw-sec-title">Responses</span>
+              <span class="sw-tag-count" *ngIf="op.responses.length">{{ op.responses.length }}</span>
+              <button class="sw-mini-btn sw-mini-add" (click)="t(op).showAddResp = !t(op).showAddResp; $event.stopPropagation()"
+                matTooltip="Add a response">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <ng-container *ngIf="isResponsesOpen(op)">
+            <div class="sw-add-form sw-add-form-resp" *ngIf="t(op).showAddResp">
+              <div class="sw-add-form-row">
+                <input class="sw-input sw-resp-code-input" type="text" [(ngModel)]="t(op).newRespCode" placeholder="200">
+                <input class="sw-input sw-grow" type="text" [(ngModel)]="t(op).newRespDesc" placeholder="description">
+                <button class="sw-mini-btn sw-mini-add" (click)="addResponse(op)"><mat-icon>add</mat-icon></button>
+              </div>
+              <textarea class="sw-body-area sw-resp-example-area" [(ngModel)]="t(op).newRespExample" spellcheck="false"
+                placeholder='Example response body — optional (JSON), e.g. {"id": 1, "name": "doggie"}'></textarea>
+            </div>
+            <table class="sw-table" *ngIf="op.responses.length">
+              <ng-container *ngFor="let r of op.responses; trackBy: trackResp">
+                <tr>
+                  <td class="sw-resp-code">{{ r.code }}</td>
+                  <td>
+                    <div class="sw-p-desc">{{ r.description }}</div>
+                    <pre class="sw-example" *ngIf="r.exampleText" [innerHTML]="respExampleHtml(op, r)"></pre>
+                  </td>
+                  <td class="sw-cell-actions">
+                    <button class="sw-mini-btn sw-mini-edit"
+                      (click)="toggleAttrEditor('resp:' + op.id + ':' + r.code, rawRespNode(op, r.code), respAttrSuggestions())"
+                      matTooltip="Edit the attributes of this response">
+                      <mat-icon>tune</mat-icon>
+                    </button>
+                    <button class="sw-mini-btn sw-mini-del" (click)="removeResponse(op, r.code)"
+                      matTooltip="Remove this response">
+                      <mat-icon>remove</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="attrKey === 'resp:' + op.id + ':' + r.code">
+                  <td colspan="3"><ng-container [ngTemplateOutlet]="attrPanel"></ng-container></td>
+                </tr>
+              </ng-container>
+            </table>
+            </ng-container>
+
+            <!-- Execute -->
+            <div class="sw-exec">
+              <button class="sw-go" (click)="execute(op)" [disabled]="t(op).running">
+                <mat-icon>{{ t(op).running ? 'hourglass_top' : 'play_arrow' }}</mat-icon>
+                {{ t(op).running ? 'Executing…' : 'Execute' }}
+              </button>
+            </div>
+            <div class="sw-result" *ngIf="t(op).status !== null || t(op).error">
+              <div class="sw-r-meta" *ngIf="t(op).status !== null">
+                <span [ngClass]="t(op).status! < 400 ? 'sw-status-ok' : 'sw-status-err'">
+                  {{ t(op).status }} {{ t(op).statusText }}
+                </span>
+                <span *ngIf="t(op).timeMs !== null">{{ t(op).timeMs }} ms</span>
+                <span class="sw-r-url">{{ t(op).requestUrl }}</span>
+              </div>
+              <pre class="sw-example sw-response" *ngIf="t(op).responseBody" [innerHTML]="t(op).responseHtml"></pre>
+              <div class="sw-erro" *ngIf="t(op).error"><mat-icon>error_outline</mat-icon> {{ t(op).error }}</div>
+            </div>
+          </div>
+        </div>
+        </ng-container>
+      </div>
+
+      <!-- Schemas -->
+      <div class="sw-group">
+        <div class="sw-tag-head" (click)="schemasOpen = !schemasOpen">
+          <mat-icon class="sw-caret">{{ schemasOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+          <h3 class="sw-tag-title">Schemas</h3>
+          <span class="sw-tag-count">{{ model.schemas.length }}</span>
+          <button class="sw-mini-btn sw-mini-add" (click)="showAddSchema = !showAddSchema; $event.stopPropagation()"
+            matTooltip="Add a schema">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <ng-container *ngIf="schemasOpen">
+        <div class="sw-add-form" *ngIf="showAddSchema">
+          <input class="sw-input sw-grow" type="text" [(ngModel)]="newSchemaName" placeholder="SchemaName">
+          <button class="sw-mini-btn sw-mini-add" (click)="addSchema()"><mat-icon>add</mat-icon></button>
+        </div>
+        <p class="sw-vazio" *ngIf="!model.schemas.length">No schemas defined.</p>
+
+        <div class="sw-schema" *ngFor="let schema of model.schemas; trackBy: trackSchema">
+          <div class="sw-schema-head sw-schema-head-toggle" (click)="toggleSchema(schema.name)">
+            <mat-icon class="sw-caret">{{ isSchemaOpen(schema.name) ? 'expand_less' : 'expand_more' }}</mat-icon>
+            <span class="sw-schema-name">{{ schema.name }}</span>
+            <span class="sw-tag-count" *ngIf="!isSchemaOpen(schema.name)">{{ schema.props.length }}</span>
+            <button class="sw-mini-btn sw-mini-edit"
+              (click)="toggleAttrEditor('schema:' + schema.name, rawSchemaNode(schema.name), schemaAttrSuggestions()); $event.stopPropagation()"
+              matTooltip="Edit the attributes of this schema">
+              <mat-icon>tune</mat-icon>
+            </button>
+            <button class="sw-mini-btn sw-mini-add" (click)="sf(schema).showAddProp = !sf(schema).showAddProp; $event.stopPropagation()"
+              matTooltip="Add a property">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button class="sw-mini-btn sw-mini-del" (click)="removeSchema(schema); $event.stopPropagation()"
+              matTooltip="Remove this schema">
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
+          <ng-container *ngIf="isSchemaOpen(schema.name)">
+          <ng-container *ngIf="attrKey === 'schema:' + schema.name" [ngTemplateOutlet]="attrPanel"></ng-container>
+          <div class="sw-add-form" *ngIf="sf(schema).showAddProp">
+            <input class="sw-input sw-grow" type="text" [(ngModel)]="sf(schema).newPropName" placeholder="propertyName">
+            <select class="sw-select" [(ngModel)]="sf(schema).newPropType">
+              <option *ngFor="let pt of paramTypes" [value]="pt">{{ pt }}</option>
+            </select>
+            <button class="sw-mini-btn sw-mini-add" (click)="addProp(schema)"><mat-icon>add</mat-icon></button>
+          </div>
+          <table class="sw-table" *ngIf="schema.props.length">
+            <ng-container *ngFor="let p of schema.props; trackBy: trackProp">
+              <tr>
+                <td>
+                  <span class="sw-p-name">{{ p.name }}</span>
+                  <span class="sw-req" *ngIf="p.required">required</span>
+                </td>
+                <td class="sw-p-type">{{ p.type }}</td>
+                <td class="sw-p-desc">{{ p.description }}</td>
+                <td class="sw-cell-actions">
+                  <button class="sw-mini-btn sw-mini-edit"
+                    (click)="toggleAttrEditor('prop:' + schema.name + ':' + p.name, rawPropNode(schema.name, p.name), schemaAttrSuggestions())"
+                    matTooltip="Edit the attributes of this property">
+                    <mat-icon>tune</mat-icon>
+                  </button>
+                  <button class="sw-mini-btn sw-mini-del" (click)="removeProp(schema, p.name)"
+                    matTooltip="Remove this property">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="attrKey === 'prop:' + schema.name + ':' + p.name">
+                <td colspan="4"><ng-container [ngTemplateOutlet]="attrPanel"></ng-container></td>
+              </tr>
+            </ng-container>
+          </table>
+          <p class="sw-vazio" *ngIf="!schema.props.length">{{ schema.type || 'object' }} — no properties.</p>
+          </ng-container>
+        </div>
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── Shared attribute editor panel ─── -->
+<ng-template #attrPanel>
+  <div class="sw-attr-editor" *ngIf="attrEditor">
+    <div class="sw-attr-row" *ngFor="let e of attrEditor!.entries; trackBy: trackAttr">
+      <span class="sw-attr-key">{{ e.key }}</span>
+      <textarea *ngIf="e.multiline" class="sw-input sw-attr-val" rows="4" [(ngModel)]="e.value" spellcheck="false"></textarea>
+      <input *ngIf="!e.multiline" class="sw-input sw-attr-val" type="text" [(ngModel)]="e.value" spellcheck="false">
+      <button class="sw-mini-btn sw-mini-del" (click)="removeAttr(e.key)" matTooltip="Remove this attribute">
+        <mat-icon>remove</mat-icon>
+      </button>
+    </div>
+    <div class="sw-add-form">
+      <input class="sw-input" type="text" list="sw-attr-sugg" [(ngModel)]="attrEditor!.newKey" placeholder="attribute">
+      <datalist id="sw-attr-sugg">
+        <option *ngFor="let s of attrEditor!.suggestions; trackBy: trackValue" [value]="s"></option>
+      </datalist>
+      <input class="sw-input sw-grow" type="text" [(ngModel)]="attrEditor!.newValue" placeholder="value (plain text or JSON)">
+      <button class="sw-mini-btn sw-mini-add" (click)="addAttr()" matTooltip="Add this attribute"><mat-icon>add</mat-icon></button>
+    </div>
+    <div class="sw-attr-actions">
+      <button mat-raised-button class="btn-neutro" (click)="applyAttrs()"><mat-icon>check</mat-icon> Apply</button>
+      <button mat-raised-button class="btn-limpar" (click)="closeAttrEditor()"><mat-icon>close</mat-icon> Close</button>
+      <span class="sw-attr-hint">Values are parsed as JSON when possible; anything else is kept as text. Use ["a","b"] for arrays and {{ '{' }}"key": "value"{{ '}' }} for objects.</span>
+    </div>
+  </div>
+</ng-template>
+
+<!-- ─── Instructions / SEO ─── -->
+<div class="instrucoes">
+  <section class="seo-intro" aria-labelledby="swagger-seo-title">
+    <h1 id="swagger-seo-title">Online Swagger Editor and OpenAPI Viewer with API Testing</h1>
+    <p>View, edit and test Swagger and OpenAPI specifications directly in the browser. Paste a document in YAML or JSON, browse the rendered documentation, convert between Swagger 2.0, OpenAPI 3.0 and OpenAPI 3.1, send real requests to each endpoint and export the result as YAML, JSON or a standalone HTML documentation page.</p>
+    <p>The tool combines a code editor, a visual documentation browser and an HTTP request console in a single split view: the specification code on the left always reflects the visual edits made on the right.</p>
+  </section>
+
+  <h2>Swagger Viewer &amp; Editor</h2>
+  <p>Work with <strong>Swagger 2.0</strong>, <strong>OpenAPI 3.0</strong> and <strong>OpenAPI 3.1</strong> documents in <strong>YAML</strong> or <strong>JSON</strong>. The classic Petstore example is loaded on first use, and any document you paste is kept in your browser's local storage — nothing is sent to our servers.</p>
+
+  <h4 class="sublinhado">How to use</h4>
+  <p>Paste your specification into the code panel on the left. The document is validated as you type; when it is valid, the rendered documentation appears on the right, grouped by tag, with parameters, request bodies, responses and schemas. Use the <strong>Format</strong> switch to convert the code between YAML and JSON, and the <strong>Specification</strong> selector to convert the document to another Swagger/OpenAPI version. Use the <strong>Petstore</strong> button to restore the classic example at any time.</p>
+
+  <h4 class="sublinhado">Editing with + and −</h4>
+  <p>Unlike a regular viewer, the documentation panel is editable: use the <strong>+</strong> buttons to add endpoints, parameters, request bodies, responses, schemas and schema properties, and the <strong>−</strong> buttons to remove them. Every visual change is immediately reflected in the specification code on the left, in the current format and version. For fine-grained edits (descriptions, examples, security), edit the code directly — the preview updates as you type.</p>
+
+  <h4 class="sublinhado">Version conversion</h4>
+  <p>The version selector converts the whole document: <code>host</code>/<code>basePath</code> become <code>servers</code>, body parameters become <code>requestBody</code>, <code>definitions</code> become <code>components/schemas</code> and all <code>$ref</code> references are rewritten — and vice versa when downgrading. Conversion is a best-effort adaptation: features without an equivalent in the target version (for example HTTP bearer security in Swagger 2.0) are approximated, so review the result for advanced documents.</p>
+
+  <h4 class="sublinhado">Testing endpoints</h4>
+  <p>Expand an operation, fill in the parameter values and request body, choose the target <strong>server</strong> (or type a custom base URL) and click <strong>Execute</strong>. The request is sent from your browser and the status code, response time and response body are shown below the operation. Because requests come from the browser, the target API must allow cross-origin requests (CORS); the default Petstore server does.</p>
+
+  <h4 class="sublinhado">Downloads and standalone HTML</h4>
+  <p>Download the specification as <strong>YAML</strong> or <strong>JSON</strong>, or export a <strong>standalone HTML</strong> page: a single self-contained file with the full read-only documentation and the request console, which anyone can open in a browser without installing anything — ideal for sharing API documentation with your team.</p>
+
+  <h4 class="sublinhado">Privacy</h4>
+  <p>Parsing, conversion and rendering run entirely in your browser. The specification is stored only in your browser's local storage, and requests made with <strong>Execute</strong> go straight from your browser to the API server you chose.</p>
+</div>

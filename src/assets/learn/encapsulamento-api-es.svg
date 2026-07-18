@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Encapsulamento de uma chamada de API</title>
+  <desc id="desc">Camadas Aplicación, Seguridad, Transporte, Internet e Enlace encapsulam progressivamente os dados de uma requisição.</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#07142b"/><stop offset="1" stop-color="#030b1b"/></linearGradient><filter id="g"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <rect width="1200" height="520" rx="28" fill="url(#bg)"/>
+  <g font-family="Arial, sans-serif">
+    <text x="600" y="54" fill="#f3f7ff" font-size="28" font-weight="700" text-anchor="middle">Un mensaje, cinco perspectivas</text>
+    <g transform="translate(90 105)"><rect width="1020" height="66" rx="15" fill="#0c2841" stroke="#00ffd1" stroke-width="3"/><text x="30" y="41" fill="#00ffd1" font-size="22" font-weight="700">Aplicación</text><text x="245" y="41" fill="#f3f7ff" font-size="20">GET /v1/clientes/123 + headers + JSON</text></g>
+    <g transform="translate(130 182)"><rect width="940" height="66" rx="15" fill="#102746" stroke="#22d8f8" stroke-width="3"/><text x="30" y="41" fill="#22d8f8" font-size="22" font-weight="700">Seguridad</text><text x="245" y="41" fill="#f3f7ff" font-size="20">Registro TLS + datos cifrados</text></g>
+    <g transform="translate(170 259)"><rect width="860" height="66" rx="15" fill="#132340" stroke="#38a8ff" stroke-width="3"/><text x="30" y="41" fill="#38a8ff" font-size="22" font-weight="700">Transporte</text><text x="245" y="41" fill="#f3f7ff" font-size="20">Segmento TCP + puertos + secuencia</text></g>
+    <g transform="translate(210 336)"><rect width="780" height="66" rx="15" fill="#191f3f" stroke="#8275ff" stroke-width="3"/><text x="30" y="41" fill="#9d8cff" font-size="22" font-weight="700">Internet</text><text x="245" y="41" fill="#f3f7ff" font-size="20">Datagrama IP + origen + destino</text></g>
+    <g transform="translate(250 413)"><rect width="700" height="66" rx="15" fill="#221b3c" stroke="#b625ff" stroke-width="3"/><text x="30" y="41" fill="#d56aff" font-size="22" font-weight="700">Enlace</text><text x="245" y="41" fill="#f3f7ff" font-size="20">Trama Ethernet o Wi-Fi</text></g>
+    <path d="M65 135v315" stroke="#00ffd1" stroke-width="3" stroke-dasharray="7 8" filter="url(#g)"/><path d="m54 433 11 20 11-20" fill="none" stroke="#00ffd1" stroke-width="3"/>
+  </g>
+</svg>

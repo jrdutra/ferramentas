@@ -1,6 +1,85 @@
 import { ArticleDeepDive } from './tool-article.model';
 
 export const DATA_FORMAT_DEEP_DIVES: Record<string, ArticleDeepDive> = {
+  'swagger-openapi-specification-guide': {
+    readingTime: '22 min read',
+    deepDiveSections: [
+      {
+        title: 'Who standardizes OpenAPI and how releases happen',
+        paragraphs: [
+          'The OpenAPI Specification is governed by the OpenAPI Initiative (OAI), an open-source project under the Linux Foundation created in November 2015 when SmartBear donated the Swagger 2.0 specification. A Technical Steering Committee maintains the specification in a public GitHub repository (OAI/OpenAPI-Specification); changes are proposed, discussed and merged as pull requests, and formal releases are published at spec.openapis.org. Membership includes major API producers and tooling vendors, which keeps the specification vendor-neutral.',
+          'Releases follow a deliberate cadence rather than strict semantic versioning. Patch releases such as 3.0.4 and 3.1.1 (both October 2024) only clarify wording for implementers — documents do not need to change. Minor releases can add features: OpenAPI 3.2.0 (September 2025) added hierarchical tags, streaming media type support, the additionalOperations keyword for non-standard HTTP methods and the OAuth2 device flow, while remaining a compatible evolution of 3.1. In parallel, the "Moonwalk" special interest group explores a possible OpenAPI 4.0 with no committed date, so 3.x remains the recommended line for production contracts.'
+        ],
+        table: {
+          caption: 'Specification timeline',
+          headers: ['Version', 'Date', 'Milestone'],
+          rows: [
+            ['Swagger 1.0–1.2', '2011–2014', 'Created by Tony Tam at Wordnik; specification plus Swagger UI and Codegen'],
+            ['Swagger 2.0', 'September 2014', 'Single-file contract; consolidated parameters model; wide tooling adoption'],
+            ['OpenAPI 3.0.0', 'July 2017', 'First OAI release: servers, components, requestBody, content maps, links, callbacks'],
+            ['OpenAPI 3.1.0', 'February 2021', 'Full JSON Schema 2020-12 alignment; webhooks; optional paths'],
+            ['OpenAPI 3.0.4 / 3.1.1', 'October 2024', 'Clarification patch releases for implementers'],
+            ['OpenAPI 3.2.0', 'September 2025', 'Hierarchical tags, streaming support, additional HTTP methods, OAuth2 device flow']
+          ]
+        }
+      },
+      {
+        title: 'Swagger 2.0 → OpenAPI 3.0: the structural mapping',
+        paragraphs: [
+          'The 2.0 → 3.0 conversion is a systematic restructuring. The single host/basePath/schemes triple expands into a servers array of URL templates with variables. The five parameter locations shrink to four (path, query, header, cookie): body parameters become the operation-level requestBody, and formData parameters become properties of an application/x-www-form-urlencoded or multipart/form-data request body schema. produces and consumes disappear because every request body and response now carries an explicit content map keyed by media type, each entry with its own schema, examples and encoding rules.',
+          'Reusable definitions consolidate under components, and every $ref must be rewritten (#/definitions/X → #/components/schemas/X, and similarly for parameters and responses). Security definitions become securitySchemes: type basic becomes type http with scheme basic, OAuth2 gains a flows object that can describe several flows in one scheme, and two new scheme types appear — http bearer and openIdConnect — that have no 2.0 representation. File uploads change from the non-standard type: file to type: string with format: binary inside a multipart body.'
+        ],
+        table: {
+          caption: 'Field-by-field mapping between Swagger 2.0 and OpenAPI 3.0',
+          headers: ['Swagger 2.0', 'OpenAPI 3.0', 'Notes'],
+          rows: [
+            ['host + basePath + schemes', 'servers[].url', '3.0 supports multiple servers and templated variables'],
+            ['parameter in: body', 'requestBody.content.<media>.schema', 'Description and required move to the requestBody object'],
+            ['parameter in: formData', 'requestBody with form/multipart content', 'Each field becomes a schema property'],
+            ['consumes / produces', 'content maps on requestBody and responses', 'Media type becomes explicit per payload'],
+            ['definitions', 'components.schemas', 'All $ref paths must be rewritten'],
+            ['securityDefinitions', 'components.securitySchemes', 'basic → http/basic; OAuth2 gains flows; bearer and OIDC are new'],
+            ['type: file', 'type: string + format: binary', 'Only meaningful inside multipart or binary content'],
+            ['(not available)', 'callbacks, links, cookie parameters', 'New expressive power in 3.0']
+          ]
+        }
+      },
+      {
+        title: 'OpenAPI 3.0 → 3.1: JSON Schema 2020-12 alignment',
+        paragraphs: [
+          'OpenAPI 3.0 schemas were an "extended subset" of JSON Schema Draft 4: keywords such as nullable, discriminator and example existed only in OpenAPI, while standard keywords such as const, if/then/else and patternProperties were missing. OpenAPI 3.1 declares its schema object to be a superset dialect of JSON Schema 2020-12, so any compliant JSON Schema validator can process OpenAPI 3.1 schemas directly. This is the single most important change — and the reason 3.1 broke most 3.0 tooling despite the minor version number.',
+          'Concretely: nullable: true is replaced by type arrays such as type: ["string", "null"]; exclusiveMinimum and exclusiveMaximum change from booleans that modify minimum/maximum into standalone numeric bounds; example (singular) is deprecated in favor of the JSON Schema examples array; and schemas may use $schema, $dynamicRef, prefixItems, const, contentEncoding and the full 2020-12 vocabulary. At the document level, 3.1 adds top-level webhooks (operations the API invokes on subscribers), makes paths optional so a document may describe only webhooks or shared components, allows SPDX license identifiers and permits summary in the info object.'
+        ],
+        table: {
+          caption: 'Schema keyword changes between OpenAPI 3.0 and 3.1',
+          headers: ['Concern', 'OpenAPI 3.0', 'OpenAPI 3.1'],
+          rows: [
+            ['Null values', 'nullable: true beside a single type', 'type: ["T", "null"] arrays'],
+            ['Exclusive bounds', 'exclusiveMinimum: true + minimum: n', 'exclusiveMinimum: n (numeric)'],
+            ['Examples', 'example (OpenAPI-specific)', 'examples array with JSON Schema semantics'],
+            ['Schema dialect', 'Extended subset of Draft 4', 'Full JSON Schema 2020-12 superset'],
+            ['Conditional schemas', 'Not available', 'if / then / else, dependentSchemas'],
+            ['Event delivery', 'callbacks only', 'callbacks and top-level webhooks'],
+            ['Minimum document', 'paths required', 'paths, webhooks or components suffice']
+          ]
+        }
+      },
+      {
+        title: 'Conversion strategy: what survives a round trip',
+        paragraphs: [
+          'Upgrades preserve meaning almost completely; downgrades cannot. Converting 3.x → 2.0 collapses the servers array into a single host/basePath/schemes triple (additional servers are dropped), keeps only one media type where several were described, discards cookie parameters, callbacks, links and webhooks, flattens oneOf/anyOf composition that 2.0 cannot express, and approximates security: http bearer typically degrades to an apiKey in the Authorization header. Converting 3.1 → 3.0 must reverse the null-type and exclusive-bound encodings, replace const with a single-value enum and drop webhooks entirely.',
+          'A practical migration workflow: convert upward mechanically, then review the result for idioms the converter cannot infer — server variables, per-media-type schemas that were implicit in produces lists, and security schemes that deserve the richer 3.x types. Keep the highest version as the source of truth and generate lower versions only for consumers that require them, treating those artifacts as disposable build outputs. The utily.tools Swagger Viewer & Editor implements exactly this kind of best-effort bidirectional conversion in the browser, which makes it convenient for inspecting what a version change does to a real contract before committing to it.'
+        ]
+      }
+    ],
+    references: [
+      { title: 'OpenAPI Specification (all published versions)', url: 'https://spec.openapis.org/oas/', publisher: 'OpenAPI Initiative' },
+      { title: 'Announcing OpenAPI v3.2', url: 'https://www.openapis.org/blog/2025/09/23/announcing-openapi-v3-2', publisher: 'OpenAPI Initiative' },
+      { title: 'OAI/OpenAPI-Specification releases', url: 'https://github.com/OAI/OpenAPI-Specification/releases', publisher: 'OpenAPI Initiative / GitHub' },
+      { title: 'Swagger Specification documentation', url: 'https://swagger.io/specification/', publisher: 'SmartBear Software' },
+      { title: 'Moonwalk special interest group (OpenAPI 4.0 exploration)', url: 'https://github.com/OAI/sig-moonwalk', publisher: 'OpenAPI Initiative / GitHub' }
+    ]
+  },
   'json-formatting-minification-and-validation': {
     readingTime: '17 min read',
     deepDiveSections: [

@@ -99,6 +99,7 @@ export class HomeComponent {
         { titulo: 'URL Codec', descricao: 'Encode and decode URLs quickly.', icone: 'link', rota: 'url-codec', novo: false },
         { titulo: 'JSON Editor', descricao: 'Format, minify and stringify JSON.', icone: 'integration_instructions', rota: 'json-editor', novo: false },
         { titulo: 'Hash Generator', descricao: 'Generate MD5, SHA-1, SHA-256 and SHA-512 hashes.', icone: 'tag', rota: 'hash-generator', novo: true },
+        { titulo: 'Swagger Viewer & Editor', descricao: 'View, edit and test Swagger/OpenAPI specs: convert versions, call endpoints and export standalone HTML docs.', icone: 'api', rota: 'swagger-editor', novo: true },
         { titulo: 'JSON & YAML Comparator', descricao: 'Compare fields of two JSON or YAML files: missing on each side and differing values.', icone: 'compare_arrows', rota: 'json-yaml-compare', novo: true },
         { titulo: 'UUID Generator', descricao: 'Generate v4, v7 and v1 UUIDs with formatting options.', icone: 'fingerprint', rota: 'uuid-generator', novo: true },
         { titulo: 'Unix Timestamp', descricao: 'Convert dates and times to Unix timestamps.', icone: 'schedule', rota: 'unix-timestamp', novo: false },

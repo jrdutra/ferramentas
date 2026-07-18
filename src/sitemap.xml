@@ -10,6 +10,45 @@
     <loc>https://utily.tools/articles</loc>
   </url>
   <url>
+    <loc>https://utily.tools/learn</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/internet-networking-api-fundamentals</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/fundamentos-internet-redes-apis</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/tcp-udp-portas-e-sockets</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/tcp-udp-ports-and-sockets</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/tcp-udp-puertos-y-sockets</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento</loc>
+  </url>
+  <url>
     <loc>https://utily.tools/articles/what-is-utily-tools</loc>
   </url>
   <url>
@@ -161,5 +200,32 @@
   </url>
   <url>
     <loc>https://utily.tools/articles/ipv4-cidr-subnet-range-calculation-guide</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/http-1-1-http-2-e-http-3</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/http-1-1-http-2-and-http-3</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/http-1-1-http-2-y-http-3</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/https-e-tls-em-profundidade</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/https-and-tls-in-depth</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/https-y-tls-en-profundidad</loc>
   </url>
 </urlset>

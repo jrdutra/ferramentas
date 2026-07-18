@@ -14,6 +14,10 @@
                     <mat-icon>article</mat-icon>
                     Articles
                 </button>
+                <button mat-button (click)="navegaMenu('learn')">
+                    <mat-icon>school</mat-icon>
+                    Learn
+                </button>
             </div>
 
             <div class="marca-direita">
@@ -29,6 +33,7 @@
                     <button mat-menu-item (click)="navegaMenu('home')">Home</button>
                     <button mat-menu-item (click)="navegaMenu('about')">About</button>
                     <button mat-menu-item (click)="navegaMenu('articles')">Articles</button>
+                    <button mat-menu-item (click)="navegaMenu('learn')">Learn</button>
                 </mat-menu>
             </div>
             <span class="menu-hamburger">Tools</span>

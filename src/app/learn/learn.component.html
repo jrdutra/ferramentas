@@ -1,0 +1,279 @@
+<section class="learn-page">
+  <header class="learn-hero">
+    <span class="eyebrow">utily.tools learning paths</span>
+    <h1>Learn</h1>
+    <p>Structured learning series about the concepts and architecture behind modern corporate APIs.</p>
+
+    <div class="progress-toolbar">
+      <span class="progress-count">
+        <mat-icon aria-hidden="true">task_alt</mat-icon>
+        {{ totalReadCount }} {{ totalReadCount === 1 ? 'article' : 'articles' }} read
+      </span>
+      <div class="progress-actions">
+        <button type="button" class="progress-button" (click)="exportProgress()">
+          <mat-icon aria-hidden="true">download</mat-icon>
+          Export progress
+        </button>
+        <button type="button" class="progress-button" (click)="triggerImport()">
+          <mat-icon aria-hidden="true">upload</mat-icon>
+          Import progress
+        </button>
+      </div>
+      <input
+        #importInput
+        type="file"
+        accept="application/json,.json"
+        class="visually-hidden"
+        (change)="onImportFile($event)"
+        aria-hidden="true"
+        tabindex="-1">
+    </div>
+
+    @if (importFeedback) {
+      <p class="progress-feedback" [class.is-error]="importFeedback.type === 'error'" role="status">
+        {{ importFeedback.message }}
+      </p>
+    }
+  </header>
+
+  <section class="learning-path" aria-labelledby="corporate-api-path-title">
+    <button
+      type="button"
+      class="learning-path-card"
+      (click)="toggleCorporateApiPath()"
+      [attr.aria-expanded]="isCorporateApiPathOpen"
+      [attr.aria-controls]="corporateApiPathContentId"
+      [attr.aria-label]="(isCorporateApiPathOpen ? 'Hide ' : 'Show ') + 'Corporate API Fundamentals and Architecture'">
+      <span class="path-card-icon" aria-hidden="true">
+        <mat-icon>account_tree</mat-icon>
+      </span>
+
+      <span class="path-card-copy">
+        <span class="path-card-eyebrow">Learning path</span>
+        <span id="corporate-api-path-title" class="path-card-title">Corporate API Fundamentals and Architecture</span>
+        <span class="path-card-description">Internet, networking, transport protocols, IP addressing, and API infrastructure.</span>
+        <span class="path-card-progress" [class.is-complete]="pathReadCount('corporate-api-fundamentals') === pathTotal('corporate-api-fundamentals')">
+          <mat-icon aria-hidden="true">task_alt</mat-icon>
+          {{ pathReadCount('corporate-api-fundamentals') }} of {{ pathTotal('corporate-api-fundamentals') }} read
+        </span>
+        <span class="path-progress-row">
+          <span class="path-progress-track" role="progressbar" aria-label="Reading progress"
+            [attr.aria-valuenow]="pathCompletionPercent('corporate-api-fundamentals')" aria-valuemin="0" aria-valuemax="100">
+            <span class="path-progress-fill" [style.width.%]="pathCompletionPercent('corporate-api-fundamentals')"></span>
+          </span>
+          <span class="path-progress-percent">{{ pathCompletionPercent('corporate-api-fundamentals') }}%</span>
+        </span>
+      </span>
+
+      <span class="path-card-languages" aria-label="Available in English, Spanish, and Portuguese">
+        <span class="path-language" title="English">
+          <img src="/assets/learn/usa.png" alt="English">
+        </span>
+        <span class="path-language" title="Español">
+          <img src="/assets/learn/espanha.png" alt="Español">
+        </span>
+        <span class="path-language" title="Português">
+          <img src="/assets/learn/brazil.png" alt="Português">
+        </span>
+      </span>
+
+      <span class="path-card-action" aria-hidden="true">
+        <span>{{ isCorporateApiPathOpen ? 'Hide articles' : 'View articles' }}</span>
+        <mat-icon>expand_more</mat-icon>
+      </span>
+    </button>
+
+    @if (isCorporateApiPathOpen) {
+      <div [id]="corporateApiPathContentId" class="learning-path-content">
+        <section class="learning-series" aria-labelledby="english-series-title">
+    <div class="series-header">
+      <h2 id="english-series-title" class="series-title">
+        <button
+          type="button"
+          class="series-toggle"
+          (click)="toggleSeries('english')"
+          [attr.aria-expanded]="isSeriesOpen('english')"
+          aria-controls="english-series-track">
+          <span class="series-toggle-copy">
+            <span class="language-label">
+              English
+              <img class="language-flag" src="/assets/learn/usa.png" alt="" aria-hidden="true">
+            </span>
+            <span class="series-title-text">Corporate API Fundamentals and Architecture</span>
+          </span>
+          <mat-icon class="series-chevron" [class.is-open]="isSeriesOpen('english')" aria-hidden="true">expand_more</mat-icon>
+        </button>
+      </h2>
+
+      @if (isSeriesOpen('english')) {
+        <div class="carousel-controls" aria-label="English carousel controls">
+          <button type="button" (click)="scroll('english', -1)" [disabled]="englishArticles.length === 0" aria-label="Previous articles">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button type="button" (click)="scroll('english', 1)" [disabled]="englishArticles.length === 0" aria-label="Next articles">
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (isSeriesOpen('english')) {
+    <div #englishTrack id="english-series-track" class="carousel-track" aria-live="polite">
+      @for (article of englishArticles; track article.route) {
+        <article class="learn-card">
+          <a class="learn-card-image" [routerLink]="article.route" tabindex="-1" aria-hidden="true">
+            <img [src]="article.image" [alt]="article.imageAlt" loading="lazy">
+            @if (isRead(article.route)) {
+              <span class="read-badge" title="Read"><mat-icon>check</mat-icon></span>
+            }
+          </a>
+          <div class="learn-card-content">
+          <div class="learn-card-meta">
+            <span class="chapter-label">{{ article.chapterLabel }}</span>
+            <span aria-hidden="true">•</span>
+            <span>{{ article.readingTime }}</span>
+          </div>
+          <h3>{{ article.title }}</h3>
+          <p>{{ article.description }}</p>
+          <a [routerLink]="article.route">Read article <mat-icon>arrow_forward</mat-icon></a>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-carousel">
+          <mat-icon>auto_stories</mat-icon>
+          <p>New articles will be published soon.</p>
+        </div>
+      }
+    </div>
+    }
+        </section>
+
+        <section class="learning-series" aria-labelledby="spanish-series-title">
+    <div class="series-header">
+      <h2 id="spanish-series-title" class="series-title">
+        <button
+          type="button"
+          class="series-toggle"
+          (click)="toggleSeries('spanish')"
+          [attr.aria-expanded]="isSeriesOpen('spanish')"
+          aria-controls="spanish-series-track">
+          <span class="series-toggle-copy">
+            <span class="language-label">
+              Español
+              <img class="language-flag" src="/assets/learn/espanha.png" alt="" aria-hidden="true">
+            </span>
+            <span class="series-title-text">Fundamentos y Arquitectura de APIs Corporativas</span>
+          </span>
+          <mat-icon class="series-chevron" [class.is-open]="isSeriesOpen('spanish')" aria-hidden="true">expand_more</mat-icon>
+        </button>
+      </h2>
+
+      @if (isSeriesOpen('spanish')) {
+        <div class="carousel-controls" aria-label="Controles del carrusel en español">
+          <button type="button" (click)="scroll('spanish', -1)" [disabled]="spanishArticles.length === 0" aria-label="Artículos anteriores">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button type="button" (click)="scroll('spanish', 1)" [disabled]="spanishArticles.length === 0" aria-label="Próximos artículos">
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (isSeriesOpen('spanish')) {
+    <div #spanishTrack id="spanish-series-track" class="carousel-track" aria-live="polite">
+      @for (article of spanishArticles; track article.route) {
+        <article class="learn-card">
+          <a class="learn-card-image" [routerLink]="article.route" tabindex="-1" aria-hidden="true">
+            <img [src]="article.image" [alt]="article.imageAlt" loading="lazy">
+            @if (isRead(article.route)) {
+              <span class="read-badge" title="Read"><mat-icon>check</mat-icon></span>
+            }
+          </a>
+          <div class="learn-card-content">
+          <div class="learn-card-meta">
+            <span class="chapter-label">{{ article.chapterLabel }}</span>
+            <span aria-hidden="true">•</span>
+            <span>{{ article.readingTime }}</span>
+          </div>
+          <h3>{{ article.title }}</h3>
+          <p>{{ article.description }}</p>
+          <a [routerLink]="article.route">Leer artículo <mat-icon>arrow_forward</mat-icon></a>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-carousel">
+          <mat-icon>auto_stories</mat-icon>
+          <p>Próximamente se publicarán nuevos artículos.</p>
+        </div>
+      }
+    </div>
+    }
+        </section>
+
+        <section class="learning-series" aria-labelledby="portuguese-series-title">
+    <div class="series-header">
+      <h2 id="portuguese-series-title" class="series-title">
+        <button
+          type="button"
+          class="series-toggle"
+          (click)="toggleSeries('portuguese')"
+          [attr.aria-expanded]="isSeriesOpen('portuguese')"
+          aria-controls="portuguese-series-track">
+          <span class="series-toggle-copy">
+            <span class="language-label">
+              Português
+              <img class="language-flag" src="/assets/learn/brazil.png" alt="" aria-hidden="true">
+            </span>
+            <span class="series-title-text">Fundamentos e Arquitetura de APIs Corporativas</span>
+          </span>
+          <mat-icon class="series-chevron" [class.is-open]="isSeriesOpen('portuguese')" aria-hidden="true">expand_more</mat-icon>
+        </button>
+      </h2>
+
+      @if (isSeriesOpen('portuguese')) {
+        <div class="carousel-controls" aria-label="Controles do carrossel em português">
+          <button type="button" (click)="scroll('portuguese', -1)" [disabled]="portugueseArticles.length === 0" aria-label="Artigos anteriores">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button type="button" (click)="scroll('portuguese', 1)" [disabled]="portugueseArticles.length === 0" aria-label="Próximos artigos">
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (isSeriesOpen('portuguese')) {
+    <div #portugueseTrack id="portuguese-series-track" class="carousel-track" aria-live="polite">
+      @for (article of portugueseArticles; track article.route) {
+        <article class="learn-card">
+          <a class="learn-card-image" [routerLink]="article.route" tabindex="-1" aria-hidden="true">
+            <img [src]="article.image" [alt]="article.imageAlt" loading="lazy">
+            @if (isRead(article.route)) {
+              <span class="read-badge" title="Read"><mat-icon>check</mat-icon></span>
+            }
+          </a>
+          <div class="learn-card-content">
+          <div class="learn-card-meta">
+            <span class="chapter-label">{{ article.chapterLabel }}</span>
+            <span aria-hidden="true">•</span>
+            <span>{{ article.readingTime }}</span>
+          </div>
+          <h3>{{ article.title }}</h3>
+          <p>{{ article.description }}</p>
+          <a [routerLink]="article.route">Ler artigo <mat-icon>arrow_forward</mat-icon></a>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-carousel">
+          <mat-icon>auto_stories</mat-icon>
+          <p>Novos artigos serão publicados em breve.</p>
+        </div>
+      }
+    </div>
+    }
+        </section>
+      </div>
+    }
+  </section>
+</section>

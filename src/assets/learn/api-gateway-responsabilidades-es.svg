@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Responsabilidades de um API Gateway</title>
+  <desc id="desc">Consumidores atravessam um API Gateway que concentra segurança, tráfego, mediação, roteamento e observabilidade antes dos backends.</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#07142b"/><stop offset="1" stop-color="#030b1b"/></linearGradient><linearGradient id="gw" x2="1" y2="1"><stop stop-color="#00ffd1" stop-opacity=".25"/><stop offset="1" stop-color="#6c5cff" stop-opacity=".3"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <rect width="1200" height="560" rx="28" fill="url(#bg)"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="55" y="215" width="210" height="120" rx="22" fill="#0b2038" stroke="#38a8ff" stroke-width="3"/><text x="160" y="266" fill="#f3f7ff" font-size="24" font-weight="700">Consumidores</text><text x="160" y="299" fill="#91a6bd" font-size="17">apps • socios • servicios</text>
+    <path d="M270 275h135" stroke="#38a8ff" stroke-width="6" filter="url(#glow)"/><path d="m389 262 22 13-22 13" fill="#38a8ff"/>
+    <rect x="415" y="70" width="370" height="420" rx="34" fill="url(#gw)" stroke="#00ffd1" stroke-width="4" filter="url(#glow)"/><text x="600" y="122" fill="#00ffd1" font-size="29" font-weight="700">API GATEWAY</text>
+    <g fill="#0a1a32" stroke="#4a7cff" stroke-width="2"><rect x="470" y="155" width="260" height="48" rx="12"/><rect x="470" y="218" width="260" height="48" rx="12"/><rect x="470" y="281" width="260" height="48" rx="12"/><rect x="470" y="344" width="260" height="48" rx="12"/><rect x="470" y="407" width="260" height="48" rx="12"/></g>
+    <g fill="#dcecff" font-size="19"><text x="600" y="186">Seguridad e identidad</text><text x="600" y="249">Límites de tasa y cuotas</text><text x="600" y="312">Mediación y transformación</text><text x="600" y="375">Enrutamiento upstream</text><text x="600" y="438">Logs, métricas y trazas</text></g>
+    <path d="M790 275h135" stroke="#b625ff" stroke-width="6" filter="url(#glow)"/><path d="m909 262 22 13-22 13" fill="#b625ff"/>
+    <g fill="#121b39" stroke="#b625ff" stroke-width="3"><rect x="935" y="100" width="210" height="90" rx="20"/><rect x="935" y="235" width="210" height="90" rx="20"/><rect x="935" y="370" width="210" height="90" rx="20"/></g>
+    <g fill="#f3f7ff" font-size="21" font-weight="700"><text x="1040" y="153">Backend A</text><text x="1040" y="288">Backend B</text><text x="1040" y="423">Backend C</text></g>
+  </g>
+</svg>

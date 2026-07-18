@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">Evolução da Internet às plataformas de APIs</title>
+  <desc id="desc">Linha do tempo de 1969 a 2010 mostrando ARPANET, TCP IP, Web, REST e plataformas de APIs.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07142b"/><stop offset="1" stop-color="#030b1b"/></linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#00ffd1"/><stop offset=".55" stop-color="#38a8ff"/><stop offset="1" stop-color="#b625ff"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="430" rx="28" fill="url(#bg)"/>
+  <path d="M100 230H1100" stroke="url(#line)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <g transform="translate(130 230)"><circle r="24" fill="#07142b" stroke="#00ffd1" stroke-width="6"/><text y="-62" fill="#00ffd1" font-size="25" font-weight="700">1969</text><text y="72" fill="#f3f7ff" font-size="22" font-weight="700">ARPANET</text><text y="102" fill="#91a6bd" font-size="16">comutação de pacotes</text></g>
+    <g transform="translate(365 230)"><circle r="24" fill="#07142b" stroke="#22d8f8" stroke-width="6"/><text y="-62" fill="#22d8f8" font-size="25" font-weight="700">1983</text><text y="72" fill="#f3f7ff" font-size="22" font-weight="700">TCP/IP</text><text y="102" fill="#91a6bd" font-size="16">redes interconectadas</text></g>
+    <g transform="translate(600 230)"><circle r="24" fill="#07142b" stroke="#38a8ff" stroke-width="6"/><text y="-62" fill="#38a8ff" font-size="25" font-weight="700">1989-1991</text><text y="72" fill="#f3f7ff" font-size="22" font-weight="700">World Wide Web</text><text y="102" fill="#91a6bd" font-size="16">URI, HTTP e HTML</text></g>
+    <g transform="translate(835 230)"><circle r="24" fill="#07142b" stroke="#8275ff" stroke-width="6"/><text y="-62" fill="#9d8cff" font-size="25" font-weight="700">2000</text><text y="72" fill="#f3f7ff" font-size="22" font-weight="700">REST</text><text y="102" fill="#91a6bd" font-size="16">integração pela Web</text></g>
+    <g transform="translate(1070 230)"><circle r="24" fill="#07142b" stroke="#b625ff" stroke-width="6"/><text y="-62" fill="#d56aff" font-size="25" font-weight="700">2010+</text><text y="72" fill="#f3f7ff" font-size="22" font-weight="700">API Platforms</text><text y="102" fill="#91a6bd" font-size="16">governança em escala</text></g>
+  </g>
+</svg>

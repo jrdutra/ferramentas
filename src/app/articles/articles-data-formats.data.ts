@@ -8,6 +8,76 @@ const publication = {
 
 export const DATA_FORMAT_TOOL_ARTICLES: ToolArticle[] = [
   {
+    publishedAt: 'July 17, 2026',
+    publishedIso: '2026-07-17',
+    modifiedIso: '2026-07-17T00:00:00-03:00',
+    slug: 'swagger-openapi-specification-guide',
+    toolName: 'Swagger Viewer & Editor',
+    toolRoute: '/swagger-editor',
+    title: 'Swagger and OpenAPI: History, Versions and Technical Differences',
+    description: 'The history of Swagger and OpenAPI, who standardizes the specification, and the technical differences, gains and losses between Swagger 2.0, OpenAPI 3.0 and OpenAPI 3.1.',
+    keywords: 'swagger, openapi, openapi specification, swagger 2.0, openapi 3.0, openapi 3.1, swagger vs openapi, api documentation, api description, openapi initiative, swagger history, convert swagger to openapi',
+    category: 'APIs',
+    image: '/assets/articles/swagger-editor-cover.png',
+    imageAlt: 'Split view of a glowing OpenAPI document in YAML next to rendered API endpoints with colored HTTP method badges',
+    imageWidth: 1672,
+    imageHeight: 941,
+    readingTime: '14 min read',
+    introduction: [
+      'Every HTTP API raises the same questions: which paths exist, which parameters do they accept, what do responses look like and how is the caller authenticated. Swagger — today formalized as the OpenAPI Specification — answers those questions with a machine-readable contract. The same YAML or JSON document drives interactive documentation, client and server code generation, request validation, mock servers and automated tests.',
+      'This article traces where Swagger came from, explains who standardizes OpenAPI today, and then goes deep into the technical differences between Swagger 2.0, OpenAPI 3.0 and OpenAPI 3.1 — including what you gain and what you lose when moving a document from one version to another.',
+      'You can follow along interactively: the utily.tools Swagger Viewer & Editor loads the classic Petstore contract, lets you edit it visually or as code, converts it between Swagger 2.0, OpenAPI 3.0 and 3.1 in either YAML or JSON, and even sends real requests to the described endpoints — all in the browser.'
+    ],
+    theoryTitle: 'From Swagger to OpenAPI: a short history',
+    theory: [
+      'Swagger was created around 2010–2011 by Tony Tam at Wordnik, an online dictionary company that needed a way to describe and document its own REST APIs. The specification was open-sourced together with a toolchain that made it popular far beyond Wordnik: Swagger UI rendered interactive documentation from the contract, and Swagger Codegen generated client and server code. Describing an API once and deriving documentation, SDKs and test consoles from that single source was the idea that made Swagger the de facto standard.',
+      'In 2015 SmartBear Software acquired the Swagger assets and, in November of the same year, donated the specification to the newly created OpenAPI Initiative, an open-governance project hosted by the Linux Foundation with founding members including Google, Microsoft, IBM, PayPal and others. The specification itself was renamed: Swagger 2.0 became the OpenAPI Specification, and the name "Swagger" now formally refers to SmartBear\'s tooling family (Swagger UI, Swagger Editor, SwaggerHub). In everyday conversation, however, "a swagger" still usually means "an OpenAPI document".',
+      'Under the OpenAPI Initiative the specification evolved in the open: OpenAPI 3.0.0 arrived in July 2017 with a restructured document model, OpenAPI 3.1.0 in February 2021 aligned schemas with modern JSON Schema, patch releases 3.0.4 and 3.1.1 in October 2024 clarified ambiguities, and OpenAPI 3.2.0 was released in September 2025. A special interest group known as "Moonwalk" explores what a future OpenAPI 4.0 could look like.'
+    ],
+    technicalIntroduction: [
+      'All versions share the same core anatomy: an info block with metadata, a paths map from URL templates to HTTP operations, reusable definitions referenced through $ref pointers, and security scheme declarations. What changes between versions is how requests and responses are modeled, how much of JSON Schema is available, and how servers, content types and reusable components are expressed.'
+    ],
+    technicalPoints: [
+      {
+        title: 'Swagger 2.0: one host, flat parameters',
+        paragraphs: [
+          'A Swagger 2.0 document declares swagger: "2.0" and describes exactly one API surface through host, basePath and schemes. Media types are listed globally or per operation with consumes and produces. Every input is a parameter with an in location of path, query, header, formData or body — the body parameter carries a schema, while all the others use a flattened, restricted subset of JSON Schema directly on the parameter object. Reusable schemas live under definitions, reusable parameters under parameters and security schemes under securityDefinitions.',
+          'This flat model is simple to read and generate, but it has hard limits: only one server, no way to describe different payloads per media type, no cookie parameters, at most one body, and no oneOf/anyOf composition, which makes polymorphic payloads difficult to express.'
+        ]
+      },
+      {
+        title: 'OpenAPI 3.0: servers, content maps and components',
+        paragraphs: [
+          'OpenAPI 3.0 declares openapi: 3.0.x and replaces host/basePath/schemes with a servers array whose URLs support templated variables — multiple environments and parameterized hosts become first-class. The body parameter disappears: operations gain a requestBody whose content map associates each media type (application/json, multipart/form-data, text/csv…) with its own schema, and responses adopt the same content structure, replacing produces/consumes entirely.',
+          'All reusable pieces are consolidated under components (schemas, parameters, responses, requestBodies, headers, examples, links, callbacks, securitySchemes), $ref paths change accordingly (#/definitions/Pet becomes #/components/schemas/Pet), and the schema object grows: oneOf, anyOf, not and discriminator enable real polymorphism, nullable marks optional null values, and callbacks plus links describe asynchronous notifications and workflow relations between operations. Security also improves, with http bearer, openIdConnect and structured OAuth2 flows.'
+        ]
+      },
+      {
+        title: 'OpenAPI 3.1: full JSON Schema alignment',
+        paragraphs: [
+          'OpenAPI 3.0 used an "extended subset" of JSON Schema Draft 4, which meant a schema valid for an OpenAPI validator could be invalid for a standard JSON Schema validator and vice versa. OpenAPI 3.1 ended that divergence: its schema object is a full JSON Schema 2020-12 dialect. nullable: true disappears in favor of type: ["string", "null"], exclusiveMinimum/exclusiveMaximum become numeric values instead of booleans, const, if/then/else, prefixItems and $dynamicRef become available, and examples follows JSON Schema semantics.',
+          'Version 3.1 also adds top-level webhooks for event callbacks the API sends to consumers, makes paths optional (a document can describe only webhooks or only components), and permits license identification by SPDX identifier. Although the version number suggests a patch-level change, 3.1 is effectively a breaking release for tooling — which is exactly why many generators took years to support it.'
+        ]
+      },
+      {
+        title: 'Gains and losses when converting between versions',
+        paragraphs: [
+          'Upgrading 2.0 → 3.0 is mostly mechanical and lossless: hosts map to servers, body and formData parameters map to requestBody content, definitions move under components and $refs are rewritten. What you gain is expressiveness — multiple servers, per-media-type schemas, cookie parameters, polymorphism, callbacks and links. Upgrading 3.0 → 3.1 rewrites nullable and the exclusive bounds and unlocks the full JSON Schema vocabulary.',
+          'Downgrading is where losses appear. Going 3.1 → 3.0 must approximate type arrays back to nullable, turn const into a single-value enum and drop webhooks. Going 3.0 → 2.0 collapses multiple servers into one host, keeps only one media type per body, loses cookie parameters, oneOf/anyOf composition, callbacks and links, and approximates modern security schemes — HTTP bearer authentication, for example, has no 2.0 equivalent and is usually emulated as an apiKey header. Converters, including the one built into the utily.tools Swagger Viewer & Editor, are best-effort adaptations: always review a downgraded contract before publishing it.'
+        ]
+      }
+    ],
+    examples: [
+      { title: 'Design-first development', description: 'Teams write the OpenAPI contract before any code, review it like source code, and generate servers, clients and tests from it — keeping frontend and backend aligned from day one.' },
+      { title: 'Interactive documentation and onboarding', description: 'A rendered contract with a try-it-out console lets consumers explore endpoints and send real requests without reading source code or importing collections.' },
+      { title: 'Legacy migration and audits', description: 'Converting a Swagger 2.0 contract to OpenAPI 3.1 exposes implicit assumptions — single host, single content type, informal null handling — and prepares the API description for modern validation and generation pipelines.' }
+    ],
+    conclusion: [
+      'Swagger started as one company\'s internal documentation tool and became, as OpenAPI, the neutral standard that the entire HTTP API ecosystem builds on. Knowing the differences between 2.0, 3.0 and 3.1 is not trivia: it determines which features you can express, which tools can consume your contract and what breaks when a document moves between versions.',
+      'My practical advice: author new contracts in OpenAPI 3.1, keep 3.0 output available while any consumer tooling lags behind, and treat any remaining Swagger 2.0 documents as migration candidates. Use the utily.tools Swagger Viewer & Editor to paste a contract in YAML or JSON, convert it across versions, edit it visually with + and − controls, call the real endpoints and export the result — including a standalone HTML documentation page you can share with your team.'
+    ]
+  },
+  {
     ...publication,
     slug: 'json-formatting-minification-and-validation',
     toolName: 'JSON Editor',
