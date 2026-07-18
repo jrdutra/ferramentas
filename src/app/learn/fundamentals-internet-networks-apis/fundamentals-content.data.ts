@@ -637,11 +637,40 @@ export const FUNDAMENTALS_CHAPTER_BLOCKS: ChapterBlock[] = [
   {
     "kind": "heading",
     "level": 3,
-    "text": "Reverse proxy and balancer"
+    "text": "Forward proxy, reverse proxy, and load balancer"
+  },
+  {
+    "kind": "paragraph",
+    "text": "A forward proxy, often simply called a proxy or egress proxy, acts on behalf of the client. The browser, operating system, or application knows about the intermediary and sends it a request intended for another server. The proxy decides whether to permit the outbound connection, connects to the destination, and returns the response to the consumer. Organizations use forward proxies for Internet access control, auditing, filtering, caching, and egress policy enforcement. To the destination server, the connection usually appears to originate from the proxy, which hides or replaces the client network address."
   },
   {
     "kind": "paragraph",
     "text": "A reverse proxy receives requests in the name of internal servers. It can terminate TLS, apply rules, normalize headers, compress responses, and hide backend topology. An API Gateway has a reverse-proxy feature but adds API management, security, and governance-specific functions."
+  },
+  {
+    "kind": "paragraph",
+    "text": "With a reverse proxy, the consumer believes it is communicating with the published service itself. DNS points the API name to the proxy, and the proxy chooses which internal server receives the call. A forward proxy therefore represents clients and controls outbound traffic, whereas a reverse proxy represents servers and controls inbound traffic. Both can forward HTTP and manipulate headers, but they sit on opposite sides of the relationship and rely on different trust roots."
+  },
+  {
+    "kind": "table",
+    "caption": "Comparison between a forward proxy and a reverse proxy.",
+    "headers": [
+      "Aspect",
+      "Forward proxy",
+      "Reverse proxy"
+    ],
+    "rows": [
+      ["Represents", "A client or a network of clients", "A server or a set of backends"],
+      ["Primary flow", "Outbound traffic from the network to external services", "Inbound traffic from consumers to published services"],
+      ["Who knows about it", "The client is normally configured to use it", "The client accesses the service name and may not notice the intermediary"],
+      ["What it hides", "The source and topology of the client network", "The location and number of internal servers"],
+      ["Frequent uses", "Egress, filtering, auditing, and caching", "TLS termination, routing, load balancing, WAF, and backend protection"],
+      ["Relationship to APIs", "Controls which external APIs consumers may call", "Publishes internal APIs and routes calls to the correct backends"]
+    ]
+  },
+  {
+    "kind": "paragraph",
+    "text": "With HTTPS, a forward proxy can create only a TCP tunnel using CONNECT, without reading the protected HTTP traffic, or it can perform TLS inspection when managed client devices trust a corporate CA. The latter is a sensitive operation that creates two TLS sessions and requires governance. A reverse proxy can use pass-through mode and preserve TLS to the backend, terminate TLS and forward HTTP internally, or terminate and re-encrypt the call in a separate TLS session. These modes are not equivalent and must be explicit in the trust diagram."
   },
   {
     "kind": "paragraph",
@@ -662,8 +691,20 @@ export const FUNDAMENTALS_CHAPTER_BLOCKS: ChapterBlock[] = [
     "id": "seguranca"
   },
   {
+    "kind": "subhead",
+    "text": "What TLS protects — and what remains outside its scope"
+  },
+  {
     "kind": "paragraph",
     "text": "TLS protects communication against unintended reading, alteration, and forgery within the considered threat model. HTTPS is HTTP transported over a protected channel by TLS. The protocol negotiates cryptographic parameters, authenticates at least the server in common configurations, and establishes keys used to protect transmitted data."
+  },
+  {
+    "kind": "paragraph",
+    "text": "After the handshake, TLS records use session keys and authenticated encryption to provide confidentiality and integrity for bytes in transit on that hop. A network observer can still infer metadata such as IP addresses, ports, connection volume, and duration. TLS also does not correct broken authorization, malicious payloads, compromised endpoints, secrets written to logs, or data already decrypted by the application. It protects the channel between two termination points; it does not by itself establish that the complete business journey is secure."
+  },
+  {
+    "kind": "subhead",
+    "text": "How the handshake establishes trust and keys"
   },
   {
     "kind": "paragraph",
@@ -671,11 +712,35 @@ export const FUNDAMENTALS_CHAPTER_BLOCKS: ChapterBlock[] = [
   },
   {
     "kind": "paragraph",
+    "text": "At the start, ClientHello advertises supported versions, cipher suites, key-exchange groups, and extensions. SNI carries the expected name so a shared address can select the correct certificate; ALPN negotiates HTTP/1.1, HTTP/2, or another application protocol. The server responds with the selected parameters, its certificate chain, and proof that it possesses the private key. An ephemeral exchange, normally ECDHE in modern TLS, produces the secret from which session keys are derived without transmitting those keys over the network. Finished messages authenticate the handshake transcript and detect tampering with the negotiation."
+  },
+  {
+    "kind": "paragraph",
     "text": "During the handshake, the client and server negotiate compatible versions and algorithms. TLS 1.3 simplified and modernized parts of the protocol compared to previous versions. The application should only send sensitive information after the channel is established and validated. If negotiation fails, no gateway HTTP policy can be executed because the application message has not yet been received."
   },
   {
     "kind": "paragraph",
+    "text": "TLS 1.3 removed obsolete cryptographic options, reduced plaintext handshake messages, and normally completes a new handshake in one round trip. Session resumption with PSKs or tickets reduces cost and latency, but tickets and their protection keys also need expiration and rotation. The 0-RTT mode can send data before a new handshake finishes, but it permits replay under certain conditions; it should therefore be restricted to truly safe and idempotent operations or remain disabled for sensitive APIs."
+  },
+  {
+    "kind": "subhead",
+    "text": "mTLS: mutual authentication at the channel"
+  },
+  {
+    "kind": "paragraph",
     "text": "mTLS adds client authentication at the TLS level. In addition to validating the server's certificate, the server requests and validates a certificate presented by the client. This is common in B2B and financial integrations. mTLS authenticates a technical identity linked to the certificate; business authorization may still depend on tokens, scopes, contracts, and context."
+  },
+  {
+    "kind": "paragraph",
+    "text": "When mTLS is required, the server sends CertificateRequest with information about acceptable CAs and algorithms. The client presents its chain and produces CertificateVerify, a signature over the transcript proving possession of the corresponding private key—sending a copied certificate alone is not enough. The server validates the chain, validity, key usage, policies, and, where applicable, revocation; it then maps the subject, SAN, fingerprint, or registered data to a technical identity. That mapping must be explicit and auditable."
+  },
+  {
+    "kind": "paragraph",
+    "text": "mTLS operations depend on a lifecycle: secure issuance, private-key storage, chain distribution, renewal before expiration, rotation without downtime, and revocation when a partner or workload is no longer trusted. Different clients should not indiscriminately share the same key. In service meshes and internal communication, workload identities and automation can reduce manual work, but they do not eliminate the need to define which CA is trusted for which purpose."
+  },
+  {
+    "kind": "paragraph",
+    "text": "mTLS does not replace OAuth, JWT, or resource authorization. The certificate primarily answers which system possesses the key and participates in the channel; a token can represent a user, consent, audience, and scopes. In combined architectures, the gateway first associates the certificate with an authorized client, then validates the token and enforces business policies. Binding a token to the certificate, when supported by the adopted profile, also reduces the value of a stolen token outside the authorized channel."
   },
   {
     "kind": "paragraph",

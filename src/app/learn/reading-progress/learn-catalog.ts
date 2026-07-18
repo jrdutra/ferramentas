@@ -88,6 +88,96 @@ export const LEARN_PATHS: LearnPath[] = [
           en: '/learn/en/cryptography-fundamentals-and-api-applications',
           es: '/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis'
         }
+      },
+      {
+        id: 'corporate-api/digital-certificates',
+        topicCount: 33,
+        routes: {
+          pt: '/learn/pt/certificados-digitais-pki-e-x509',
+          en: '/learn/en/digital-certificates-pki-and-x509',
+          es: '/learn/es/certificados-digitales-pki-y-x509'
+        }
+      },
+      {
+        id: 'corporate-api/mtls',
+        topicCount: 16,
+        routes: {
+          pt: '/learn/pt/mtls-em-profundidade',
+          en: '/learn/en/mtls-in-depth',
+          es: '/learn/es/mtls-en-profundidad'
+        }
+      },
+      {
+        id: 'corporate-api/rest',
+        topicCount: 27,
+        routes: {
+          pt: '/learn/pt/rest-arquitetura-e-boas-praticas',
+          en: '/learn/en/rest-architecture-and-best-practices',
+          es: '/learn/es/rest-arquitectura-y-buenas-practicas'
+        }
+      },
+      {
+        id: 'corporate-api/richardson-maturity-model',
+        topicCount: 29,
+        routes: {
+          pt: '/learn/pt/modelo-de-maturidade-rest-de-richardson',
+          en: '/learn/en/richardson-rest-maturity-model',
+          es: '/learn/es/modelo-de-madurez-rest-de-richardson'
+        }
+      },
+      {
+        id: 'corporate-api/openapi-contracts',
+        topicCount: 32,
+        routes: {
+          pt: '/learn/pt/openapi-swagger-contratos-documentacao-e-automacao',
+          en: '/learn/en/openapi-swagger-contracts-documentation-and-automation',
+          es: '/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion'
+        }
+      },
+      {
+        id: 'corporate-api/graphql-grpc-websocket',
+        topicCount: 21,
+        routes: {
+          pt: '/learn/pt/graphql-grpc-e-websocket',
+          en: '/learn/en/graphql-grpc-and-websocket',
+          es: '/learn/es/graphql-grpc-y-websocket'
+        }
+      },
+      {
+        id: 'corporate-api/authentication-authorization',
+        topicCount: 31,
+        routes: {
+          pt: '/learn/pt/autenticacao-x-autorizacao',
+          en: '/learn/en/authentication-vs-authorization',
+          es: '/learn/es/autenticacion-vs-autorizacion'
+        }
+      },
+      {
+        id: 'corporate-api/basic-auth-digest-api-keys',
+        topicCount: 27,
+        routes: {
+          pt: '/learn/pt/basic-auth-digest-e-api-keys',
+          en: '/learn/en/basic-auth-digest-and-api-keys',
+          es: '/learn/es/basic-auth-digest-y-api-keys'
+        }
+      },
+      {
+        id: 'corporate-api/oauth-2-flows-tokens-security',
+        topicCount: 33,
+        routes: {
+          pt: '/learn/pt/oauth-2-fluxos-tokens-e-seguranca',
+          en: '/learn/en/oauth-2-flows-tokens-and-security',
+          es: '/learn/es/oauth-2-flujos-tokens-y-seguridad'
+        }
+      },
+      {
+        id: 'corporate-api/openid-connect-id-tokens-sessions-federation',
+        topicCount: 32,
+        routes: {
+          pt: '/learn/pt/openid-connect-id-tokens-sessoes-e-federacao',
+          en: '/learn/en/openid-connect-id-tokens-sessions-and-federation',
+          es: '/learn/es/openid-connect-id-tokens-sesiones-y-federacion'
+        }
       }
     ]
   }

@@ -98,6 +98,16 @@ const seo = {
       { title: 'HTTP/1.1, HTTP/2, and HTTP/3', path: '/learn/en/http-1-1-http-2-and-http-3', imagePath: '/assets/learn/http-versions-cover.png' },
       { title: 'HTTPS and TLS in Depth', path: '/learn/en/https-and-tls-in-depth', imagePath: '/assets/learn/https-tls-cover.png' },
       { title: 'Cryptography: Symmetric, Asymmetric, Hashes, and Digital Signatures', path: '/learn/en/cryptography-fundamentals-and-api-applications', imagePath: '/assets/learn/cryptography-cover.png' },
+      { title: 'Digital Certificates, PKI, and X.509', path: '/learn/en/digital-certificates-pki-and-x509', imagePath: '/assets/learn/digital-certificates-pki-x509-cover.png' },
+      { title: 'mTLS in Depth: Mutual Authentication for APIs', path: '/learn/en/mtls-in-depth', imagePath: '/assets/learn/mtls-in-depth-cover.png' },
+      { title: 'REST: Architecture and Best Practices for APIs', path: '/learn/en/rest-architecture-and-best-practices', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png' },
+      { title: 'Richardson REST Maturity Model: Complete Guide', path: '/learn/en/richardson-rest-maturity-model', imagePath: '/assets/learn/richardson-rest-maturity-model-cover.png' },
+      { title: 'OpenAPI and Swagger: Contracts, Documentation, and Automation', path: '/learn/en/openapi-swagger-contracts-documentation-and-automation', imagePath: '/assets/learn/openapi-swagger-contracts-cover.png' },
+      { title: 'GraphQL, gRPC, and WebSocket: Complete Enterprise API Guide', path: '/learn/en/graphql-grpc-and-websocket', imagePath: '/assets/learn/graphql-grpc-websocket-cover.png' },
+      { title: 'Authentication vs. Authorization: Complete Enterprise API Guide', path: '/learn/en/authentication-vs-authorization', imagePath: '/assets/learn/authentication-authorization-cover.png' },
+      { title: 'Basic Auth, Digest, and API Keys: Complete Enterprise API Guide', path: '/learn/en/basic-auth-digest-and-api-keys', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png' },
+      { title: 'OAuth 2.0 in Depth: Flows, Tokens, and Enterprise API Security', path: '/learn/en/oauth-2-flows-tokens-and-security', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png' },
+      { title: 'OpenID Connect: ID Tokens, Sessions, SSO, and Identity Federation', path: '/learn/en/openid-connect-id-tokens-sessions-and-federation', imagePath: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png' },
       { title: 'Fundamentos de Internet, Redes y APIs', path: '/learn/es/fundamentos-internet-redes-apis', imagePath: '/assets/learn/fundamentos-internet-redes-apis-cover.png' },
       { title: 'TCP, UDP, Puertos y Sockets', path: '/learn/es/tcp-udp-puertos-y-sockets', imagePath: '/assets/learn/tcp-udp-portas-sockets-cover.png' },
       { title: 'Direccionamiento IP: IPv4, IPv6, Subredes y Enrutamiento', path: '/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento', imagePath: '/assets/learn/ip-addressing-cover.png' },
@@ -105,13 +115,33 @@ const seo = {
       { title: 'HTTP/1.1, HTTP/2 y HTTP/3', path: '/learn/es/http-1-1-http-2-y-http-3', imagePath: '/assets/learn/http-versions-cover.png' },
       { title: 'HTTPS y TLS en profundidad', path: '/learn/es/https-y-tls-en-profundidad', imagePath: '/assets/learn/https-tls-cover.png' },
       { title: 'Criptografía: simétrica, asimétrica, hashes y firmas digitales', path: '/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis', imagePath: '/assets/learn/cryptography-cover.png' },
+      { title: 'Certificados digitales, PKI y X.509', path: '/learn/es/certificados-digitales-pki-y-x509', imagePath: '/assets/learn/digital-certificates-pki-x509-cover.png' },
+      { title: 'mTLS en profundidad: autenticación mutua para APIs', path: '/learn/es/mtls-en-profundidad', imagePath: '/assets/learn/mtls-in-depth-cover.png' },
+      { title: 'REST: Arquitectura y Buenas Prácticas para APIs', path: '/learn/es/rest-arquitectura-y-buenas-practicas', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png' },
+      { title: 'Modelo de Madurez REST de Richardson: Guía Completa', path: '/learn/es/modelo-de-madurez-rest-de-richardson', imagePath: '/assets/learn/richardson-rest-maturity-model-cover.png' },
+      { title: 'OpenAPI y Swagger: Contratos, Documentación y Automatización', path: '/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion', imagePath: '/assets/learn/openapi-swagger-contracts-cover.png' },
+      { title: 'GraphQL, gRPC y WebSocket: Guía Completa para APIs Corporativas', path: '/learn/es/graphql-grpc-y-websocket', imagePath: '/assets/learn/graphql-grpc-websocket-cover.png' },
+      { title: 'Autenticación vs. Autorización: Guía Completa para APIs Corporativas', path: '/learn/es/autenticacion-vs-autorizacion', imagePath: '/assets/learn/authentication-authorization-cover.png' },
+      { title: 'Basic Auth, Digest y API Keys: Guía Completa para APIs Corporativas', path: '/learn/es/basic-auth-digest-y-api-keys', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png' },
+      { title: 'OAuth 2.0 en Profundidad: Flujos, Tokens y Seguridad para APIs', path: '/learn/es/oauth-2-flujos-tokens-y-seguridad', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png' },
+      { title: 'OpenID Connect: ID Tokens, Sesiones, SSO y Federación de Identidad', path: '/learn/es/openid-connect-id-tokens-sesiones-y-federacion', imagePath: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png' },
       { title: 'Fundamentos da Internet, Redes e APIs', path: '/learn/pt/fundamentos-da-internet-redes-e-apis', imagePath: '/assets/learn/fundamentos-internet-redes-apis-cover.png' },
       { title: 'TCP, UDP, Portas e Sockets', path: '/learn/pt/tcp-udp-portas-e-sockets', imagePath: '/assets/learn/tcp-udp-portas-sockets-cover.png' },
       { title: 'Endereçamento IP: IPv4, IPv6, Sub-redes e Roteamento', path: '/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento', imagePath: '/assets/learn/ip-addressing-cover.png' },
       { title: 'DNS, NAT, Proxies e Balanceadores de Carga', path: '/learn/pt/dns-nat-proxies-e-balanceadores-de-carga', imagePath: '/assets/learn/dns-nat-proxies-load-balancers-cover.png' },
       { title: 'HTTP/1.1, HTTP/2 e HTTP/3', path: '/learn/pt/http-1-1-http-2-e-http-3', imagePath: '/assets/learn/http-versions-cover.png' },
       { title: 'HTTPS e TLS em profundidade', path: '/learn/pt/https-e-tls-em-profundidade', imagePath: '/assets/learn/https-tls-cover.png' },
-      { title: 'Criptografia: simétrica, assimétrica, hashes e assinaturas digitais', path: '/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis', imagePath: '/assets/learn/cryptography-cover.png' }
+      { title: 'Criptografia: simétrica, assimétrica, hashes e assinaturas digitais', path: '/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis', imagePath: '/assets/learn/cryptography-cover.png' },
+      { title: 'Certificados digitais, PKI e X.509', path: '/learn/pt/certificados-digitais-pki-e-x509', imagePath: '/assets/learn/digital-certificates-pki-x509-cover.png' },
+      { title: 'mTLS em profundidade: autenticação mútua para APIs', path: '/learn/pt/mtls-em-profundidade', imagePath: '/assets/learn/mtls-in-depth-cover.png' },
+      { title: 'REST: Arquitetura e Boas Práticas para APIs', path: '/learn/pt/rest-arquitetura-e-boas-praticas', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png' },
+      { title: 'Modelo de Maturidade REST de Richardson: Guia Completo', path: '/learn/pt/modelo-de-maturidade-rest-de-richardson', imagePath: '/assets/learn/richardson-rest-maturity-model-cover.png' },
+      { title: 'OpenAPI e Swagger: Contratos, Documentação e Automação', path: '/learn/pt/openapi-swagger-contratos-documentacao-e-automacao', imagePath: '/assets/learn/openapi-swagger-contracts-cover.png' },
+      { title: 'GraphQL, gRPC e WebSocket: Guia Completo para APIs Corporativas', path: '/learn/pt/graphql-grpc-e-websocket', imagePath: '/assets/learn/graphql-grpc-websocket-cover.png' },
+      { title: 'Autenticação x Autorização: Guia Completo para APIs Corporativas', path: '/learn/pt/autenticacao-x-autorizacao', imagePath: '/assets/learn/authentication-authorization-cover.png' },
+      { title: 'Basic Auth, Digest e API Keys: Guia Completo para APIs Corporativas', path: '/learn/pt/basic-auth-digest-e-api-keys', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png' },
+      { title: 'OAuth 2.0 em Profundidade: Fluxos, Tokens e Segurança para APIs', path: '/learn/pt/oauth-2-fluxos-tokens-e-seguranca', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png' },
+      { title: 'OpenID Connect (OIDC): ID Tokens, Sessões e Federação de Identidade', path: '/learn/pt/openid-connect-id-tokens-sessoes-e-federacao', imagePath: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png' }
     ]
   },
   learnFundamentosInternet: {
@@ -454,6 +484,516 @@ const seo = {
       { language: 'x-default', path: '/learn/en/cryptography-fundamentals-and-api-applications' }
     ]
   },
+  learnCertificatesPortuguese: {
+    title: 'Certificados digitais, PKI e X.509',
+    description: 'Aprenda certificados digitais e PKI em profundidade: X.509, CA raiz e intermediária, SAN, EKU, cadeia de confiança, CSR, CRL, OCSP, HSM, mTLS e API Gateways.',
+    keywords: 'certificados digitais, PKI, X.509, autoridade certificadora, CA raiz, CA intermediária, SAN, EKU, CSR, CRL, OCSP, HSM, mTLS, API Gateway, OpenSSL',
+    canonicalPath: '/learn/pt/certificados-digitais-pki-e-x509',
+    pageType: 'article', imagePath: '/assets/learn/digital-certificates-pki-x509-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Cadeia de confiança PKI conectando uma CA raiz, certificados, HSM, API Gateway e servidores',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['Certificados digitais', 'PKI', 'X.509', 'CA', 'SAN', 'CSR', 'CRL', 'OCSP', 'HSM', 'mTLS', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/certificados-digitais-pki-e-x509', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/digital-certificates-pki-and-x509', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/certificados-digitales-pki-y-x509', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/digital-certificates-pki-and-x509' }
+    ]
+  },
+  learnCertificatesEnglish: {
+    title: 'Digital Certificates, PKI, and X.509',
+    description: 'Learn digital certificates and PKI in depth: X.509, root and intermediate CAs, SAN, EKU, trust chains, CSR, CRL, OCSP, HSM, mTLS, and API Gateways.',
+    keywords: 'digital certificates, PKI, X.509, certificate authority, root CA, intermediate CA, SAN, EKU, CSR, CRL, OCSP, HSM, mTLS, API Gateway, OpenSSL',
+    canonicalPath: '/learn/en/digital-certificates-pki-and-x509',
+    pageType: 'article', imagePath: '/assets/learn/digital-certificates-pki-x509-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'PKI trust chain connecting a root CA, certificates, an HSM, an API Gateway, and servers',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['Digital certificates', 'PKI', 'X.509', 'CA', 'SAN', 'CSR', 'CRL', 'OCSP', 'HSM', 'mTLS', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/certificados-digitais-pki-e-x509', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/digital-certificates-pki-and-x509', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/certificados-digitales-pki-y-x509', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/digital-certificates-pki-and-x509' }
+    ]
+  },
+  learnCertificatesSpanish: {
+    title: 'Certificados digitales, PKI y X.509',
+    description: 'Aprende certificados digitales y PKI en profundidad: X.509, CA raíz e intermedia, SAN, EKU, cadena de confianza, CSR, CRL, OCSP, HSM, mTLS y API Gateways.',
+    keywords: 'certificados digitales, PKI, X.509, autoridad certificadora, CA raíz, CA intermedia, SAN, EKU, CSR, CRL, OCSP, HSM, mTLS, API Gateway, OpenSSL',
+    canonicalPath: '/learn/es/certificados-digitales-pki-y-x509',
+    pageType: 'article', imagePath: '/assets/learn/digital-certificates-pki-x509-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Cadena de confianza PKI que conecta una CA raíz, certificados, un HSM, un API Gateway y servidores',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['Certificados digitales', 'PKI', 'X.509', 'CA', 'SAN', 'CSR', 'CRL', 'OCSP', 'HSM', 'mTLS', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/certificados-digitais-pki-e-x509', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/digital-certificates-pki-and-x509', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/certificados-digitales-pki-y-x509', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/digital-certificates-pki-and-x509' }
+    ]
+  },
+  learnMtlsPortuguese: {
+    title: 'mTLS em profundidade: autenticação mútua para APIs',
+    description: 'Aprenda mTLS em profundidade: handshake TLS 1.3, certificados de cliente, truststores, identidade, autorização, API Gateways, service mesh, OAuth certificate-bound, rotação e troubleshooting.',
+    keywords: 'mTLS, mutual TLS, autenticação mútua, certificado de cliente, TLS 1.3, CertificateRequest, CertificateVerify, truststore, API Gateway, service mesh, OAuth mTLS, certificate-bound token, OpenSSL',
+    canonicalPath: '/learn/pt/mtls-em-profundidade',
+    pageType: 'article', imagePath: '/assets/learn/mtls-in-depth-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Cliente e servidor apresentam certificados e validam mutuamente suas identidades em uma arquitetura de API corporativa',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['mTLS', 'Mutual TLS', 'TLS 1.3', 'Certificado de cliente', 'Truststore', 'API Gateway', 'Service mesh', 'OAuth', 'Certificate-bound token', 'OpenSSL'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/mtls-em-profundidade', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/mtls-in-depth', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/mtls-en-profundidad', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/mtls-in-depth' }
+    ]
+  },
+  learnMtlsEnglish: {
+    title: 'mTLS in Depth: Mutual Authentication for APIs',
+    description: 'Learn mTLS in depth: TLS 1.3 handshakes, client certificates, truststores, identity, authorization, API Gateways, service meshes, certificate-bound OAuth, rotation, and troubleshooting.',
+    keywords: 'mTLS, mutual TLS, mutual authentication, client certificate, TLS 1.3, CertificateRequest, CertificateVerify, truststore, API Gateway, service mesh, OAuth mTLS, certificate-bound token, OpenSSL',
+    canonicalPath: '/learn/en/mtls-in-depth',
+    pageType: 'article', imagePath: '/assets/learn/mtls-in-depth-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Client and server present certificates and mutually validate their identities in an enterprise API architecture',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['mTLS', 'Mutual TLS', 'TLS 1.3', 'Client certificate', 'Truststore', 'API Gateway', 'Service mesh', 'OAuth', 'Certificate-bound token', 'OpenSSL'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/mtls-em-profundidade', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/mtls-in-depth', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/mtls-en-profundidad', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/mtls-in-depth' }
+    ]
+  },
+  learnMtlsSpanish: {
+    title: 'mTLS en profundidad: autenticación mutua para APIs',
+    description: 'Aprende mTLS en profundidad: handshake TLS 1.3, certificados de cliente, truststores, identidad, autorización, API Gateways, service mesh, OAuth certificate-bound, rotación y troubleshooting.',
+    keywords: 'mTLS, mutual TLS, autenticación mutua, certificado de cliente, TLS 1.3, CertificateRequest, CertificateVerify, truststore, API Gateway, service mesh, OAuth mTLS, token certificate-bound, OpenSSL',
+    canonicalPath: '/learn/es/mtls-en-profundidad',
+    pageType: 'article', imagePath: '/assets/learn/mtls-in-depth-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Cliente y servidor presentan certificados y validan mutuamente sus identidades en una arquitectura de API empresarial',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['mTLS', 'Mutual TLS', 'TLS 1.3', 'Certificado de cliente', 'Truststore', 'API Gateway', 'Service mesh', 'OAuth', 'Token certificate-bound', 'OpenSSL'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/mtls-em-profundidade', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/mtls-in-depth', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/mtls-en-profundidad', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/mtls-in-depth' }
+    ]
+  },
+  learnRestPortuguese: {
+    title: 'REST: Arquitetura e Boas Práticas para APIs',
+    description: 'Aprenda REST em profundidade: restrições arquiteturais, recursos, URIs, métodos HTTP, idempotência, cache, ETag, paginação, Problem Details, OpenAPI, segurança e API Gateways.',
+    keywords: 'REST, arquitetura REST, API REST, boas práticas APIs, recursos REST, URI, métodos HTTP, idempotência, cache HTTP, ETag, paginação, Problem Details, OpenAPI, API Gateway',
+    canonicalPath: '/learn/pt/rest-arquitetura-e-boas-praticas',
+    pageType: 'article', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Ecossistema REST corporativo com recurso central, clientes, API Gateway, representações, cache e persistência',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['REST', 'Arquitetura REST', 'API REST', 'HTTP', 'Idempotência', 'Cache', 'ETag', 'Problem Details', 'OpenAPI', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/rest-arquitetura-e-boas-praticas', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/rest-architecture-and-best-practices', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/rest-arquitectura-y-buenas-practicas', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/rest-architecture-and-best-practices' }
+    ]
+  },
+  learnRestEnglish: {
+    title: 'REST: Architecture and Best Practices for APIs',
+    description: 'Learn REST in depth: architectural constraints, resources, URIs, HTTP methods, idempotency, caching, ETags, pagination, Problem Details, OpenAPI, security, and API Gateways.',
+    keywords: 'REST, REST architecture, REST API, API best practices, REST resources, URI, HTTP methods, idempotency, HTTP cache, ETag, pagination, Problem Details, OpenAPI, API Gateway',
+    canonicalPath: '/learn/en/rest-architecture-and-best-practices',
+    pageType: 'article', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Enterprise REST ecosystem with a central resource, clients, API Gateway, representations, cache, and persistence',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['REST', 'REST Architecture', 'REST API', 'HTTP', 'Idempotency', 'Caching', 'ETag', 'Problem Details', 'OpenAPI', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/rest-arquitetura-e-boas-praticas', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/rest-architecture-and-best-practices', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/rest-arquitectura-y-buenas-practicas', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/rest-architecture-and-best-practices' }
+    ]
+  },
+  learnRestSpanish: {
+    title: 'REST: Arquitectura y Buenas Prácticas para APIs',
+    description: 'Aprende REST en profundidad: restricciones arquitectónicas, recursos, URIs, métodos HTTP, idempotencia, cache, ETag, paginación, Problem Details, OpenAPI, seguridad y API Gateways.',
+    keywords: 'REST, arquitectura REST, API REST, buenas prácticas APIs, recursos REST, URI, métodos HTTP, idempotencia, cache HTTP, ETag, paginación, Problem Details, OpenAPI, API Gateway',
+    canonicalPath: '/learn/es/rest-arquitectura-y-buenas-practicas',
+    pageType: 'article', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Ecosistema REST corporativo con recurso central, clientes, API Gateway, representaciones, cache y persistencia',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['REST', 'Arquitectura REST', 'API REST', 'HTTP', 'Idempotencia', 'Cache', 'ETag', 'Problem Details', 'OpenAPI', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/rest-arquitetura-e-boas-praticas', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/rest-architecture-and-best-practices', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/rest-arquitectura-y-buenas-practicas', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/rest-architecture-and-best-practices' }
+    ]
+  },
+  learnRichardsonPortuguese: {
+    title: 'Modelo de Maturidade REST de Richardson: Guia Completo',
+    description: 'Aprenda o Richardson Maturity Model em profundidade: níveis 0 a 3, recursos, semântica HTTP, hipermídia, HATEOAS, OpenAPI, API Gateways, governança e migração.',
+    keywords: 'Richardson Maturity Model, modelo de maturidade REST, níveis REST, nível 0 POX, nível 1 recursos, nível 2 HTTP, nível 3 hipermídia, HATEOAS, API Gateway, OpenAPI',
+    canonicalPath: '/learn/pt/modelo-de-maturidade-rest-de-richardson',
+    pageType: 'article', imagePath: '/assets/learn/richardson-rest-maturity-model-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Evolução em quatro estágios do modelo de maturidade REST de Richardson, do endpoint único à hipermídia',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['Richardson Maturity Model', 'REST', 'HTTP', 'Hipermídia', 'HATEOAS', 'OpenAPI', 'API Gateway', 'Governança de APIs'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/modelo-de-maturidade-rest-de-richardson', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/richardson-rest-maturity-model', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/modelo-de-madurez-rest-de-richardson', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/richardson-rest-maturity-model' }
+    ]
+  },
+  learnRichardsonEnglish: {
+    title: 'Richardson REST Maturity Model: Complete Guide',
+    description: 'Learn the Richardson Maturity Model in depth: levels 0 through 3, resources, HTTP semantics, hypermedia, HATEOAS, OpenAPI, API Gateways, governance, and migration.',
+    keywords: 'Richardson Maturity Model, REST maturity model, REST levels, level 0 POX, level 1 resources, level 2 HTTP, level 3 hypermedia, HATEOAS, API Gateway, OpenAPI',
+    canonicalPath: '/learn/en/richardson-rest-maturity-model',
+    pageType: 'article', imagePath: '/assets/learn/richardson-rest-maturity-model-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Four-stage evolution of the Richardson REST Maturity Model, from a single endpoint to hypermedia',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['Richardson Maturity Model', 'REST', 'HTTP', 'Hypermedia', 'HATEOAS', 'OpenAPI', 'API Gateway', 'API Governance'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/modelo-de-maturidade-rest-de-richardson', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/richardson-rest-maturity-model', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/modelo-de-madurez-rest-de-richardson', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/richardson-rest-maturity-model' }
+    ]
+  },
+  learnRichardsonSpanish: {
+    title: 'Modelo de Madurez REST de Richardson: Guía Completa',
+    description: 'Aprende el Richardson Maturity Model en profundidad: niveles 0 a 3, recursos, semántica HTTP, hipermedia, HATEOAS, OpenAPI, API Gateways, gobernanza y migración.',
+    keywords: 'Richardson Maturity Model, modelo de madurez REST, niveles REST, nivel 0 POX, nivel 1 recursos, nivel 2 HTTP, nivel 3 hipermedia, HATEOAS, API Gateway, OpenAPI',
+    canonicalPath: '/learn/es/modelo-de-madurez-rest-de-richardson',
+    pageType: 'article', imagePath: '/assets/learn/richardson-rest-maturity-model-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Evolución en cuatro etapas del modelo de madurez REST de Richardson, desde un endpoint único hasta la hipermedia',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['Richardson Maturity Model', 'REST', 'HTTP', 'Hipermedia', 'HATEOAS', 'OpenAPI', 'API Gateway', 'Gobernanza de APIs'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/modelo-de-maturidade-rest-de-richardson', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/richardson-rest-maturity-model', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/modelo-de-madurez-rest-de-richardson', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/richardson-rest-maturity-model' }
+    ]
+  },
+  learnOpenApiPortuguese: {
+    title: 'OpenAPI e Swagger: Contratos, Documentação e Automação',
+    description: 'Aprenda OpenAPI e Swagger em profundidade: contratos de API, OAS 3, YAML, JSON Schema, segurança, linting, semantic diff, mocks, SDKs, portais e API Gateways.',
+    keywords: 'OpenAPI, Swagger, contrato de API, OAS 3, YAML, JSON Schema, documentação de API, linting, semantic diff, mock server, geração de SDK, API Gateway',
+    canonicalPath: '/learn/pt/openapi-swagger-contratos-documentacao-e-automacao',
+    pageType: 'article', imagePath: '/assets/learn/openapi-swagger-contracts-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Contrato OpenAPI conectando design, validação, documentação, automação, API Gateway e runtime',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['OpenAPI', 'Swagger', 'Contratos de API', 'OAS 3', 'YAML', 'JSON Schema', 'Linting', 'Semantic Diff', 'SDK', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/openapi-swagger-contratos-documentacao-e-automacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/openapi-swagger-contracts-documentation-and-automation', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/openapi-swagger-contracts-documentation-and-automation' }
+    ]
+  },
+  learnOpenApiEnglish: {
+    title: 'OpenAPI and Swagger: Contracts, Documentation, and Automation',
+    description: 'Learn OpenAPI and Swagger in depth: API contracts, OAS 3, YAML, JSON Schema, security, linting, semantic diff, mocks, SDKs, portals, and API Gateways.',
+    keywords: 'OpenAPI, Swagger, API contract, OAS 3, YAML, JSON Schema, API documentation, linting, semantic diff, mock server, SDK generation, API Gateway',
+    canonicalPath: '/learn/en/openapi-swagger-contracts-documentation-and-automation',
+    pageType: 'article', imagePath: '/assets/learn/openapi-swagger-contracts-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'OpenAPI contract connecting design, validation, documentation, automation, API Gateway, and runtime',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['OpenAPI', 'Swagger', 'API Contracts', 'OAS 3', 'YAML', 'JSON Schema', 'Linting', 'Semantic Diff', 'SDK', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/openapi-swagger-contratos-documentacao-e-automacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/openapi-swagger-contracts-documentation-and-automation', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/openapi-swagger-contracts-documentation-and-automation' }
+    ]
+  },
+  learnOpenApiSpanish: {
+    title: 'OpenAPI y Swagger: Contratos, Documentación y Automatización',
+    description: 'Aprende OpenAPI y Swagger en profundidad: contratos de API, OAS 3, YAML, JSON Schema, seguridad, linting, semantic diff, mocks, SDKs, portales y API Gateways.',
+    keywords: 'OpenAPI, Swagger, contrato de API, OAS 3, YAML, JSON Schema, documentación de API, linting, semantic diff, mock server, generación de SDK, API Gateway',
+    canonicalPath: '/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion',
+    pageType: 'article', imagePath: '/assets/learn/openapi-swagger-contracts-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Contrato OpenAPI que conecta diseño, validación, documentación, automatización, API Gateway y runtime',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['OpenAPI', 'Swagger', 'Contratos de API', 'OAS 3', 'YAML', 'JSON Schema', 'Linting', 'Semantic Diff', 'SDK', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/openapi-swagger-contratos-documentacao-e-automacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/openapi-swagger-contracts-documentation-and-automation', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/openapi-swagger-contracts-documentation-and-automation' }
+    ]
+  },
+  learnGraphqlGrpcWebsocketPortuguese: {
+    title: 'GraphQL, gRPC e WebSocket: Guia Completo para APIs Corporativas',
+    description: 'Aprenda GraphQL, gRPC e WebSocket em profundidade: schemas, resolvers, N+1, Protobuf, streaming, deadlines, conexões persistentes, segurança e arquitetura.',
+    keywords: 'GraphQL, gRPC, WebSocket, APIs corporativas, schema GraphQL, resolvers, N+1, Protocol Buffers, Protobuf, streaming, HTTP/2, real time APIs',
+    canonicalPath: '/learn/pt/graphql-grpc-e-websocket',
+    pageType: 'article', imagePath: '/assets/learn/graphql-grpc-websocket-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'GraphQL, gRPC e WebSocket conectados em uma arquitetura corporativa moderna',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['GraphQL', 'gRPC', 'WebSocket', 'Protocol Buffers', 'Streaming', 'HTTP/2', 'APIs em tempo real', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/graphql-grpc-e-websocket', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/graphql-grpc-and-websocket', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/graphql-grpc-y-websocket', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/graphql-grpc-and-websocket' }
+    ]
+  },
+  learnGraphqlGrpcWebsocketEnglish: {
+    title: 'GraphQL, gRPC, and WebSocket: Complete Enterprise API Guide',
+    description: 'Learn GraphQL, gRPC, and WebSocket in depth: schemas, resolvers, N+1, Protobuf, streaming, deadlines, persistent connections, security, and architecture.',
+    keywords: 'GraphQL, gRPC, WebSocket, enterprise APIs, GraphQL schema, resolvers, N+1, Protocol Buffers, Protobuf, streaming, HTTP/2, real-time APIs',
+    canonicalPath: '/learn/en/graphql-grpc-and-websocket',
+    pageType: 'article', imagePath: '/assets/learn/graphql-grpc-websocket-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'GraphQL, gRPC, and WebSocket connected in a modern enterprise architecture',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['GraphQL', 'gRPC', 'WebSocket', 'Protocol Buffers', 'Streaming', 'HTTP/2', 'Real-time APIs', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/graphql-grpc-e-websocket', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/graphql-grpc-and-websocket', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/graphql-grpc-y-websocket', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/graphql-grpc-and-websocket' }
+    ]
+  },
+  learnGraphqlGrpcWebsocketSpanish: {
+    title: 'GraphQL, gRPC y WebSocket: Guía Completa para APIs Corporativas',
+    description: 'Aprende GraphQL, gRPC y WebSocket en profundidad: schemas, resolvers, N+1, Protobuf, streaming, deadlines, conexiones persistentes, seguridad y arquitectura.',
+    keywords: 'GraphQL, gRPC, WebSocket, APIs corporativas, schema GraphQL, resolvers, N+1, Protocol Buffers, Protobuf, streaming, HTTP/2, APIs en tiempo real',
+    canonicalPath: '/learn/es/graphql-grpc-y-websocket',
+    pageType: 'article', imagePath: '/assets/learn/graphql-grpc-websocket-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'GraphQL, gRPC y WebSocket conectados en una arquitectura corporativa moderna',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['GraphQL', 'gRPC', 'WebSocket', 'Protocol Buffers', 'Streaming', 'HTTP/2', 'APIs en tiempo real', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/graphql-grpc-e-websocket', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/graphql-grpc-and-websocket', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/graphql-grpc-y-websocket', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/graphql-grpc-and-websocket' }
+    ]
+  },
+  learnAuthenticationAuthorizationPortuguese: {
+    title: 'Autenticação x Autorização: Guia Completo para APIs Corporativas',
+    description: 'Aprenda autenticação e autorização em profundidade: identidade, credenciais, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, 401 e 403.',
+    keywords: 'autenticação, autorização, AuthN, AuthZ, identidade, credenciais, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, API Gateway, 401, 403',
+    canonicalPath: '/learn/pt/autenticacao-x-autorizacao',
+    pageType: 'article', imagePath: '/assets/learn/authentication-authorization-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Fluxo corporativo que separa a prova de identidade da decisão de acesso a APIs protegidas',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['Autenticação', 'Autorização', 'Identidade', 'JWT', 'OAuth 2.0', 'OpenID Connect', 'RBAC', 'ABAC', 'PEP', 'PDP', 'Workload identity', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/autenticacao-x-autorizacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/authentication-vs-authorization', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/autenticacion-vs-autorizacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/authentication-vs-authorization' }
+    ]
+  },
+  learnAuthenticationAuthorizationEnglish: {
+    title: 'Authentication vs. Authorization: Complete Enterprise API Guide',
+    description: 'Learn authentication and authorization in depth: identity, credentials, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, 401, and 403.',
+    keywords: 'authentication, authorization, AuthN, AuthZ, identity, credentials, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, API Gateway, 401, 403',
+    canonicalPath: '/learn/en/authentication-vs-authorization',
+    pageType: 'article', imagePath: '/assets/learn/authentication-authorization-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Enterprise flow separating identity proof from access decisions for protected APIs',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['Authentication', 'Authorization', 'Identity', 'JWT', 'OAuth 2.0', 'OpenID Connect', 'RBAC', 'ABAC', 'PEP', 'PDP', 'Workload identity', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/autenticacao-x-autorizacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/authentication-vs-authorization', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/autenticacion-vs-autorizacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/authentication-vs-authorization' }
+    ]
+  },
+  learnAuthenticationAuthorizationSpanish: {
+    title: 'Autenticación vs. Autorización: Guía Completa para APIs Corporativas',
+    description: 'Aprende autenticación y autorización en profundidad: identidad, credenciales, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, 401 y 403.',
+    keywords: 'autenticación, autorización, AuthN, AuthZ, identidad, credenciales, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, API Gateway, 401, 403',
+    canonicalPath: '/learn/es/autenticacion-vs-autorizacion',
+    pageType: 'article', imagePath: '/assets/learn/authentication-authorization-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Flujo corporativo que separa la prueba de identidad de la decisión de acceso a APIs protegidas',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['Autenticación', 'Autorización', 'Identidad', 'JWT', 'OAuth 2.0', 'OpenID Connect', 'RBAC', 'ABAC', 'PEP', 'PDP', 'Workload identity', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/autenticacao-x-autorizacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/authentication-vs-authorization', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/autenticacion-vs-autorizacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/authentication-vs-authorization' }
+    ]
+  },
+  learnBasicAuthDigestApiKeysPortuguese: {
+    title: 'Basic Auth, Digest e API Keys: Guia Completo para APIs Corporativas',
+    description: 'Aprenda Basic Auth, HTTP Digest e API Keys em profundidade: desafios HTTP, Base64, TLS, nonce, replay, armazenamento, escopos, quotas, rotação, revogação, HMAC e API Gateways.',
+    keywords: 'Basic Auth, HTTP Digest, API Keys, autenticação HTTP, WWW-Authenticate, Authorization, Base64, TLS, nonce, replay, HMAC, API Gateway, rotação de chaves, segurança de APIs',
+    canonicalPath: '/learn/pt/basic-auth-digest-e-api-keys',
+    pageType: 'article', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Basic Auth, Digest e API Keys convergindo para um gateway corporativo protegido',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['Basic Auth', 'HTTP Digest', 'API Keys', 'Autenticação HTTP', 'Base64', 'TLS', 'Nonce', 'Replay', 'HMAC', 'API Gateway', 'Rotação de chaves'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/basic-auth-digest-e-api-keys', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/basic-auth-digest-and-api-keys', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/basic-auth-digest-y-api-keys', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/basic-auth-digest-and-api-keys' }
+    ]
+  },
+  learnBasicAuthDigestApiKeysEnglish: {
+    title: 'Basic Auth, Digest, and API Keys: Complete Enterprise API Guide',
+    description: 'Learn Basic Auth, HTTP Digest, and API keys in depth: HTTP challenges, Base64, TLS, nonce, replay, storage, scopes, quotas, rotation, revocation, HMAC, and API Gateways.',
+    keywords: 'Basic Auth, HTTP Digest, API keys, HTTP authentication, WWW-Authenticate, Authorization, Base64, TLS, nonce, replay, HMAC, API Gateway, key rotation, API security',
+    canonicalPath: '/learn/en/basic-auth-digest-and-api-keys',
+    pageType: 'article', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Basic Auth, Digest, and API keys converging on a protected enterprise gateway',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['Basic Auth', 'HTTP Digest', 'API Keys', 'HTTP Authentication', 'Base64', 'TLS', 'Nonce', 'Replay', 'HMAC', 'API Gateway', 'Key rotation'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/basic-auth-digest-e-api-keys', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/basic-auth-digest-and-api-keys', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/basic-auth-digest-y-api-keys', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/basic-auth-digest-and-api-keys' }
+    ]
+  },
+  learnBasicAuthDigestApiKeysSpanish: {
+    title: 'Basic Auth, Digest y API Keys: Guía Completa para APIs Corporativas',
+    description: 'Aprende Basic Auth, HTTP Digest y API Keys en profundidad: desafíos HTTP, Base64, TLS, nonce, replay, almacenamiento, scopes, quotas, rotación, revocación, HMAC y API Gateways.',
+    keywords: 'Basic Auth, HTTP Digest, API Keys, autenticación HTTP, WWW-Authenticate, Authorization, Base64, TLS, nonce, replay, HMAC, API Gateway, rotación de claves, seguridad de APIs',
+    canonicalPath: '/learn/es/basic-auth-digest-y-api-keys',
+    pageType: 'article', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Basic Auth, Digest y API Keys convergiendo en un gateway corporativo protegido',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['Basic Auth', 'HTTP Digest', 'API Keys', 'Autenticación HTTP', 'Base64', 'TLS', 'Nonce', 'Replay', 'HMAC', 'API Gateway', 'Rotación de claves'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/basic-auth-digest-e-api-keys', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/basic-auth-digest-and-api-keys', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/basic-auth-digest-y-api-keys', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/basic-auth-digest-and-api-keys' }
+    ]
+  },
+  learnOAuth2Portuguese: {
+    title: 'OAuth 2.0 em Profundidade: Fluxos, Tokens e Segurança para APIs',
+    description: 'Aprenda OAuth 2.0 em profundidade: Authorization Code com PKCE, Client Credentials, refresh tokens, JWT, introspecção, revogação, PAR, JAR, JARM, DPoP, mTLS e API Gateways.',
+    keywords: 'OAuth 2.0, Authorization Code, PKCE, Client Credentials, refresh token, access token, JWT, introspecção, revogação, PAR, JAR, JARM, RAR, DPoP, mTLS, API Gateway, segurança de APIs',
+    canonicalPath: '/learn/pt/oauth-2-fluxos-tokens-e-seguranca',
+    pageType: 'article', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Fluxos OAuth 2.0 protegidos por PKCE, tokens e controles modernos de segurança',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['OAuth 2.0', 'Authorization Code', 'PKCE', 'Client Credentials', 'Refresh tokens', 'JWT', 'Introspection', 'Revocation', 'PAR', 'JAR', 'JARM', 'DPoP', 'mTLS', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/oauth-2-fluxos-tokens-e-seguranca', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/oauth-2-flows-tokens-and-security', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/oauth-2-flujos-tokens-y-seguridad', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/oauth-2-flows-tokens-and-security' }
+    ]
+  },
+  learnOAuth2English: {
+    title: 'OAuth 2.0 in Depth: Flows, Tokens, and Enterprise API Security',
+    description: 'Learn OAuth 2.0 in depth: Authorization Code with PKCE, Client Credentials, refresh tokens, JWT access tokens, introspection, revocation, PAR, JAR, JARM, DPoP, mTLS, and API Gateways.',
+    keywords: 'OAuth 2.0, Authorization Code, PKCE, Client Credentials, refresh token, access token, JWT, introspection, revocation, PAR, JAR, JARM, RAR, DPoP, mTLS, API Gateway, API security',
+    canonicalPath: '/learn/en/oauth-2-flows-tokens-and-security',
+    pageType: 'article', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'OAuth 2.0 flows protected by PKCE, tokens, and modern security controls',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['OAuth 2.0', 'Authorization Code', 'PKCE', 'Client Credentials', 'Refresh tokens', 'JWT', 'Introspection', 'Revocation', 'PAR', 'JAR', 'JARM', 'DPoP', 'mTLS', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/oauth-2-fluxos-tokens-e-seguranca', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/oauth-2-flows-tokens-and-security', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/oauth-2-flujos-tokens-y-seguridad', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/oauth-2-flows-tokens-and-security' }
+    ]
+  },
+  learnOAuth2Spanish: {
+    title: 'OAuth 2.0 en Profundidad: Flujos, Tokens y Seguridad para APIs',
+    description: 'Aprende OAuth 2.0 en profundidad: Authorization Code con PKCE, Client Credentials, refresh tokens, JWT, introspección, revocación, PAR, JAR, JARM, DPoP, mTLS y API Gateways.',
+    keywords: 'OAuth 2.0, Authorization Code, PKCE, Client Credentials, refresh token, access token, JWT, introspección, revocación, PAR, JAR, JARM, RAR, DPoP, mTLS, API Gateway, seguridad de APIs',
+    canonicalPath: '/learn/es/oauth-2-flujos-tokens-y-seguridad',
+    pageType: 'article', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Flujos OAuth 2.0 protegidos por PKCE, tokens y controles modernos de seguridad',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['OAuth 2.0', 'Authorization Code', 'PKCE', 'Client Credentials', 'Refresh tokens', 'JWT', 'Introspection', 'Revocation', 'PAR', 'JAR', 'JARM', 'DPoP', 'mTLS', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/oauth-2-fluxos-tokens-e-seguranca', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/oauth-2-flows-tokens-and-security', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/oauth-2-flujos-tokens-y-seguridad', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/oauth-2-flows-tokens-and-security' }
+    ]
+  },
+  learnOpenIdConnectPortuguese: {
+    title: 'OpenID Connect (OIDC): ID Tokens, Sessões e Federação de Identidade',
+    description: 'Aprenda OpenID Connect em profundidade: ID Tokens, UserInfo, nonce, claims, sessões, SSO, logout, discovery, JWKS, assurance, multi-tenant e federação de identidade.',
+    keywords: 'OpenID Connect, OIDC, ID Token, UserInfo, nonce, claims, sessão, SSO, logout federado, RP-Initiated Logout, Front-Channel Logout, Back-Channel Logout, discovery, JWKS, assurance, federação de identidade',
+    canonicalPath: '/learn/pt/openid-connect-id-tokens-sessoes-e-federacao',
+    pageType: 'article', imagePath: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Identidade federada OpenID Connect com ID Tokens verificáveis, sessões e Relying Parties',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos e Arquitetura de APIs Corporativas', language: 'pt-BR', locale: 'pt_BR',
+    tags: ['OpenID Connect', 'OIDC', 'ID Token', 'UserInfo', 'Nonce', 'Claims', 'SSO', 'Logout', 'Discovery', 'JWKS', 'Assurance', 'Identity Federation', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/openid-connect-id-tokens-sessoes-e-federacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/openid-connect-id-tokens-sessions-and-federation', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/openid-connect-id-tokens-sesiones-y-federacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/openid-connect-id-tokens-sessions-and-federation' }
+    ]
+  },
+  learnOpenIdConnectEnglish: {
+    title: 'OpenID Connect: ID Tokens, Sessions, SSO, and Identity Federation',
+    description: 'Learn OpenID Connect in depth: ID Tokens, UserInfo, nonce, claims, sessions, SSO, logout, discovery, JWKS, assurance, multi-tenant identity, and federation.',
+    keywords: 'OpenID Connect, OIDC, ID Token, UserInfo, nonce, claims, session, SSO, federated logout, RP-Initiated Logout, Front-Channel Logout, Back-Channel Logout, discovery, JWKS, assurance, identity federation',
+    canonicalPath: '/learn/en/openid-connect-id-tokens-sessions-and-federation',
+    pageType: 'article', imagePath: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Federated OpenID Connect identity with verifiable ID Tokens, sessions, and Relying Parties',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Corporate API Fundamentals and Architecture', language: 'en', locale: 'en_US',
+    tags: ['OpenID Connect', 'OIDC', 'ID Token', 'UserInfo', 'Nonce', 'Claims', 'SSO', 'Logout', 'Discovery', 'JWKS', 'Assurance', 'Identity Federation', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/openid-connect-id-tokens-sessoes-e-federacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/openid-connect-id-tokens-sessions-and-federation', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/openid-connect-id-tokens-sesiones-y-federacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/openid-connect-id-tokens-sessions-and-federation' }
+    ]
+  },
+  learnOpenIdConnectSpanish: {
+    title: 'OpenID Connect: ID Tokens, Sesiones, SSO y Federación de Identidad',
+    description: 'Aprende OpenID Connect en profundidad: ID Tokens, UserInfo, nonce, claims, sesiones, SSO, logout, discovery, JWKS, assurance, identidad multi-tenant y federación.',
+    keywords: 'OpenID Connect, OIDC, ID Token, UserInfo, nonce, claims, sesión, SSO, logout federado, RP-Initiated Logout, Front-Channel Logout, Back-Channel Logout, discovery, JWKS, assurance, federación de identidad',
+    canonicalPath: '/learn/es/openid-connect-id-tokens-sesiones-y-federacion',
+    pageType: 'article', imagePath: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png', imageWidth: 1536, imageHeight: 1024,
+    imageAlt: 'Identidad federada OpenID Connect con ID Tokens verificables, sesiones y Relying Parties',
+    publishedTime: '2026-07-18T00:00:00-03:00', modifiedTime: '2026-07-18T00:00:00-03:00', author: 'João Ricardo Dutra',
+    section: 'Fundamentos y Arquitectura de APIs Corporativas', language: 'es', locale: 'es_ES',
+    tags: ['OpenID Connect', 'OIDC', 'ID Token', 'UserInfo', 'Nonce', 'Claims', 'SSO', 'Logout', 'Discovery', 'JWKS', 'Assurance', 'Identity Federation', 'API Gateway'],
+    alternateLanguages: [
+      { language: 'pt-BR', path: '/learn/pt/openid-connect-id-tokens-sessoes-e-federacao', locale: 'pt_BR' },
+      { language: 'en', path: '/learn/en/openid-connect-id-tokens-sessions-and-federation', locale: 'en_US' },
+      { language: 'es', path: '/learn/es/openid-connect-id-tokens-sesiones-y-federacion', locale: 'es_ES' },
+      { language: 'x-default', path: '/learn/en/openid-connect-id-tokens-sessions-and-federation' }
+    ]
+  },
   whatIsUtilyTools: {
     title: 'What Is utily.tools?',
     description: 'Discover what utily.tools is, which browser-based developer utilities it provides and how it helps with everyday technical tasks.',
@@ -666,6 +1206,186 @@ export const routes: Routes = [
   { path: 'learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis', component: CriptografiaFundamentosAplicacoesApisPtComponent, data: { seo: seo.learnCryptographyPortuguese } },
   { path: 'learn/en/cryptography-fundamentals-and-api-applications', component: CryptographyFundamentalsApiApplicationsEnComponent, data: { seo: seo.learnCryptographyEnglish } },
   { path: 'learn/es/criptografia-fundamentos-y-aplicaciones-en-apis', component: CriptografiaFundamentosAplicacionesApisEsComponent, data: { seo: seo.learnCryptographySpanish } },
+  {
+    path: 'learn/pt/certificados-digitais-pki-e-x509',
+    loadComponent: () => import('./learn/certificados-digitais-pki-x509-pt/certificados-digitais-pki-x509-pt.component')
+      .then((module) => module.CertificadosDigitaisPkiX509PtComponent),
+    data: { seo: seo.learnCertificatesPortuguese }
+  },
+  {
+    path: 'learn/en/digital-certificates-pki-and-x509',
+    loadComponent: () => import('./learn/digital-certificates-pki-x509-en/digital-certificates-pki-x509-en.component')
+      .then((module) => module.DigitalCertificatesPkiX509EnComponent),
+    data: { seo: seo.learnCertificatesEnglish }
+  },
+  {
+    path: 'learn/es/certificados-digitales-pki-y-x509',
+    loadComponent: () => import('./learn/certificados-digitales-pki-x509-es/certificados-digitales-pki-x509-es.component')
+      .then((module) => module.CertificadosDigitalesPkiX509EsComponent),
+    data: { seo: seo.learnCertificatesSpanish }
+  },
+  {
+    path: 'learn/pt/mtls-em-profundidade',
+    loadComponent: () => import('./learn/mtls-em-profundidade-pt/mtls-em-profundidade-pt.component')
+      .then((module) => module.MtlsEmProfundidadePtComponent),
+    data: { seo: seo.learnMtlsPortuguese }
+  },
+  {
+    path: 'learn/en/mtls-in-depth',
+    loadComponent: () => import('./learn/mtls-in-depth-en/mtls-in-depth-en.component')
+      .then((module) => module.MtlsInDepthEnComponent),
+    data: { seo: seo.learnMtlsEnglish }
+  },
+  {
+    path: 'learn/es/mtls-en-profundidad',
+    loadComponent: () => import('./learn/mtls-en-profundidad-es/mtls-en-profundidad-es.component')
+      .then((module) => module.MtlsEnProfundidadEsComponent),
+    data: { seo: seo.learnMtlsSpanish }
+  },
+  {
+    path: 'learn/pt/rest-arquitetura-e-boas-praticas',
+    loadComponent: () => import('./learn/rest-arquitetura-boas-praticas-pt/rest-arquitetura-boas-praticas-pt.component')
+      .then((module) => module.RestArquiteturaBoasPraticasPtComponent),
+    data: { seo: seo.learnRestPortuguese }
+  },
+  {
+    path: 'learn/en/rest-architecture-and-best-practices',
+    loadComponent: () => import('./learn/rest-architecture-best-practices-en/rest-architecture-best-practices-en.component')
+      .then((module) => module.RestArchitectureBestPracticesEnComponent),
+    data: { seo: seo.learnRestEnglish }
+  },
+  {
+    path: 'learn/es/rest-arquitectura-y-buenas-practicas',
+    loadComponent: () => import('./learn/rest-arquitectura-buenas-practicas-es/rest-arquitectura-buenas-practicas-es.component')
+      .then((module) => module.RestArquitecturaBuenasPracticasEsComponent),
+    data: { seo: seo.learnRestSpanish }
+  },
+  {
+    path: 'learn/pt/modelo-de-maturidade-rest-de-richardson',
+    loadComponent: () => import('./learn/modelo-maturidade-rest-richardson-pt/modelo-maturidade-rest-richardson-pt.component')
+      .then((module) => module.ModeloMaturidadeRestRichardsonPtComponent),
+    data: { seo: seo.learnRichardsonPortuguese }
+  },
+  {
+    path: 'learn/en/richardson-rest-maturity-model',
+    loadComponent: () => import('./learn/richardson-rest-maturity-model-en/richardson-rest-maturity-model-en.component')
+      .then((module) => module.RichardsonRestMaturityModelEnComponent),
+    data: { seo: seo.learnRichardsonEnglish }
+  },
+  {
+    path: 'learn/es/modelo-de-madurez-rest-de-richardson',
+    loadComponent: () => import('./learn/modelo-madurez-rest-richardson-es/modelo-madurez-rest-richardson-es.component')
+      .then((module) => module.ModeloMadurezRestRichardsonEsComponent),
+    data: { seo: seo.learnRichardsonSpanish }
+  },
+  {
+    path: 'learn/pt/openapi-swagger-contratos-documentacao-e-automacao',
+    loadComponent: () => import('./learn/openapi-swagger-contratos-documentacao-automacao-pt/openapi-swagger-contratos-documentacao-automacao-pt.component')
+      .then((module) => module.OpenApiSwaggerContratosDocumentacaoAutomacaoPtComponent),
+    data: { seo: seo.learnOpenApiPortuguese }
+  },
+  {
+    path: 'learn/en/openapi-swagger-contracts-documentation-and-automation',
+    loadComponent: () => import('./learn/openapi-swagger-contracts-documentation-automation-en/openapi-swagger-contracts-documentation-automation-en.component')
+      .then((module) => module.OpenApiSwaggerContractsDocumentationAutomationEnComponent),
+    data: { seo: seo.learnOpenApiEnglish }
+  },
+  {
+    path: 'learn/es/openapi-swagger-contratos-documentacion-y-automatizacion',
+    loadComponent: () => import('./learn/openapi-swagger-contratos-documentacion-automatizacion-es/openapi-swagger-contratos-documentacion-automatizacion-es.component')
+      .then((module) => module.OpenApiSwaggerContratosDocumentacionAutomatizacionEsComponent),
+    data: { seo: seo.learnOpenApiSpanish }
+  },
+  {
+    path: 'learn/pt/graphql-grpc-e-websocket',
+    loadComponent: () => import('./learn/graphql-grpc-websocket-pt/graphql-grpc-websocket-pt.component')
+      .then((module) => module.GraphqlGrpcWebsocketPtComponent),
+    data: { seo: seo.learnGraphqlGrpcWebsocketPortuguese }
+  },
+  {
+    path: 'learn/en/graphql-grpc-and-websocket',
+    loadComponent: () => import('./learn/graphql-grpc-websocket-en/graphql-grpc-websocket-en.component')
+      .then((module) => module.GraphqlGrpcWebsocketEnComponent),
+    data: { seo: seo.learnGraphqlGrpcWebsocketEnglish }
+  },
+  {
+    path: 'learn/es/graphql-grpc-y-websocket',
+    loadComponent: () => import('./learn/graphql-grpc-websocket-es/graphql-grpc-websocket-es.component')
+      .then((module) => module.GraphqlGrpcWebsocketEsComponent),
+    data: { seo: seo.learnGraphqlGrpcWebsocketSpanish }
+  },
+  {
+    path: 'learn/pt/autenticacao-x-autorizacao',
+    loadComponent: () => import('./learn/autenticacao-autorizacao-pt/autenticacao-autorizacao-pt.component')
+      .then((module) => module.AutenticacaoAutorizacaoPtComponent),
+    data: { seo: seo.learnAuthenticationAuthorizationPortuguese }
+  },
+  {
+    path: 'learn/en/authentication-vs-authorization',
+    loadComponent: () => import('./learn/authentication-authorization-en/authentication-authorization-en.component')
+      .then((module) => module.AuthenticationAuthorizationEnComponent),
+    data: { seo: seo.learnAuthenticationAuthorizationEnglish }
+  },
+  {
+    path: 'learn/es/autenticacion-vs-autorizacion',
+    loadComponent: () => import('./learn/autenticacion-autorizacion-es/autenticacion-autorizacion-es.component')
+      .then((module) => module.AutenticacionAutorizacionEsComponent),
+    data: { seo: seo.learnAuthenticationAuthorizationSpanish }
+  },
+  {
+    path: 'learn/pt/basic-auth-digest-e-api-keys',
+    loadComponent: () => import('./learn/basic-auth-digest-api-keys-pt/basic-auth-digest-api-keys-pt.component')
+      .then((module) => module.BasicAuthDigestApiKeysPtComponent),
+    data: { seo: seo.learnBasicAuthDigestApiKeysPortuguese }
+  },
+  {
+    path: 'learn/en/basic-auth-digest-and-api-keys',
+    loadComponent: () => import('./learn/basic-auth-digest-api-keys-en/basic-auth-digest-api-keys-en.component')
+      .then((module) => module.BasicAuthDigestApiKeysEnComponent),
+    data: { seo: seo.learnBasicAuthDigestApiKeysEnglish }
+  },
+  {
+    path: 'learn/es/basic-auth-digest-y-api-keys',
+    loadComponent: () => import('./learn/basic-auth-digest-api-keys-es/basic-auth-digest-api-keys-es.component')
+      .then((module) => module.BasicAuthDigestApiKeysEsComponent),
+    data: { seo: seo.learnBasicAuthDigestApiKeysSpanish }
+  },
+  {
+    path: 'learn/pt/oauth-2-fluxos-tokens-e-seguranca',
+    loadComponent: () => import('./learn/oauth-2-fluxos-tokens-seguranca-pt/oauth-2-fluxos-tokens-seguranca-pt.component')
+      .then((module) => module.OAuth2FluxosTokensSegurancaPtComponent),
+    data: { seo: seo.learnOAuth2Portuguese }
+  },
+  {
+    path: 'learn/en/oauth-2-flows-tokens-and-security',
+    loadComponent: () => import('./learn/oauth-2-flows-tokens-security-en/oauth-2-flows-tokens-security-en.component')
+      .then((module) => module.OAuth2FlowsTokensSecurityEnComponent),
+    data: { seo: seo.learnOAuth2English }
+  },
+  {
+    path: 'learn/es/oauth-2-flujos-tokens-y-seguridad',
+    loadComponent: () => import('./learn/oauth-2-flujos-tokens-seguridad-es/oauth-2-flujos-tokens-seguridad-es.component')
+      .then((module) => module.OAuth2FlujosTokensSeguridadEsComponent),
+    data: { seo: seo.learnOAuth2Spanish }
+  },
+  {
+    path: 'learn/pt/openid-connect-id-tokens-sessoes-e-federacao',
+    loadComponent: () => import('./learn/openid-connect-id-tokens-sessoes-federacao-pt/openid-connect-id-tokens-sessoes-federacao-pt.component')
+      .then((module) => module.OpenIdConnectIdTokensSessoesFederacaoPtComponent),
+    data: { seo: seo.learnOpenIdConnectPortuguese }
+  },
+  {
+    path: 'learn/en/openid-connect-id-tokens-sessions-and-federation',
+    loadComponent: () => import('./learn/openid-connect-id-tokens-sessions-federation-en/openid-connect-id-tokens-sessions-federation-en.component')
+      .then((module) => module.OpenIdConnectIdTokensSessionsFederationEnComponent),
+    data: { seo: seo.learnOpenIdConnectEnglish }
+  },
+  {
+    path: 'learn/es/openid-connect-id-tokens-sesiones-y-federacion',
+    loadComponent: () => import('./learn/openid-connect-id-tokens-sesiones-federacion-es/openid-connect-id-tokens-sesiones-federacion-es.component')
+      .then((module) => module.OpenIdConnectIdTokensSesionesFederacionEsComponent),
+    data: { seo: seo.learnOpenIdConnectSpanish }
+  },
   { path: 'articles/what-is-utily-tools', component: WhatIsUtilyToolsComponent, data: { seo: seo.whatIsUtilyTools } },
   ...toolArticleRoutes,
   { path: 'base64', component: Base64Component, data: toolData(seo.base64, 'base64-encoding-decoding-guide', 'Base64 Text Converter') },

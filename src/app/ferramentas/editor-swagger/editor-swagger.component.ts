@@ -61,6 +61,10 @@ interface AttrEditorState {
 @Component({
   selector: 'app-editor-swagger',
   standalone: true,
+  // The editor restores a browser-only draft from localStorage during startup.
+  // Recreating this highly dynamic subtree on the client avoids an SSR hydration
+  // mismatch that otherwise leaves schema buttons present but without handlers.
+  host: { ngSkipHydration: 'true' },
   imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './editor-swagger.component.html',
   styleUrl: './editor-swagger.component.css'
@@ -90,6 +94,7 @@ export class EditorSwaggerComponent implements OnInit {
   expanded = new Set<string>();
   collapsedTags = new Set<string>();
   collapsedSchemas = new Set<string>();
+  private knownSchemas = new Set<string>();
   collapsedParams = new Set<string>();
   collapsedResponses = new Set<string>();
   private exampleHtml = new Map<string, SafeHtml>();
@@ -294,6 +299,15 @@ export class EditorSwaggerComponent implements OnInit {
   private rebuildModel(): void {
     try {
       this.model = this.swagger.normalize(this.spec);
+      const currentSchemas = new Set(this.model.schemas.map((schema) => schema.name));
+      this.collapsedSchemas = new Set(this.collapsedSchemas);
+      for (const name of currentSchemas) {
+        if (!this.knownSchemas.has(name)) this.collapsedSchemas.add(name);
+      }
+      for (const name of [...this.collapsedSchemas]) {
+        if (!currentSchemas.has(name)) this.collapsedSchemas.delete(name);
+      }
+      this.knownSchemas = currentSchemas;
       this.exampleHtml.clear();
       for (const group of this.model.groups) {
         for (const op of group.ops) {
@@ -356,6 +370,7 @@ export class EditorSwaggerComponent implements OnInit {
   }
 
   toggleSchema(name: string): void {
+    this.collapsedSchemas = new Set(this.collapsedSchemas);
     if (this.collapsedSchemas.has(name)) this.collapsedSchemas.delete(name);
     else this.collapsedSchemas.add(name);
   }
@@ -602,6 +617,8 @@ export class EditorSwaggerComponent implements OnInit {
     if (!container[name]) {
       container[name] = { type: 'object', properties: {} };
     }
+    this.knownSchemas.add(name);
+    this.collapsedSchemas.delete(name);
     this.newSchemaName = '';
     this.showAddSchema = false;
     this.refresh();

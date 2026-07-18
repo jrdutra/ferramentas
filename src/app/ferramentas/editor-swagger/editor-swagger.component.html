@@ -54,8 +54,9 @@
       <div class="sw-ok" *ngIf="!parseError && model">
         <mat-icon>check_circle</mat-icon> Valid document — changes are saved in your browser.
       </div>
-      <div class="sw-editor-wrap">
-        <pre class="sw-highlight" #hl aria-hidden="true"><code [innerHTML]="highlightedCode"></code></pre>
+      <div class="sw-editor-wrap" [attr.data-language]="format === 'json' ? 'JSON' : 'YAML'">
+        <pre class="sw-highlight" #hl aria-hidden="true"><code [class.language-json]="format === 'json'"
+          [class.language-yaml]="format === 'yaml'" [innerHTML]="highlightedCode"></code></pre>
         <textarea #ta class="sw-code" [(ngModel)]="editorText" (ngModelChange)="onEditorInput()"
           (scroll)="hl.scrollTop = ta.scrollTop; hl.scrollLeft = ta.scrollLeft"
           spellcheck="false" wrap="off" placeholder="Paste your Swagger / OpenAPI document here..."></textarea>
@@ -322,26 +323,32 @@
         </div>
         <p class="sw-vazio" *ngIf="!model.schemas.length">No schemas defined.</p>
 
-        <div class="sw-schema" *ngFor="let schema of model.schemas; trackBy: trackSchema">
-          <div class="sw-schema-head sw-schema-head-toggle" (click)="toggleSchema(schema.name)">
-            <mat-icon class="sw-caret">{{ isSchemaOpen(schema.name) ? 'expand_less' : 'expand_more' }}</mat-icon>
-            <span class="sw-schema-name">{{ schema.name }}</span>
-            <span class="sw-tag-count" *ngIf="!isSchemaOpen(schema.name)">{{ schema.props.length }}</span>
+        <div class="sw-schema" *ngFor="let schema of model.schemas; trackBy: trackSchema"
+          [attr.data-schema-name]="schema.name">
+          <div class="sw-schema-head">
+            <button type="button" class="sw-schema-toggle" (click)="toggleSchema(schema.name)"
+              [attr.aria-expanded]="isSchemaOpen(schema.name)"
+              [attr.aria-controls]="'schema-body-' + schema.name"
+              [attr.aria-label]="(isSchemaOpen(schema.name) ? 'Collapse schema ' : 'Expand schema ') + schema.name">
+              <mat-icon class="sw-caret">{{ isSchemaOpen(schema.name) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              <span class="sw-schema-name">{{ schema.name }}</span>
+              <span class="sw-tag-count">{{ schema.props.length }}</span>
+            </button>
             <button class="sw-mini-btn sw-mini-edit"
-              (click)="toggleAttrEditor('schema:' + schema.name, rawSchemaNode(schema.name), schemaAttrSuggestions()); $event.stopPropagation()"
+              (click)="toggleAttrEditor('schema:' + schema.name, rawSchemaNode(schema.name), schemaAttrSuggestions())"
               matTooltip="Edit the attributes of this schema">
               <mat-icon>tune</mat-icon>
             </button>
-            <button class="sw-mini-btn sw-mini-add" (click)="sf(schema).showAddProp = !sf(schema).showAddProp; $event.stopPropagation()"
+            <button class="sw-mini-btn sw-mini-add" (click)="sf(schema).showAddProp = !sf(schema).showAddProp"
               matTooltip="Add a property">
               <mat-icon>add</mat-icon>
             </button>
-            <button class="sw-mini-btn sw-mini-del" (click)="removeSchema(schema); $event.stopPropagation()"
+            <button class="sw-mini-btn sw-mini-del" (click)="removeSchema(schema)"
               matTooltip="Remove this schema">
               <mat-icon>remove</mat-icon>
             </button>
           </div>
-          <ng-container *ngIf="isSchemaOpen(schema.name)">
+          <div class="sw-schema-body" [hidden]="!isSchemaOpen(schema.name)" [id]="'schema-body-' + schema.name">
           <ng-container *ngIf="attrKey === 'schema:' + schema.name" [ngTemplateOutlet]="attrPanel"></ng-container>
           <div class="sw-add-form" *ngIf="sf(schema).showAddProp">
             <input class="sw-input sw-grow" type="text" [(ngModel)]="sf(schema).newPropName" placeholder="propertyName">
@@ -377,7 +384,7 @@
             </ng-container>
           </table>
           <p class="sw-vazio" *ngIf="!schema.props.length">{{ schema.type || 'object' }} — no properties.</p>
-          </ng-container>
+          </div>
         </div>
         </ng-container>
       </div>

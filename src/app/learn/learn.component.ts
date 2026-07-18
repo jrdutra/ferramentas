@@ -104,6 +104,96 @@ export class LearnComponent implements OnInit {
       readingTime: '65 min de leitura',
       image: '/assets/learn/cryptography-cover.png',
       imageAlt: 'Núcleo criptográfico protegendo chaves, assinaturas, hashes e chamadas de APIs'
+    },
+    {
+      chapterLabel: 'Capítulo 8',
+      title: 'Certificados digitais, PKI e X.509',
+      description: 'De identidade, emissão e cadeia de confiança a SAN, CSR, CRL, OCSP, HSM, mTLS e operação em API Gateways.',
+      route: '/learn/pt/certificados-digitais-pki-e-x509',
+      readingTime: '75 min de leitura',
+      image: '/assets/learn/digital-certificates-pki-x509-cover.png',
+      imageAlt: 'Cadeia de confiança PKI conectando uma CA raiz, certificados, HSM, API Gateway e servidores'
+    },
+    {
+      chapterLabel: 'Capítulo 9',
+      title: 'mTLS em profundidade',
+      description: 'De handshake TLS 1.3 e certificados de cliente a identidade, autorização, API Gateways, service mesh, OAuth e operação segura.',
+      route: '/learn/pt/mtls-em-profundidade',
+      readingTime: '75 min de leitura',
+      image: '/assets/learn/mtls-in-depth-cover.png',
+      imageAlt: 'Cliente e servidor apresentam certificados e validam mutuamente suas identidades em uma arquitetura de API corporativa'
+    },
+    {
+      chapterLabel: 'Capítulo 10',
+      title: 'REST: Arquitetura e Boas Práticas',
+      description: 'Dos princípios de Fielding a recursos, semântica HTTP, idempotência, cache, concorrência, OpenAPI, segurança e operação em API Gateways.',
+      route: '/learn/pt/rest-arquitetura-e-boas-praticas',
+      readingTime: '85 min de leitura',
+      image: '/assets/learn/rest-architecture-best-practices-cover.png',
+      imageAlt: 'Ecossistema REST corporativo com recurso central, clientes, API Gateway, representações, cache e persistência'
+    },
+    {
+      chapterLabel: 'Capítulo 11',
+      title: 'Modelo de Maturidade REST de Richardson',
+      description: 'Do endpoint único à hipermídia: níveis 0 a 3, semântica HTTP, HATEOAS, avaliação, governança e migração de APIs corporativas.',
+      route: '/learn/pt/modelo-de-maturidade-rest-de-richardson',
+      readingTime: '80 min de leitura',
+      image: '/assets/learn/richardson-rest-maturity-model-cover.png',
+      imageAlt: 'Evolução em quatro estágios do modelo de maturidade REST de Richardson, do endpoint único à hipermídia'
+    },
+    {
+      chapterLabel: 'Capítulo 12',
+      title: 'OpenAPI (Swagger): Contratos, Documentação e Automação',
+      description: 'Da descrição formal da interface à validação, linting, semantic diff, mocks, geração de SDKs, portais, governança e API Gateways.',
+      route: '/learn/pt/openapi-swagger-contratos-documentacao-e-automacao',
+      readingTime: '90 min de leitura',
+      image: '/assets/learn/openapi-swagger-contracts-cover.png',
+      imageAlt: 'Contrato OpenAPI conectando design, validação, documentação, automação, API Gateway e runtime'
+    },
+    {
+      chapterLabel: 'Capítulo 13',
+      title: 'GraphQL, gRPC e WebSocket',
+      description: 'De schemas, resolvers e N+1 a Protobuf, streaming, deadlines, conexões persistentes, segurança e critérios de arquitetura corporativa.',
+      route: '/learn/pt/graphql-grpc-e-websocket',
+      readingTime: '65 min de leitura',
+      image: '/assets/learn/graphql-grpc-websocket-cover.png',
+      imageAlt: 'GraphQL, gRPC e WebSocket conectados em uma arquitetura corporativa moderna'
+    },
+    {
+      chapterLabel: 'Capítulo 14',
+      title: 'Autenticação x Autorização',
+      description: 'Da prova de identidade à decisão de acesso: credenciais, tokens, OAuth, modelos RBAC, ABAC, ReBAC e PBAC, policy enforcement, workload identity e troubleshooting.',
+      route: '/learn/pt/autenticacao-x-autorizacao',
+      readingTime: '120 min de leitura',
+      image: '/assets/learn/authentication-authorization-cover.png',
+      imageAlt: 'Fluxo corporativo que separa a prova de identidade da decisão de acesso a APIs protegidas'
+    },
+    {
+      chapterLabel: 'Capítulo 15',
+      title: 'Basic Auth, Digest e API Keys',
+      description: 'Desafios HTTP, Base64, TLS, nonce, replay, armazenamento, escopos, quotas, rotação, revogação, HMAC e validação segura em API Gateways.',
+      route: '/learn/pt/basic-auth-digest-e-api-keys',
+      readingTime: '90 min de leitura',
+      image: '/assets/learn/basic-auth-digest-api-keys-cover.png',
+      imageAlt: 'Basic Auth, Digest e API Keys convergindo para um gateway corporativo protegido'
+    },
+    {
+      chapterLabel: 'Capítulo 16',
+      title: 'OAuth 2.0 em Profundidade: Fluxos, Tokens e Segurança',
+      description: 'Papéis, endpoints, Authorization Code com PKCE, Client Credentials, refresh tokens, introspecção, revogação, PAR, JAR, JARM, DPoP, mTLS e segurança em API Gateways.',
+      route: '/learn/pt/oauth-2-fluxos-tokens-e-seguranca',
+      readingTime: '150 min de leitura',
+      image: '/assets/learn/oauth-2-flows-tokens-security-cover.png',
+      imageAlt: 'Fluxos OAuth 2.0 protegidos por PKCE, tokens e controles modernos de segurança'
+    },
+    {
+      chapterLabel: 'Capítulo 17',
+      title: 'OpenID Connect (OIDC): ID Tokens, Sessões e Federação de Identidade',
+      description: 'Da autenticação do usuário à validação de ID Tokens, UserInfo, assurance, SSO, logout federado, discovery, JWKS e federação de identidade.',
+      route: '/learn/pt/openid-connect-id-tokens-sessoes-e-federacao',
+      readingTime: '140 min de leitura',
+      image: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png',
+      imageAlt: 'Identidade federada OpenID Connect com ID Tokens verificáveis, sessões e Relying Parties'
     }
   ];
   readonly englishArticles: LearnArticle[] = [
@@ -169,6 +259,96 @@ export class LearnComponent implements OnInit {
       readingTime: '65 min read',
       image: '/assets/learn/cryptography-cover.png',
       imageAlt: 'Cryptographic core protecting keys, signatures, hashes, and API calls'
+    },
+    {
+      chapterLabel: 'Chapter 8',
+      title: 'Digital Certificates, PKI, and X.509',
+      description: 'From identity, issuance, and trust chains to SAN, CSR, CRL, OCSP, HSM, mTLS, and API Gateway operations.',
+      route: '/learn/en/digital-certificates-pki-and-x509',
+      readingTime: '75 min read',
+      image: '/assets/learn/digital-certificates-pki-x509-cover.png',
+      imageAlt: 'PKI trust chain connecting a root CA, certificates, an HSM, an API Gateway, and servers'
+    },
+    {
+      chapterLabel: 'Chapter 9',
+      title: 'mTLS in Depth',
+      description: 'From TLS 1.3 handshakes and client certificates to identity, authorization, API Gateways, service meshes, OAuth, and secure operations.',
+      route: '/learn/en/mtls-in-depth',
+      readingTime: '75 min read',
+      image: '/assets/learn/mtls-in-depth-cover.png',
+      imageAlt: 'Client and server present certificates and mutually validate their identities in an enterprise API architecture'
+    },
+    {
+      chapterLabel: 'Chapter 10',
+      title: 'REST: Architecture and Best Practices',
+      description: "From Fielding's principles to resources, HTTP semantics, idempotency, caching, concurrency, OpenAPI, security, and API Gateway operations.",
+      route: '/learn/en/rest-architecture-and-best-practices',
+      readingTime: '85 min read',
+      image: '/assets/learn/rest-architecture-best-practices-cover.png',
+      imageAlt: 'Enterprise REST ecosystem with a central resource, clients, API Gateway, representations, cache, and persistence'
+    },
+    {
+      chapterLabel: 'Chapter 11',
+      title: 'Richardson REST Maturity Model',
+      description: 'From a single endpoint to hypermedia: levels 0 through 3, HTTP semantics, HATEOAS, assessment, governance, and enterprise API migration.',
+      route: '/learn/en/richardson-rest-maturity-model',
+      readingTime: '80 min read',
+      image: '/assets/learn/richardson-rest-maturity-model-cover.png',
+      imageAlt: 'Four-stage evolution of the Richardson REST Maturity Model, from a single endpoint to hypermedia'
+    },
+    {
+      chapterLabel: 'Chapter 12',
+      title: 'OpenAPI (Swagger): Contracts, Documentation, and Automation',
+      description: 'From formal interface description to validation, linting, semantic diff, mocks, SDK generation, portals, governance, and API Gateways.',
+      route: '/learn/en/openapi-swagger-contracts-documentation-and-automation',
+      readingTime: '90 min read',
+      image: '/assets/learn/openapi-swagger-contracts-cover.png',
+      imageAlt: 'OpenAPI contract connecting design, validation, documentation, automation, API Gateway, and runtime'
+    },
+    {
+      chapterLabel: 'Chapter 13',
+      title: 'GraphQL, gRPC, and WebSocket',
+      description: 'From schemas, resolvers, and N+1 to Protobuf, streaming, deadlines, persistent connections, security, and enterprise architecture criteria.',
+      route: '/learn/en/graphql-grpc-and-websocket',
+      readingTime: '65 min read',
+      image: '/assets/learn/graphql-grpc-websocket-cover.png',
+      imageAlt: 'GraphQL, gRPC, and WebSocket connected in a modern enterprise architecture'
+    },
+    {
+      chapterLabel: 'Chapter 14',
+      title: 'Authentication vs. Authorization',
+      description: 'From identity proof to access decisions: credentials, tokens, OAuth, RBAC, ABAC, ReBAC and PBAC models, policy enforcement, workload identity, and troubleshooting.',
+      route: '/learn/en/authentication-vs-authorization',
+      readingTime: '120 min read',
+      image: '/assets/learn/authentication-authorization-cover.png',
+      imageAlt: 'Enterprise flow separating identity proof from access decisions for protected APIs'
+    },
+    {
+      chapterLabel: 'Chapter 15',
+      title: 'Basic Auth, Digest, and API Keys',
+      description: 'HTTP challenges, Base64, TLS, nonce, replay, storage, scopes, quotas, rotation, revocation, HMAC, and secure validation in API Gateways.',
+      route: '/learn/en/basic-auth-digest-and-api-keys',
+      readingTime: '90 min read',
+      image: '/assets/learn/basic-auth-digest-api-keys-cover.png',
+      imageAlt: 'Basic Auth, Digest, and API keys converging on a protected enterprise gateway'
+    },
+    {
+      chapterLabel: 'Chapter 16',
+      title: 'OAuth 2.0 in Depth: Flows, Tokens, and Security',
+      description: 'Roles, endpoints, Authorization Code with PKCE, Client Credentials, refresh tokens, introspection, revocation, PAR, JAR, JARM, DPoP, mTLS, and API Gateway security.',
+      route: '/learn/en/oauth-2-flows-tokens-and-security',
+      readingTime: '150 min read',
+      image: '/assets/learn/oauth-2-flows-tokens-security-cover.png',
+      imageAlt: 'OAuth 2.0 flows protected by PKCE, tokens, and modern security controls'
+    },
+    {
+      chapterLabel: 'Chapter 17',
+      title: 'OpenID Connect (OIDC): ID Tokens, Sessions, and Identity Federation',
+      description: 'From user authentication to ID Token validation, UserInfo, assurance, SSO, federated logout, discovery, JWKS, and identity federation.',
+      route: '/learn/en/openid-connect-id-tokens-sessions-and-federation',
+      readingTime: '140 min read',
+      image: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png',
+      imageAlt: 'Federated OpenID Connect identity with verifiable ID Tokens, sessions, and Relying Parties'
     }
   ];
   readonly spanishArticles: LearnArticle[] = [
@@ -234,6 +414,96 @@ export class LearnComponent implements OnInit {
       readingTime: '65 min de lectura',
       image: '/assets/learn/cryptography-cover.png',
       imageAlt: 'Núcleo criptográfico que protege claves, firmas, hashes y llamadas de APIs'
+    },
+    {
+      chapterLabel: 'Capítulo 8',
+      title: 'Certificados digitales, PKI y X.509',
+      description: 'De identidad, emisión y cadena de confianza a SAN, CSR, CRL, OCSP, HSM, mTLS y operación en API Gateways.',
+      route: '/learn/es/certificados-digitales-pki-y-x509',
+      readingTime: '75 min de lectura',
+      image: '/assets/learn/digital-certificates-pki-x509-cover.png',
+      imageAlt: 'Cadena de confianza PKI que conecta una CA raíz, certificados, un HSM, un API Gateway y servidores'
+    },
+    {
+      chapterLabel: 'Capítulo 9',
+      title: 'mTLS en profundidad',
+      description: 'De handshakes TLS 1.3 y certificados de cliente a identidad, autorización, API Gateways, service mesh, OAuth y operación segura.',
+      route: '/learn/es/mtls-en-profundidad',
+      readingTime: '75 min de lectura',
+      image: '/assets/learn/mtls-in-depth-cover.png',
+      imageAlt: 'Cliente y servidor presentan certificados y validan mutuamente sus identidades en una arquitectura de API empresarial'
+    },
+    {
+      chapterLabel: 'Capítulo 10',
+      title: 'REST: Arquitectura y Buenas Prácticas',
+      description: 'De los principios de Fielding a recursos, semántica HTTP, idempotencia, cache, concurrencia, OpenAPI, seguridad y operación en API Gateways.',
+      route: '/learn/es/rest-arquitectura-y-buenas-practicas',
+      readingTime: '85 min de lectura',
+      image: '/assets/learn/rest-architecture-best-practices-cover.png',
+      imageAlt: 'Ecosistema REST corporativo con recurso central, clientes, API Gateway, representaciones, cache y persistencia'
+    },
+    {
+      chapterLabel: 'Capítulo 11',
+      title: 'Modelo de Madurez REST de Richardson',
+      description: 'Del endpoint único a la hipermedia: niveles 0 a 3, semántica HTTP, HATEOAS, evaluación, gobernanza y migración de APIs corporativas.',
+      route: '/learn/es/modelo-de-madurez-rest-de-richardson',
+      readingTime: '80 min de lectura',
+      image: '/assets/learn/richardson-rest-maturity-model-cover.png',
+      imageAlt: 'Evolución en cuatro etapas del modelo de madurez REST de Richardson, desde un endpoint único hasta la hipermedia'
+    },
+    {
+      chapterLabel: 'Capítulo 12',
+      title: 'OpenAPI (Swagger): Contratos, Documentación y Automatización',
+      description: 'De la descripción formal de la interfaz a validación, linting, semantic diff, mocks, generación de SDKs, portales, gobernanza y API Gateways.',
+      route: '/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion',
+      readingTime: '90 min de lectura',
+      image: '/assets/learn/openapi-swagger-contracts-cover.png',
+      imageAlt: 'Contrato OpenAPI que conecta diseño, validación, documentación, automatización, API Gateway y runtime'
+    },
+    {
+      chapterLabel: 'Capítulo 13',
+      title: 'GraphQL, gRPC y WebSocket',
+      description: 'De schemas, resolvers y N+1 a Protobuf, streaming, deadlines, conexiones persistentes, seguridad y criterios de arquitectura corporativa.',
+      route: '/learn/es/graphql-grpc-y-websocket',
+      readingTime: '65 min de lectura',
+      image: '/assets/learn/graphql-grpc-websocket-cover.png',
+      imageAlt: 'GraphQL, gRPC y WebSocket conectados en una arquitectura corporativa moderna'
+    },
+    {
+      chapterLabel: 'Capítulo 14',
+      title: 'Autenticación vs. Autorización',
+      description: 'De la prueba de identidad a la decisión de acceso: credenciales, tokens, OAuth, modelos RBAC, ABAC, ReBAC y PBAC, aplicación de políticas, workload identity y troubleshooting.',
+      route: '/learn/es/autenticacion-vs-autorizacion',
+      readingTime: '120 min de lectura',
+      image: '/assets/learn/authentication-authorization-cover.png',
+      imageAlt: 'Flujo corporativo que separa la prueba de identidad de la decisión de acceso a APIs protegidas'
+    },
+    {
+      chapterLabel: 'Capítulo 15',
+      title: 'Basic Auth, Digest y API Keys',
+      description: 'Desafíos HTTP, Base64, TLS, nonce, replay, almacenamiento, scopes, quotas, rotación, revocación, HMAC y validación segura en API Gateways.',
+      route: '/learn/es/basic-auth-digest-y-api-keys',
+      readingTime: '90 min de lectura',
+      image: '/assets/learn/basic-auth-digest-api-keys-cover.png',
+      imageAlt: 'Basic Auth, Digest y API Keys convergiendo en un gateway corporativo protegido'
+    },
+    {
+      chapterLabel: 'Capítulo 16',
+      title: 'OAuth 2.0 en Profundidad: Flujos, Tokens y Seguridad',
+      description: 'Roles, endpoints, Authorization Code con PKCE, Client Credentials, refresh tokens, introspección, revocación, PAR, JAR, JARM, DPoP, mTLS y seguridad en API Gateways.',
+      route: '/learn/es/oauth-2-flujos-tokens-y-seguridad',
+      readingTime: '150 min de lectura',
+      image: '/assets/learn/oauth-2-flows-tokens-security-cover.png',
+      imageAlt: 'Flujos OAuth 2.0 protegidos por PKCE, tokens y controles modernos de seguridad'
+    },
+    {
+      chapterLabel: 'Capítulo 17',
+      title: 'OpenID Connect (OIDC): ID Tokens, Sesiones y Federación de Identidad',
+      description: 'De la autenticación del usuario a la validación de ID Tokens, UserInfo, assurance, SSO, logout federado, discovery, JWKS y federación de identidad.',
+      route: '/learn/es/openid-connect-id-tokens-sesiones-y-federacion',
+      readingTime: '140 min de lectura',
+      image: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png',
+      imageAlt: 'Identidad federada OpenID Connect con ID Tokens verificables, sesiones y Relying Parties'
     }
   ];
 

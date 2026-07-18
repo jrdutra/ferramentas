@@ -202,7 +202,7 @@ export class SwaggerService {
 
     const schemaSource: Record<string, any> = version === '2.0' ? (spec.definitions ?? {}) : (spec.components?.schemas ?? {});
     for (const [name, schema] of Object.entries<any>(schemaSource)) {
-      model.schemas.push(this.schema(name, schema));
+      model.schemas.push(this.schema(spec, name, schema));
     }
     return model;
   }
@@ -299,18 +299,55 @@ export class SwaggerService {
     return out;
   }
 
-  private schema(name: string, schema: any): RenderSchema {
-    const out: RenderSchema = { name, type: schema?.type ?? (schema?.properties ? 'object' : ''), props: [] };
-    const required: string[] = Array.isArray(schema?.required) ? schema.required : [];
-    for (const [propName, prop] of Object.entries<any>(schema?.properties ?? {})) {
+  private schema(spec: any, name: string, schema: any): RenderSchema {
+    const flattened = this.flattenSchema(spec, schema);
+    const out: RenderSchema = {
+      name,
+      type: flattened?.type ?? (flattened?.properties ? 'object' : ''),
+      props: []
+    };
+    const required: string[] = Array.isArray(flattened?.required) ? flattened.required : [];
+    for (const [propName, rawProp] of Object.entries<any>(flattened?.properties ?? {})) {
+      const prop = rawProp?.$ref ? (this.resolveRef(spec, rawProp.$ref) ?? rawProp) : rawProp;
       out.props.push({
         name: propName,
-        type: this.typeLabel(null, prop),
+        type: this.typeLabel(spec, rawProp),
         required: required.includes(propName),
         description: prop?.description ?? ''
       });
     }
     return out;
+  }
+
+  /**
+   * Produces the effective object shape used by the visual schema browser.
+   * OpenAPI commonly models inheritance with allOf, so reading only the
+   * top-level properties makes valid schemas look empty or collapsed.
+   */
+  private flattenSchema(spec: any, schema: any, seen = new Set<any>(), depth = 0): any {
+    if (!schema || typeof schema !== 'object' || depth > 12 || seen.has(schema)) return {};
+    seen.add(schema);
+
+    const resolved = schema.$ref ? (this.resolveRef(spec, schema.$ref) ?? schema) : schema;
+    if (resolved !== schema) return this.flattenSchema(spec, resolved, seen, depth + 1);
+
+    const result: any = { ...resolved, properties: {}, required: [] };
+    const merge = (part: any): void => {
+      const effective = this.flattenSchema(spec, part, new Set(seen), depth + 1);
+      if (effective.type && !result.type) result.type = effective.type;
+      Object.assign(result.properties, effective.properties ?? {});
+      for (const item of effective.required ?? []) {
+        if (!result.required.includes(item)) result.required.push(item);
+      }
+    };
+
+    for (const part of resolved.allOf ?? []) merge(part);
+    Object.assign(result.properties, resolved.properties ?? {});
+    for (const item of resolved.required ?? []) {
+      if (!result.required.includes(item)) result.required.push(item);
+    }
+
+    return result;
   }
 
   private typeLabel(spec: any, schema: any): string {

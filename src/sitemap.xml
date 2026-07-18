@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://utily.tools/</loc>
   </url>
@@ -11,45 +11,415 @@
   </url>
   <url>
     <loc>https://utily.tools/learn</loc>
+    <lastmod>2026-07-18</lastmod>
   </url>
   <url>
     <loc>https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/fundamentos-internet-redes-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
   </url>
   <url>
     <loc>https://utily.tools/learn/en/internet-networking-api-fundamentals</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/fundamentos-internet-redes-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
   </url>
   <url>
     <loc>https://utily.tools/learn/es/fundamentos-internet-redes-apis</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/fundamentos-internet-redes-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
   </url>
   <url>
     <loc>https://utily.tools/learn/pt/tcp-udp-portas-e-sockets</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/tcp-udp-portas-e-sockets"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/tcp-udp-puertos-y-sockets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
   </url>
   <url>
     <loc>https://utily.tools/learn/en/tcp-udp-ports-and-sockets</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/tcp-udp-portas-e-sockets"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/tcp-udp-puertos-y-sockets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
   </url>
   <url>
     <loc>https://utily.tools/learn/es/tcp-udp-puertos-y-sockets</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/tcp-udp-portas-e-sockets"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/tcp-udp-puertos-y-sockets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
   </url>
   <url>
     <loc>https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
   </url>
   <url>
     <loc>https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
   </url>
   <url>
     <loc>https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
   </url>
   <url>
-    <loc>https://utily.tools/articles/what-is-utily-tools</loc>
+    <loc>https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/http-1-1-http-2-e-http-3</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/http-1-1-http-2-e-http-3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/http-1-1-http-2-y-http-3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/http-1-1-http-2-and-http-3</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/http-1-1-http-2-e-http-3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/http-1-1-http-2-y-http-3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/http-1-1-http-2-y-http-3</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/http-1-1-http-2-e-http-3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/http-1-1-http-2-y-http-3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/https-e-tls-em-profundidade</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/https-e-tls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/https-y-tls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/https-and-tls-in-depth</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/https-e-tls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/https-y-tls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/https-y-tls-en-profundidad</loc>
+    <lastmod>2026-07-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/https-e-tls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/https-y-tls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis</loc>
+    <lastmod>2026-07-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications</loc>
+    <lastmod>2026-07-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis</loc>
+    <lastmod>2026-07-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/certificados-digitais-pki-e-x509</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/certificados-digitais-pki-e-x509"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/certificados-digitales-pki-y-x509"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/digital-certificates-pki-and-x509</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/certificados-digitais-pki-e-x509"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/certificados-digitales-pki-y-x509"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/certificados-digitales-pki-y-x509</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/certificados-digitais-pki-e-x509"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/certificados-digitales-pki-y-x509"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/mtls-em-profundidade</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/mtls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/mtls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/mtls-in-depth"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/mtls-in-depth</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/mtls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/mtls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/mtls-in-depth"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/mtls-en-profundidad</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/mtls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/mtls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/mtls-in-depth"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/rest-arquitetura-e-boas-praticas</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/rest-arquitetura-e-boas-praticas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/rest-arquitectura-y-buenas-practicas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/rest-architecture-and-best-practices</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/rest-arquitetura-e-boas-praticas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/rest-arquitectura-y-buenas-practicas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/rest-arquitectura-y-buenas-practicas</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/rest-arquitetura-e-boas-praticas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/rest-arquitectura-y-buenas-practicas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/modelo-de-maturidade-rest-de-richardson</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/modelo-de-madurez-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/richardson-rest-maturity-model</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/modelo-de-madurez-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/modelo-de-madurez-rest-de-richardson</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/modelo-de-madurez-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/openapi-swagger-contratos-documentacao-e-automacao</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/graphql-grpc-e-websocket</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/graphql-grpc-e-websocket"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/graphql-grpc-y-websocket"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/graphql-grpc-and-websocket</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/graphql-grpc-e-websocket"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/graphql-grpc-y-websocket"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/graphql-grpc-y-websocket</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/graphql-grpc-e-websocket"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/graphql-grpc-y-websocket"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/autenticacao-x-autorizacao</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/autenticacao-x-autorizacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/autenticacion-vs-autorizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/authentication-vs-authorization</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/autenticacao-x-autorizacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/autenticacion-vs-autorizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/autenticacion-vs-autorizacion</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/autenticacao-x-autorizacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/autenticacion-vs-autorizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/basic-auth-digest-e-api-keys</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/basic-auth-digest-e-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/basic-auth-digest-y-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/basic-auth-digest-and-api-keys</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/basic-auth-digest-e-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/basic-auth-digest-y-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/basic-auth-digest-y-api-keys</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/basic-auth-digest-e-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/basic-auth-digest-y-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/oauth-2-fluxos-tokens-e-seguranca</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/oauth-2-flows-tokens-and-security</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/oauth-2-flujos-tokens-y-seguridad</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/pt/openid-connect-id-tokens-sessoes-e-federacao</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+  </url>
+  <url>
+    <loc>https://utily.tools/learn/es/openid-connect-id-tokens-sesiones-y-federacion</loc>
+    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
   </url>
   <url>
     <loc>https://utily.tools/base64</loc>
@@ -97,6 +467,9 @@
     <loc>https://utily.tools/pdf-splitter</loc>
   </url>
   <url>
+    <loc>https://utily.tools/pdf-creator</loc>
+  </url>
+  <url>
     <loc>https://utily.tools/hash-generator</loc>
   </url>
   <url>
@@ -121,10 +494,13 @@
     <loc>https://utily.tools/certificate-validator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/pdf-creator</loc>
+    <loc>https://utily.tools/swagger-editor</loc>
   </url>
   <url>
     <loc>https://utily.tools/shared-text</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/what-is-utily-tools</loc>
   </url>
   <url>
     <loc>https://utily.tools/articles/online-text-editor-text-transformation-guide</loc>
@@ -146,6 +522,9 @@
   </url>
   <url>
     <loc>https://utily.tools/articles/compare-json-yaml-structural-diff</loc>
+  </url>
+  <url>
+    <loc>https://utily.tools/articles/swagger-openapi-specification-guide</loc>
   </url>
   <url>
     <loc>https://utily.tools/articles/uuid-v1-v4-v7-generation-guide</loc>
@@ -200,32 +579,5 @@
   </url>
   <url>
     <loc>https://utily.tools/articles/ipv4-cidr-subnet-range-calculation-guide</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/pt/http-1-1-http-2-e-http-3</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/en/http-1-1-http-2-and-http-3</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/es/http-1-1-http-2-y-http-3</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/pt/https-e-tls-em-profundidade</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/en/https-and-tls-in-depth</loc>
-  </url>
-  <url>
-    <loc>https://utily.tools/learn/es/https-y-tls-en-profundidad</loc>
   </url>
 </urlset>

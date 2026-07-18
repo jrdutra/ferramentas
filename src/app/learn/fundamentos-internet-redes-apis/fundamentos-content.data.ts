@@ -651,11 +651,40 @@ export const FUNDAMENTOS_CHAPTER_BLOCKS: ChapterBlock[] = [
   {
     "kind": "heading",
     "level": 3,
-    "text": "Proxy reverso e balanceador"
+    "text": "Proxy comum, proxy reverso e balanceador"
+  },
+  {
+    "kind": "paragraph",
+    "text": "Um proxy comum, também chamado forward proxy ou proxy de saída, atua em nome do cliente. O navegador, sistema operacional ou aplicação conhece esse intermediário e envia a ele a requisição destinada a outro servidor. O proxy decide se permite a saída, estabelece a conexão com o destino e devolve a resposta ao consumidor. Empresas usam forward proxies para controle de acesso à Internet, auditoria, filtragem, cache e aplicação de políticas de egress. Para o servidor de destino, a conexão normalmente parece vir do proxy, que oculta ou substitui o endereço de rede do cliente."
   },
   {
     "kind": "paragraph",
     "text": "Um proxy reverso recebe requisições em nome de servidores internos. Ele pode terminar TLS, aplicar regras, normalizar headers, comprimir respostas e ocultar a topologia de backend. Um API Gateway possui características de proxy reverso, mas acrescenta funções específicas de gestão, segurança e governança de APIs."
+  },
+  {
+    "kind": "paragraph",
+    "text": "No proxy reverso, o consumidor acredita estar conversando com o próprio serviço publicado. DNS direciona o nome da API ao proxy, e o proxy escolhe qual servidor interno receberá a chamada. Assim, o forward proxy representa clientes e controla tráfego de saída; o reverse proxy representa servidores e controla tráfego de entrada. Os dois podem encaminhar HTTP e manipular headers, mas ocupam lados opostos da relação e possuem raízes de confiança diferentes."
+  },
+  {
+    "kind": "table",
+    "caption": "Comparação entre proxy comum e proxy reverso.",
+    "headers": [
+      "Aspecto",
+      "Proxy comum / forward proxy",
+      "Proxy reverso / reverse proxy"
+    ],
+    "rows": [
+      ["Representa", "O cliente ou uma rede de clientes", "O servidor ou um conjunto de backends"],
+      ["Fluxo principal", "Saída da rede para serviços externos", "Entrada de consumidores para serviços publicados"],
+      ["Quem conhece o proxy", "Normalmente o cliente é configurado para usá-lo", "O cliente acessa o nome do serviço e pode nem perceber o intermediário"],
+      ["O que oculta", "A origem e a topologia da rede cliente", "A localização e a quantidade de servidores internos"],
+      ["Usos frequentes", "Egress, filtragem, auditoria e cache", "Terminação TLS, roteamento, balanceamento, WAF e proteção de backends"],
+      ["Relação com APIs", "Controla quais APIs externas os consumidores podem chamar", "Publica APIs internas e encaminha chamadas aos backends corretos"]
+    ]
+  },
+  {
+    "kind": "paragraph",
+    "text": "Com HTTPS, um forward proxy pode apenas criar um túnel TCP com o método CONNECT, sem ler o HTTP protegido, ou pode realizar inspeção TLS quando dispositivos clientes confiam em uma CA corporativa — operação sensível que cria duas sessões TLS e exige governança. Um reverse proxy pode operar em pass-through, preservando TLS até o backend, terminar TLS e encaminhar HTTP internamente, ou terminar e recriptografar a chamada em outra sessão TLS. Esses modos não são equivalentes e devem aparecer explicitamente no diagrama de confiança."
   },
   {
     "kind": "paragraph",
@@ -676,8 +705,20 @@ export const FUNDAMENTOS_CHAPTER_BLOCKS: ChapterBlock[] = [
     "id": "seguranca"
   },
   {
+    "kind": "subhead",
+    "text": "O que TLS protege — e o que permanece fora do seu alcance"
+  },
+  {
     "kind": "paragraph",
     "text": "TLS protege a comunicação contra leitura indevida, alteração e falsificação dentro do modelo de ameaça considerado. HTTPS é HTTP transportado em um canal protegido por TLS. O protocolo negocia parâmetros criptográficos, autentica pelo menos o servidor na configuração comum e estabelece chaves de sessão utilizadas para proteger os dados transmitidos."
+  },
+  {
+    "kind": "paragraph",
+    "text": "Depois do handshake, os registros TLS usam chaves de sessão e criptografia autenticada para oferecer confidencialidade e integridade aos bytes em trânsito naquele hop. Um observador de rede ainda pode inferir metadados como endereços IP, portas, volume e duração das conexões. TLS também não corrige autorização incorreta, payload malicioso, endpoint comprometido, vazamento em logs ou dados já descriptografados na aplicação. Ele protege o canal entre duas terminações; não declara que toda a jornada de negócio é segura."
+  },
+  {
+    "kind": "subhead",
+    "text": "Como o handshake estabelece confiança e chaves"
   },
   {
     "kind": "paragraph",
@@ -685,11 +726,35 @@ export const FUNDAMENTOS_CHAPTER_BLOCKS: ChapterBlock[] = [
   },
   {
     "kind": "paragraph",
+    "text": "No início, o ClientHello anuncia versões suportadas, suites criptográficas, grupos de troca de chaves e extensões. SNI informa o nome esperado para que um endereço compartilhado selecione o certificado correto; ALPN permite negociar HTTP/1.1, HTTP/2 ou outro protocolo. O servidor responde com os parâmetros escolhidos, sua cadeia de certificados e prova de posse da chave privada. Uma troca efêmera, normalmente baseada em ECDHE no TLS moderno, produz o segredo do qual derivam as chaves de sessão sem transmitir essas chaves pela rede. Mensagens Finished autenticam o transcript do handshake e detectam alteração da negociação."
+  },
+  {
+    "kind": "paragraph",
     "text": "No handshake, cliente e servidor negociam versão e algoritmos compatíveis. TLS 1.3 simplificou e modernizou partes do protocolo em relação a versões anteriores. A aplicação só deve enviar informações sensíveis depois que o canal está estabelecido e validado. Quando a negociação falha, nenhuma política HTTP do gateway pode ser executada porque a mensagem de aplicação ainda não foi recebida."
   },
   {
     "kind": "paragraph",
+    "text": "TLS 1.3 removeu opções criptográficas antigas, reduziu mensagens em claro e normalmente completa um handshake novo em um round trip. Retomada de sessão com PSK ou tickets reduz custo e latência, mas tickets e suas chaves também precisam de expiração e rotação. O modo 0-RTT pode enviar dados antes de concluir um novo handshake, porém permite replay em determinadas condições; por isso deve ser restrito a operações realmente seguras e idempotentes ou permanecer desabilitado em APIs sensíveis."
+  },
+  {
+    "kind": "subhead",
+    "text": "mTLS: autenticação bilateral no canal"
+  },
+  {
+    "kind": "paragraph",
     "text": "mTLS acrescenta autenticação do cliente no nível TLS. Além de validar o certificado do servidor, o servidor solicita e valida um certificado apresentado pelo cliente. Isso é comum em integrações B2B e financeiras. mTLS autentica uma identidade técnica ligada ao certificado; autorização de negócio ainda pode depender de token, escopo, contrato e contexto."
+  },
+  {
+    "kind": "paragraph",
+    "text": "Quando mTLS é exigido, o servidor envia CertificateRequest com informações sobre CAs e algoritmos aceitos. O cliente apresenta sua cadeia e produz CertificateVerify, uma assinatura sobre o transcript que prova possuir a chave privada correspondente — enviar apenas um certificado copiado não basta. O servidor valida cadeia, validade, usos de chave, políticas e, conforme o ambiente, revogação; depois mapeia subject, SAN, fingerprint ou dados cadastrados para uma identidade técnica. Esse mapeamento precisa ser explícito e auditável."
+  },
+  {
+    "kind": "paragraph",
+    "text": "A operação de mTLS depende de ciclo de vida: emissão segura, armazenamento da chave privada, distribuição da cadeia, renovação antes da expiração, rotação sem indisponibilidade e revogação quando um parceiro ou workload perde confiança. Certificados de clientes diferentes não devem compartilhar indiscriminadamente a mesma chave. Em meshes e comunicações internas, identidades de workload e automação podem reduzir trabalho manual, mas não eliminam a necessidade de definir quem confia em qual CA e para qual finalidade."
+  },
+  {
+    "kind": "paragraph",
+    "text": "mTLS não substitui OAuth, JWT ou autorização do recurso. O certificado responde principalmente qual sistema possui a chave e participa do canal; um token pode representar usuário, consentimento, audiência e escopos. Em arquiteturas combinadas, o gateway primeiro associa o certificado a um cliente autorizado, depois valida o token e aplica políticas de negócio. Vincular o token ao certificado, quando o perfil adotado prevê essa proteção, também reduz o valor de um token roubado fora do canal autorizado."
   },
   {
     "kind": "paragraph",
