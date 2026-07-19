@@ -1,25 +1,64 @@
 <section class="home-dashboard">
-    <div class="home-intro-container">
-        <div class="home-intro-glow" aria-hidden="true"></div>
-        <div class="home-intro">
-            <h1>Free Online Developer Tools</h1>
-            <p class="home-intro-lead">
+
+    <!-- ─── Cinematic hero ──────────────────────────────────────────── -->
+    <section class="hero" #heroSection>
+        <canvas class="hero-canvas" #heroCanvas aria-hidden="true"></canvas>
+
+        <div class="hero-aurora hero-aurora-a" aria-hidden="true"></div>
+        <div class="hero-aurora hero-aurora-b" aria-hidden="true"></div>
+        <div class="hero-grid-floor" aria-hidden="true"></div>
+        <div class="hero-scanline" aria-hidden="true"></div>
+
+        <div class="hero-content">
+            <span class="hero-eyebrow">
+                <span class="hero-pulse-dot" aria-hidden="true"></span>
+                Free · in-browser · no sign-up
+            </span>
+
+            <h1>Free Online <span class="hero-gradient-text">Developer Tools</span></h1>
+
+            <p class="hero-type" aria-hidden="true">
+                <span class="hero-type-prefix">for&nbsp;</span><span class="hero-type-text" #typeText>{{ firstPhrase }}</span><span class="hero-type-caret"></span>
+            </p>
+
+            <p class="hero-lead">
                 utily.tools brings together the utilities developers reach for every day — Base64 and URL encoding,
                 JSON and YAML formatting, JWT and certificate inspection, hash, UUID and password generation,
                 QR codes, OCR and PDF editing. Everything runs in your browser, with no sign-up and no cost.
             </p>
-            <p class="home-intro-sub">Pick a tool by category, or search the catalogue below.</p>
-        </div>
-    </div>
 
-    <!-- Tool filter -->
-    <mat-form-field appearance="fill" class="home-filtro-field">
-        <input matInput [(ngModel)]="filtro" placeholder="Filter tools…" autocomplete="off" spellcheck="false"
-            aria-label="Filter tools by name or description" />
-        <button matSuffix mat-icon-button *ngIf="filtro" (click)="limparFiltro()" aria-label="Clear filter">
-            <mat-icon>close</mat-icon>
-        </button>
-    </mat-form-field>
+            <!-- Tool filter -->
+            <mat-form-field appearance="fill" class="home-filtro-field hero-filtro">
+                <input matInput [(ngModel)]="filtro" placeholder="Search the catalogue…" autocomplete="off"
+                    spellcheck="false" aria-label="Filter tools by name or description" />
+                <button matSuffix mat-icon-button *ngIf="filtro" (click)="limparFiltro()" aria-label="Clear filter">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <div class="hero-stats" role="presentation">
+                <span class="hero-stat">
+                    <strong [attr.data-count]="toolCount">{{ toolCount }}</strong>
+                    tools
+                </span>
+                <span class="hero-stat-divider" aria-hidden="true"></span>
+                <span class="hero-stat">
+                    <strong [attr.data-count]="groupCount">{{ groupCount }}</strong>
+                    categories
+                </span>
+                <span class="hero-stat-divider" aria-hidden="true"></span>
+                <span class="hero-stat">
+                    <strong data-count="0">0</strong>
+                    sign-ups required
+                </span>
+            </div>
+
+            <button type="button" class="hero-cta" (click)="scrollToCatalog()">
+                Explore the catalogue
+                <mat-icon aria-hidden="true">arrow_downward</mat-icon>
+            </button>
+        </div>
+    </section>
 
     <!-- No results -->
     <div class="home-sem-resultados" *ngIf="semResultados">
@@ -27,64 +66,66 @@
         <span>No tools found for <strong>"{{ filtro }}"</strong></span>
     </div>
 
-    <section class="grupo-ferramentas" *ngFor="let grupo of gruposFiltrados; trackBy: trackByGrupo">
-        <div class="grupo-cabecalho">
-            <h2>{{ grupo.titulo }}</h2>
-        </div>
+    <div id="catalogo-ferramentas" class="catalogo-ferramentas">
+        <section class="grupo-ferramentas" *ngFor="let grupo of gruposFiltrados; trackBy: trackByGrupo">
+            <div class="grupo-cabecalho">
+                <h2>{{ grupo.titulo }}</h2>
+            </div>
 
-        <div class="grade-ferramentas">
-            <ng-container *ngFor="let ferramenta of grupo.ferramentas; trackBy: trackByFerramenta">
-                <a class="atalho-ferramenta" *ngIf="!ferramenta.external" [routerLink]="'/' + ferramenta.rota">
-                    <span class="imagem-ferramenta">
-                        <img
-                            [src]="ferramenta.image"
-                            [alt]="ferramenta.imageAlt"
-                            [attr.width]="ferramenta.imageWidth"
-                            [attr.height]="ferramenta.imageHeight"
-                            loading="lazy"
-                            decoding="async"
-                        />
-                        <span class="icone-ferramenta" aria-hidden="true">
-                            <mat-icon>{{ ferramenta.icone }}</mat-icon>
+            <div class="grade-ferramentas">
+                <ng-container *ngFor="let ferramenta of grupo.ferramentas; trackBy: trackByFerramenta">
+                    <a class="atalho-ferramenta" *ngIf="!ferramenta.external" [routerLink]="'/' + ferramenta.rota">
+                        <span class="imagem-ferramenta">
+                            <img
+                                [src]="ferramenta.image"
+                                [alt]="ferramenta.imageAlt"
+                                [attr.width]="ferramenta.imageWidth"
+                                [attr.height]="ferramenta.imageHeight"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            <span class="icone-ferramenta" aria-hidden="true">
+                                <mat-icon>{{ ferramenta.icone }}</mat-icon>
+                            </span>
                         </span>
-                    </span>
-                    <span class="conteudo-ferramenta">
-                        <strong>{{ ferramenta.titulo }}</strong>
-                        <span class="descricao-ferramenta">{{ ferramenta.descricao }}</span>
-                        <span class="acao-ferramenta">
-                            Open tool
-                            <mat-icon>arrow_forward</mat-icon>
+                        <span class="conteudo-ferramenta">
+                            <strong>{{ ferramenta.titulo }}</strong>
+                            <span class="descricao-ferramenta">{{ ferramenta.descricao }}</span>
+                            <span class="acao-ferramenta">
+                                Open tool
+                                <mat-icon>arrow_forward</mat-icon>
+                            </span>
                         </span>
-                    </span>
-                </a>
+                    </a>
 
-                <a class="atalho-ferramenta" *ngIf="ferramenta.external" [href]="ferramenta.rota" target="_blank"
-                    rel="noopener">
-                    <span class="imagem-ferramenta">
-                        <img
-                            [src]="ferramenta.image"
-                            [alt]="ferramenta.imageAlt"
-                            [attr.width]="ferramenta.imageWidth"
-                            [attr.height]="ferramenta.imageHeight"
-                            loading="lazy"
-                            decoding="async"
-                        />
-                        <span class="icone-ferramenta" aria-hidden="true">
-                            <mat-icon>{{ ferramenta.icone }}</mat-icon>
+                    <a class="atalho-ferramenta" *ngIf="ferramenta.external" [href]="ferramenta.rota" target="_blank"
+                        rel="noopener">
+                        <span class="imagem-ferramenta">
+                            <img
+                                [src]="ferramenta.image"
+                                [alt]="ferramenta.imageAlt"
+                                [attr.width]="ferramenta.imageWidth"
+                                [attr.height]="ferramenta.imageHeight"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            <span class="icone-ferramenta" aria-hidden="true">
+                                <mat-icon>{{ ferramenta.icone }}</mat-icon>
+                            </span>
                         </span>
-                    </span>
-                    <span class="conteudo-ferramenta">
-                        <strong>{{ ferramenta.titulo }}</strong>
-                        <span class="descricao-ferramenta">{{ ferramenta.descricao }}</span>
-                        <span class="acao-ferramenta">
-                            Open external tool
-                            <mat-icon>open_in_new</mat-icon>
+                        <span class="conteudo-ferramenta">
+                            <strong>{{ ferramenta.titulo }}</strong>
+                            <span class="descricao-ferramenta">{{ ferramenta.descricao }}</span>
+                            <span class="acao-ferramenta">
+                                Open external tool
+                                <mat-icon>open_in_new</mat-icon>
+                            </span>
                         </span>
-                    </span>
-                </a>
-            </ng-container>
-        </div>
-    </section>
+                    </a>
+                </ng-container>
+            </div>
+        </section>
+    </div>
 
     <!-- Articles carousel -->
     <section class="home-artigos" aria-labelledby="home-artigos-titulo">
