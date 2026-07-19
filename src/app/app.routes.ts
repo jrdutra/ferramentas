@@ -8,7 +8,7 @@ import { HOME_TOOL_ITEMS } from './home/home-tools.data';
 const seo = {
   home: {
     title: 'Free Online Developer Tools',
-    description: 'Free online developer tools that run in your browser: Base64 and URL encoder, JSON and YAML formatter, JWT and X.509 viewers, hash, UUID and password generators, QR codes, OCR and PDF tools. No sign-up required.',
+    description: 'Free online developer tools in your browser: Base64, JSON, JWT and X.509 viewers, hash, UUID and password generators, QR codes, OCR and PDF tools. No sign-up needed.',
     keywords: 'free online developer tools, online tools for developers, base64 encoder decoder, url encoder decoder, json formatter online, jwt decoder, x509 certificate viewer, hash generator, uuid generator, password generator, qr code generator, pdf merger, ocr online, ipv4 cidr calculator, browser based tools',
     canonicalPath: '/',
     imageAlt: 'Developer tools connected to structured technical learning on utily.tools',
@@ -337,7 +337,7 @@ const seo = {
   },
   learnHttpsTlsPortuguese: {
     title: 'HTTPS e TLS em profundidade',
-    description: 'Aprenda HTTPS e TLS em profundidade: criptografia, handshake TLS 1.2 e 1.3, certificados X.509, cadeia de confiança, SNI, ALPN, mTLS, HSTS e troubleshooting em API Gateways.',
+    description: 'Aprenda HTTPS e TLS em profundidade: criptografia, handshake TLS 1.2 e 1.3, certificados X.509, cadeia de confiança, SNI, ALPN, mTLS e HSTS.',
     keywords: 'HTTPS, TLS, SSL, TLS 1.2, TLS 1.3, handshake TLS, certificado X.509, cadeia de confiança, SNI, ALPN, mTLS, HSTS, cipher suites, API Gateway, troubleshooting TLS',
     canonicalPath: '/learn/pt/https-e-tls-em-profundidade',
     pageType: 'article', imagePath: '/assets/learn/https-tls-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -371,7 +371,7 @@ const seo = {
   },
   learnHttpsTlsSpanish: {
     title: 'HTTPS y TLS en profundidad',
-    description: 'Aprende HTTPS y TLS en profundidad: criptografía, handshakes TLS 1.2 y 1.3, certificados X.509, cadena de confianza, SNI, ALPN, mTLS, HSTS y troubleshooting en API Gateways.',
+    description: 'Aprende HTTPS y TLS en profundidad: criptografía, handshakes TLS 1.2 y 1.3, certificados X.509, cadena de confianza, SNI, ALPN, mTLS y HSTS.',
     keywords: 'HTTPS, TLS, SSL, TLS 1.2, TLS 1.3, handshake TLS, certificado X.509, cadena de confianza, SNI, ALPN, mTLS, HSTS, cipher suites, API Gateway, troubleshooting TLS',
     canonicalPath: '/learn/es/https-y-tls-en-profundidad',
     pageType: 'article', imagePath: '/assets/learn/https-tls-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -388,7 +388,7 @@ const seo = {
   },
   learnCryptographyPortuguese: {
     title: 'Criptografia: simétrica, assimétrica, hashes e assinaturas digitais',
-    description: 'Aprenda criptografia aplicada a APIs: AES, ChaCha20, AEAD, hashes, HMAC, KDFs, RSA, curvas elípticas, assinaturas digitais, KMS, HSM, envelope encryption e criptografia pós-quântica.',
+    description: 'Aprenda criptografia aplicada a APIs: AES, ChaCha20, AEAD, hashes, HMAC, KDFs, RSA, curvas elípticas, assinaturas digitais, KMS, HSM e criptografia pós-quântica.',
     keywords: 'criptografia em APIs, AES, ChaCha20, AEAD, SHA-256, HMAC, RSA, ECC, assinatura digital, KMS, HSM, envelope encryption, criptografia pós-quântica, API Gateway',
     canonicalPath: '/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis',
     pageType: 'article', imagePath: '/assets/learn/cryptography-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -405,7 +405,7 @@ const seo = {
   },
   learnCryptographyEnglish: {
     title: 'Cryptography: Symmetric, Asymmetric, Hashes, and Digital Signatures',
-    description: 'Learn cryptography for APIs: AES, ChaCha20, AEAD, hashes, HMAC, KDFs, RSA, elliptic curves, digital signatures, KMS, HSM, envelope encryption, and post-quantum cryptography.',
+    description: 'Learn cryptography for APIs: AES, ChaCha20, AEAD, hashes, HMAC, KDFs, RSA, elliptic curves, digital signatures, KMS, HSM, and post-quantum cryptography.',
     keywords: 'cryptography for APIs, AES, ChaCha20, AEAD, SHA-256, HMAC, RSA, ECC, digital signature, KMS, HSM, envelope encryption, post-quantum cryptography, API Gateway',
     canonicalPath: '/learn/en/cryptography-fundamentals-and-api-applications',
     pageType: 'article', imagePath: '/assets/learn/cryptography-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -422,7 +422,7 @@ const seo = {
   },
   learnCryptographySpanish: {
     title: 'Criptografía: simétrica, asimétrica, hashes y firmas digitales',
-    description: 'Aprende criptografía aplicada a APIs: AES, ChaCha20, AEAD, hashes, HMAC, KDFs, RSA, curvas elípticas, firmas digitales, KMS, HSM, envelope encryption y criptografía poscuántica.',
+    description: 'Aprende criptografía aplicada a APIs: AES, ChaCha20, AEAD, hashes, HMAC, KDFs, RSA, curvas elípticas, firmas digitales, KMS, HSM y criptografía poscuántica.',
     keywords: 'criptografía en APIs, AES, ChaCha20, AEAD, SHA-256, HMAC, RSA, ECC, firma digital, KMS, HSM, envelope encryption, criptografía poscuántica, API Gateway',
     canonicalPath: '/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis',
     pageType: 'article', imagePath: '/assets/learn/cryptography-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -490,7 +490,7 @@ const seo = {
   },
   learnMtlsPortuguese: {
     title: 'mTLS em profundidade: autenticação mútua para APIs',
-    description: 'Aprenda mTLS em profundidade: handshake TLS 1.3, certificados de cliente, truststores, identidade, autorização, API Gateways, service mesh, OAuth certificate-bound, rotação e troubleshooting.',
+    description: 'Aprenda mTLS em profundidade: handshake TLS 1.3, certificados de cliente, truststores, identidade, autorização, API Gateways, service mesh e troubleshooting.',
     keywords: 'mTLS, mutual TLS, autenticação mútua, certificado de cliente, TLS 1.3, CertificateRequest, CertificateVerify, truststore, API Gateway, service mesh, OAuth mTLS, certificate-bound token, OpenSSL',
     canonicalPath: '/learn/pt/mtls-em-profundidade',
     pageType: 'article', imagePath: '/assets/learn/mtls-in-depth-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -507,7 +507,7 @@ const seo = {
   },
   learnMtlsEnglish: {
     title: 'mTLS in Depth: Mutual Authentication for APIs',
-    description: 'Learn mTLS in depth: TLS 1.3 handshakes, client certificates, truststores, identity, authorization, API Gateways, service meshes, certificate-bound OAuth, rotation, and troubleshooting.',
+    description: 'Learn mTLS in depth: TLS 1.3 handshakes, client certificates, truststores, identity, authorization, API Gateways, service meshes, and troubleshooting.',
     keywords: 'mTLS, mutual TLS, mutual authentication, client certificate, TLS 1.3, CertificateRequest, CertificateVerify, truststore, API Gateway, service mesh, OAuth mTLS, certificate-bound token, OpenSSL',
     canonicalPath: '/learn/en/mtls-in-depth',
     pageType: 'article', imagePath: '/assets/learn/mtls-in-depth-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -524,7 +524,7 @@ const seo = {
   },
   learnMtlsSpanish: {
     title: 'mTLS en profundidad: autenticación mutua para APIs',
-    description: 'Aprende mTLS en profundidad: handshake TLS 1.3, certificados de cliente, truststores, identidad, autorización, API Gateways, service mesh, OAuth certificate-bound, rotación y troubleshooting.',
+    description: 'Aprende mTLS en profundidad: handshake TLS 1.3, certificados de cliente, truststores, identidad, autorización, API Gateways, service mesh y troubleshooting.',
     keywords: 'mTLS, mutual TLS, autenticación mutua, certificado de cliente, TLS 1.3, CertificateRequest, CertificateVerify, truststore, API Gateway, service mesh, OAuth mTLS, token certificate-bound, OpenSSL',
     canonicalPath: '/learn/es/mtls-en-profundidad',
     pageType: 'article', imagePath: '/assets/learn/mtls-in-depth-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -541,7 +541,7 @@ const seo = {
   },
   learnRestPortuguese: {
     title: 'REST: Arquitetura e Boas Práticas para APIs',
-    description: 'Aprenda REST em profundidade: restrições arquiteturais, recursos, URIs, métodos HTTP, idempotência, cache, ETag, paginação, Problem Details, OpenAPI, segurança e API Gateways.',
+    description: 'Aprenda REST em profundidade: restrições arquiteturais, recursos, URIs, métodos HTTP, idempotência, cache, ETag, paginação, Problem Details e OpenAPI.',
     keywords: 'REST, arquitetura REST, API REST, boas práticas APIs, recursos REST, URI, métodos HTTP, idempotência, cache HTTP, ETag, paginação, Problem Details, OpenAPI, API Gateway',
     canonicalPath: '/learn/pt/rest-arquitetura-e-boas-praticas',
     pageType: 'article', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -558,7 +558,7 @@ const seo = {
   },
   learnRestEnglish: {
     title: 'REST: Architecture and Best Practices for APIs',
-    description: 'Learn REST in depth: architectural constraints, resources, URIs, HTTP methods, idempotency, caching, ETags, pagination, Problem Details, OpenAPI, security, and API Gateways.',
+    description: 'Learn REST in depth: architectural constraints, resources, URIs, HTTP methods, idempotency, caching, ETags, pagination, Problem Details, and OpenAPI.',
     keywords: 'REST, REST architecture, REST API, API best practices, REST resources, URI, HTTP methods, idempotency, HTTP cache, ETag, pagination, Problem Details, OpenAPI, API Gateway',
     canonicalPath: '/learn/en/rest-architecture-and-best-practices',
     pageType: 'article', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -575,7 +575,7 @@ const seo = {
   },
   learnRestSpanish: {
     title: 'REST: Arquitectura y Buenas Prácticas para APIs',
-    description: 'Aprende REST en profundidad: restricciones arquitectónicas, recursos, URIs, métodos HTTP, idempotencia, cache, ETag, paginación, Problem Details, OpenAPI, seguridad y API Gateways.',
+    description: 'Aprende REST en profundidad: restricciones arquitectónicas, recursos, URIs, métodos HTTP, idempotencia, cache, ETag, paginación, Problem Details y OpenAPI.',
     keywords: 'REST, arquitectura REST, API REST, buenas prácticas APIs, recursos REST, URI, métodos HTTP, idempotencia, cache HTTP, ETag, paginación, Problem Details, OpenAPI, API Gateway',
     canonicalPath: '/learn/es/rest-arquitectura-y-buenas-practicas',
     pageType: 'article', imagePath: '/assets/learn/rest-architecture-best-practices-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -745,7 +745,7 @@ const seo = {
   },
   learnAuthenticationAuthorizationPortuguese: {
     title: 'Autenticação x Autorização: Guia Completo para APIs Corporativas',
-    description: 'Aprenda autenticação e autorização em profundidade: identidade, credenciais, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, 401 e 403.',
+    description: 'Aprenda autenticação e autorização em profundidade: identidade, credenciais, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC e workload identity.',
     keywords: 'autenticação, autorização, AuthN, AuthZ, identidade, credenciais, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, API Gateway, 401, 403',
     canonicalPath: '/learn/pt/autenticacao-x-autorizacao',
     pageType: 'article', imagePath: '/assets/learn/authentication-authorization-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -762,7 +762,7 @@ const seo = {
   },
   learnAuthenticationAuthorizationEnglish: {
     title: 'Authentication vs. Authorization: Complete Enterprise API Guide',
-    description: 'Learn authentication and authorization in depth: identity, credentials, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, 401, and 403.',
+    description: 'Learn authentication and authorization in depth: identity, credentials, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, and workload identity.',
     keywords: 'authentication, authorization, AuthN, AuthZ, identity, credentials, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, API Gateway, 401, 403',
     canonicalPath: '/learn/en/authentication-vs-authorization',
     pageType: 'article', imagePath: '/assets/learn/authentication-authorization-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -779,7 +779,7 @@ const seo = {
   },
   learnAuthenticationAuthorizationSpanish: {
     title: 'Autenticación vs. Autorización: Guía Completa para APIs Corporativas',
-    description: 'Aprende autenticación y autorización en profundidad: identidad, credenciales, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, 401 y 403.',
+    description: 'Aprende autenticación y autorización en profundidad: identidad, credenciales, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC y workload identity.',
     keywords: 'autenticación, autorización, AuthN, AuthZ, identidad, credenciales, JWT, OAuth 2.0, OpenID Connect, RBAC, ABAC, ReBAC, PBAC, PEP, PDP, workload identity, API Gateway, 401, 403',
     canonicalPath: '/learn/es/autenticacion-vs-autorizacion',
     pageType: 'article', imagePath: '/assets/learn/authentication-authorization-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -796,7 +796,7 @@ const seo = {
   },
   learnBasicAuthDigestApiKeysPortuguese: {
     title: 'Basic Auth, Digest e API Keys: Guia Completo para APIs Corporativas',
-    description: 'Aprenda Basic Auth, HTTP Digest e API Keys em profundidade: desafios HTTP, Base64, TLS, nonce, replay, armazenamento, escopos, quotas, rotação, revogação, HMAC e API Gateways.',
+    description: 'Aprenda Basic Auth, HTTP Digest e API Keys em profundidade: desafios HTTP, Base64, TLS, nonce, replay, escopos, quotas, rotação, revogação e HMAC.',
     keywords: 'Basic Auth, HTTP Digest, API Keys, autenticação HTTP, WWW-Authenticate, Authorization, Base64, TLS, nonce, replay, HMAC, API Gateway, rotação de chaves, segurança de APIs',
     canonicalPath: '/learn/pt/basic-auth-digest-e-api-keys',
     pageType: 'article', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -813,7 +813,7 @@ const seo = {
   },
   learnBasicAuthDigestApiKeysEnglish: {
     title: 'Basic Auth, Digest, and API Keys: Complete Enterprise API Guide',
-    description: 'Learn Basic Auth, HTTP Digest, and API keys in depth: HTTP challenges, Base64, TLS, nonce, replay, storage, scopes, quotas, rotation, revocation, HMAC, and API Gateways.',
+    description: 'Learn Basic Auth, HTTP Digest, and API keys in depth: HTTP challenges, Base64, TLS, nonce, replay, scopes, quotas, rotation, revocation, and HMAC.',
     keywords: 'Basic Auth, HTTP Digest, API keys, HTTP authentication, WWW-Authenticate, Authorization, Base64, TLS, nonce, replay, HMAC, API Gateway, key rotation, API security',
     canonicalPath: '/learn/en/basic-auth-digest-and-api-keys',
     pageType: 'article', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -830,7 +830,7 @@ const seo = {
   },
   learnBasicAuthDigestApiKeysSpanish: {
     title: 'Basic Auth, Digest y API Keys: Guía Completa para APIs Corporativas',
-    description: 'Aprende Basic Auth, HTTP Digest y API Keys en profundidad: desafíos HTTP, Base64, TLS, nonce, replay, almacenamiento, scopes, quotas, rotación, revocación, HMAC y API Gateways.',
+    description: 'Aprende Basic Auth, HTTP Digest y API Keys en profundidad: desafíos HTTP, Base64, TLS, nonce, replay, scopes, quotas, rotación, revocación y HMAC.',
     keywords: 'Basic Auth, HTTP Digest, API Keys, autenticación HTTP, WWW-Authenticate, Authorization, Base64, TLS, nonce, replay, HMAC, API Gateway, rotación de claves, seguridad de APIs',
     canonicalPath: '/learn/es/basic-auth-digest-y-api-keys',
     pageType: 'article', imagePath: '/assets/learn/basic-auth-digest-api-keys-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -847,7 +847,7 @@ const seo = {
   },
   learnOAuth2Portuguese: {
     title: 'OAuth 2.0 em Profundidade: Fluxos, Tokens e Segurança para APIs',
-    description: 'Aprenda OAuth 2.0 em profundidade: Authorization Code com PKCE, Client Credentials, refresh tokens, JWT, introspecção, revogação, PAR, JAR, JARM, DPoP, mTLS e API Gateways.',
+    description: 'Aprenda OAuth 2.0 em profundidade: Authorization Code com PKCE, Client Credentials, refresh tokens, JWT, introspecção, revogação, DPoP e mTLS.',
     keywords: 'OAuth 2.0, Authorization Code, PKCE, Client Credentials, refresh token, access token, JWT, introspecção, revogação, PAR, JAR, JARM, RAR, DPoP, mTLS, API Gateway, segurança de APIs',
     canonicalPath: '/learn/pt/oauth-2-fluxos-tokens-e-seguranca',
     pageType: 'article', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -864,7 +864,7 @@ const seo = {
   },
   learnOAuth2English: {
     title: 'OAuth 2.0 in Depth: Flows, Tokens, and Enterprise API Security',
-    description: 'Learn OAuth 2.0 in depth: Authorization Code with PKCE, Client Credentials, refresh tokens, JWT access tokens, introspection, revocation, PAR, JAR, JARM, DPoP, mTLS, and API Gateways.',
+    description: 'Learn OAuth 2.0 in depth: Authorization Code with PKCE, Client Credentials, refresh tokens, JWT access tokens, introspection, revocation, DPoP, and mTLS.',
     keywords: 'OAuth 2.0, Authorization Code, PKCE, Client Credentials, refresh token, access token, JWT, introspection, revocation, PAR, JAR, JARM, RAR, DPoP, mTLS, API Gateway, API security',
     canonicalPath: '/learn/en/oauth-2-flows-tokens-and-security',
     pageType: 'article', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -881,7 +881,7 @@ const seo = {
   },
   learnOAuth2Spanish: {
     title: 'OAuth 2.0 en Profundidad: Flujos, Tokens y Seguridad para APIs',
-    description: 'Aprende OAuth 2.0 en profundidad: Authorization Code con PKCE, Client Credentials, refresh tokens, JWT, introspección, revocación, PAR, JAR, JARM, DPoP, mTLS y API Gateways.',
+    description: 'Aprende OAuth 2.0 en profundidad: Authorization Code con PKCE, Client Credentials, refresh tokens, JWT, introspección, revocación, DPoP y mTLS.',
     keywords: 'OAuth 2.0, Authorization Code, PKCE, Client Credentials, refresh token, access token, JWT, introspección, revocación, PAR, JAR, JARM, RAR, DPoP, mTLS, API Gateway, seguridad de APIs',
     canonicalPath: '/learn/es/oauth-2-flujos-tokens-y-seguridad',
     pageType: 'article', imagePath: '/assets/learn/oauth-2-flows-tokens-security-cover.png', imageWidth: 1536, imageHeight: 1024,
@@ -963,37 +963,37 @@ const seo = {
   },
   base64: {
     title: 'Base64 Encoder and Decoder Online',
-    description: 'Encode text to Base64 or decode Base64 strings back to readable text directly in your browser.',
+    description: 'Encode text to Base64 or decode Base64 back to readable text directly in your browser. Free and instant, with no sign-up — paste, convert and copy the result.',
     keywords: 'base64 encoder, base64 decoder, base64 encode online, base64 decode online, text to base64, base64 to text'
   },
   jsonEditor: {
     title: 'JSON Formatter, Minifier and Stringifier',
-    description: 'Format, beautify, minify and stringify JSON online to make API responses and configuration files easier to read.',
+    description: 'Format, beautify, minify and stringify JSON online to make API responses and configuration files easier to read. Free JSON tools — no sign-up required.',
     keywords: 'json formatter, json beautifier, json minifier, json validator, json editor, stringify json, format json online'
   },
   jwtViewer: {
     title: 'JWT Decoder and Token Manipulator',
-    description: 'Decode, inspect and edit JWT headers, payloads and signatures for debugging JSON Web Tokens in the browser.',
+    description: 'Decode, inspect and edit JWT headers, payloads and signatures in your browser. Free JWT debugger for development and troubleshooting — no sign-up required.',
     keywords: 'jwt decoder, jwt debugger, json web token, jwt viewer, decode jwt, jwt token inspector, jwt manipulator'
   },
   jweViewer: {
     title: 'JWE Decoder and Token Manipulator',
-    description: 'Inspect JWE tokens by splitting header, encrypted key, IV, ciphertext and authentication tag for secure debugging.',
+    description: 'Inspect JWE tokens by splitting header, encrypted key, IV, ciphertext and authentication tag for secure debugging in your browser — free, with no sign-up.',
     keywords: 'jwe decoder, jwe debugger, json web encryption, encrypted jwt, jwe token, jwe viewer, jwe manipulator'
   },
   urlCodec: {
     title: 'URL Encoder and Decoder Online',
-    description: 'Encode and decode URLs, query strings and percent-encoded text with UTF-8 support.',
+    description: 'Encode and decode URLs, query strings and percent-encoded text with UTF-8 support. Free online URL codec for developers — no sign-up, instant results.',
     keywords: 'url encoder, url decoder, percent encoding, url encode online, url decode online, query string encoder'
   },
   ocr: {
     title: 'Image to Text OCR Converter',
-    description: 'Extract text from images with OCR directly in the browser using local processing.',
+    description: 'Extract text from images with OCR directly in your browser. Upload a picture or screenshot and copy the recognized text — free and with no sign-up.',
     keywords: 'image to text, OCR online, image OCR, extract text from image, picture to text, tesseract ocr'
   },
   unixTimestamp: {
     title: 'Unix Timestamp Converter',
-    description: 'Convert Unix timestamps to readable dates and convert dates back to epoch time in seconds or milliseconds.',
+    description: 'Convert Unix timestamps to human-readable dates and dates back to epoch time in seconds or milliseconds. Free online epoch converter — no sign-up needed.',
     keywords: 'unix timestamp converter, epoch converter, timestamp to date, date to timestamp, epoch time, unix time'
   },
   ipv4Range: {
@@ -1004,88 +1004,88 @@ const seo = {
   },
   qrCode: {
     title: 'Text to QR Code Generator',
-    description: 'Create QR codes from text and URLs, customize the design and download the generated code.',
+    description: 'Create QR codes from text and URLs, customize colors and design, then download the image. Free online QR code generator — no sign-up needed.',
     keywords: 'qr code generator, text to qr code, url to qr code, create qr code, free qr code, qr code maker'
   },
   textEditor: {
     title: 'Online Text Editor and Text Cleaner',
-    description: 'Clean, split, replace, sort and transform text online with quick formatting utilities.',
+    description: 'Clean, split, replace, sort and transform text online with quick formatting utilities. Free browser-based text editor and cleaner — no sign-up required.',
     keywords: 'text editor online, text cleaner, split text, replace text, sort lines, remove line breaks, text tools'
   },
   sharedText: {
     title: 'Real-Time Text Sharer',
-    description: 'Share text in real time between screens using a browser-based text channel.',
+    description: 'Share temporary text between screens in real time through a simple browser channel. Open it on two devices and sync instantly — free, with no sign-up.',
     keywords: 'share text online, real time text sharing, browser text share, shared clipboard, text sharer',
     canonicalPath: '/shared-text'
   },
   textTemplate: {
     title: 'Text Template Generator',
-    description: 'Fill reusable text templates with variables to generate repeated messages, snippets and documents faster.',
+    description: 'Fill reusable text templates with variables to generate repeated messages, snippets and documents faster. Free online template generator — no sign-up.',
     keywords: 'text template, template generator, variable template, reusable text, text snippet generator'
   },
   x509Viewer: {
     title: 'X.509 Certificate Viewer and Decoder',
-    description: 'Decode X.509 certificates and inspect issuer, subject, validity, public key, fingerprints and extensions.',
+    description: 'Decode X.509 certificates and inspect issuer, subject, validity, public key, fingerprints and extensions in your browser. Free — no sign-up required.',
     keywords: 'x509 certificate decoder, certificate viewer, ssl certificate decoder, pem decoder, certificate parser'
   },
   x509Generator: {
     title: 'X.509 Key and Certificate Generator',
-    description: 'Generate RSA keys and self-signed X.509 certificates for development and software testing.',
+    description: 'Generate RSA keys and self-signed X.509 certificates for development and software testing directly in your browser. Free and with no sign-up required.',
     keywords: 'x509 certificate generator, self signed certificate, rsa key generator, certificate generator, pem certificate'
   },
   pdfMerger: {
     title: 'PDF and Image Merger Online',
-    description: 'Merge PDFs and images into a single PDF or image file, reorder files and download the combined result.',
+    description: 'Merge multiple PDFs and images into a single PDF or image file, reorder pages and download the combined result. Free online PDF merger — no sign-up.',
     keywords: 'merge pdf, pdf merger, combine pdf, merge images to pdf, pdf and image merger, online pdf merger'
   },
   pdfSplitter: {
     title: 'PDF Splitter Online',
-    description: 'Split PDF files into pages and download individual PDFs or JPG images in a ZIP file.',
+    description: 'Split PDF files into individual pages and download them as separate PDFs or JPG images in a ZIP. Free online PDF splitter — no sign-up required.',
     keywords: 'split pdf, pdf splitter, extract pdf pages, pdf to jpg pages, separate pdf, online pdf splitter'
   },
   pdfCreator: {
     title: 'Create PDF from Images Online',
-    description: 'Arrange JPG, PNG and other browser-supported images and create one PDF locally in your browser.',
+    description: 'Arrange JPG, PNG and other images and create a single PDF locally in your browser. Free online PDF creator with reordering — no sign-up required.',
     keywords: 'create pdf from images, images to pdf, jpg to pdf, png to pdf, online pdf creator'
   },
   hashGenerator: {
     title: 'Hash Generator for MD5, SHA-1 and SHA-256',
-    description: 'Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from text directly in the browser.',
+    description: 'Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from text directly in your browser. Free online hash calculator — no sign-up required.',
     keywords: 'hash generator, md5 generator, sha256 generator, sha512 hash, sha1 hash, generate hash online'
   },
   textDiff: {
     title: 'Online Text Diff Checker',
-    description: 'Compare two blocks of text and highlight line-by-line differences for code, documents and notes.',
+    description: 'Compare two blocks of text and highlight line-by-line differences for code, documents and notes. Free online diff checker — no sign-up required.',
     keywords: 'text diff, diff checker, compare text online, text compare, difference checker, compare two texts'
   },
   uuidGenerator: {
     title: 'UUID Generator Online',
-    description: 'Generate UUID v4, v7 and v1 identifiers with uppercase, lowercase, hyphen and bulk output options.',
+    description: 'Generate UUID v4, v7 and v1 identifiers with uppercase, lowercase, hyphen and bulk output options. Free online UUID generator — no sign-up required.',
     keywords: 'uuid generator, guid generator, uuid v4, uuid v7, uuid v1, generate uuid online, random uuid'
   },
   passwordGenerator: {
     title: 'Secure Password Generator',
-    description: 'Generate strong random passwords with configurable length, uppercase, lowercase, numbers and symbols.',
+    description: 'Generate strong random passwords with configurable length, uppercase, lowercase, numbers and symbols. Free secure password generator — no sign-up.',
     keywords: 'password generator, secure password generator, random password, strong password, generate password online'
   },
   hmacGenerator: {
     title: 'HMAC Generator Online',
-    description: 'Generate HMAC signatures with SHA-256, SHA-384, SHA-512 and other algorithms using a secret key.',
+    description: 'Generate HMAC signatures with SHA-256, SHA-384, SHA-512 and other algorithms using a secret key. Free online HMAC calculator — no sign-up required.',
     keywords: 'hmac generator, hmac sha256, hmac sha512, signature generator, message authentication code, hmac online'
   },
   cpfCnpjGenerator: {
     title: 'CPF and CNPJ Generator for Testing',
-    description: 'Generate valid CPF and CNPJ numbers for Brazilian software testing, QA and form validation.',
+    description: 'Generate valid CPF and CNPJ numbers for Brazilian software testing, QA and form validation. Free test data generator — no sign-up required.',
     keywords: 'cpf generator, cnpj generator, cpf cnpj generator, brazil document generator, test cpf, test cnpj'
   },
   jsonYamlCompare: {
     title: 'JSON and YAML Comparator',
-    description: 'Compare JSON and YAML files structurally to find missing fields and different values side by side.',
+    description: 'Compare JSON and YAML files structurally to find missing fields and differing values side by side. Free online comparator — no sign-up required.',
     keywords: 'json compare, yaml compare, json diff, yaml diff, compare json online, compare yaml online, structural diff'
   },
   swaggerEditor: {
     title: 'Swagger Editor & OpenAPI Viewer with API Testing',
-    description: 'Free online Swagger editor and OpenAPI viewer: edit YAML or JSON, convert between Swagger 2.0, OpenAPI 3.0 and 3.1, test API endpoints from the browser and export standalone HTML documentation.',
+    description: 'Free online Swagger editor and OpenAPI viewer: edit YAML or JSON, convert between Swagger 2.0, OpenAPI 3.0 and 3.1, test endpoints and export HTML docs.',
     keywords: 'swagger editor, swagger viewer, openapi editor, openapi viewer, swagger editor online, openapi 3.1 converter, swagger 2.0 to openapi 3.0, convert swagger to openapi, swagger yaml to json, test api endpoints online, api documentation generator, swagger ui alternative, openapi specification editor'
   },
   certificateValidator: {

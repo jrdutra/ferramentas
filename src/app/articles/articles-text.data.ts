@@ -211,7 +211,7 @@ export const TEXT_TOOL_ARTICLES: ToolArticle[] = [
     toolName: 'URL Codec',
     toolRoute: '/url-codec',
     title: 'URI vs URL: The Difference Explained with Examples',
-    description: 'Understand the difference between URI, URL and URN: definitions from RFC 3986, generic syntax, schemes, relative references, real code examples and why the distinction matters.',
+    description: 'Understand the difference between URI, URL and URN: RFC 3986 definitions, generic syntax, schemes, relative references and real code examples.',
     keywords: 'URI vs URL, difference between URI and URL, what is a URI, what is a URL, URN, URI URL URN, RFC 3986, URI scheme, relative reference, absolute URI, URL structure, uniform resource identifier',
     category: 'Web Standards',
     image: '/assets/articles/url-codec-cover.png',

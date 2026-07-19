@@ -24,17 +24,93 @@
 }
 
 .footer {
-    height: 3.5em; /* Define a altura do rodapé */
     background:
         linear-gradient(90deg, rgba(2, 8, 23, 0.99), rgba(6, 18, 37, 0.98));
     color: var(--text-main);
-    text-align: center; /* Centraliza o texto horizontalmente */
-    line-height: 3.5em; /* Centraliza o texto verticalmente, deve ser igual à altura */
-    width: 100%; /* Garante que o rodapé se estenda por toda a largura da página */
-    position: relative; /* Pode ser 'absolute' se precisar fixar no fundo, mas 'relative' é o padrão */
+    width: 100%;
+    position: relative;
     flex: 0 0 auto;
     border-top: 1px solid rgba(91, 124, 255, 0.28);
     box-shadow: 0 -12px 35px rgba(0, 0, 0, 0.26), 0 0 18px rgba(182, 37, 255, 0.1);
+}
+
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8em 1.5em;
+    max-width: 72em;
+    margin: 0 auto;
+    padding: 0.9em 1.4em;
+    box-sizing: border-box;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    font-weight: 600;
+}
+
+.footer-logo {
+    height: 1.3em;
+    width: auto;
+}
+
+.footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1.4em;
+}
+
+.footer-nav a {
+    padding: 0.4em 0;
+    color: var(--text-muted);
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: color 160ms ease;
+}
+
+.footer-nav a:hover,
+.footer-nav a:focus-visible {
+    color: var(--aqua);
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
+}
+
+.footer-copy {
+    color: var(--text-muted);
+    font-size: 0.85em;
+}
+
+@media (max-width: 620px) {
+    .footer-inner {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+.skip-link {
+    position: fixed;
+    top: 0.6em;
+    left: 0.6em;
+    z-index: 2000;
+    padding: 0.6em 1.1em;
+    transform: translateY(-300%);
+    color: #04121f;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0.5em;
+    background: var(--aqua);
+    transition: transform 160ms ease;
+}
+
+.skip-link:focus-visible {
+    transform: translateY(0);
+    outline: 2px solid var(--text-main);
+    outline-offset: 2px;
 }
 
 .privacy-consent-backdrop {

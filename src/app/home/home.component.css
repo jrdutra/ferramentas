@@ -280,11 +280,19 @@
   background: linear-gradient(to bottom, transparent, rgba(0, 255, 209, 0.5), transparent);
 }
 
+.hero-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9em;
+  margin-top: 1.5em;
+}
+
 .hero-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
-  margin-top: 1.5em;
   padding: 0.72em 1.6em;
   cursor: pointer;
   color: #04121f;
@@ -313,13 +321,149 @@
   50% { transform: translateY(0.18em); }
 }
 
-.hero-cta:hover,
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1.1em 2.8em rgba(0, 255, 209, 0.3),
+    0 0 2em rgba(0, 255, 209, 0.4);
+}
+
 .hero-cta:focus-visible {
   transform: translateY(-2px);
   box-shadow:
     0 1.1em 2.8em rgba(0, 255, 209, 0.3),
     0 0 2em rgba(0, 255, 209, 0.4);
-  outline: none;
+  outline: 2px solid var(--text-main);
+  outline-offset: 3px;
+}
+
+/* Ghost counterpart of the primary CTA, pointing at the articles/learn areas */
+.hero-cta-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.66em 1.5em;
+  color: var(--aqua);
+  font-size: 0.95em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  border: 1px solid rgba(0, 255, 209, 0.38);
+  border-radius: 10em;
+  background: rgba(2, 12, 28, 0.55);
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.hero-cta-secundario mat-icon {
+  width: 1em;
+  height: 1em;
+  font-size: 1.1em;
+}
+
+.hero-cta-secundario:hover,
+.hero-cta-secundario:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(0, 255, 209, 0.7);
+  background: rgba(0, 255, 209, 0.1);
+}
+
+.hero-cta-secundario:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 3px;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Category chips: quick jump links into the catalogue
+   ════════════════════════════════════════════════════════════════════ */
+
+.chips-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55em;
+}
+
+.chip-categoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 2.75em;
+  padding: 0.45em 1.05em;
+  cursor: pointer;
+  color: var(--text-main);
+  font: inherit;
+  font-size: 0.88em;
+  font-weight: 600;
+  border: 1px solid rgba(0, 255, 209, 0.24);
+  border-radius: 10em;
+  background: linear-gradient(145deg, rgba(7, 20, 43, 0.9), rgba(4, 12, 29, 0.96));
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.chip-categoria:hover,
+.chip-categoria:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(0, 255, 209, 0.55);
+  background: rgba(0, 255, 209, 0.08);
+}
+
+.chip-categoria:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 2px;
+}
+
+.chip-contagem {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6em;
+  padding: 0.1em 0.4em;
+  color: var(--aqua);
+  font-size: 0.82em;
+  font-weight: 700;
+  border-radius: 10em;
+  background: rgba(0, 255, 209, 0.1);
+  border: 1px solid rgba(0, 255, 209, 0.22);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Closing CTA after the FAQ
+   ════════════════════════════════════════════════════════════════════ */
+
+.home-cta-final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: 3em;
+  padding: 2.4em 1.4em;
+  text-align: center;
+  border: 1px solid rgba(0, 255, 209, 0.18);
+  border-radius: 0.9em;
+  background:
+    radial-gradient(ellipse at 50% 120%, rgba(182, 37, 255, 0.1), transparent 60%),
+    linear-gradient(160deg, rgba(5, 13, 32, 0.95), rgba(3, 9, 24, 0.98));
+}
+
+.home-cta-final h2 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 1.45em;
+}
+
+.home-cta-final p {
+  max-width: 34em;
+  margin: 0.35em 0 0;
+  color: var(--text-muted);
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+.home-cta-final-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9em;
+  margin-top: 1.3em;
 }
 
 /* ════════════════════════════════════════════════════════════════════
@@ -458,6 +602,21 @@
   .hero-content > *,
   .atalho-ferramenta {
     animation: none;
+  }
+
+  .hero-cta,
+  .hero-cta-secundario,
+  .chip-categoria {
+    transition: none;
+  }
+
+  .hero-cta:hover,
+  .hero-cta:focus-visible,
+  .hero-cta-secundario:hover,
+  .hero-cta-secundario:focus-visible,
+  .chip-categoria:hover,
+  .chip-categoria:focus-visible {
+    transform: none;
   }
 
   .hero-aurora-a,

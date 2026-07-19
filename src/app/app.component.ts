@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 import {MenuComponent} from './menu/menu.component'
 import {MatCardModule} from '@angular/material/card';
@@ -11,7 +11,7 @@ import { ArticleInviteComponent } from './articles/article-invite/article-invite
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MenuComponent, MatCardModule, ArticleInviteComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, MenuComponent, MatCardModule, ArticleInviteComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
 
   title = 'utily.tools';
   showPrivacyConsent = false;
+  readonly currentYear = new Date().getFullYear();
 
   constructor(
     private readonly seoService: SeoService,

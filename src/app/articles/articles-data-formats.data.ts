@@ -15,7 +15,7 @@ export const DATA_FORMAT_TOOL_ARTICLES: ToolArticle[] = [
     toolName: 'Swagger Viewer & Editor',
     toolRoute: '/swagger-editor',
     title: 'Swagger and OpenAPI: History, Versions and Technical Differences',
-    description: 'The history of Swagger and OpenAPI, who standardizes the specification, and the technical differences, gains and losses between Swagger 2.0, OpenAPI 3.0 and OpenAPI 3.1.',
+    description: 'The history of Swagger and OpenAPI, who standardizes the specification, and the technical differences between Swagger 2.0, OpenAPI 3.0 and 3.1.',
     keywords: 'swagger, openapi, openapi specification, swagger 2.0, openapi 3.0, openapi 3.1, swagger vs openapi, api documentation, api description, openapi initiative, swagger history, convert swagger to openapi',
     category: 'APIs',
     image: '/assets/articles/swagger-editor-cover.png',

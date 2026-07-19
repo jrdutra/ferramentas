@@ -156,6 +156,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.filtro.trim().length > 0 && this.gruposFiltrados.length === 0;
   }
 
+  /** Total of tools currently visible, announced to assistive technology while filtering. */
+  get totalFerramentasFiltradas(): number {
+    return this.gruposFiltrados.reduce((total, grupo) => total + grupo.ferramentas.length, 0);
+  }
+
   constructor(
     private dataService: DataService,
     private router: Router,
@@ -212,8 +217,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scrollToCatalog(): void {
+    this.scrollToId('catalogo-ferramentas');
+  }
+
+  /** Stable DOM id for a tool group, used by the category chips. */
+  anchorId(titulo: string): string {
+    return 'grupo-' + titulo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  scrollToId(id: string): void {
     if (typeof document === 'undefined') return;
-    document.getElementById('catalogo-ferramentas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById(id)?.scrollIntoView({
+      behavior: this.reducedMotion ? 'auto' : 'smooth',
+      block: 'start'
+    });
   }
 
   trackByGrupo(_: number, grupo: { titulo: string }): string {
@@ -496,7 +513,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private initSectionReveal(): void {
     if (typeof IntersectionObserver === 'undefined' || this.reducedMotion) return;
 
-    const targets = Array.from(document.querySelectorAll<HTMLElement>('.home-artigos, .home-faq'));
+    const targets = Array.from(document.querySelectorAll<HTMLElement>('.home-artigos, .home-faq, .home-cta-final'));
     if (!targets.length) return;
 
     const io = new IntersectionObserver((entries) => {

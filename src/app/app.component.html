@@ -1,18 +1,31 @@
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <div class="body-wrapper ">
   <div class="main-content">
     <app-menu></app-menu>
-    <div class="container-card-principal">
+    <main id="main-content" class="container-card-principal">
       <mat-card>
         <mat-card-content>
           <router-outlet></router-outlet>
           <app-article-invite></app-article-invite>
         </mat-card-content>
       </mat-card>
-    </div>
+    </main>
   </div>
 </div>
 <footer class="footer">
-  © 2024 João Dutra
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="/assets/logo-branco.svg" class="footer-logo" width="24" height="26" alt="" aria-hidden="true">
+      <span>utily.tools</span>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a routerLink="/home">Tools</a>
+      <a routerLink="/articles">Articles</a>
+      <a routerLink="/learn">Learn</a>
+      <a routerLink="/about">About</a>
+    </nav>
+    <span class="footer-copy">© {{ currentYear }} João Dutra</span>
+  </div>
 </footer>
 
 <div class="privacy-consent-backdrop" *ngIf="showPrivacyConsent" role="presentation">

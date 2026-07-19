@@ -36,7 +36,7 @@
                 </button>
             </mat-form-field>
 
-            <div class="hero-stats" role="presentation">
+            <div class="hero-stats">
                 <span class="hero-stat">
                     <strong [attr.data-count]="toolCount">{{ toolCount }}</strong>
                     tools
@@ -53,21 +53,43 @@
                 </span>
             </div>
 
-            <button type="button" class="hero-cta" (click)="scrollToCatalog()">
-                Explore the catalogue
-                <mat-icon aria-hidden="true">arrow_downward</mat-icon>
-            </button>
+            <div class="hero-acoes">
+                <button type="button" class="hero-cta" (click)="scrollToCatalog()">
+                    Explore the tools
+                    <mat-icon aria-hidden="true">arrow_downward</mat-icon>
+                </button>
+                <a class="hero-cta-secundario" routerLink="/articles">
+                    Read the articles
+                    <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+                </a>
+            </div>
         </div>
     </section>
 
+    <!-- Category quick navigation -->
+    <nav class="chips-categorias" aria-label="Tool categories" *ngIf="!filtro.trim()">
+        <button type="button" class="chip-categoria" *ngFor="let grupo of gruposFerramentas; trackBy: trackByGrupo"
+            (click)="scrollToId(anchorId(grupo.titulo))">
+            {{ grupo.titulo }}
+            <span class="chip-contagem" [attr.aria-label]="grupo.ferramentas.length + ' tools'">{{ grupo.ferramentas.length }}</span>
+        </button>
+    </nav>
+
+    <!-- Screen reader feedback while filtering -->
+    <p class="sr-only" role="status">
+        {{ filtro.trim() ? totalFerramentasFiltradas + (totalFerramentasFiltradas === 1 ? ' tool matches your search' : ' tools match your search') : '' }}
+    </p>
+
     <!-- No results -->
     <div class="home-sem-resultados" *ngIf="semResultados">
-        <mat-icon>search_off</mat-icon>
+        <mat-icon aria-hidden="true">search_off</mat-icon>
         <span>No tools found for <strong>"{{ filtro }}"</strong></span>
+        <button type="button" class="botao-limpar-filtro" (click)="limparFiltro()">Clear search</button>
     </div>
 
     <div id="catalogo-ferramentas" class="catalogo-ferramentas">
-        <section class="grupo-ferramentas" *ngFor="let grupo of gruposFiltrados; trackBy: trackByGrupo">
+        <section class="grupo-ferramentas" *ngFor="let grupo of gruposFiltrados; trackBy: trackByGrupo"
+            [id]="anchorId(grupo.titulo)">
             <div class="grupo-cabecalho">
                 <h2>{{ grupo.titulo }}</h2>
             </div>
@@ -189,6 +211,25 @@
                 </summary>
                 <p>{{ item.answer }}</p>
             </details>
+        </div>
+    </section>
+
+    <!-- Closing CTA -->
+    <section class="home-cta-final" aria-labelledby="home-cta-final-titulo">
+        <h2 id="home-cta-final-titulo">Pick a tool and get to work</h2>
+        <p>
+            Every utility runs in your browser, ready to use. Prefer to build a deeper foundation first?
+            The Learn section covers networking and API fundamentals step by step.
+        </p>
+        <div class="home-cta-final-acoes">
+            <button type="button" class="hero-cta" (click)="scrollToCatalog()">
+                Back to the tool catalogue
+                <mat-icon aria-hidden="true">arrow_upward</mat-icon>
+            </button>
+            <a class="hero-cta-secundario" routerLink="/learn">
+                Explore the Learn section
+                <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+            </a>
         </div>
     </section>
 </section>

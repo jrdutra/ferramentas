@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +11,7 @@ import { DataService } from '../data.service';
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [AsyncPipe, MatButtonModule, MatToolbarModule, MatIconModule, MatMenuModule],
+  imports: [AsyncPipe, RouterLink, MatButtonModule, MatToolbarModule, MatIconModule, MatMenuModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
 

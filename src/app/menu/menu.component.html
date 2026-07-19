@@ -1,47 +1,48 @@
 <div class="div-principal">
     <div class="div-topo menu-fixo">
         <mat-toolbar color="primary" class="mat-elevation-z4">
-            <div class="menu-grande">
-                <button mat-button (click)="navegaMenu('home')">
+            <nav class="menu-grande" aria-label="Main navigation">
+                <a mat-button routerLink="/home">
                     <mat-icon>home</mat-icon>
                     Home
-                </button>
-                <button mat-button (click)="navegaMenu('about')">
+                </a>
+                <a mat-button routerLink="/about">
                     <mat-icon>info</mat-icon>
                     About
-                </button>
-                <button mat-button (click)="navegaMenu('articles')">
+                </a>
+                <a mat-button routerLink="/articles">
                     <mat-icon>article</mat-icon>
                     Articles
-                </button>
-                <button mat-button (click)="navegaMenu('learn')">
+                </a>
+                <a mat-button routerLink="/learn">
                     <mat-icon>school</mat-icon>
                     Learn
-                </button>
-            </div>
+                </a>
+            </nav>
 
             <div class="marca-direita">
-                <img src="/assets/icon-preto.png" class="logo-direita logo-cor-invertida" alt="utily.tools">
+                <img src="/assets/logo-branco.svg" class="logo-direita" width="21" height="23" alt="utily.tools">
                 <span class="nome-marca">utily.tools</span>
             </div>
 
             <div class="menu-hamburger">
-                <button [matMenuTriggerFor]="menuHamburger" mat-icon-button class="example-icon">
+                <button [matMenuTriggerFor]="menuHamburger" mat-icon-button class="example-icon"
+                    aria-label="Open navigation menu">
                     <mat-icon>menu</mat-icon>
                 </button>
                 <mat-menu #menuHamburger="matMenu">
-                    <button mat-menu-item (click)="navegaMenu('home')">Home</button>
-                    <button mat-menu-item (click)="navegaMenu('about')">About</button>
-                    <button mat-menu-item (click)="navegaMenu('articles')">Articles</button>
-                    <button mat-menu-item (click)="navegaMenu('learn')">Learn</button>
+                    <a mat-menu-item routerLink="/home">Home</a>
+                    <a mat-menu-item routerLink="/about">About</a>
+                    <a mat-menu-item routerLink="/articles">Articles</a>
+                    <a mat-menu-item routerLink="/learn">Learn</a>
                 </mat-menu>
             </div>
             <span class="menu-hamburger">Tools</span>
             <span class="example-spacer menu-hamburger"></span>
-            <button mat-icon-button class="example-icon home-icon menu-hamburger"
-                aria-label="Go to home page" (click)="navegaMenu('home')">
+            <a mat-icon-button class="example-icon home-icon menu-hamburger"
+                aria-label="Go to home page" routerLink="/home">
                 <mat-icon>home</mat-icon>
-            </button>
+            </a>
         </mat-toolbar>
     </div>
     <div class="div-rodape">
