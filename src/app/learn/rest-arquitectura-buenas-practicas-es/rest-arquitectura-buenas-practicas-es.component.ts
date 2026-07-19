@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { DataService } from '../../data.service';
 import { GlossaryTextComponent } from '../glossary/glossary-text.component';
-import { extractGlossary } from '../glossary/glossary.model';
+import { buildGlossary } from '../glossary/glossary.model';
 import { ArticleReadToggleComponent } from '../reading-progress/article-read-toggle.component';
 import { TopicReadToggleComponent } from '../reading-progress/topic-read-toggle.component';
 import { REST_ES_CHAPTER_BLOCKS } from './rest-content.data';
@@ -32,7 +32,7 @@ export class RestArquitecturaBuenasPracticasEsComponent implements OnInit {
   readonly footerText = 'Fin del Capítulo 10 de Fundamentos y Arquitectura de APIs Corporativas.';
   readonly footerLink = 'Volver a todos los contenidos de Learn';
   readonly blocks = REST_ES_CHAPTER_BLOCKS;
-  readonly glossary = extractGlossary(this.blocks);
+  readonly glossary = buildGlossary(this.blocks, 'es');
   readonly tocItems = this.blocks.reduce<Array<{ id: string; label: string }>>((items, block) => {
     if (block.kind === 'heading' && block.level === 2 && block.id) items.push({ id: block.id, label: block.text });
     return items;

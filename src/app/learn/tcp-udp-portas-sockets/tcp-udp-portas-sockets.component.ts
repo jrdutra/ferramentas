@@ -5,7 +5,7 @@ import { DataService } from '../../data.service';
 import { GlossaryTextComponent } from '../glossary/glossary-text.component';
 import { ArticleReadToggleComponent } from '../reading-progress/article-read-toggle.component';
 import { TopicReadToggleComponent } from '../reading-progress/topic-read-toggle.component';
-import { extractGlossary } from '../glossary/glossary.model';
+import { buildGlossary } from '../glossary/glossary.model';
 import { TCP_UDP_CHAPTER_BLOCKS } from './tcp-udp-content.data';
 
 @Component({ selector: 'app-tcp-udp-portas-sockets', standalone: true, imports: [MatIconModule, RouterLink, GlossaryTextComponent, ArticleReadToggleComponent, TopicReadToggleComponent],
@@ -13,7 +13,7 @@ import { TCP_UDP_CHAPTER_BLOCKS } from './tcp-udp-content.data';
   changeDetection: ChangeDetectionStrategy.OnPush })
 export class TcpUdpPortasSocketsComponent implements OnInit {
   readonly blocks = TCP_UDP_CHAPTER_BLOCKS;
-  readonly glossary = extractGlossary(this.blocks);
+  readonly glossary = buildGlossary(this.blocks, 'pt');
   readonly coverImage = '/assets/learn/tcp-udp-portas-sockets-cover.png';
   readonly backLabel = 'Voltar para Learn'; readonly chapterLabel = 'Capítulo 2';
   readonly seriesName = 'Fundamentos e Arquitetura de APIs Corporativas';

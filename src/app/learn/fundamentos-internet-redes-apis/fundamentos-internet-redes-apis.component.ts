@@ -5,7 +5,7 @@ import { DataService } from '../../data.service';
 import { GlossaryTextComponent } from '../glossary/glossary-text.component';
 import { ArticleReadToggleComponent } from '../reading-progress/article-read-toggle.component';
 import { TopicReadToggleComponent } from '../reading-progress/topic-read-toggle.component';
-import { extractGlossary } from '../glossary/glossary.model';
+import { buildGlossary } from '../glossary/glossary.model';
 import { FUNDAMENTOS_CHAPTER_BLOCKS } from './fundamentos-content.data';
 
 @Component({
@@ -18,7 +18,7 @@ import { FUNDAMENTOS_CHAPTER_BLOCKS } from './fundamentos-content.data';
 })
 export class FundamentosInternetRedesApisComponent implements OnInit {
   readonly blocks = FUNDAMENTOS_CHAPTER_BLOCKS;
-  readonly glossary = extractGlossary(this.blocks);
+  readonly glossary = buildGlossary(this.blocks, 'pt');
 
   constructor(private readonly dataService: DataService) {}
 

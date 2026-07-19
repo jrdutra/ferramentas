@@ -197,5 +197,177 @@ export const TEXT_DEEP_DIVES: Record<string, ArticleDeepDive> = {
       { title: 'WHATWG URL Standard', url: 'https://url.spec.whatwg.org/', publisher: 'WHATWG' },
       { title: 'HTML form URL-encoded serialization', url: 'https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#url-encoded-form-data', publisher: 'WHATWG' }
     ]
+  },
+  'uri-vs-url-difference-explained': {
+    readingTime: '19 min read',
+    deepDiveSections: [
+      {
+        title: 'Where the words came from: 1994 and the birth of three acronyms',
+        paragraphs: [
+          'When Tim Berners-Lee documented the addressing scheme of the early Web in RFC 1630 in June 1994, the document was titled "Universal Resource Identifiers in WWW". It already made the key observation that would define the next thirty years of debate: some identifiers encode enough information to locate a resource, while others merely name it. The paper described the former as locators and the latter as names.',
+          'Later that year, RFC 1738 formalized Uniform Resource Locators, listing the schemes that browsers actually used — ftp, http, gopher, mailto, news, telnet, file. RFC 1737 published functional requirements for Uniform Resource Names in December 1994, describing an identifier that should be globally unique, persistent and independent of location. The vocabulary of URI, URL and URN was therefore complete before most people had ever used a browser.',
+          'RFC 2396 replaced "Universal" with "Uniform" in August 1998 and unified the grammar. Its successor, RFC 3986, arrived in January 2005 as STD 66 and made a decision that most casual explanations still miss: it stopped treating URL and URN as formal classes. Section 1.1.3 explains that the terms are useful descriptions but that the specification defines only URI, since a single identifier can be both a durable name and a working locator at the same time.'
+        ],
+        table: {
+          caption: 'Milestones in URI standardization',
+          headers: ['Date', 'Document', 'Contribution'],
+          rows: [
+            ['June 1994', 'RFC 1630', 'First description of Universal Resource Identifiers and the locator/name split'],
+            ['December 1994', 'RFC 1738', 'Defined Uniform Resource Locators and the original scheme list'],
+            ['December 1994', 'RFC 1737', 'Functional requirements for Uniform Resource Names'],
+            ['May 1997', 'RFC 2141', 'Original URN syntax'],
+            ['August 1998', 'RFC 2396', 'Unified generic URI syntax; "Uniform" replaces "Universal"'],
+            ['January 2005', 'RFC 3986 (STD 66)', 'Current generic syntax; URL and URN become informal descriptions'],
+            ['January 2005', 'RFC 3987', 'Internationalized Resource Identifiers (IRIs) with Unicode'],
+            ['April 2017', 'RFC 8141', 'Current URN syntax, replacing RFC 2141'],
+            ['Living standard', 'WHATWG URL', 'Browser-accurate parsing model for web URLs']
+          ]
+        }
+      },
+      {
+        title: 'The generic syntax, component by component',
+        paragraphs: [
+          'RFC 3986 defines a URI as scheme ":" hier-part [ "?" query ] [ "#" fragment ]. That single production covers every identifier you will ever meet, from https://utily.tools/url-codec?value=a%20b#result to urn:isbn:0451450523 and tel:+551140028922. What changes between them is which optional components appear, not the grammar itself.',
+          'Consider https://user:pass@api.utily.tools:8443/v2/orders/42?fields=id,total#summary. The scheme is https. The authority is user:pass@api.utily.tools:8443, itself split into userinfo, host and port. The path is /v2/orders/42. The query is fields=id,total. The fragment is summary. Remove the authority and you have something like mailto:team@utily.tools — still a perfectly valid URI, just not a URL.',
+          'A crucial and frequently misunderstood detail: the fragment is a client-side concern. RFC 3986 section 3.5 states that it identifies a secondary resource by reference to the primary resource, and the dereferencing is performed by the user agent. HTTP requests never carry it. This is why server logs cannot show which anchor a visitor jumped to, and why single-page applications historically used fragments for routing without any server round trip.'
+        ],
+        table: {
+          caption: 'Components of https://user:pass@api.utily.tools:8443/v2/orders/42?fields=id,total#summary',
+          headers: ['Component', 'Value', 'Delimiter', 'Required?'],
+          rows: [
+            ['Scheme', 'https', 'followed by :', 'Yes, in an absolute URI'],
+            ['Userinfo', 'user:pass', 'followed by @', 'No, and deprecated for credentials'],
+            ['Host', 'api.utily.tools', 'after //', 'Only when an authority exists'],
+            ['Port', '8443', 'preceded by :', 'No; scheme default applies'],
+            ['Path', '/v2/orders/42', 'starts with /', 'Yes, but may be empty'],
+            ['Query', 'fields=id,total', 'preceded by ?', 'No'],
+            ['Fragment', 'summary', 'preceded by #', 'No; never sent to the server']
+          ]
+        }
+      },
+      {
+        title: 'Identifying versus locating: the test that actually works',
+        paragraphs: [
+          'The reliable test is not whether the string starts with http. It is whether the identifier describes an access mechanism. If it tells an agent which protocol to speak and which endpoint to speak it to, it functions as a locator. If it only asserts uniqueness, it functions as a name.',
+          'This is why some examples surprise people. The XML namespace http://www.w3.org/1999/xhtml uses the http scheme and syntactically qualifies as a URL, yet it is used exclusively as a name — no conforming parser fetches it, and the W3C has published guidance explaining that namespace URIs need not be dereferenceable. Conversely urn:isbn:0451450523 is unambiguously a name, and resolving it to a copy of the book requires an external resolution service.',
+          'The pragmatic conclusion drawn by RFC 3986 is that classification depends on use, not on shape. A given string can serve as a durable identifier in a contract and as a working address in production, which is exactly why the standard defines only one term and lets context supply the rest.'
+        ],
+        items: [
+          { name: 'URI', description: 'Identifies a resource. The umbrella concept; the only one formally defined by RFC 3986.' },
+          { name: 'URL', description: 'A URI that also specifies a primary access mechanism, normally a network protocol plus location.' },
+          { name: 'URN', description: 'A URI under the urn scheme, intended to be a globally unique and persistent name.' },
+          { name: 'URI reference', description: 'Either a full URI or a relative reference that must be resolved against a base.' },
+          { name: 'IRI', description: 'An internationalized identifier permitting Unicode, mapped to a URI for transmission.' }
+        ]
+      },
+      {
+        title: 'Relative references and the resolution algorithm',
+        paragraphs: [
+          'Most links inside a real application are not URIs at all. /articles/uri-vs-url-difference-explained, ../assets/cover.png, ./next and the bare #summary are relative references. RFC 3986 section 5 specifies precisely how a base URI and a reference combine, and every browser, HTTP client and crawler implements the same steps.',
+          'The algorithm resolves in order: if the reference has a scheme it is already absolute; otherwise inherit the base scheme. If it has an authority, keep it and take the path as given. If the path starts with a slash, replace the base path entirely. If the path is empty, keep the base path and substitute the query when one is present. Otherwise merge the reference onto the base path directory and run remove_dot_segments to collapse . and .. sequences.',
+          'Two consequences trip teams up constantly. First, a base of https://utily.tools/articles/guide with reference "next" resolves to /articles/next, not /articles/guide/next — the last segment is treated as a file, not a directory, unless the base ends in a slash. Second, a reference beginning with a double slash, such as //cdn.example.com/lib.js, is a protocol-relative reference that inherits only the scheme and replaces the entire authority. That form was once idiomatic and is now discouraged, since it silently follows an insecure base into HTTP.'
+        ],
+        table: {
+          caption: 'Resolution against base https://utily.tools/articles/guide?x=1',
+          headers: ['Reference', 'Resolved URI', 'Rule applied'],
+          rows: [
+            ['other', 'https://utily.tools/articles/other', 'Merge with base directory'],
+            ['/url-codec', 'https://utily.tools/url-codec', 'Absolute path replaces base path'],
+            ['../about', 'https://utily.tools/about', 'Merge then remove dot segments'],
+            ['?y=2', 'https://utily.tools/articles/guide?y=2', 'Empty path keeps base path, query replaced'],
+            ['#top', 'https://utily.tools/articles/guide?x=1#top', 'Same-document reference'],
+            ['//cdn.example.com/a.js', 'https://cdn.example.com/a.js', 'Scheme inherited, authority replaced'],
+            ['mailto:hi@utily.tools', 'mailto:hi@utily.tools', 'Reference already has a scheme']
+          ]
+        }
+      },
+      {
+        title: 'Normalization, equivalence and why two URIs can be the same',
+        paragraphs: [
+          'Comparing identifiers naively causes cache misses, duplicate database rows and broken authorization checks. RFC 3986 section 6 defines a ladder of comparison strategies, from simple string equality to scheme-based normalization, and warns that false negatives are usually more damaging than the cost of normalizing.',
+          'Syntax-based normalization is always safe: lowercase the scheme and host because they are case-insensitive, uppercase the hexadecimal digits in percent triplets, decode percent-encoded octets that correspond to unreserved characters, and remove dot segments from the path. Scheme-based normalization adds knowledge of defaults — https://utily.tools:443/ equals https://utily.tools/, and an empty path in an http URI is equivalent to /.',
+          'What is never safe to assume is that the path is case-insensitive, that a trailing slash is meaningless, or that reordering query parameters preserves identity. All three depend entirely on the server. This is the layer where SEO and engineering meet: canonical link elements exist precisely because a site can serve identical content under several non-equivalent URIs, and search engines need to be told which one is authoritative.'
+        ],
+        items: [
+          { name: 'Case normalization', description: 'Scheme and host lowercase; percent-encoding hex digits uppercase.' },
+          { name: 'Percent-encoding normalization', description: 'Decode triplets representing unreserved characters such as %7E to ~.' },
+          { name: 'Path segment normalization', description: 'Apply remove_dot_segments to eliminate . and .. sequences.' },
+          { name: 'Scheme-based normalization', description: 'Drop default ports and treat an empty http path as /.' },
+          { name: 'Never assume', description: 'Path case-insensitivity, trailing-slash equivalence or query parameter order.' }
+        ]
+      },
+      {
+        title: 'The URN scheme in detail',
+        paragraphs: [
+          'RFC 8141 defines the current URN syntax as urn:NID:NSS, optionally followed by r-components, q-components and an f-component. The namespace identifier is registered with IANA; the namespace-specific string is governed by whoever owns that namespace. Case matters: the leading urn token and the NID are case-insensitive, but the NSS generally is not.',
+          'Real namespaces include isbn for books, uuid for identifiers such as urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66, ietf for specifications, and oasis for OASIS standards. The persistence guarantee is a social and organizational commitment, not a technical property — a URN survives migrations only because a registry keeps its meaning stable.',
+          'This is why URNs are common in publishing, library science, telecommunications and legal citation, and rare in day-to-day web development. When a system does need permanence, the usual pragmatic compromise is a persistent HTTP URI backed by a redirect service, as with DOIs served through doi.org. That approach gains dereferenceability at the cost of depending on one organization keeping the resolver alive.'
+        ],
+        table: {
+          caption: 'Comparing the three roles side by side',
+          headers: ['Property', 'URI (general)', 'URL', 'URN'],
+          rows: [
+            ['Purpose', 'Identify a resource', 'Identify and locate', 'Identify with a persistent name'],
+            ['Defined by', 'RFC 3986', 'RFC 1738, described by RFC 3986', 'RFC 8141'],
+            ['Access mechanism', 'Not required', 'Required', 'Not provided'],
+            ['Example', 'mailto:team@utily.tools', 'https://utily.tools/url-codec', 'urn:isbn:0451450523'],
+            ['Survives relocation', 'Depends', 'Often breaks', 'By design'],
+            ['Directly fetchable', 'Depends', 'Yes', 'Only via a resolver']
+          ]
+        }
+      },
+      {
+        title: 'RFC 3986 versus the WHATWG URL Standard',
+        paragraphs: [
+          'There are two living specifications, and they do not agree. RFC 3986 gives an ABNF grammar for identifiers in general. The WHATWG URL Standard describes a state-machine parser that reproduces what browsers actually do with web URLs, including error recovery for input that RFC 3986 would simply reject.',
+          'The divergences are concrete. WHATWG parsing has no notion of an empty-but-present authority in the RFC sense, applies IDNA and percent-encode sets per component, resolves backslashes as slashes in special schemes, and defines an "opaque path" for non-special schemes. Given http://example.com/a\\b, a browser normalizes the backslash to a forward slash; an RFC 3986 parser treats it as an invalid path character.',
+          'The engineering rule that follows is straightforward. Use the WHATWG model when the identifier will be handled by a browser, and the RFC 3986 model for protocol identifiers, namespaces and general-purpose URIs. Never rebuild an address by concatenating strings across the two models, and never let one component pass through a parser configured for another — this is the root cause of a large family of parser-confusion vulnerabilities.'
+        ]
+      },
+      {
+        title: 'Security: where the distinction becomes an incident report',
+        paragraphs: [
+          'URI parsing differences are a documented attack surface. When a proxy, a framework and an application each parse the same string with slightly different rules, an attacker can craft input that one layer treats as safe and another treats as a different resource entirely. Research on URL parser confusion has repeatedly shown request smuggling and access-control bypasses arising from exactly this mismatch.',
+          'Server-side request forgery depends on the same ambiguity. A validator that checks whether a URL "contains" an allowed host is trivially defeated by https://allowed.example.com@attacker.example/ — the userinfo component makes attacker.example the real authority. Correct validation parses the URI, extracts the host component structurally and compares it against an allowlist, never using substring matching.',
+          'Open redirects follow from the protocol-relative form: a redirect target of //attacker.example passes a naive "must start with /" check while sending the user off-site. Encoded traversal sequences such as %2e%2e%2f exploit decode-order mistakes when a path maps to a filesystem. In every case the mitigation is the same discipline: parse structurally, normalize exactly once at a defined boundary, validate the canonical form, and reject anything malformed rather than repairing it.'
+        ],
+        items: [
+          { name: 'Parse, do not pattern-match', description: 'Extract host, path and query with a real parser before validating anything.' },
+          { name: 'Beware userinfo', description: 'https://trusted.example@evil.example/ has authority evil.example.' },
+          { name: 'Reject protocol-relative redirects', description: '//host bypasses checks that only require a leading slash.' },
+          { name: 'Normalize once', description: 'Decoding twice turns %252e%252e into .. after the security check has passed.' },
+          { name: 'Encode per component', description: 'Path, query and fragment have different permitted character sets.' }
+        ]
+      },
+      {
+        title: 'Practical guidance for APIs, code and documentation',
+        paragraphs: [
+          'In API contracts, prefer "URI" when you mean identity and "URL" when you promise retrieval. An OpenAPI description that says an order is identified by /orders/{id} is describing a URI reference that stays valid across every environment; the deployment-specific https://api.example.com/orders/42 is the URL. Mixing them bakes hostnames into contracts and makes environment promotion painful.',
+          'In code, choose the type that matches the intent. Java draws the line sharply: java.net.URI parses and normalizes without network semantics, while java.net.URL can open connections and, in older releases, performed DNS resolution inside equals() and hashCode() — a well-known source of unexpected latency. In JavaScript, the URL constructor implements the WHATWG model and throws on invalid input, which makes it a reasonable validation gate. In Python, urllib.parse.urlsplit follows RFC 3986 closely and preserves components rather than guessing.',
+          'For content and SEO, the practical items are ordinary but effective: pick one canonical form and declare it with a rel=canonical link, keep paths readable and lowercase, avoid duplicate content served under both trailing-slash variants, and remember that fragments are never seen by a crawler as separate pages. None of this requires arguing about terminology — it just requires knowing which component you are changing.',
+          'When you need to inspect what a component actually contains, decode it rather than guessing. The utily.tools URL Codec percent-encodes and decodes values directly in the browser, which makes it quick to confirm whether a redirect_uri was double-encoded, whether a query value swallowed an ampersand, or how a UTF-8 string is represented on the wire.'
+        ]
+      },
+      {
+        title: 'Frequently confused cases, answered directly',
+        paragraphs: [
+          'Is every URL a URI? Yes. Is every URI a URL? No — mailto:team@utily.tools, urn:isbn:0451450523 and tel:+551140028922 identify resources without describing a retrievable network location. Does a URI have to start with http? No; the scheme is whatever the identifier declares, and thousands are registered with IANA.',
+          'Is /articles/guide a URL? Strictly, no. It is a relative reference, and it only becomes a URI after resolution against a base. Is a URN a URL? No, though a resolver can map one to a URL. Is a file path a URI? Only when expressed with the file scheme, as in file:///home/user/notes.txt.',
+          'Why does OAuth say redirect_uri instead of redirect_url? Because the value need not be an HTTP address — mobile applications legitimately register custom schemes such as com.example.app:/callback. And why does the WHATWG standard barely mention "URI"? Because it models what browsers do with web addresses specifically, and chose the more familiar term for that narrower job.'
+        ]
+      }
+    ],
+    references: [
+      { title: 'RFC 3986: Uniform Resource Identifier (URI): Generic Syntax', url: 'https://www.rfc-editor.org/rfc/rfc3986.html', publisher: 'IETF / RFC Editor' },
+      { title: 'RFC 1630: Universal Resource Identifiers in WWW', url: 'https://www.rfc-editor.org/info/rfc1630', publisher: 'IETF / RFC Editor' },
+      { title: 'RFC 1738: Uniform Resource Locators (URL)', url: 'https://www.rfc-editor.org/info/rfc1738', publisher: 'IETF / RFC Editor' },
+      { title: 'RFC 1737: Functional Requirements for Uniform Resource Names', url: 'https://www.rfc-editor.org/info/rfc1737', publisher: 'IETF / RFC Editor' },
+      { title: 'RFC 2396: Uniform Resource Identifiers (URI): Generic Syntax', url: 'https://www.rfc-editor.org/info/rfc2396', publisher: 'IETF / RFC Editor' },
+      { title: 'RFC 8141: Uniform Resource Names (URNs)', url: 'https://www.rfc-editor.org/info/rfc8141', publisher: 'IETF / RFC Editor' },
+      { title: 'RFC 3987: Internationalized Resource Identifiers (IRIs)', url: 'https://www.rfc-editor.org/info/rfc3987', publisher: 'IETF / RFC Editor' },
+      { title: 'WHATWG URL Standard', url: 'https://url.spec.whatwg.org/', publisher: 'WHATWG' },
+      { title: 'IANA Uniform Resource Identifier (URI) Schemes registry', url: 'https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml', publisher: 'IANA' },
+      { title: 'MDN: What is a URL?', url: 'https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_URL', publisher: 'MDN Web Docs' }
+    ]
   }
 };

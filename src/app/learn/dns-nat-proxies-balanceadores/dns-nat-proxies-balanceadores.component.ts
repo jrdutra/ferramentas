@@ -5,7 +5,7 @@ import { DataService } from '../../data.service';
 import { GlossaryTextComponent } from '../glossary/glossary-text.component';
 import { ArticleReadToggleComponent } from '../reading-progress/article-read-toggle.component';
 import { TopicReadToggleComponent } from '../reading-progress/topic-read-toggle.component';
-import { extractGlossary } from '../glossary/glossary.model';
+import { buildGlossary } from '../glossary/glossary.model';
 import { DNS_NAT_PT_CHAPTER_BLOCKS } from './dns-nat-content.data';
 
 @Component({
@@ -32,7 +32,7 @@ export class DnsNatProxiesBalanceadoresComponent implements OnInit {
   readonly footerText = 'Fim do Capítulo 4 de Fundamentos e Arquitetura de APIs Corporativas.';
   readonly footerLink = 'Voltar para todos os conteúdos Learn';
   readonly blocks = DNS_NAT_PT_CHAPTER_BLOCKS;
-  readonly glossary = extractGlossary(this.blocks);
+  readonly glossary = buildGlossary(this.blocks, 'pt');
   readonly tocItems = this.blocks.reduce<Array<{ id: string; label: string }>>((items, block) => {
     if (block.kind === 'heading' && block.level === 2 && block.id) items.push({ id: block.id, label: block.text });
     return items;

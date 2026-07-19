@@ -5,7 +5,7 @@ import { DataService } from '../../data.service';
 import { GlossaryTextComponent } from '../glossary/glossary-text.component';
 import { ArticleReadToggleComponent } from '../reading-progress/article-read-toggle.component';
 import { TopicReadToggleComponent } from '../reading-progress/topic-read-toggle.component';
-import { extractGlossary } from '../glossary/glossary.model';
+import { buildGlossary } from '../glossary/glossary.model';
 import { ENDERECAMENTO_IP_CHAPTER_BLOCKS } from './enderecamento-content.data';
 
 @Component({
@@ -32,7 +32,7 @@ export class EnderecamentoIpIpv4Ipv6Component implements OnInit {
   readonly footerText = 'Fim do Capítulo 3 de Fundamentos e Arquitetura de APIs Corporativas.';
   readonly footerLink = 'Voltar para todos os conteúdos Learn';
   readonly blocks = ENDERECAMENTO_IP_CHAPTER_BLOCKS;
-  readonly glossary = extractGlossary(this.blocks);
+  readonly glossary = buildGlossary(this.blocks, 'pt');
   readonly tocItems = this.blocks.reduce<Array<{ id: string; label: string }>>((items, block) => {
     if (block.kind === 'heading' && block.level === 2 && block.id) {
       items.push({ id: block.id, label: block.text });

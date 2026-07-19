@@ -1,67 +1,20 @@
 import { Routes } from '@angular/router';
 
-import { Base64Component } from './ferramentas/base64/base64.component';
-import { EditorJsonComponent } from './ferramentas/editor-json/editor-json.component';
-import { VisualizadorJwtComponent } from './ferramentas/visualizador-jwt/visualizador-jwt.component';
-import { VisualizadorJweComponent } from './ferramentas/visualizador-jwe/visualizador-jwe.component';
-import { UrlcodecComponent } from './ferramentas/urlcodec/urlcodec.component';
-import { ConversorImagemTextoOcrComponent } from './ferramentas/conversor-imagem-texto-ocr/conversor-imagem-texto-ocr.component';
-import { UnixTimestampComponent } from './ferramentas/unix-timestamp/unix-timestamp.component';
-import { TextoQrcodeComponent } from './ferramentas/texto-qrcode/texto-qrcode.component';
-import { QuebraLinhaComponent } from './ferramentas/quebra-linha/quebra-linha.component';
-import { TemplateDeTextoComponent } from './ferramentas/template-de-texto/template-de-texto.component';
-import { VisualizadorX509Component } from './ferramentas/visualizador-x-509/visualizador-x-509.component';
-import { GeradorCertificadoX509Component } from './ferramentas/gerador-certificado-x509/gerador-certificado-x509.component';
 import { HomeComponent } from './home/home.component';
-import { SobreComponent } from './sobre/sobre.component';
-import { JuntadorPdfComponent } from './ferramentas/juntador-pdf/juntador-pdf.component';
-import { SeparadorPdfComponent } from './ferramentas/separador-pdf/separador-pdf.component';
-import { GeradorHashComponent } from './ferramentas/gerador-hash/gerador-hash.component';
-import { DiffTextoComponent } from './ferramentas/diff-texto/diff-texto.component';
-import { GeradorUuidComponent } from './ferramentas/gerador-uuid/gerador-uuid.component';
-import { GeradorSenhaComponent } from './ferramentas/gerador-senha/gerador-senha.component';
-import { GeradorHmacComponent } from './ferramentas/gerador-hmac/gerador-hmac.component';
-import { GeradorCpfCnpjComponent } from './ferramentas/gerador-cpf-cnpj/gerador-cpf-cnpj.component';
-import { ComparadorJsonYamlComponent } from './ferramentas/comparador-json-yaml/comparador-json-yaml.component';
-import { ValidadorCertificadoComponent } from './ferramentas/validador-certificado/validador-certificado.component';
-import { EditorSwaggerComponent } from './ferramentas/editor-swagger/editor-swagger.component';
-import { ArticlesComponent } from './articles/articles.component';
-import { WhatIsUtilyToolsComponent } from './articles/what-is-utily-tools/what-is-utily-tools.component';
-import { ToolArticleComponent } from './articles/tool-article/tool-article.component';
 import { ARTICLE_SUMMARIES, TOOL_ARTICLES } from './articles/articles.data';
-import { CriadorPdfComponent } from './ferramentas/criador-pdf/criador-pdf.component';
-import { TextoGlobalComponent } from './ferramentas/texto-global/texto-global.component';
-import { CalculadoraRangeIpComponent } from './ferramentas/calculadora-range-ip/calculadora-range-ip.component';
-import { LearnComponent } from './learn/learn.component';
-import { FundamentosInternetRedesApisComponent } from './learn/fundamentos-internet-redes-apis/fundamentos-internet-redes-apis.component';
-import { FundamentalsInternetNetworksApisComponent } from './learn/fundamentals-internet-networks-apis/fundamentals-internet-networks-apis.component';
-import { FundamentosInternetRedesApisEsComponent } from './learn/fundamentos-internet-redes-apis-es/fundamentos-internet-redes-apis-es.component';
-import { TcpUdpPortasSocketsComponent } from './learn/tcp-udp-portas-sockets/tcp-udp-portas-sockets.component';
-import { TcpUdpPortsSocketsComponent } from './learn/tcp-udp-ports-sockets/tcp-udp-ports-sockets.component';
-import { TcpUdpPuertosSocketsComponent } from './learn/tcp-udp-puertos-sockets/tcp-udp-puertos-sockets.component';
-import { EnderecamentoIpIpv4Ipv6Component } from './learn/enderecamento-ip-ipv4-ipv6/enderecamento-ip-ipv4-ipv6.component';
-import { IpAddressingIpv4Ipv6Component } from './learn/ip-addressing-ipv4-ipv6/ip-addressing-ipv4-ipv6.component';
-import { DireccionamientoIpIpv4Ipv6Component } from './learn/direccionamiento-ip-ipv4-ipv6/direccionamiento-ip-ipv4-ipv6.component';
-import { DnsNatProxiesBalanceadoresComponent } from './learn/dns-nat-proxies-balanceadores/dns-nat-proxies-balanceadores.component';
-import { DnsNatProxiesLoadBalancersComponent } from './learn/dns-nat-proxies-load-balancers/dns-nat-proxies-load-balancers.component';
-import { DnsNatProxiesBalanceadoresEsComponent } from './learn/dns-nat-proxies-balanceadores-es/dns-nat-proxies-balanceadores-es.component';
-import { Http11Http2Http3PtComponent } from './learn/http-1-1-http-2-http-3-pt/http-1-1-http-2-http-3-pt.component';
-import { Http11Http2Http3EnComponent } from './learn/http-1-1-http-2-http-3-en/http-1-1-http-2-http-3-en.component';
-import { Http11Http2Http3EsComponent } from './learn/http-1-1-http-2-http-3-es/http-1-1-http-2-http-3-es.component';
-import { HttpsTlsEmProfundidadePtComponent } from './learn/https-tls-em-profundidade-pt/https-tls-em-profundidade-pt.component';
-import { HttpsTlsInDepthEnComponent } from './learn/https-tls-in-depth-en/https-tls-in-depth-en.component';
-import { HttpsTlsEnProfundidadEsComponent } from './learn/https-tls-en-profundidad-es/https-tls-en-profundidad-es.component';
-import { CriptografiaFundamentosAplicacoesApisPtComponent } from './learn/criptografia-fundamentos-aplicacoes-apis-pt/criptografia-fundamentos-aplicacoes-apis-pt.component';
-import { CryptographyFundamentalsApiApplicationsEnComponent } from './learn/cryptography-fundamentals-api-applications-en/cryptography-fundamentals-api-applications-en.component';
-import { CriptografiaFundamentosAplicacionesApisEsComponent } from './learn/criptografia-fundamentos-aplicaciones-apis-es/criptografia-fundamentos-aplicaciones-apis-es.component';
+import { HOME_FAQ } from './home/home-faq.data';
+import { HOME_TOOL_ITEMS } from './home/home-tools.data';
 
 const seo = {
   home: {
     title: 'Free Online Developer Tools',
-    description: 'Free online tools for developers: Base64, JSON, JWT, QR codes, hashes, UUIDs, passwords, PDF tools, OCR and more.',
-    keywords: 'developer tools, online tools, free tools, base64, json formatter, jwt decoder, qr code generator, hash generator, uuid generator, password generator',
+    description: 'Free online developer tools that run in your browser: Base64 and URL encoder, JSON and YAML formatter, JWT and X.509 viewers, hash, UUID and password generators, QR codes, OCR and PDF tools. No sign-up required.',
+    keywords: 'free online developer tools, online tools for developers, base64 encoder decoder, url encoder decoder, json formatter online, jwt decoder, x509 certificate viewer, hash generator, uuid generator, password generator, qr code generator, pdf merger, ocr online, ipv4 cidr calculator, browser based tools',
     canonicalPath: '/',
-    imageAlt: 'Developer tools connected to structured technical learning on utily.tools'
+    imageAlt: 'Developer tools connected to structured technical learning on utily.tools',
+    searchUrlTemplate: '/?search={search_term_string}',
+    faq: HOME_FAQ.map((item) => ({ question: item.question, answer: item.answer })),
+    toolItems: HOME_TOOL_ITEMS
   },
   about: {
     title: 'About utily.tools',
@@ -1159,7 +1112,7 @@ const toolData = (seoData: object, articleSlug: string, toolName: string) => {
 
 const toolArticleRoutes: Routes = TOOL_ARTICLES.map((article) => ({
   path: `articles/${article.slug}`,
-  component: ToolArticleComponent,
+  loadComponent: () => import('./articles/tool-article/tool-article.component').then((m) => m.ToolArticleComponent),
   data: {
     articleSlug: article.slug,
     seo: {
@@ -1182,30 +1135,30 @@ const toolArticleRoutes: Routes = TOOL_ARTICLES.map((article) => ({
 export const routes: Routes = [
   { path: '', component: HomeComponent, data: { seo: seo.home } },
   { path: 'home', component: HomeComponent, data: { seo: seo.home } },
-  { path: 'about', component: SobreComponent, data: { seo: seo.about } },
-  { path: 'articles', component: ArticlesComponent, data: { seo: seo.articles } },
-  { path: 'learn', component: LearnComponent, data: { seo: seo.learn } },
-  { path: 'learn/pt/fundamentos-da-internet-redes-e-apis', component: FundamentosInternetRedesApisComponent, data: { seo: seo.learnFundamentosInternet } },
-  { path: 'learn/en/internet-networking-api-fundamentals', component: FundamentalsInternetNetworksApisComponent, data: { seo: seo.learnFundamentalsInternetEnglish } },
-  { path: 'learn/es/fundamentos-internet-redes-apis', component: FundamentosInternetRedesApisEsComponent, data: { seo: seo.learnFundamentosInternetSpanish } },
-  { path: 'learn/pt/tcp-udp-portas-e-sockets', component: TcpUdpPortasSocketsComponent, data: { seo: seo.learnTcpUdpPortuguese } },
-  { path: 'learn/en/tcp-udp-ports-and-sockets', component: TcpUdpPortsSocketsComponent, data: { seo: seo.learnTcpUdpEnglish } },
-  { path: 'learn/es/tcp-udp-puertos-y-sockets', component: TcpUdpPuertosSocketsComponent, data: { seo: seo.learnTcpUdpSpanish } },
-  { path: 'learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento', component: EnderecamentoIpIpv4Ipv6Component, data: { seo: seo.learnIpAddressingPortuguese } },
-  { path: 'learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing', component: IpAddressingIpv4Ipv6Component, data: { seo: seo.learnIpAddressingEnglish } },
-  { path: 'learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento', component: DireccionamientoIpIpv4Ipv6Component, data: { seo: seo.learnIpAddressingSpanish } },
-  { path: 'learn/pt/dns-nat-proxies-e-balanceadores-de-carga', component: DnsNatProxiesBalanceadoresComponent, data: { seo: seo.learnDnsNatPortuguese } },
-  { path: 'learn/en/dns-nat-proxies-and-load-balancers', component: DnsNatProxiesLoadBalancersComponent, data: { seo: seo.learnDnsNatEnglish } },
-  { path: 'learn/es/dns-nat-proxies-y-balanceadores-de-carga', component: DnsNatProxiesBalanceadoresEsComponent, data: { seo: seo.learnDnsNatSpanish } },
-  { path: 'learn/pt/http-1-1-http-2-e-http-3', component: Http11Http2Http3PtComponent, data: { seo: seo.learnHttpVersionsPortuguese } },
-  { path: 'learn/en/http-1-1-http-2-and-http-3', component: Http11Http2Http3EnComponent, data: { seo: seo.learnHttpVersionsEnglish } },
-  { path: 'learn/es/http-1-1-http-2-y-http-3', component: Http11Http2Http3EsComponent, data: { seo: seo.learnHttpVersionsSpanish } },
-  { path: 'learn/pt/https-e-tls-em-profundidade', component: HttpsTlsEmProfundidadePtComponent, data: { seo: seo.learnHttpsTlsPortuguese } },
-  { path: 'learn/en/https-and-tls-in-depth', component: HttpsTlsInDepthEnComponent, data: { seo: seo.learnHttpsTlsEnglish } },
-  { path: 'learn/es/https-y-tls-en-profundidad', component: HttpsTlsEnProfundidadEsComponent, data: { seo: seo.learnHttpsTlsSpanish } },
-  { path: 'learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis', component: CriptografiaFundamentosAplicacoesApisPtComponent, data: { seo: seo.learnCryptographyPortuguese } },
-  { path: 'learn/en/cryptography-fundamentals-and-api-applications', component: CryptographyFundamentalsApiApplicationsEnComponent, data: { seo: seo.learnCryptographyEnglish } },
-  { path: 'learn/es/criptografia-fundamentos-y-aplicaciones-en-apis', component: CriptografiaFundamentosAplicacionesApisEsComponent, data: { seo: seo.learnCryptographySpanish } },
+  { path: 'about', loadComponent: () => import('./sobre/sobre.component').then((m) => m.SobreComponent), data: { seo: seo.about } },
+  { path: 'articles', loadComponent: () => import('./articles/articles.component').then((m) => m.ArticlesComponent), data: { seo: seo.articles } },
+  { path: 'learn', loadComponent: () => import('./learn/learn.component').then((m) => m.LearnComponent), data: { seo: seo.learn } },
+  { path: 'learn/pt/fundamentos-da-internet-redes-e-apis', loadComponent: () => import('./learn/fundamentos-internet-redes-apis/fundamentos-internet-redes-apis.component').then((m) => m.FundamentosInternetRedesApisComponent), data: { seo: seo.learnFundamentosInternet } },
+  { path: 'learn/en/internet-networking-api-fundamentals', loadComponent: () => import('./learn/fundamentals-internet-networks-apis/fundamentals-internet-networks-apis.component').then((m) => m.FundamentalsInternetNetworksApisComponent), data: { seo: seo.learnFundamentalsInternetEnglish } },
+  { path: 'learn/es/fundamentos-internet-redes-apis', loadComponent: () => import('./learn/fundamentos-internet-redes-apis-es/fundamentos-internet-redes-apis-es.component').then((m) => m.FundamentosInternetRedesApisEsComponent), data: { seo: seo.learnFundamentosInternetSpanish } },
+  { path: 'learn/pt/tcp-udp-portas-e-sockets', loadComponent: () => import('./learn/tcp-udp-portas-sockets/tcp-udp-portas-sockets.component').then((m) => m.TcpUdpPortasSocketsComponent), data: { seo: seo.learnTcpUdpPortuguese } },
+  { path: 'learn/en/tcp-udp-ports-and-sockets', loadComponent: () => import('./learn/tcp-udp-ports-sockets/tcp-udp-ports-sockets.component').then((m) => m.TcpUdpPortsSocketsComponent), data: { seo: seo.learnTcpUdpEnglish } },
+  { path: 'learn/es/tcp-udp-puertos-y-sockets', loadComponent: () => import('./learn/tcp-udp-puertos-sockets/tcp-udp-puertos-sockets.component').then((m) => m.TcpUdpPuertosSocketsComponent), data: { seo: seo.learnTcpUdpSpanish } },
+  { path: 'learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento', loadComponent: () => import('./learn/enderecamento-ip-ipv4-ipv6/enderecamento-ip-ipv4-ipv6.component').then((m) => m.EnderecamentoIpIpv4Ipv6Component), data: { seo: seo.learnIpAddressingPortuguese } },
+  { path: 'learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing', loadComponent: () => import('./learn/ip-addressing-ipv4-ipv6/ip-addressing-ipv4-ipv6.component').then((m) => m.IpAddressingIpv4Ipv6Component), data: { seo: seo.learnIpAddressingEnglish } },
+  { path: 'learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento', loadComponent: () => import('./learn/direccionamiento-ip-ipv4-ipv6/direccionamiento-ip-ipv4-ipv6.component').then((m) => m.DireccionamientoIpIpv4Ipv6Component), data: { seo: seo.learnIpAddressingSpanish } },
+  { path: 'learn/pt/dns-nat-proxies-e-balanceadores-de-carga', loadComponent: () => import('./learn/dns-nat-proxies-balanceadores/dns-nat-proxies-balanceadores.component').then((m) => m.DnsNatProxiesBalanceadoresComponent), data: { seo: seo.learnDnsNatPortuguese } },
+  { path: 'learn/en/dns-nat-proxies-and-load-balancers', loadComponent: () => import('./learn/dns-nat-proxies-load-balancers/dns-nat-proxies-load-balancers.component').then((m) => m.DnsNatProxiesLoadBalancersComponent), data: { seo: seo.learnDnsNatEnglish } },
+  { path: 'learn/es/dns-nat-proxies-y-balanceadores-de-carga', loadComponent: () => import('./learn/dns-nat-proxies-balanceadores-es/dns-nat-proxies-balanceadores-es.component').then((m) => m.DnsNatProxiesBalanceadoresEsComponent), data: { seo: seo.learnDnsNatSpanish } },
+  { path: 'learn/pt/http-1-1-http-2-e-http-3', loadComponent: () => import('./learn/http-1-1-http-2-http-3-pt/http-1-1-http-2-http-3-pt.component').then((m) => m.Http11Http2Http3PtComponent), data: { seo: seo.learnHttpVersionsPortuguese } },
+  { path: 'learn/en/http-1-1-http-2-and-http-3', loadComponent: () => import('./learn/http-1-1-http-2-http-3-en/http-1-1-http-2-http-3-en.component').then((m) => m.Http11Http2Http3EnComponent), data: { seo: seo.learnHttpVersionsEnglish } },
+  { path: 'learn/es/http-1-1-http-2-y-http-3', loadComponent: () => import('./learn/http-1-1-http-2-http-3-es/http-1-1-http-2-http-3-es.component').then((m) => m.Http11Http2Http3EsComponent), data: { seo: seo.learnHttpVersionsSpanish } },
+  { path: 'learn/pt/https-e-tls-em-profundidade', loadComponent: () => import('./learn/https-tls-em-profundidade-pt/https-tls-em-profundidade-pt.component').then((m) => m.HttpsTlsEmProfundidadePtComponent), data: { seo: seo.learnHttpsTlsPortuguese } },
+  { path: 'learn/en/https-and-tls-in-depth', loadComponent: () => import('./learn/https-tls-in-depth-en/https-tls-in-depth-en.component').then((m) => m.HttpsTlsInDepthEnComponent), data: { seo: seo.learnHttpsTlsEnglish } },
+  { path: 'learn/es/https-y-tls-en-profundidad', loadComponent: () => import('./learn/https-tls-en-profundidad-es/https-tls-en-profundidad-es.component').then((m) => m.HttpsTlsEnProfundidadEsComponent), data: { seo: seo.learnHttpsTlsSpanish } },
+  { path: 'learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis', loadComponent: () => import('./learn/criptografia-fundamentos-aplicacoes-apis-pt/criptografia-fundamentos-aplicacoes-apis-pt.component').then((m) => m.CriptografiaFundamentosAplicacoesApisPtComponent), data: { seo: seo.learnCryptographyPortuguese } },
+  { path: 'learn/en/cryptography-fundamentals-and-api-applications', loadComponent: () => import('./learn/cryptography-fundamentals-api-applications-en/cryptography-fundamentals-api-applications-en.component').then((m) => m.CryptographyFundamentalsApiApplicationsEnComponent), data: { seo: seo.learnCryptographyEnglish } },
+  { path: 'learn/es/criptografia-fundamentos-y-aplicaciones-en-apis', loadComponent: () => import('./learn/criptografia-fundamentos-aplicaciones-apis-es/criptografia-fundamentos-aplicaciones-apis-es.component').then((m) => m.CriptografiaFundamentosAplicacionesApisEsComponent), data: { seo: seo.learnCryptographySpanish } },
   {
     path: 'learn/pt/certificados-digitais-pki-e-x509',
     loadComponent: () => import('./learn/certificados-digitais-pki-x509-pt/certificados-digitais-pki-x509-pt.component')
@@ -1386,33 +1339,33 @@ export const routes: Routes = [
       .then((module) => module.OpenIdConnectIdTokensSesionesFederacionEsComponent),
     data: { seo: seo.learnOpenIdConnectSpanish }
   },
-  { path: 'articles/what-is-utily-tools', component: WhatIsUtilyToolsComponent, data: { seo: seo.whatIsUtilyTools } },
+  { path: 'articles/what-is-utily-tools', loadComponent: () => import('./articles/what-is-utily-tools/what-is-utily-tools.component').then((m) => m.WhatIsUtilyToolsComponent), data: { seo: seo.whatIsUtilyTools } },
   ...toolArticleRoutes,
-  { path: 'base64', component: Base64Component, data: toolData(seo.base64, 'base64-encoding-decoding-guide', 'Base64 Text Converter') },
-  { path: 'json-editor', component: EditorJsonComponent, data: toolData(seo.jsonEditor, 'json-formatting-minification-and-validation', 'JSON Editor') },
-  { path: 'jwt-viewer', component: VisualizadorJwtComponent, data: toolData(seo.jwtViewer, 'jwt-structure-signing-and-validation', 'JWT Manipulator') },
-  { path: 'jwe-viewer', component: VisualizadorJweComponent, data: toolData(seo.jweViewer, 'jwe-encryption-compact-serialization', 'JWE Manipulator') },
-  { path: 'url-codec', component: UrlcodecComponent, data: toolData(seo.urlCodec, 'url-encoding-percent-encoding-guide', 'URL Codec') },
-  { path: 'image-to-text-ocr', component: ConversorImagemTextoOcrComponent, data: toolData(seo.ocr, 'ocr-image-to-text-technology', 'OCR Converter') },
-  { path: 'unix-timestamp', component: UnixTimestampComponent, data: toolData(seo.unixTimestamp, 'unix-timestamp-epoch-time-conversion', 'Unix Timestamp') },
-  { path: 'ipv4-range-calculator', component: CalculadoraRangeIpComponent, data: toolData(seo.ipv4Range, 'ipv4-cidr-subnet-range-calculation-guide', 'IPv4 CIDR Range Calculator') },
-  { path: 'text-to-qrcode', component: TextoQrcodeComponent, data: toolData(seo.qrCode, 'qr-code-generation-error-correction', 'Text to QR Code') },
-  { path: 'text-editor', component: QuebraLinhaComponent, data: toolData(seo.textEditor, 'online-text-editor-text-transformation-guide', 'Text Editor') },
-  { path: 'text-template', component: TemplateDeTextoComponent, data: toolData(seo.textTemplate, 'text-templates-variables-and-automation', 'Text Template') },
-  { path: 'x509-viewer', component: VisualizadorX509Component, data: toolData(seo.x509Viewer, 'x509-certificate-fields-and-decoding', 'X.509 Certificate Viewer') },
-  { path: 'x509-generator', component: GeradorCertificadoX509Component, data: toolData(seo.x509Generator, 'generate-self-signed-x509-certificates', 'X.509 Key & Certificate Generator') },
-  { path: 'pdf-merger', component: JuntadorPdfComponent, data: toolData(seo.pdfMerger, 'merge-pdf-and-images-in-browser', 'PDF & Image Merger') },
-  { path: 'pdf-splitter', component: SeparadorPdfComponent, data: toolData(seo.pdfSplitter, 'split-pdf-pages-and-export-jpg', 'PDF Splitter') },
-  { path: 'pdf-creator', component: CriadorPdfComponent, data: toolData(seo.pdfCreator, 'create-pdf-from-images-browser', 'PDF Creator') },
-  { path: 'hash-generator', component: GeradorHashComponent, data: toolData(seo.hashGenerator, 'cryptographic-hash-functions-md5-sha', 'Hash Generator') },
-  { path: 'text-diff', component: DiffTextoComponent, data: toolData(seo.textDiff, 'text-diff-algorithms-and-comparison', 'Text Diff') },
-  { path: 'uuid-generator', component: GeradorUuidComponent, data: toolData(seo.uuidGenerator, 'uuid-v1-v4-v7-generation-guide', 'UUID Generator') },
-  { path: 'password-generator', component: GeradorSenhaComponent, data: toolData(seo.passwordGenerator, 'secure-password-generation-entropy', 'Password Generator') },
-  { path: 'hmac-generator', component: GeradorHmacComponent, data: toolData(seo.hmacGenerator, 'hmac-message-authentication-guide', 'HMAC Generator') },
-  { path: 'cpf-cnpj-generator', component: GeradorCpfCnpjComponent, data: toolData(seo.cpfCnpjGenerator, 'cpf-cnpj-check-digit-generation-for-testing', 'CPF & CNPJ Generator') },
-  { path: 'json-yaml-compare', component: ComparadorJsonYamlComponent, data: toolData(seo.jsonYamlCompare, 'compare-json-yaml-structural-diff', 'JSON & YAML Comparator') },
-  { path: 'certificate-validator', component: ValidadorCertificadoComponent, data: toolData(seo.certificateValidator, 'validate-certificates-and-key-pairs', 'Certificate & Key Validator') },
-  { path: 'swagger-editor', component: EditorSwaggerComponent, data: toolData({ ...seo.swaggerEditor, canonicalPath: '/swagger-editor' }, 'swagger-openapi-specification-guide', 'Swagger Viewer & Editor') },
-  { path: 'shared-text', component: TextoGlobalComponent, data: toolData(seo.sharedText, 'real-time-text-sharing-websockets', 'Text Sharer') },
-  { path: 'shared-text/:grupo/:canal', component: TextoGlobalComponent, data: toolData(seo.sharedText, 'real-time-text-sharing-websockets', 'Text Sharer') },
+  { path: 'base64', loadComponent: () => import('./ferramentas/base64/base64.component').then((m) => m.Base64Component), data: toolData(seo.base64, 'base64-encoding-decoding-guide', 'Base64 Text Converter') },
+  { path: 'json-editor', loadComponent: () => import('./ferramentas/editor-json/editor-json.component').then((m) => m.EditorJsonComponent), data: toolData(seo.jsonEditor, 'json-formatting-minification-and-validation', 'JSON Editor') },
+  { path: 'jwt-viewer', loadComponent: () => import('./ferramentas/visualizador-jwt/visualizador-jwt.component').then((m) => m.VisualizadorJwtComponent), data: toolData(seo.jwtViewer, 'jwt-structure-signing-and-validation', 'JWT Manipulator') },
+  { path: 'jwe-viewer', loadComponent: () => import('./ferramentas/visualizador-jwe/visualizador-jwe.component').then((m) => m.VisualizadorJweComponent), data: toolData(seo.jweViewer, 'jwe-encryption-compact-serialization', 'JWE Manipulator') },
+  { path: 'url-codec', loadComponent: () => import('./ferramentas/urlcodec/urlcodec.component').then((m) => m.UrlcodecComponent), data: toolData(seo.urlCodec, 'url-encoding-percent-encoding-guide', 'URL Codec') },
+  { path: 'image-to-text-ocr', loadComponent: () => import('./ferramentas/conversor-imagem-texto-ocr/conversor-imagem-texto-ocr.component').then((m) => m.ConversorImagemTextoOcrComponent), data: toolData(seo.ocr, 'ocr-image-to-text-technology', 'OCR Converter') },
+  { path: 'unix-timestamp', loadComponent: () => import('./ferramentas/unix-timestamp/unix-timestamp.component').then((m) => m.UnixTimestampComponent), data: toolData(seo.unixTimestamp, 'unix-timestamp-epoch-time-conversion', 'Unix Timestamp') },
+  { path: 'ipv4-range-calculator', loadComponent: () => import('./ferramentas/calculadora-range-ip/calculadora-range-ip.component').then((m) => m.CalculadoraRangeIpComponent), data: toolData(seo.ipv4Range, 'ipv4-cidr-subnet-range-calculation-guide', 'IPv4 CIDR Range Calculator') },
+  { path: 'text-to-qrcode', loadComponent: () => import('./ferramentas/texto-qrcode/texto-qrcode.component').then((m) => m.TextoQrcodeComponent), data: toolData(seo.qrCode, 'qr-code-generation-error-correction', 'Text to QR Code') },
+  { path: 'text-editor', loadComponent: () => import('./ferramentas/quebra-linha/quebra-linha.component').then((m) => m.QuebraLinhaComponent), data: toolData(seo.textEditor, 'online-text-editor-text-transformation-guide', 'Text Editor') },
+  { path: 'text-template', loadComponent: () => import('./ferramentas/template-de-texto/template-de-texto.component').then((m) => m.TemplateDeTextoComponent), data: toolData(seo.textTemplate, 'text-templates-variables-and-automation', 'Text Template') },
+  { path: 'x509-viewer', loadComponent: () => import('./ferramentas/visualizador-x-509/visualizador-x-509.component').then((m) => m.VisualizadorX509Component), data: toolData(seo.x509Viewer, 'x509-certificate-fields-and-decoding', 'X.509 Certificate Viewer') },
+  { path: 'x509-generator', loadComponent: () => import('./ferramentas/gerador-certificado-x509/gerador-certificado-x509.component').then((m) => m.GeradorCertificadoX509Component), data: toolData(seo.x509Generator, 'generate-self-signed-x509-certificates', 'X.509 Key & Certificate Generator') },
+  { path: 'pdf-merger', loadComponent: () => import('./ferramentas/juntador-pdf/juntador-pdf.component').then((m) => m.JuntadorPdfComponent), data: toolData(seo.pdfMerger, 'merge-pdf-and-images-in-browser', 'PDF & Image Merger') },
+  { path: 'pdf-splitter', loadComponent: () => import('./ferramentas/separador-pdf/separador-pdf.component').then((m) => m.SeparadorPdfComponent), data: toolData(seo.pdfSplitter, 'split-pdf-pages-and-export-jpg', 'PDF Splitter') },
+  { path: 'pdf-creator', loadComponent: () => import('./ferramentas/criador-pdf/criador-pdf.component').then((m) => m.CriadorPdfComponent), data: toolData(seo.pdfCreator, 'create-pdf-from-images-browser', 'PDF Creator') },
+  { path: 'hash-generator', loadComponent: () => import('./ferramentas/gerador-hash/gerador-hash.component').then((m) => m.GeradorHashComponent), data: toolData(seo.hashGenerator, 'cryptographic-hash-functions-md5-sha', 'Hash Generator') },
+  { path: 'text-diff', loadComponent: () => import('./ferramentas/diff-texto/diff-texto.component').then((m) => m.DiffTextoComponent), data: toolData(seo.textDiff, 'text-diff-algorithms-and-comparison', 'Text Diff') },
+  { path: 'uuid-generator', loadComponent: () => import('./ferramentas/gerador-uuid/gerador-uuid.component').then((m) => m.GeradorUuidComponent), data: toolData(seo.uuidGenerator, 'uuid-v1-v4-v7-generation-guide', 'UUID Generator') },
+  { path: 'password-generator', loadComponent: () => import('./ferramentas/gerador-senha/gerador-senha.component').then((m) => m.GeradorSenhaComponent), data: toolData(seo.passwordGenerator, 'secure-password-generation-entropy', 'Password Generator') },
+  { path: 'hmac-generator', loadComponent: () => import('./ferramentas/gerador-hmac/gerador-hmac.component').then((m) => m.GeradorHmacComponent), data: toolData(seo.hmacGenerator, 'hmac-message-authentication-guide', 'HMAC Generator') },
+  { path: 'cpf-cnpj-generator', loadComponent: () => import('./ferramentas/gerador-cpf-cnpj/gerador-cpf-cnpj.component').then((m) => m.GeradorCpfCnpjComponent), data: toolData(seo.cpfCnpjGenerator, 'cpf-cnpj-check-digit-generation-for-testing', 'CPF & CNPJ Generator') },
+  { path: 'json-yaml-compare', loadComponent: () => import('./ferramentas/comparador-json-yaml/comparador-json-yaml.component').then((m) => m.ComparadorJsonYamlComponent), data: toolData(seo.jsonYamlCompare, 'compare-json-yaml-structural-diff', 'JSON & YAML Comparator') },
+  { path: 'certificate-validator', loadComponent: () => import('./ferramentas/validador-certificado/validador-certificado.component').then((m) => m.ValidadorCertificadoComponent), data: toolData(seo.certificateValidator, 'validate-certificates-and-key-pairs', 'Certificate & Key Validator') },
+  { path: 'swagger-editor', loadComponent: () => import('./ferramentas/editor-swagger/editor-swagger.component').then((m) => m.EditorSwaggerComponent), data: toolData({ ...seo.swaggerEditor, canonicalPath: '/swagger-editor' }, 'swagger-openapi-specification-guide', 'Swagger Viewer & Editor') },
+  { path: 'shared-text', loadComponent: () => import('./ferramentas/texto-global/texto-global.component').then((m) => m.TextoGlobalComponent), data: toolData(seo.sharedText, 'real-time-text-sharing-websockets', 'Text Sharer') },
+  { path: 'shared-text/:grupo/:canal', loadComponent: () => import('./ferramentas/texto-global/texto-global.component').then((m) => m.TextoGlobalComponent), data: toolData(seo.sharedText, 'real-time-text-sharing-websockets', 'Text Sharer') },
 ];

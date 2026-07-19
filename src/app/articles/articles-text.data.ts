@@ -201,5 +201,88 @@ export const TEXT_TOOL_ARTICLES: ToolArticle[] = [
       'URL encoding protects the boundary between URI structure and user data. The correct function depends on whether the input is an entire address, a path segment, a query value or form data.',
       'In my opinion, the safest approach is to build URLs with structured APIs and use manual encoding tools for inspection and debugging. Explore values with the utily.tools URL Codec, then read more articles on the site about the formats and security mechanisms carried by modern web requests.'
     ]
+  },
+  {
+    ...publication,
+    publishedAt: 'July 18, 2026',
+    publishedIso: '2026-07-18',
+    modifiedIso: '2026-07-18T00:00:00-03:00',
+    slug: 'uri-vs-url-difference-explained',
+    toolName: 'URL Codec',
+    toolRoute: '/url-codec',
+    title: 'URI vs URL: The Difference Explained with Examples',
+    description: 'Understand the difference between URI, URL and URN: definitions from RFC 3986, generic syntax, schemes, relative references, real code examples and why the distinction matters.',
+    keywords: 'URI vs URL, difference between URI and URL, what is a URI, what is a URL, URN, URI URL URN, RFC 3986, URI scheme, relative reference, absolute URI, URL structure, uniform resource identifier',
+    category: 'Web Standards',
+    image: '/assets/articles/url-codec-cover.png',
+    imageAlt: 'Neon web address branching into identifier, locator and name components',
+    readingTime: '11 min read',
+    introduction: [
+      'Ask ten developers to explain the difference between a URI and a URL and you will probably get ten slightly different answers. Some say the terms are interchangeable. Some say a URL always starts with http. Some remember a rule about "identify versus locate" but cannot say why anyone bothered to invent two words for something that looks like one string of text.',
+      'The confusion has a historical cause. In 1994, RFC 1630 described a Universal Resource Identifier and already predicted the split: some identifiers would carry enough information to find a resource, and others would only name it. That same year RFC 1738 defined Uniform Resource Locators, and RFC 1737 set out requirements for Uniform Resource Names. Three related ideas were born within months of each other, and the vocabulary has been leaking ever since.',
+      'By January 2005, RFC 3986 settled the architecture: URI is the general concept, and "URL" and "URN" are informal labels for what a particular URI does. That single sentence resolves most arguments — but only if you understand the syntax underneath it, which is exactly what this article unpacks.',
+      'This matters far beyond trivia. The distinction shows up whenever you configure an OAuth redirect_uri, declare an XML namespace, write a Java URI class instead of URL, define a REST resource identifier, or debug why a relative link resolved to the wrong path. Read on and the next time a code review argues about naming, you will be the one holding the specification.'
+    ],
+    theoryTitle: 'One generic syntax, two familiar roles',
+    theory: [
+      'A URI is a compact sequence of characters that identifies an abstract or physical resource. The resource can be a web page, but it can equally be a book, a phone number, a person, a namespace or a concept that no network can deliver. Identification is the only requirement.',
+      'A URL is a URI that additionally tells you how to get the resource, by describing its primary access mechanism — typically a network protocol and location. Because every URL identifies something, every URL is a URI. The reverse is not true.',
+      'A URN is a URI intended to remain a globally unique, persistent name even if the resource moves or disappears. RFC 8141 defines the urn scheme with the form urn:namespace:specific-string, as in urn:isbn:0451450523. It names the book; it does not tell you which server holds a copy.',
+      'RFC 3986 deliberately stops using "URL" and "URN" as formal categories. It treats them as descriptions of usefulness rather than distinct types, because a single string can behave as a locator today and remain a stable identifier for decades. The specification defines only URI, its generic syntax and its resolution rules.'
+    ],
+    technicalIntroduction: [
+      'Everything in the URI family shares one grammar, defined in RFC 3986 as scheme, authority, path, query and fragment. Understanding which components are present, and which are optional, explains almost every practical difference you will encounter between a URI, a URL and a relative reference.',
+      'The syntax is: scheme ":" hier-part [ "?" query ] [ "#" fragment ]. The scheme is mandatory in an absolute URI and is the part that determines how everything after the colon must be interpreted.'
+    ],
+    technicalPoints: [
+      {
+        title: 'Every absolute URI needs a scheme',
+        paragraphs: [
+          'The scheme is the leading token before the first colon: http, https, ftp, mailto, tel, file, urn, data, git, jdbc. It is case-insensitive but conventionally lowercase. Without a scheme you do not have a URI at all — you have a relative reference, which only becomes a full URI after being resolved against a base.'
+        ]
+      },
+      {
+        title: 'The authority is what makes a URI look like a URL',
+        paragraphs: [
+          'When a scheme uses a network location, the hierarchical part begins with a double slash and carries an authority: optional userinfo, a host and an optional port. That authority component is precisely the "where to find it" information that earns a URI the informal label URL. mailto:team@utily.tools has no authority and is not a URL; https://utily.tools/url-codec has one and is.'
+        ]
+      },
+      {
+        title: 'Path, query and fragment carry the rest of the meaning',
+        paragraphs: [
+          'The path is hierarchical data identifying the resource within the authority. The query, introduced by ?, carries non-hierarchical data such as filters or parameters. The fragment, introduced by #, identifies a secondary resource within the primary one and is never sent to the server — the browser resolves it locally, which is why analytics tools cannot see it.'
+        ]
+      },
+      {
+        title: 'URI reference: absolute, relative and same-document',
+        paragraphs: [
+          'RFC 3986 defines a URI reference as either a URI or a relative reference. /articles/uri-vs-url-difference-explained, ../assets/logo.png and #section-3 are all valid references but none is a URI on its own. Section 5 of the specification gives the exact algorithm for merging them with a base URI — the algorithm every browser and HTTP client implements.'
+        ]
+      },
+      {
+        title: 'Reserved characters make the distinction operational',
+        paragraphs: [
+          'Because the delimiters :, /, ?, #, [, ], @, &, = and + carry structural meaning, any user data placed inside a component must be percent-encoded first. This is where the theory becomes a bug report: an unencoded ampersand inside a query value silently becomes a new parameter. Verify such values in the utily.tools URL Codec before shipping them.'
+        ]
+      },
+      {
+        title: 'IRI, and why non-ASCII addresses still work',
+        paragraphs: [
+          'RFC 3986 restricts URIs to a subset of ASCII. RFC 3987 defines the Internationalized Resource Identifier, which permits Unicode and maps back to a URI by encoding path and query bytes as UTF-8 percent triplets and converting host labels through IDNA Punycode. What you see in the address bar is often an IRI; what travels on the wire is a URI.'
+        ]
+      }
+    ],
+    examples: [
+      { title: 'OAuth 2.0 redirect_uri', description: 'The specification names the parameter redirect_uri, not redirect_url, and requires an absolute URI. Native apps legitimately register custom schemes such as com.example.app:/callback, which identify a handler rather than a network location.' },
+      { title: 'XML and RDF namespaces', description: 'A namespace declared as http://www.w3.org/1999/xhtml is a URI used purely as a unique name. Dereferencing it is optional and irrelevant to parsing — a perfect example of a URI that looks like a URL but is not used as one.' },
+      { title: 'Java URI versus URL', description: 'java.net.URI parses and normalizes strings without network assumptions, while java.net.URL can open a connection and, in older versions, performs DNS lookups inside equals(). Choosing the right class prevents surprising latency and comparison bugs.' },
+      { title: 'REST resource identifiers', description: 'An API contract that says "the order is identified by /orders/{id}" is describing a URI reference; the deployed https://api.example.com/orders/42 is the URL that resolves it. Keeping the two apart makes versioning and environment promotion far cleaner.' },
+      { title: 'Persistent identifiers', description: 'A DOI expressed as doi:10.1000/182 or an ISBN as urn:isbn:0451450523 stays valid after any migration, while the URL that serves the file may change several times over the same period.' }
+    ],
+    conclusion: [
+      'The hierarchy is simple once stated precisely: URI is the general concept of identifying a resource, URL is the informal name for a URI that also describes how to access it, and URN is the informal name for a URI meant to be a persistent name. Every URL is a URI; not every URI is a URL. Since RFC 3986, the specification itself only defines URI and its generic syntax of scheme, authority, path, query and fragment.',
+      'In my view, the practical value of the distinction is not vocabulary policing but design clarity. When you say "URI" you are committing only to identity, which keeps contracts, namespaces and API documentation independent of hosting decisions. When you say "URL" you are promising a retrieval path, and that promise has an expiry date. Teams that blur the two end up hard-coding environments into identifiers.',
+      'A closing thought worth carrying forward: the strings you write in configuration files are not just text — they are a small grammar with reserved characters that can change a request structure the moment user data slips in unencoded. Try encoding and decoding a few real values in the utily.tools URL Codec, then continue with the article on URL percent-encoding to see exactly where that grammar breaks and how to protect it.'
+    ]
   }
 ];

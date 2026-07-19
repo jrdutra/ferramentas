@@ -2,14 +2,20 @@
     <div class="home-intro-container">
         <div class="home-intro-glow" aria-hidden="true"></div>
         <div class="home-intro">
-            <h1>utily.tools</h1>
-            <p>Pick a tool by category.</p>
+            <h1>Free Online Developer Tools</h1>
+            <p class="home-intro-lead">
+                utily.tools brings together the utilities developers reach for every day — Base64 and URL encoding,
+                JSON and YAML formatting, JWT and certificate inspection, hash, UUID and password generation,
+                QR codes, OCR and PDF editing. Everything runs in your browser, with no sign-up and no cost.
+            </p>
+            <p class="home-intro-sub">Pick a tool by category, or search the catalogue below.</p>
         </div>
     </div>
 
     <!-- Tool filter -->
     <mat-form-field appearance="fill" class="home-filtro-field">
-        <input matInput [(ngModel)]="filtro" placeholder="Filter tools…" autocomplete="off" spellcheck="false" />
+        <input matInput [(ngModel)]="filtro" placeholder="Filter tools…" autocomplete="off" spellcheck="false"
+            aria-label="Filter tools by name or description" />
         <button matSuffix mat-icon-button *ngIf="filtro" (click)="limparFiltro()" aria-label="Clear filter">
             <mat-icon>close</mat-icon>
         </button>
@@ -27,30 +33,121 @@
         </div>
 
         <div class="grade-ferramentas">
-            <button class="atalho-ferramenta" type="button" *ngFor="let ferramenta of grupo.ferramentas; trackBy: trackByFerramenta"
-                (click)="navegaFerramenta(ferramenta.rota)">
-                <span class="imagem-ferramenta">
-                    <img
-                        [src]="ferramenta.image"
-                        [alt]="ferramenta.imageAlt"
-                        [attr.width]="ferramenta.imageWidth"
-                        [attr.height]="ferramenta.imageHeight"
-                        loading="lazy"
-                        decoding="async"
-                    />
-                    <span class="icone-ferramenta" aria-hidden="true">
-                        <mat-icon>{{ ferramenta.icone }}</mat-icon>
+            <ng-container *ngFor="let ferramenta of grupo.ferramentas; trackBy: trackByFerramenta">
+                <a class="atalho-ferramenta" *ngIf="!ferramenta.external" [routerLink]="'/' + ferramenta.rota">
+                    <span class="imagem-ferramenta">
+                        <img
+                            [src]="ferramenta.image"
+                            [alt]="ferramenta.imageAlt"
+                            [attr.width]="ferramenta.imageWidth"
+                            [attr.height]="ferramenta.imageHeight"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                        <span class="icone-ferramenta" aria-hidden="true">
+                            <mat-icon>{{ ferramenta.icone }}</mat-icon>
+                        </span>
+                    </span>
+                    <span class="conteudo-ferramenta">
+                        <strong>{{ ferramenta.titulo }}</strong>
+                        <span class="descricao-ferramenta">{{ ferramenta.descricao }}</span>
+                        <span class="acao-ferramenta">
+                            Open tool
+                            <mat-icon>arrow_forward</mat-icon>
+                        </span>
+                    </span>
+                </a>
+
+                <a class="atalho-ferramenta" *ngIf="ferramenta.external" [href]="ferramenta.rota" target="_blank"
+                    rel="noopener">
+                    <span class="imagem-ferramenta">
+                        <img
+                            [src]="ferramenta.image"
+                            [alt]="ferramenta.imageAlt"
+                            [attr.width]="ferramenta.imageWidth"
+                            [attr.height]="ferramenta.imageHeight"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                        <span class="icone-ferramenta" aria-hidden="true">
+                            <mat-icon>{{ ferramenta.icone }}</mat-icon>
+                        </span>
+                    </span>
+                    <span class="conteudo-ferramenta">
+                        <strong>{{ ferramenta.titulo }}</strong>
+                        <span class="descricao-ferramenta">{{ ferramenta.descricao }}</span>
+                        <span class="acao-ferramenta">
+                            Open external tool
+                            <mat-icon>open_in_new</mat-icon>
+                        </span>
+                    </span>
+                </a>
+            </ng-container>
+        </div>
+    </section>
+
+    <!-- Articles carousel -->
+    <section class="home-artigos" aria-labelledby="home-artigos-titulo">
+        <div class="home-secao-cabecalho">
+            <div>
+                <h2 id="home-artigos-titulo">Latest articles</h2>
+                <p>Guides explaining the standards and concepts behind each tool.</p>
+            </div>
+            <div class="carrossel-controles">
+                <button type="button" (click)="moveCarrossel(-1)" aria-label="Previous articles">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+                <button type="button" (click)="moveCarrossel(1)" aria-label="Next articles">
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="carrossel-artigos" #articlesTrack tabindex="0" role="region"
+            aria-label="Article carousel, scroll horizontally">
+            <a class="artigo-card" *ngFor="let artigo of artigosDestaque; trackBy: trackByArtigo"
+                [routerLink]="artigo.route">
+                <span class="artigo-imagem">
+                    <img [src]="artigo.image" [alt]="artigo.imageAlt" [attr.width]="artigo.imageWidth"
+                        [attr.height]="artigo.imageHeight" loading="lazy" decoding="async" />
+                </span>
+                <span class="artigo-conteudo">
+                    <span class="artigo-categoria">{{ artigo.category }}</span>
+                    <strong>{{ artigo.title }}</strong>
+                    <span class="artigo-excerto">{{ artigo.excerpt }}</span>
+                    <span class="artigo-meta">
+                        <time [attr.datetime]="artigo.publishedIso">{{ artigo.publishedAt }}</time>
+                        <span aria-hidden="true">•</span>
+                        <span>{{ artigo.readingTime }}</span>
                     </span>
                 </span>
-                <span class="conteudo-ferramenta">
-                    <strong>{{ ferramenta.titulo }}</strong>
-                    <span class="descricao-ferramenta">{{ ferramenta.descricao }}</span>
-                    <span class="acao-ferramenta">
-                        {{ ferramenta.external ? 'Open external tool' : 'Open tool' }}
-                        <mat-icon>{{ ferramenta.external ? 'open_in_new' : 'arrow_forward' }}</mat-icon>
-                    </span>
-                </span>
-            </button>
+            </a>
+        </div>
+
+        <a class="home-secao-link" routerLink="/articles">
+            See all articles
+            <mat-icon>arrow_forward</mat-icon>
+        </a>
+    </section>
+
+    <!-- FAQ -->
+    <section class="home-faq" aria-labelledby="home-faq-titulo">
+        <div class="home-secao-cabecalho">
+            <div>
+                <h2 id="home-faq-titulo">Frequently asked questions</h2>
+                <p>What utily.tools is, how it handles your data and what it costs.</p>
+            </div>
+        </div>
+
+        <div class="faq-lista">
+            <details class="faq-item" *ngFor="let item of faq; trackBy: trackByPergunta; let first = first"
+                [open]="first">
+                <summary>
+                    <h3>{{ item.question }}</h3>
+                    <mat-icon aria-hidden="true">expand_more</mat-icon>
+                </summary>
+                <p>{{ item.answer }}</p>
+            </details>
         </div>
     </section>
 </section>

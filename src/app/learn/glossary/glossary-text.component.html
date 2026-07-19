@@ -1,13 +1,13 @@
 @for (segment of segments; track $index) {
   @if (segment.entry) {
-    <span class="glossary-term-shell">
+    <span class="glossary-term-shell" #shell>
       <button
         class="glossary-term"
         type="button"
         data-glossary-trigger
         [attr.aria-expanded]="popover.activeId() === occurrenceId($index)"
         [attr.aria-describedby]="popover.activeId() === occurrenceId($index) ? occurrenceId($index) + '-definition' : null"
-        (click)="popover.toggle(occurrenceId($index))"
+        (click)="toggle(occurrenceId($index), shell)"
       >{{ segment.text }}</button>
       @if (popover.activeId() === occurrenceId($index)) {
         <span

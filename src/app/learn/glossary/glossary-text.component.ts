@@ -14,6 +14,11 @@ interface GlossaryCandidate {
 
 let nextComponentId = 0;
 
+/** Must mirror the width declared for .glossary-popover in the stylesheet. */
+const POPOVER_WIDTH_REM = 22;
+/** Keeps the arrow from sliding past the rounded corners of the popover. */
+const ARROW_EDGE_INSET_PX = 18;
+
 @Component({
   selector: 'app-glossary-text',
   standalone: true,
@@ -36,6 +41,46 @@ export class GlossaryTextComponent implements OnChanges {
 
   occurrenceId(index: number): string {
     return `${this.componentId}-${index}`;
+  }
+
+  toggle(id: string, shell: HTMLElement): void {
+    const willOpen = this.popover.activeId() !== id;
+    this.popover.toggle(id);
+
+    if (willOpen) {
+      this.keepPopoverInsideViewport(shell);
+    }
+  }
+
+  /**
+   * The popover is centred under the term, which clips it when the term sits
+   * near the left or right edge of a narrow screen. Here we measure the term
+   * and shift the popover horizontally just enough to keep it fully visible,
+   * moving the arrow in the opposite direction so it still points at the word.
+   * The popover always stays anchored below the term.
+   */
+  private keepPopoverInsideViewport(shell: HTMLElement): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const trigger = shell.querySelector('.glossary-term') ?? shell;
+    const triggerBounds = trigger.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+    const rootFontSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
+
+    const edgeGap = 12;
+    const popoverWidth = Math.min(POPOVER_WIDTH_REM * rootFontSize, viewportWidth - 2 * edgeGap);
+    const centeredLeft = triggerBounds.left + triggerBounds.width / 2 - popoverWidth / 2;
+    const furthestLeft = Math.max(edgeGap, viewportWidth - edgeGap - popoverWidth);
+    const clampedLeft = Math.min(Math.max(centeredLeft, edgeGap), furthestLeft);
+
+    const shift = clampedLeft - centeredLeft;
+    const arrowLimit = Math.max(0, popoverWidth / 2 - ARROW_EDGE_INSET_PX);
+    const arrowShift = Math.min(Math.max(-shift, -arrowLimit), arrowLimit);
+
+    shell.style.setProperty('--glossary-shift', `${Math.round(shift)}px`);
+    shell.style.setProperty('--glossary-arrow-shift', `${Math.round(arrowShift)}px`);
   }
 
   private segmentText(text: string, glossary: readonly GlossaryEntry[]): readonly GlossaryTextSegment[] {

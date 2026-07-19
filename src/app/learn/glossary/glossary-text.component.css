@@ -55,7 +55,7 @@
   line-height: 1.5;
   text-align: left;
   white-space: normal;
-  transform: translateX(-50%);
+  transform: translateX(calc(-50% + var(--glossary-shift, 0px)));
 }
 
 .glossary-popover::before {
@@ -68,7 +68,7 @@
   border-left: 1px solid rgba(0, 255, 209, 0.38);
   background: #07172d;
   content: '';
-  transform: translateX(-50%) rotate(45deg);
+  transform: translateX(calc(-50% + var(--glossary-arrow-shift, 0px))) rotate(45deg);
 }
 
 .glossary-popover strong {

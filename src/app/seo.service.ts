@@ -23,12 +23,26 @@ export interface SeoRouteData {
   imageAlt?: string;
   tags?: string[];
   alternateLanguages?: Array<{ language: string; path: string; locale?: string }>;
+  faq?: SeoFaqItem[];
+  toolItems?: SeoToolListItem[];
+  searchUrlTemplate?: string;
 }
 
 export interface SeoArticleListItem {
   title: string;
   path: string;
   imagePath: string;
+}
+
+export interface SeoFaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface SeoToolListItem {
+  name: string;
+  path: string;
+  description: string;
 }
 
 @Injectable({
@@ -295,16 +309,61 @@ export class SeoService {
       });
     }
 
-    if (isHome) {
+    if (seo.faq?.length) {
       graph.push({
+        '@type': 'FAQPage',
+        '@id': `${canonicalUrl}#faq`,
+        mainEntity: seo.faq.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer
+          }
+        }))
+      });
+    }
+
+    if (seo.toolItems?.length) {
+      graph.push({
+        '@type': 'ItemList',
+        '@id': `${canonicalUrl}#tools`,
+        name: `Tools available on ${this.siteName}`,
+        numberOfItems: seo.toolItems.length,
+        itemListElement: seo.toolItems.map((tool, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: tool.name,
+          description: tool.description,
+          url: tool.path.startsWith('http') ? tool.path : `${this.siteUrl}${tool.path}`
+        }))
+      });
+    }
+
+    if (isHome) {
+      const website: Record<string, unknown> = {
         '@type': 'WebSite',
         '@id': `${this.siteUrl}/#website`,
         url: `${this.siteUrl}/`,
         name: this.siteName,
         alternateName: 'utily tools',
+        description: seo.description,
         inLanguage: 'en',
         publisher: { '@id': `${this.siteUrl}/#organization` }
-      });
+      };
+
+      if (seo.searchUrlTemplate) {
+        website['potentialAction'] = {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${this.siteUrl}${seo.searchUrlTemplate}`
+          },
+          'query-input': 'required name=search_term_string'
+        };
+      }
+
+      graph.push(website);
     } else {
       graph.push({
         '@type': 'BreadcrumbList',
