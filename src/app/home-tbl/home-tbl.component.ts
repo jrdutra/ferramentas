@@ -26,6 +26,11 @@ interface Neuron {
   radius: number; // how far it may drift from home
   wander: number; // per-neuron oscillation speed factor
   lum: number;    // per-neuron brightness factor (>= 1)
+  tx: number;     // icon-formation target x
+  ty: number;     // icon-formation target y
+  captured: boolean; // true while pinned onto an invisible icon stroke
+  alpha: number;  // 0..1 opacity, used for fade-in (new points) and fade-out (dispersal)
+  life: 'alive' | 'dying' | 'dead';
   neighbors: number[];
   glow: number;
   lastFire: number;
@@ -204,6 +209,16 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private mouseY = -9999;
   private mouseActive = false;
   private spawnAccumulator = 0;
+  private maxLinkDist = 0;
+  private baseCount = 0;
+  private rewireAcc = 0;
+  private iconActive = false;
+  private iconAnchorX = 0;
+  private iconAnchorY = 0;
+  private capturedIdx: number[] = [];
+  private stillX = -9999;
+  private stillY = -9999;
+  private stillSince = 0;
 
   private readonly MOUSE_RADIUS = 260;
   private readonly MAX_PULSES = 300;
@@ -212,7 +227,13 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly REFRACTORY_MS = 190;
   private readonly PULSE_SPEED = 0.052;      // slow base speed (css px per ms)
   private readonly MOUSE_SPEED_BOOST = 0.95;  // near-pointer travel speed factor
-  private readonly NEURON_ATTRACT_RADIUS = 320; // pointer influence on neuron drift
+  private readonly ICON_SIZE = 330;           // rendered size of the invisible icon strokes
+  private readonly ICON_POINTS = 92;          // how many points arrange onto the strokes
+  private readonly DISPERSE_MS = 2600;        // slow fade-out while a drawing disperses
+  private readonly SPAWN_FADE_MS = 1400;      // fade-in for replacement points
+  private readonly ICON_RECRUIT_RADIUS = 450; // how far points may be recruited from
+  private readonly NEURON_ATTRACT_RADIUS = 320; // pointer influence on free-point drift
+  private readonly REWIRE_INTERVAL = 850;     // ms between connection dissolve/grow steps
 
   private initNeuralField(): void {
     const host = this.homeRoot?.nativeElement;
@@ -258,6 +279,12 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mouseX = e.clientX - rect.left;
       this.mouseY = e.clientY - rect.top;
       this.mouseActive = true;
+      // Track stillness: drawings only start after the pointer rests in place.
+      if (Math.hypot(this.mouseX - this.stillX, this.mouseY - this.stillY) > 14) {
+        this.stillX = this.mouseX;
+        this.stillY = this.mouseY;
+        this.stillSince = performance.now();
+      }
     };
     const onLeave = () => {
       this.mouseActive = false;
@@ -323,6 +350,11 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
           radius: 104 + Math.random() * 120,
           wander: 0.65 + Math.random() * 0.7,
           lum: 1 + Math.random() * 0.7,
+          tx: x,
+          ty: y,
+          captured: false,
+          alpha: 1,
+          life: 'alive',
           neighbors: [],
           glow: 0,
           lastFire: -1e9,
@@ -335,6 +367,7 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const maxDist = Math.max(cw, ch) * 1.7;
     const maxDist2 = maxDist * maxDist;
     const maxDegree = 5;
+    this.maxLinkDist = maxDist;
 
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
@@ -381,15 +414,16 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.neurons = neurons;
+    this.baseCount = neurons.length;
     this.pulses = [];
   }
 
   private fireNeuron(index: number, from: number, now: number): void {
     const n = this.neurons[index];
-    if (!n) return;
+    if (!n || n.life !== 'alive') return;
     if (now - n.lastFire < this.REFRACTORY_MS) return;
     n.lastFire = now;
-    n.glow = 1;
+    n.glow = Math.max(n.glow, 1);
 
     const candidates = n.neighbors.filter((j) => j !== from);
 
@@ -433,7 +467,20 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private spawnPulse(from: number, to: number): void {
     const a = this.neurons[from];
     const b = this.neurons[to];
-    if (!a || !b) return;
+    if (!a || !b || a.life !== 'alive' || b.life !== 'alive') return;
+
+    // Inside a formed drawing, synapses keep flowing like everywhere else —
+    // just mildly reduced so the icon stays readable.
+    if ((a.captured || b.captured) && Math.random() > 0.5) return;
+
+    // A line normally carries a single pulse; a second one is rare, never a third.
+    let onEdge = 0;
+    for (const q of this.pulses) {
+      if ((q.from === from && q.to === to) || (q.from === to && q.to === from)) onEdge++;
+    }
+    if (onEdge >= 2) return;
+    if (onEdge === 1 && Math.random() > 0.12) return;
+
     const len = Math.hypot(a.x - b.x, a.y - b.y) || 1;
     this.pulses.push({
       from,
@@ -456,7 +503,11 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.neurons.length) return;
     for (let c = 0; c < count; c++) {
       let index = Math.floor(Math.random() * this.neurons.length);
-      if (this.mouseActive) {
+      if (this.iconActive && this.capturedIdx.length && Math.random() < 0.45) {
+        // The drawing is part of the network: seed pulses on its own points so
+        // synapses visibly run between them too.
+        index = this.capturedIdx[Math.floor(Math.random() * this.capturedIdx.length)];
+      } else if (this.mouseActive) {
         let bestD = -1;
         for (let k = 0; k < 4; k++) {
           const j = Math.floor(Math.random() * this.neurons.length);
@@ -469,29 +520,88 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Each neuron drifts gently within its own leash radius. When the pointer is
-   * near, it leans towards the pointer but never leaves its allowed circle.
+   * Fixed points oscillate inside their own leash radius. They only ever leave
+   * that radius under mouse influence: nearby points are recruited onto the
+   * invisible strokes of a themed icon (article, learning, security…) and hold
+   * position there until the pointer moves away.
    */
-  private updateNeurons(dt: number): void {
+  private updateNeurons(dt: number, now: number): void {
     const f = Math.min(dt, 32) / 16;
-    const attractR = this.NEURON_ATTRACT_RADIUS;
-    const attract2 = attractR * attractR;
 
-    for (const n of this.neurons) {
+    this.manageIconFormation(now);
+    this.rewire(dt);
+    if (this.iconActive) this.migrateCapturedLinks();
+
+    for (let ni = 0; ni < this.neurons.length; ni++) {
+      const n = this.neurons[ni];
+      if (n.life === 'dead') continue;
+
+      if (n.life === 'dying') {
+        // Slow dispersal: the point drifts apart and fades away.
+        n.vx += (Math.random() - 0.5) * 0.03;
+        n.vy += (Math.random() - 0.5) * 0.03;
+        n.vx *= 0.985;
+        n.vy *= 0.985;
+        n.x += n.vx * f;
+        n.y += n.vy * f;
+        n.alpha -= dt / this.DISPERSE_MS;
+        if (n.alpha <= 0) {
+          n.alpha = 0;
+          n.life = 'dead';
+          this.stripLinks(ni);
+        }
+        continue;
+      }
+
+      // Freshly spawned replacement points fade in.
+      if (n.alpha < 1) n.alpha = Math.min(1, n.alpha + dt / this.SPAWN_FADE_MS);
+
+      if (n.captured) {
+        const dxT = n.tx - n.x;
+        const dyT = n.ty - n.y;
+        const settled = dxT * dxT + dyT * dyT < 36; // within 6px of its stroke
+
+        // Mouse influence: drift calmly onto the invisible icon stroke
+        // (1/3 of the previous formation speed).
+        n.vx += dxT * 0.00167;
+        n.vy += dyT * 0.00167;
+        if (settled) {
+          // Once the drawing has formed, hover in place at a very low speed.
+          n.vx += (Math.random() - 0.5) * 0.02;
+          n.vy += (Math.random() - 0.5) * 0.02;
+        }
+        n.vx *= 0.85;
+        n.vy *= 0.85;
+        const spc = n.vx * n.vx + n.vy * n.vy;
+        // Distant recruits fly in faster and glide as they arrive, so the whole
+        // outline completes together instead of trickling in (1/3 speed).
+        const maxC = settled ? 0.14 : Math.min(0.67, 0.25 + Math.sqrt(dxT * dxT + dyT * dyT) / 1200);
+        if (spc > maxC * maxC) {
+          const s = maxC / Math.sqrt(spc);
+          n.vx *= s;
+          n.vy *= s;
+        }
+        n.x += n.vx * f;
+        n.y += n.vy * f;
+        continue; // leash suspended while it belongs to the drawing
+      }
+
       // Subtle random wander — its magnitude varies a little per neuron.
       n.vx += (Math.random() - 0.5) * 0.055 * n.wander;
       n.vy += (Math.random() - 0.5) * 0.055 * n.wander;
 
-      // Lean towards the pointer, stronger the closer it is.
+      // Free points lean towards the pointer, stronger the closer it is —
+      // the leash below still keeps them inside their own radius.
       if (this.mouseActive) {
-        const dx = this.mouseX - n.x;
-        const dy = this.mouseY - n.y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < attract2 && d2 > 1) {
-          const d = Math.sqrt(d2);
-          const infl = 1 - d / attractR;
-          n.vx += (dx / d) * infl * 0.17;
-          n.vy += (dy / d) * infl * 0.17;
+        const dxm = this.mouseX - n.x;
+        const dym = this.mouseY - n.y;
+        const dm2 = dxm * dxm + dym * dym;
+        const aR = this.NEURON_ATTRACT_RADIUS;
+        if (dm2 < aR * aR && dm2 > 1) {
+          const dm = Math.sqrt(dm2);
+          const infl = 1 - dm / aR;
+          n.vx += (dxm / dm) * infl * 0.17;
+          n.vy += (dym / dm) * infl * 0.17;
         }
       }
 
@@ -512,14 +622,912 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       n.x += n.vx * f;
       n.y += n.vy * f;
 
-      // Hard leash: never drift beyond the neuron's radius from home.
+      // Soft leash: beyond its radius the point is pulled back by a spring,
+      // so points released far away (after a drawing dissolves) glide home
+      // smoothly instead of snapping to the boundary.
       const hx = n.x - n.hx;
       const hy = n.y - n.hy;
       const hd = Math.hypot(hx, hy);
       if (hd > n.radius) {
-        n.x = n.hx + (hx / hd) * n.radius;
-        n.y = n.hy + (hy / hd) * n.radius;
+        const over = (hd - n.radius) / hd;
+        n.vx -= hx * over * 0.03;
+        n.vy -= hy * over * 0.03;
       }
+    }
+  }
+
+  // ── Icon formation under mouse influence ────────────────────────────────
+  private manageIconFormation(now: number): void {
+    if (this.mouseActive) {
+      if (!this.iconActive) {
+        // A drawing starts after the pointer rests 15s in the same spot.
+        if (now - this.stillSince > 15000) this.formIcon();
+      } else {
+        // The drawing stays where it formed. If the pointer strays further than
+        // 20% of the icon size from it, the drawing starts to dissolve.
+        const moved = Math.hypot(this.mouseX - this.iconAnchorX, this.mouseY - this.iconAnchorY);
+        if (moved > this.ICON_SIZE * 0.2) {
+          this.releaseIcon();
+        }
+      }
+    } else if (this.iconActive) {
+      // Pointer gone (left the page): let the drawing disperse slowly.
+      this.releaseIcon();
+    }
+  }
+
+  /** Recruits the nearest points and pins them along the icon's invisible strokes. */
+  private formIcon(): void {
+    const icons = TblHomeComponent.getIcons();
+    const icon = icons[Math.floor(Math.random() * icons.length)];
+    const locals = this.sampleIcon(icon, this.ICON_POINTS);
+    if (!locals.length) return;
+
+    this.iconAnchorX = this.mouseX;
+    this.iconAnchorY = this.mouseY;
+
+    const targets = locals.map((p) => ({
+      x: this.iconAnchorX + p.lx * this.ICON_SIZE,
+      y: this.iconAnchorY + p.ly * this.ICON_SIZE
+    }));
+
+    // Recruit enough points to complete the WHOLE drawing: widen the search
+    // radius until there are at least as many candidates as stroke targets.
+    let recruitR = this.ICON_RECRUIT_RADIUS;
+    let pool: number[] = [];
+    for (let round = 0; round < 4; round++) {
+      const r2 = recruitR * recruitR;
+      pool = [];
+      for (let i = 0; i < this.neurons.length; i++) {
+        const n = this.neurons[i];
+        if (n.life !== 'alive' || n.captured) continue;
+        const dx = n.x - this.mouseX;
+        const dy = n.y - this.mouseY;
+        if (dx * dx + dy * dy < r2) pool.push(i);
+      }
+      if (pool.length >= targets.length) break;
+      recruitR *= 1.7;
+    }
+
+    // If points are still scarce, thin the targets uniformly across all strokes
+    // so the full outline always forms (just at a lower density) — never leave
+    // half a drawing missing.
+    let chosen = targets;
+    if (pool.length < targets.length && pool.length > 0) {
+      chosen = [];
+      const step = targets.length / pool.length;
+      for (let k = 0; k < pool.length; k++) {
+        chosen.push(targets[Math.min(targets.length - 1, Math.floor(k * step))]);
+      }
+    }
+
+    const used = new Set<number>();
+    for (const t of chosen) {
+      let best = -1;
+      let bestD = Infinity;
+      for (const i of pool) {
+        if (used.has(i)) continue;
+        const n = this.neurons[i];
+        const d = (n.x - t.x) * (n.x - t.x) + (n.y - t.y) * (n.y - t.y);
+        if (d < bestD) { bestD = d; best = i; }
+      }
+      if (best < 0) break;
+      used.add(best);
+      const n = this.neurons[best];
+      n.captured = true;
+      n.tx = t.x;
+      n.ty = t.y;
+      this.capturedIdx.push(best);
+      // Fill the vacancy it leaves behind with a fresh point fading in.
+      this.spawnReplacement(n.hx, n.hy);
+    }
+
+    this.iconActive = true;
+  }
+
+  /**
+   * The drawing dissolves without any fade: each point gets a small scatter
+   * impulse and then travels back to its place of origin, pulled home by the
+   * containment spring in updateNeurons().
+   */
+  private releaseIcon(): void {
+    for (const i of this.capturedIdx) {
+      const n = this.neurons[i];
+      if (!n) continue;
+      n.captured = false;
+      const ang = Math.random() * Math.PI * 2;
+      const sp = 0.2 + Math.random() * 0.35;
+      n.vx = Math.cos(ang) * sp;
+      n.vy = Math.sin(ang) * sp;
+      // hx/hy stay untouched: the point returns to where it came from.
+    }
+    this.capturedIdx = [];
+    this.iconActive = false;
+  }
+
+  /** Removes every link of a point that has fully faded out. */
+  private stripLinks(index: number): void {
+    const n = this.neurons[index];
+    for (const j of n.neighbors) {
+      const b = this.neurons[j];
+      const k = b?.neighbors.indexOf(index) ?? -1;
+      if (k >= 0) b.neighbors.splice(k, 1);
+    }
+    n.neighbors = [];
+  }
+
+  /** Spawns a fresh point (fading in) at the vacancy a recruited point left. */
+  private spawnReplacement(hx: number, hy: number): void {
+    // Dispersed points stay alive now, so cap the population to avoid growth.
+    let alive = 0;
+    for (const n of this.neurons) if (n.life === 'alive') alive++;
+    if (alive >= this.baseCount * 1.25) return;
+
+    const fresh: Neuron = {
+      x: hx + (Math.random() - 0.5) * 30,
+      y: hy + (Math.random() - 0.5) * 30,
+      hx,
+      hy,
+      vx: 0,
+      vy: 0,
+      radius: 104 + Math.random() * 120,
+      wander: 0.65 + Math.random() * 0.7,
+      lum: 1 + Math.random() * 0.7,
+      tx: hx,
+      ty: hy,
+      captured: false,
+      alpha: 0,
+      life: 'alive',
+      neighbors: [],
+      glow: 0,
+      lastFire: -1e9,
+      color: Math.floor(Math.random() * 3) as 0 | 1 | 2
+    };
+
+    // Reuse a dead slot when possible so the population stays stable.
+    let idx = this.neurons.findIndex((n) => n.life === 'dead');
+    if (idx >= 0) {
+      this.neurons[idx] = fresh;
+    } else {
+      idx = this.neurons.length;
+      this.neurons.push(fresh);
+    }
+
+    // Wire it into the local mesh (up to 3 nearby links).
+    const maxD2 = this.maxLinkDist * this.maxLinkDist;
+    const near: Array<{ j: number; d: number }> = [];
+    for (let j = 0; j < this.neurons.length; j++) {
+      if (j === idx) continue;
+      const b = this.neurons[j];
+      if (b.life !== 'alive' || b.captured || b.neighbors.length >= 5) continue;
+      const dx = b.x - fresh.x;
+      const dy = b.y - fresh.y;
+      const d = dx * dx + dy * dy;
+      if (d < maxD2) near.push({ j, d });
+    }
+    near.sort((a, b) => a.d - b.d);
+    for (const { j } of near.slice(0, 3)) {
+      fresh.neighbors.push(j);
+      this.neurons[j].neighbors.push(idx);
+    }
+  }
+
+  /**
+   * While a drawing forms, its points gradually drop the connections they
+   * brought from their origin and bond with nearby points of the icon instead.
+   */
+  private migrateCapturedLinks(): void {
+    const bondDist2 = 90 * 90;
+    for (const i of this.capturedIdx) {
+      const a = this.neurons[i];
+      if (!a || !a.captured) continue;
+
+      // Fade out one origin link now and then (never isolating either side).
+      if (Math.random() < 0.05 && a.neighbors.length > 1) {
+        for (const j of a.neighbors) {
+          const b = this.neurons[j];
+          if (!b.captured && b.neighbors.length > 1) {
+            a.neighbors.splice(a.neighbors.indexOf(j), 1);
+            b.neighbors.splice(b.neighbors.indexOf(i), 1);
+            break;
+          }
+        }
+      }
+
+      // Bond with the closest fellow point of the drawing.
+      if (a.neighbors.length < 5 && Math.random() < 0.08) {
+        let best = -1;
+        let bestD = Infinity;
+        for (const j of this.capturedIdx) {
+          if (j === i) continue;
+          const b = this.neurons[j];
+          if (b.neighbors.length >= 5 || a.neighbors.includes(j)) continue;
+          const d = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+          if (d < bestD) { bestD = d; best = j; }
+        }
+        if (best >= 0 && bestD < bondDist2) {
+          a.neighbors.push(best);
+          this.neurons[best].neighbors.push(i);
+        }
+      }
+    }
+  }
+
+  /** Evenly samples points along the icon strokes, in local centred coordinates. */
+  private sampleIcon(icon: number[][][], count: number): Array<{ lx: number; ly: number }> {
+    const targets: Array<{ lx: number; ly: number }> = [];
+    const cums: number[][] = icon.map((s) => {
+      const cum: number[] = [0];
+      for (let i = 1; i < s.length; i++) {
+        cum.push(cum[i - 1] + Math.hypot(s[i][0] - s[i - 1][0], s[i][1] - s[i - 1][1]));
+      }
+      return cum;
+    });
+    const total = cums.reduce((a, c) => a + c[c.length - 1], 0) || 1;
+
+    icon.forEach((s, si) => {
+      const cum = cums[si];
+      const len = cum[cum.length - 1];
+      if (len <= 0) return;
+      const n = Math.max(2, Math.round((len / total) * count));
+      for (let k = 0; k < n; k++) {
+        const d = ((k + 0.5) / n) * len;
+        let i = 1;
+        while (i < cum.length - 1 && cum[i] < d) i++;
+        const t = (d - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1);
+        const x = s[i - 1][0] + (s[i][0] - s[i - 1][0]) * t;
+        const y = s[i - 1][1] + (s[i][1] - s[i - 1][1]) * t;
+        targets.push({ lx: x - 0.5, ly: y - 0.5 });
+      }
+    });
+    return targets;
+  }
+
+  // ── Icon library: invisible strokes themed on articles & learning ───────
+  private static iconCache: number[][][][] | null = null;
+
+  private static circleStroke(cx: number, cy: number, r: number, segments = 22): number[][] {
+    const pts: number[][] = [];
+    for (let i = 0; i <= segments; i++) {
+      const a = (i / segments) * Math.PI * 2;
+      pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]);
+    }
+    return pts;
+  }
+
+  private static arcStroke(cx: number, cy: number, r: number, a0: number, a1: number, segments = 12): number[][] {
+    const pts: number[][] = [];
+    for (let i = 0; i <= segments; i++) {
+      const a = a0 + ((a1 - a0) * i) / segments;
+      pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]);
+    }
+    return pts;
+  }
+
+  private static getIcons(): number[][][][] {
+    if (this.iconCache) return this.iconCache;
+    const C = (cx: number, cy: number, r: number, seg?: number) => TblHomeComponent.circleStroke(cx, cy, r, seg);
+    const A = (cx: number, cy: number, r: number, a0: number, a1: number) => TblHomeComponent.arcStroke(cx, cy, r, a0, a1);
+
+    // Article / document — outline, folded corner, title, text lines and a bullet
+    const doc: number[][][] = [
+      [[0.28, 0.06], [0.6, 0.06], [0.76, 0.22], [0.76, 0.94], [0.28, 0.94], [0.28, 0.06]],
+      [[0.6, 0.06], [0.6, 0.22], [0.76, 0.22]],
+      [[0.36, 0.32], [0.56, 0.32]],
+      [[0.36, 0.46], [0.68, 0.46]],
+      [[0.36, 0.58], [0.68, 0.58]],
+      [[0.36, 0.7], [0.6, 0.7]],
+      C(0.4, 0.84, 0.03, 8),
+      [[0.47, 0.84], [0.68, 0.84]]
+    ];
+    // Lightbulb — ideas & learning, with filament and inner glow
+    const bulb: number[][][] = [
+      C(0.5, 0.36, 0.2),
+      [[0.42, 0.62], [0.58, 0.62]],
+      [[0.43, 0.71], [0.57, 0.71]],
+      [[0.46, 0.8], [0.54, 0.8]],
+      [[0.5, 0.04], [0.5, 0.11]],
+      [[0.2, 0.16], [0.26, 0.22]],
+      [[0.8, 0.16], [0.74, 0.22]],
+      [[0.43, 0.62], [0.43, 0.5], [0.5, 0.42], [0.57, 0.5], [0.57, 0.62]],
+      C(0.5, 0.33, 0.07, 12)
+    ];
+    // Graduation cap — the Learn track, with inner board and tassel knob
+    const cap: number[][][] = [
+      [[0.5, 0.18], [0.92, 0.36], [0.5, 0.54], [0.08, 0.36], [0.5, 0.18]],
+      [[0.5, 0.26], [0.74, 0.36], [0.5, 0.46], [0.26, 0.36], [0.5, 0.26]],
+      [[0.28, 0.45], [0.28, 0.66]],
+      [[0.72, 0.45], [0.72, 0.66]],
+      [[0.28, 0.66], [0.5, 0.78], [0.72, 0.66]],
+      [[0.92, 0.36], [0.92, 0.6]],
+      C(0.92, 0.64, 0.035, 8)
+    ];
+    // Code brackets — developer content, with code lines around
+    const code: number[][][] = [
+      [[0.32, 0.28], [0.12, 0.5], [0.32, 0.72]],
+      [[0.68, 0.28], [0.88, 0.5], [0.68, 0.72]],
+      [[0.56, 0.22], [0.44, 0.78]],
+      [[0.36, 0.16], [0.52, 0.16]],
+      [[0.48, 0.84], [0.64, 0.84]]
+    ];
+    // Padlock — security chapters, with double shackle, keyhole and rivets
+    const lock: number[][][] = [
+      [[0.28, 0.48], [0.72, 0.48], [0.72, 0.92], [0.28, 0.92], [0.28, 0.48]],
+      [[0.34, 0.54], [0.66, 0.54]],
+      A(0.5, 0.48, 0.15, Math.PI, Math.PI * 2),
+      A(0.5, 0.48, 0.09, Math.PI, Math.PI * 2),
+      C(0.5, 0.68, 0.05, 12),
+      [[0.5, 0.73], [0.5, 0.8]],
+      C(0.33, 0.87, 0.02, 6),
+      C(0.67, 0.87, 0.02, 6)
+    ];
+    // Two people working together at a desk with a laptop
+    const people: number[][][] = [
+      C(0.34, 0.3, 0.09, 14),
+      [[0.18, 0.62], [0.22, 0.5], [0.34, 0.44], [0.46, 0.5], [0.5, 0.62]],
+      C(0.66, 0.34, 0.09, 14),
+      [[0.5, 0.66], [0.54, 0.55], [0.66, 0.5], [0.78, 0.55], [0.82, 0.66]],
+      [[0.12, 0.72], [0.88, 0.72]],
+      [[0.42, 0.72], [0.46, 0.6], [0.6, 0.6], [0.62, 0.72]]
+    ];
+    // Magnifier — "explore more", with inner lens, reflection and thick handle
+    const search: number[][][] = [
+      C(0.42, 0.42, 0.2),
+      C(0.42, 0.42, 0.13, 16),
+      A(0.42, 0.42, 0.16, Math.PI * 1.1, Math.PI * 1.6),
+      [[0.57, 0.57], [0.82, 0.82]],
+      [[0.6, 0.54], [0.85, 0.79]]
+    ];
+
+    // Shield with a check — API security, with inner shield outline
+    const shield: number[][][] = [
+      [[0.5, 0.06], [0.86, 0.2], [0.84, 0.55], [0.5, 0.94], [0.16, 0.55], [0.14, 0.2], [0.5, 0.06]],
+      [[0.5, 0.16], [0.76, 0.26], [0.75, 0.52], [0.5, 0.82], [0.25, 0.52], [0.24, 0.26], [0.5, 0.16]],
+      [[0.36, 0.48], [0.47, 0.6], [0.68, 0.34]]
+    ];
+    // Key — cryptography & secrets, with inner bow ring
+    const key: number[][][] = [
+      C(0.3, 0.35, 0.14),
+      C(0.3, 0.35, 0.07, 12),
+      [[0.4, 0.45], [0.78, 0.83]],
+      [[0.66, 0.71], [0.58, 0.79]],
+      [[0.74, 0.79], [0.66, 0.87]]
+    ];
+    // Gear — engineering & configuration, with hub
+    const gear: number[][][] = [
+      C(0.5, 0.5, 0.16),
+      C(0.5, 0.5, 0.06, 10),
+      C(0.5, 0.5, 0.3, 20),
+      ...Array.from({ length: 8 }, (_, k) => {
+        const a = (k / 8) * Math.PI * 2;
+        return [
+          [0.5 + Math.cos(a) * 0.3, 0.5 + Math.sin(a) * 0.3],
+          [0.5 + Math.cos(a) * 0.42, 0.5 + Math.sin(a) * 0.42]
+        ];
+      })
+    ];
+    // Open book — the Learn track, with text lines on both pages
+    const book: number[][][] = [
+      [[0.5, 0.25], [0.5, 0.85]],
+      [[0.5, 0.25], [0.18, 0.16], [0.18, 0.76], [0.5, 0.85]],
+      [[0.5, 0.25], [0.82, 0.16], [0.82, 0.76], [0.5, 0.85]],
+      [[0.26, 0.3], [0.44, 0.37]],
+      [[0.26, 0.42], [0.44, 0.49]],
+      [[0.56, 0.37], [0.74, 0.3]],
+      [[0.56, 0.49], [0.74, 0.42]]
+    ];
+    // Cloud — cloud & infrastructure, with download arrow
+    const cloud: number[][][] = [
+      A(0.34, 0.58, 0.13, Math.PI * 0.55, Math.PI * 1.45),
+      A(0.5, 0.46, 0.17, Math.PI * 0.85, Math.PI * 2.1),
+      A(0.68, 0.58, 0.13, Math.PI * 1.55, Math.PI * 2.45),
+      [[0.34, 0.71], [0.68, 0.71]],
+      [[0.5, 0.76], [0.5, 0.92]],
+      [[0.44, 0.86], [0.5, 0.92], [0.56, 0.86]]
+    ];
+    // Database cylinder — data & storage, with status dots
+    const db: number[][][] = [
+      A(0.5, 0.25, 0.3, Math.PI, Math.PI * 2),
+      [[0.2, 0.25], [0.8, 0.25]],
+      [[0.2, 0.25], [0.2, 0.75]],
+      [[0.8, 0.25], [0.8, 0.75]],
+      A(0.5, 0.45, 0.3, 0, Math.PI),
+      A(0.5, 0.75, 0.3, 0, Math.PI),
+      C(0.3, 0.38, 0.02, 6),
+      C(0.3, 0.6, 0.02, 6)
+    ];
+    // Terminal — command line, with title bar and window dots
+    const term: number[][][] = [
+      [[0.12, 0.2], [0.88, 0.2], [0.88, 0.8], [0.12, 0.8], [0.12, 0.2]],
+      [[0.12, 0.32], [0.88, 0.32]],
+      C(0.18, 0.26, 0.015, 6),
+      C(0.24, 0.26, 0.015, 6),
+      C(0.3, 0.26, 0.015, 6),
+      [[0.22, 0.46], [0.32, 0.56], [0.22, 0.66]],
+      [[0.4, 0.66], [0.58, 0.66]]
+    ];
+    // Bar chart — observability & metrics, with trend line and arrow
+    const chart: number[][][] = [
+      [[0.15, 0.15], [0.15, 0.85], [0.88, 0.85]],
+      [[0.3, 0.85], [0.3, 0.6]],
+      [[0.47, 0.85], [0.47, 0.45]],
+      [[0.64, 0.85], [0.64, 0.68]],
+      [[0.8, 0.85], [0.8, 0.3]],
+      [[0.22, 0.55], [0.4, 0.4], [0.58, 0.5], [0.78, 0.24]],
+      [[0.7, 0.24], [0.78, 0.24], [0.78, 0.32]]
+    ];
+    // Linked nodes — networking & integrations, with central hub
+    const network: number[][][] = [
+      [[0.5, 0.2], [0.2, 0.7]],
+      [[0.5, 0.2], [0.8, 0.7]],
+      [[0.2, 0.7], [0.8, 0.7]],
+      [[0.5, 0.2], [0.5, 0.5]],
+      [[0.2, 0.7], [0.5, 0.5]],
+      [[0.8, 0.7], [0.5, 0.5]],
+      C(0.5, 0.2, 0.07, 12),
+      C(0.2, 0.7, 0.07, 12),
+      C(0.8, 0.7, 0.07, 12),
+      C(0.5, 0.5, 0.05, 10)
+    ];
+    // Rocket — launches & getting started, with porthole detail and inner flame
+    const rocket: number[][][] = [
+      [[0.5, 0.08], [0.62, 0.3], [0.62, 0.62], [0.38, 0.62], [0.38, 0.3], [0.5, 0.08]],
+      [[0.38, 0.5], [0.26, 0.7], [0.38, 0.66]],
+      [[0.62, 0.5], [0.74, 0.7], [0.62, 0.66]],
+      C(0.5, 0.36, 0.06, 12),
+      C(0.5, 0.36, 0.03, 8),
+      [[0.38, 0.56], [0.62, 0.56]],
+      [[0.46, 0.66], [0.5, 0.8], [0.54, 0.66]],
+      [[0.48, 0.66], [0.5, 0.73], [0.52, 0.66]]
+    ];
+    // Chat bubbles — community & conversation, with a reply bubble
+    const chat: number[][][] = [
+      [[0.15, 0.25], [0.85, 0.25], [0.85, 0.62], [0.45, 0.62], [0.3, 0.78], [0.32, 0.62], [0.15, 0.62], [0.15, 0.25]],
+      C(0.35, 0.44, 0.03, 8),
+      C(0.5, 0.44, 0.03, 8),
+      C(0.65, 0.44, 0.03, 8),
+      [[0.62, 0.7], [0.88, 0.7], [0.88, 0.88], [0.74, 0.88], [0.66, 0.95], [0.68, 0.88], [0.62, 0.88], [0.62, 0.7]]
+    ];
+    // Globe — the web & multilingual content, with meridians and latitudes
+    const globe: number[][][] = [
+      C(0.5, 0.5, 0.3),
+      [[0.2, 0.5], [0.8, 0.5]],
+      [[0.5, 0.2], [0.5, 0.8]],
+      [[0.35, 0.24], [0.28, 0.5], [0.35, 0.76]],
+      [[0.65, 0.24], [0.72, 0.5], [0.65, 0.76]],
+      [[0.26, 0.35], [0.5, 0.3], [0.74, 0.35]],
+      [[0.26, 0.65], [0.5, 0.7], [0.74, 0.65]]
+    ];
+
+    // Envelope — messaging, with flap, fold lines and stamp
+    const mail: number[][][] = [
+      [[0.12, 0.25], [0.88, 0.25], [0.88, 0.75], [0.12, 0.75], [0.12, 0.25]],
+      [[0.12, 0.25], [0.5, 0.55], [0.88, 0.25]],
+      [[0.12, 0.75], [0.38, 0.5]],
+      [[0.88, 0.75], [0.62, 0.5]],
+      [[0.72, 0.32], [0.8, 0.32], [0.8, 0.4], [0.72, 0.4], [0.72, 0.32]]
+    ];
+    // Wi-Fi — connectivity, three arcs and the source dot
+    const wifi: number[][][] = [
+      A(0.5, 0.72, 0.42, Math.PI * 1.25, Math.PI * 1.75),
+      A(0.5, 0.72, 0.3, Math.PI * 1.25, Math.PI * 1.75),
+      A(0.5, 0.72, 0.18, Math.PI * 1.25, Math.PI * 1.75),
+      C(0.5, 0.72, 0.035, 8)
+    ];
+    // Chain links — integrations, interlocked rings with inner edges
+    const link: number[][][] = [
+      C(0.38, 0.5, 0.16),
+      C(0.62, 0.5, 0.16),
+      C(0.38, 0.5, 0.09, 12),
+      C(0.62, 0.5, 0.09, 12),
+      [[0.46, 0.5], [0.54, 0.5]]
+    ];
+    // Fingerprint — identity, concentric ridge arcs with core
+    const finger: number[][][] = [
+      A(0.5, 0.5, 0.3, Math.PI * 1.1, Math.PI * 2.4),
+      A(0.5, 0.5, 0.22, Math.PI * 0.9, Math.PI * 2.2),
+      A(0.5, 0.5, 0.14, Math.PI * 1.2, Math.PI * 2.6),
+      A(0.5, 0.55, 0.07, Math.PI * 0.8, Math.PI * 2.0),
+      C(0.5, 0.55, 0.02, 6)
+    ];
+    // Bug — debugging, body, head, six legs, antennae and spine
+    const bug: number[][][] = [
+      C(0.5, 0.55, 0.18),
+      C(0.5, 0.32, 0.08, 12),
+      [[0.5, 0.37], [0.5, 0.73]],
+      [[0.32, 0.45], [0.18, 0.38]],
+      [[0.32, 0.58], [0.16, 0.58]],
+      [[0.32, 0.68], [0.2, 0.78]],
+      [[0.68, 0.45], [0.82, 0.38]],
+      [[0.68, 0.58], [0.84, 0.58]],
+      [[0.68, 0.68], [0.8, 0.78]],
+      [[0.45, 0.26], [0.4, 0.16]],
+      [[0.55, 0.26], [0.6, 0.16]]
+    ];
+    // Folder — files, with tab, divider and label line
+    const folder: number[][][] = [
+      [[0.12, 0.3], [0.38, 0.3], [0.44, 0.38], [0.88, 0.38], [0.88, 0.78], [0.12, 0.78], [0.12, 0.3]],
+      [[0.12, 0.46], [0.88, 0.46]],
+      [[0.2, 0.6], [0.5, 0.6]]
+    ];
+    // Clock — schedules, with hands, hub and tick marks
+    const clock: number[][][] = [
+      C(0.5, 0.5, 0.3),
+      [[0.5, 0.5], [0.5, 0.3]],
+      [[0.5, 0.5], [0.64, 0.58]],
+      C(0.5, 0.5, 0.03, 8),
+      [[0.5, 0.22], [0.5, 0.26]],
+      [[0.5, 0.74], [0.5, 0.78]],
+      [[0.22, 0.5], [0.26, 0.5]],
+      [[0.74, 0.5], [0.78, 0.5]]
+    ];
+    // Target — goals, three rings and crosshairs
+    const target: number[][][] = [
+      C(0.5, 0.5, 0.3),
+      C(0.5, 0.5, 0.19, 16),
+      C(0.5, 0.5, 0.08, 10),
+      [[0.5, 0.12], [0.5, 0.24]],
+      [[0.5, 0.76], [0.5, 0.88]],
+      [[0.12, 0.5], [0.24, 0.5]],
+      [[0.76, 0.5], [0.88, 0.5]]
+    ];
+    // Puzzle piece — problem solving, outline with four knobs
+    const puzzle: number[][][] = [
+      [[0.2, 0.25], [0.4, 0.25]],
+      A(0.47, 0.25, 0.07, Math.PI, Math.PI * 2),
+      [[0.54, 0.25], [0.78, 0.25], [0.78, 0.45]],
+      A(0.78, 0.52, 0.07, Math.PI * 1.5, Math.PI * 2.5),
+      [[0.78, 0.59], [0.78, 0.78], [0.55, 0.78]],
+      A(0.48, 0.78, 0.07, 0, Math.PI),
+      [[0.41, 0.78], [0.2, 0.78], [0.2, 0.55]],
+      A(0.2, 0.48, 0.07, Math.PI * 0.5, Math.PI * 1.5),
+      [[0.2, 0.41], [0.2, 0.25]]
+    ];
+    // Trophy — achievement, cup with handles, stem, base and medal dot
+    const trophy: number[][][] = [
+      [[0.32, 0.18], [0.68, 0.18], [0.66, 0.42], [0.5, 0.55], [0.34, 0.42], [0.32, 0.18]],
+      A(0.28, 0.26, 0.09, Math.PI * 0.5, Math.PI * 1.5),
+      A(0.72, 0.26, 0.09, Math.PI * 1.5, Math.PI * 2.5),
+      [[0.5, 0.55], [0.5, 0.68]],
+      [[0.38, 0.68], [0.62, 0.68]],
+      [[0.34, 0.78], [0.66, 0.78]],
+      C(0.5, 0.32, 0.05, 10)
+    ];
+    // Star — favorites, five points with inner ring
+    const star: number[][][] = [
+      [[0.5, 0.18], [0.576, 0.395], [0.804, 0.401], [0.624, 0.54], [0.688, 0.759],
+       [0.5, 0.63], [0.312, 0.759], [0.376, 0.54], [0.196, 0.401], [0.424, 0.395], [0.5, 0.18]],
+      C(0.5, 0.5, 0.06, 10)
+    ];
+    // Pencil — writing, body, tip, eraser and edge lines
+    const pencil: number[][][] = [
+      [[0.25, 0.75], [0.62, 0.38], [0.72, 0.48], [0.35, 0.85], [0.25, 0.75]],
+      [[0.25, 0.75], [0.2, 0.9], [0.35, 0.85]],
+      [[0.62, 0.38], [0.7, 0.3], [0.8, 0.4], [0.72, 0.48]],
+      [[0.66, 0.34], [0.76, 0.44]],
+      [[0.27, 0.83], [0.24, 0.86]]
+    ];
+    // Server rack — infrastructure, three units with LEDs and vents
+    const server: number[][][] = [
+      [[0.2, 0.18], [0.8, 0.18], [0.8, 0.38], [0.2, 0.38], [0.2, 0.18]],
+      [[0.2, 0.42], [0.8, 0.42], [0.8, 0.62], [0.2, 0.62], [0.2, 0.42]],
+      [[0.2, 0.66], [0.8, 0.66], [0.8, 0.86], [0.2, 0.86], [0.2, 0.66]],
+      C(0.28, 0.28, 0.02, 6),
+      [[0.55, 0.28], [0.72, 0.28]],
+      C(0.28, 0.52, 0.02, 6),
+      [[0.55, 0.52], [0.72, 0.52]],
+      C(0.28, 0.76, 0.02, 6),
+      [[0.55, 0.76], [0.72, 0.76]]
+    ];
+    // Browser window — the web, with toolbar, buttons, URL bar and content
+    const browser: number[][][] = [
+      [[0.12, 0.18], [0.88, 0.18], [0.88, 0.82], [0.12, 0.82], [0.12, 0.18]],
+      [[0.12, 0.32], [0.88, 0.32]],
+      C(0.18, 0.25, 0.015, 6),
+      C(0.24, 0.25, 0.015, 6),
+      C(0.3, 0.25, 0.015, 6),
+      [[0.38, 0.25], [0.82, 0.25]],
+      [[0.2, 0.45], [0.55, 0.45]],
+      [[0.2, 0.57], [0.8, 0.57]],
+      [[0.2, 0.69], [0.68, 0.69]]
+    ];
+    // Mobile phone — apps, with screen edges, speaker, button and content
+    const phone: number[][][] = [
+      [[0.34, 0.1], [0.66, 0.1], [0.66, 0.9], [0.34, 0.9], [0.34, 0.1]],
+      [[0.34, 0.2], [0.66, 0.2]],
+      [[0.34, 0.78], [0.66, 0.78]],
+      [[0.44, 0.15], [0.56, 0.15]],
+      C(0.5, 0.84, 0.03, 8),
+      [[0.4, 0.32], [0.6, 0.32]],
+      [[0.4, 0.44], [0.6, 0.44]]
+    ];
+    // Certificate — completion, with text lines, seal and ribbon
+    const cert: number[][][] = [
+      [[0.14, 0.22], [0.86, 0.22], [0.86, 0.7], [0.14, 0.7], [0.14, 0.22]],
+      [[0.24, 0.34], [0.76, 0.34]],
+      [[0.24, 0.44], [0.62, 0.44]],
+      [[0.24, 0.54], [0.55, 0.54]],
+      C(0.72, 0.6, 0.06, 10),
+      [[0.69, 0.65], [0.66, 0.82], [0.72, 0.76], [0.78, 0.82], [0.75, 0.65]]
+    ];
+
+    // Laptop — screen with content, hinged base and trackpad
+    const laptop: number[][][] = [
+      [[0.22, 0.2], [0.78, 0.2], [0.78, 0.62], [0.22, 0.62], [0.22, 0.2]],
+      [[0.26, 0.26], [0.74, 0.26], [0.74, 0.56], [0.26, 0.56], [0.26, 0.26]],
+      [[0.3, 0.34], [0.6, 0.34]],
+      [[0.3, 0.42], [0.68, 0.42]],
+      [[0.22, 0.62], [0.14, 0.72]],
+      [[0.78, 0.62], [0.86, 0.72]],
+      [[0.14, 0.72], [0.86, 0.72]],
+      [[0.42, 0.67], [0.58, 0.67]]
+    ];
+    // Camera — body, double lens, flash and status LED
+    const camera: number[][][] = [
+      [[0.14, 0.32], [0.36, 0.32], [0.42, 0.24], [0.58, 0.24], [0.64, 0.32], [0.86, 0.32],
+       [0.86, 0.78], [0.14, 0.78], [0.14, 0.32]],
+      C(0.5, 0.55, 0.15),
+      C(0.5, 0.55, 0.08, 12),
+      [[0.72, 0.4], [0.8, 0.4]],
+      C(0.24, 0.42, 0.02, 6)
+    ];
+    // Music — double beam with two note heads
+    const music: number[][][] = [
+      [[0.34, 0.72], [0.34, 0.3], [0.72, 0.22], [0.72, 0.64]],
+      [[0.34, 0.38], [0.72, 0.3]],
+      C(0.29, 0.74, 0.06, 12),
+      C(0.67, 0.66, 0.06, 12)
+    ];
+    // Heart — outline with inner highlight
+    const heart: number[][][] = [
+      A(0.36, 0.36, 0.16, Math.PI * 0.75, Math.PI * 1.95),
+      A(0.64, 0.36, 0.16, Math.PI * 1.05, Math.PI * 2.25),
+      [[0.21, 0.44], [0.5, 0.85], [0.79, 0.44]],
+      A(0.42, 0.4, 0.06, Math.PI * 0.9, Math.PI * 1.9)
+    ];
+    // Map pin — location, with double ring and ground shadow
+    const pin: number[][][] = [
+      A(0.5, 0.4, 0.22, Math.PI * 0.85, Math.PI * 2.15),
+      [[0.316, 0.53], [0.5, 0.88], [0.684, 0.53]],
+      C(0.5, 0.4, 0.1, 14),
+      C(0.5, 0.4, 0.04, 8),
+      A(0.5, 0.92, 0.13, 0, Math.PI)
+    ];
+    // Calendar — frame, rings, grid and a marked day
+    const calendar: number[][][] = [
+      [[0.14, 0.24], [0.86, 0.24], [0.86, 0.84], [0.14, 0.84], [0.14, 0.24]],
+      [[0.14, 0.38], [0.86, 0.38]],
+      [[0.3, 0.16], [0.3, 0.3]],
+      [[0.7, 0.16], [0.7, 0.3]],
+      [[0.26, 0.52], [0.74, 0.52]],
+      [[0.26, 0.66], [0.74, 0.66]],
+      [[0.38, 0.44], [0.38, 0.78]],
+      [[0.62, 0.44], [0.62, 0.78]],
+      C(0.5, 0.59, 0.035, 8)
+    ];
+    // Trend line — axes, data points and ticks
+    const trend: number[][][] = [
+      [[0.14, 0.14], [0.14, 0.86], [0.88, 0.86]],
+      [[0.2, 0.7], [0.38, 0.52], [0.56, 0.62], [0.8, 0.3]],
+      C(0.2, 0.7, 0.025, 6),
+      C(0.38, 0.52, 0.025, 6),
+      C(0.56, 0.62, 0.025, 6),
+      C(0.8, 0.3, 0.025, 6),
+      [[0.14, 0.3], [0.18, 0.3]],
+      [[0.14, 0.5], [0.18, 0.5]],
+      [[0.14, 0.7], [0.18, 0.7]]
+    ];
+    // Flask — science, with liquid line and rising bubbles
+    const flask: number[][][] = [
+      [[0.44, 0.14], [0.56, 0.14]],
+      [[0.46, 0.14], [0.46, 0.4], [0.28, 0.78], [0.3, 0.84], [0.7, 0.84], [0.72, 0.78], [0.54, 0.4], [0.54, 0.14]],
+      [[0.36, 0.62], [0.64, 0.62]],
+      C(0.45, 0.72, 0.025, 6),
+      C(0.55, 0.68, 0.02, 6),
+      C(0.5, 0.77, 0.02, 6)
+    ];
+    // Brain — two lobes with folds
+    const brain: number[][][] = [
+      A(0.38, 0.4, 0.16, Math.PI * 0.5, Math.PI * 1.6),
+      A(0.62, 0.4, 0.16, Math.PI * 1.4, Math.PI * 2.5),
+      A(0.35, 0.62, 0.12, Math.PI * 0.6, Math.PI * 1.7),
+      A(0.65, 0.62, 0.12, Math.PI * 1.3, Math.PI * 2.4),
+      [[0.5, 0.26], [0.5, 0.74]],
+      A(0.42, 0.5, 0.05, 0, Math.PI * 1.5),
+      A(0.58, 0.5, 0.05, Math.PI * 1.5, Math.PI * 3)
+    ];
+    // Eye — lids, iris, pupil and lashes
+    const eye: number[][][] = [
+      A(0.5, 0.75, 0.42, Math.PI * 1.22, Math.PI * 1.78),
+      A(0.5, 0.25, 0.42, Math.PI * 0.22, Math.PI * 0.78),
+      C(0.5, 0.5, 0.13),
+      C(0.5, 0.5, 0.06, 10),
+      [[0.3, 0.28], [0.26, 0.22]],
+      [[0.5, 0.24], [0.5, 0.17]],
+      [[0.7, 0.28], [0.74, 0.22]]
+    ];
+    // Sun — double disc with eight rays
+    const sun: number[][][] = [
+      C(0.5, 0.5, 0.18),
+      C(0.5, 0.5, 0.11, 14),
+      [[0.5, 0.12], [0.5, 0.24]],
+      [[0.5, 0.76], [0.5, 0.88]],
+      [[0.12, 0.5], [0.24, 0.5]],
+      [[0.76, 0.5], [0.88, 0.5]],
+      [[0.23, 0.23], [0.32, 0.32]],
+      [[0.68, 0.32], [0.77, 0.23]],
+      [[0.23, 0.77], [0.32, 0.68]],
+      [[0.68, 0.68], [0.77, 0.77]]
+    ];
+    // Umbrella — scalloped canopy, pole, hook and tip
+    const umbrella: number[][][] = [
+      A(0.5, 0.5, 0.34, Math.PI, Math.PI * 2),
+      A(0.27, 0.5, 0.11, 0, Math.PI),
+      A(0.5, 0.5, 0.11, 0, Math.PI),
+      A(0.73, 0.5, 0.11, 0, Math.PI),
+      [[0.5, 0.12], [0.5, 0.16]],
+      [[0.5, 0.16], [0.5, 0.78]],
+      A(0.56, 0.78, 0.06, 0, Math.PI)
+    ];
+    // House — roof, walls, door with knob, cross window and chimney
+    const house: number[][][] = [
+      [[0.5, 0.12], [0.88, 0.42]],
+      [[0.5, 0.12], [0.12, 0.42]],
+      [[0.2, 0.42], [0.2, 0.84], [0.8, 0.84], [0.8, 0.42]],
+      [[0.44, 0.84], [0.44, 0.6], [0.56, 0.6], [0.56, 0.84]],
+      C(0.53, 0.73, 0.012, 6),
+      [[0.26, 0.5], [0.38, 0.5], [0.38, 0.62], [0.26, 0.62], [0.26, 0.5]],
+      [[0.32, 0.5], [0.32, 0.62]],
+      [[0.26, 0.56], [0.38, 0.56]],
+      [[0.66, 0.16], [0.66, 0.3], [0.74, 0.3], [0.74, 0.24]]
+    ];
+    // Coffee — cup with handle, saucer, coffee line and steam
+    const coffee: number[][][] = [
+      [[0.2, 0.4], [0.68, 0.4], [0.66, 0.78], [0.22, 0.78], [0.2, 0.4]],
+      A(0.68, 0.52, 0.1, Math.PI * 1.5, Math.PI * 2.5),
+      [[0.14, 0.86], [0.74, 0.86]],
+      [[0.24, 0.5], [0.64, 0.5]],
+      [[0.3, 0.16], [0.28, 0.24], [0.32, 0.3]],
+      [[0.44, 0.12], [0.42, 0.2], [0.46, 0.28]],
+      [[0.58, 0.16], [0.56, 0.24], [0.6, 0.3]]
+    ];
+    // Scissors — crossed blades, pivot and finger rings
+    const scissors: number[][][] = [
+      [[0.3, 0.3], [0.72, 0.68]],
+      [[0.3, 0.7], [0.72, 0.32]],
+      C(0.26, 0.26, 0.06, 10),
+      C(0.26, 0.74, 0.06, 10),
+      C(0.51, 0.5, 0.02, 6),
+      [[0.72, 0.68], [0.82, 0.74]],
+      [[0.72, 0.32], [0.82, 0.26]]
+    ];
+    // Bell — notifications, with clapper and sound waves
+    const bell: number[][][] = [
+      A(0.5, 0.42, 0.22, Math.PI, Math.PI * 2),
+      [[0.28, 0.42], [0.26, 0.66], [0.2, 0.72], [0.8, 0.72], [0.74, 0.66], [0.72, 0.42]],
+      [[0.46, 0.14], [0.54, 0.14]],
+      [[0.5, 0.14], [0.5, 0.2]],
+      C(0.5, 0.78, 0.04, 8),
+      A(0.5, 0.5, 0.38, Math.PI * 1.8, Math.PI * 2.05),
+      A(0.5, 0.5, 0.38, Math.PI * 0.95, Math.PI * 1.2)
+    ];
+    // Battery — body, terminal and charge bars
+    const battery: number[][][] = [
+      [[0.14, 0.34], [0.78, 0.34], [0.78, 0.66], [0.14, 0.66], [0.14, 0.34]],
+      [[0.78, 0.42], [0.86, 0.42], [0.86, 0.58], [0.78, 0.58]],
+      [[0.22, 0.42], [0.22, 0.58]],
+      [[0.3, 0.42], [0.3, 0.58]],
+      [[0.38, 0.42], [0.38, 0.58]],
+      [[0.46, 0.42], [0.46, 0.58]]
+    ];
+    // Flag — pole with finial, waving cloth and stripe
+    const flag: number[][][] = [
+      [[0.24, 0.12], [0.24, 0.88]],
+      C(0.24, 0.1, 0.02, 6),
+      [[0.24, 0.18], [0.5, 0.24], [0.78, 0.16], [0.78, 0.5], [0.5, 0.58], [0.24, 0.52]],
+      [[0.24, 0.35], [0.5, 0.41], [0.78, 0.33]]
+    ];
+    // Compass — double ring, needle, hub and north tick
+    const compass: number[][][] = [
+      C(0.5, 0.5, 0.32),
+      C(0.5, 0.5, 0.26, 18),
+      [[0.36, 0.64], [0.55, 0.45], [0.64, 0.36], [0.45, 0.55], [0.36, 0.64]],
+      C(0.5, 0.5, 0.03, 8),
+      [[0.5, 0.16], [0.5, 0.21]]
+    ];
+    // Gift — box with band, lid, ribbon and bow
+    const gift: number[][][] = [
+      [[0.16, 0.4], [0.84, 0.4], [0.84, 0.52], [0.16, 0.52], [0.16, 0.4]],
+      [[0.2, 0.52], [0.2, 0.86], [0.8, 0.86], [0.8, 0.52]],
+      [[0.5, 0.4], [0.5, 0.86]],
+      [[0.2, 0.66], [0.8, 0.66]],
+      A(0.42, 0.33, 0.08, Math.PI * 0.5, Math.PI * 1.7),
+      A(0.58, 0.33, 0.08, Math.PI * 1.3, Math.PI * 2.5)
+    ];
+
+    this.iconCache = [
+      doc, bulb, cap, code, lock, people, search,
+      shield, key, gear, book, cloud, db, term, chart, network, rocket, chat, globe,
+      mail, wifi, link, finger, bug, folder, clock, target, puzzle, trophy, star,
+      pencil, server, browser, phone, cert,
+      laptop, camera, music, heart, pin, calendar, trend, flask, brain, eye, sun,
+      umbrella, house, coffee, scissors, bell, battery, flag, compass, gift
+    ];
+    return this.iconCache;
+  }
+
+  // ── Connection dynamics: links dissolve over time and new ones appear ───
+  private rewire(dt: number): void {
+    this.rewireAcc += dt;
+    if (this.rewireAcc < this.REWIRE_INTERVAL) return;
+    this.rewireAcc = 0;
+    const N = this.neurons.length;
+    if (!N) return;
+
+    // Dissolve one existing connection (never leaving a point isolated).
+    for (let attempt = 0; attempt < 6; attempt++) {
+      const i = Math.floor(Math.random() * N);
+      const a = this.neurons[i];
+      if (a.neighbors.length < 2) continue;
+      const j = a.neighbors[Math.floor(Math.random() * a.neighbors.length)];
+      const b = this.neurons[j];
+      if (b.neighbors.length < 2) continue;
+      a.neighbors.splice(a.neighbors.indexOf(j), 1);
+      b.neighbors.splice(b.neighbors.indexOf(i), 1);
+      break;
+    }
+
+    // Prune overstretched links left behind when a drawing dissolves.
+    const stretch2 = this.maxLinkDist * this.maxLinkDist * 2.56;
+    for (let attempt = 0; attempt < 12; attempt++) {
+      const i = Math.floor(Math.random() * N);
+      const a = this.neurons[i];
+      if (a.neighbors.length < 2) continue;
+      for (const j of a.neighbors) {
+        const b = this.neurons[j];
+        if (b.neighbors.length < 2) continue;
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        if (dx * dx + dy * dy > stretch2) {
+          a.neighbors.splice(a.neighbors.indexOf(j), 1);
+          b.neighbors.splice(b.neighbors.indexOf(i), 1);
+          break;
+        }
+      }
+    }
+
+    // Grow one new connection between nearby points.
+    const maxD2 = this.maxLinkDist * this.maxLinkDist;
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const i = Math.floor(Math.random() * N);
+      const j = Math.floor(Math.random() * N);
+      if (i === j) continue;
+      const a = this.neurons[i];
+      const b = this.neurons[j];
+      if (a.life !== 'alive' || b.life !== 'alive') continue;
+      if (a.neighbors.length >= 5 || b.neighbors.length >= 5) continue;
+      if (a.neighbors.includes(j)) continue;
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      if (dx * dx + dy * dy > maxD2) continue;
+      a.neighbors.push(j);
+      b.neighbors.push(i);
+      break;
+    }
+
+    // Density regulator: after a drawing dissolves, the field carries surplus
+    // points (returned originals + their replacements). Retire up to two free
+    // points per tick until the base density is restored — a full icon's
+    // surplus clears in roughly 20 seconds.
+    let alive = 0;
+    for (const n of this.neurons) if (n.life === 'alive') alive++;
+    let culls = Math.min(2, alive - this.baseCount);
+    for (let attempt = 0; attempt < 24 && culls > 0; attempt++) {
+      const i = Math.floor(Math.random() * N);
+      const n = this.neurons[i];
+      if (n.life !== 'alive' || n.captured) continue;
+      n.life = 'dying';
+      culls--;
     }
   }
 
@@ -538,8 +1546,8 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     // Only clear/redraw the on-screen slice — keeps a tall canvas cheap.
     ctx.clearRect(0, bandTop, this.cssW, viewH + margin * 2);
 
-    // Drift the neurons within their leash and let them lean towards the pointer.
-    if (!this.reducedMotion) this.updateNeurons(dt);
+    // Drift the neurons within their leash and manage icon formations.
+    if (!this.reducedMotion) this.updateNeurons(dt, now);
 
     // Seed a steady, modest amount of activity (origins biased away from pointer).
     if (!this.reducedMotion) {
@@ -558,12 +1566,13 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     ctx.lineWidth = 1;
     for (let i = 0; i < this.neurons.length; i++) {
       const a = this.neurons[i];
+      if (a.life === 'dead') continue;
       for (const j of a.neighbors) {
         if (j <= i) continue;
         const b = this.neurons[j];
         if (!inBand(a.y) && !inBand(b.y)) continue;
         const activity = Math.max(a.glow, b.glow);
-        const alpha = 0.0381 + activity * 0.2704;
+        const alpha = (0.0381 + activity * 0.2704) * Math.min(a.alpha, b.alpha);
         const [r, g, bl] = TblHomeComponent.COLORS[a.color];
         ctx.strokeStyle = `rgba(${r}, ${g}, ${bl}, ${alpha.toFixed(3)})`;
         ctx.beginPath();
@@ -575,6 +1584,7 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // ── Neuron bodies ─────────────────────────────────────────────────
     for (const n of this.neurons) {
+      if (n.life === 'dead') continue;
       if (!this.reducedMotion) n.glow *= Math.pow(0.9, dt / 16);
       if (!inBand(n.y)) continue;
       const [r, g, b] = TblHomeComponent.COLORS[n.color];
@@ -582,7 +1592,7 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (n.glow > 0.02) {
         const halo = 4 + n.glow * 9;
         const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, halo);
-        grd.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${Math.min(n.glow * 0.4225 * n.lum, 1).toFixed(3)})`);
+        grd.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${Math.min(n.glow * 0.4225 * n.lum * n.alpha, 1).toFixed(3)})`);
         grd.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
         ctx.fillStyle = grd;
         ctx.beginPath();
@@ -590,7 +1600,7 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
         ctx.fill();
       }
 
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min((0.26 + n.glow * 0.507) * n.lum, 1).toFixed(3)})`;
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min((0.26 + n.glow * 0.507) * n.lum * n.alpha, 1).toFixed(3)})`;
       ctx.beginPath();
       ctx.arc(n.x, n.y, 1.5 + n.glow * 1.4, 0, Math.PI * 2);
       ctx.fill();
@@ -624,6 +1634,12 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       if (p.t >= 1) {
+        // Each arriving pulse stacks glow on the node, so simultaneous arrivals
+        // light it up proportionally to how many came in.
+        const target = this.neurons[p.to];
+        if (target && target.life !== 'dead') {
+          target.glow = Math.min(target.glow + 0.65, 2.2);
+        }
         this.fireNeuron(p.to, p.from, now);
         this.pulses.splice(i, 1);
         continue;
