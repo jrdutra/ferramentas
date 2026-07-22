@@ -178,6 +178,118 @@ export const LEARN_PATHS: LearnPath[] = [
           en: '/learn/en/openid-connect-id-tokens-sessions-and-federation',
           es: '/learn/es/openid-connect-id-tokens-sesiones-y-federacion'
         }
+      },
+      {
+        id: 'corporate-api/jwt-jws-jwe-jose-in-depth',
+        topicCount: 30,
+        routes: {
+          pt: '/learn/pt/jwt-jws-jwe-e-jose-em-profundidade',
+          en: '/learn/en/jwt-jws-jwe-and-jose-in-depth',
+          es: '/learn/es/jwt-jws-jwe-y-jose-en-profundidad'
+        }
+      },
+      {
+        id: 'corporate-api/saml-2-in-depth',
+        topicCount: 24,
+        routes: {
+          pt: '/learn/pt/saml-2-em-profundidade',
+          en: '/learn/en/saml-2-in-depth',
+          es: '/learn/es/saml-2-en-profundidad'
+        }
+      },
+      {
+        id: 'corporate-api/identity-federation-single-sign-on',
+        topicCount: 25,
+        routes: {
+          pt: '/learn/pt/identity-federation-e-single-sign-on',
+          en: '/learn/en/identity-federation-and-single-sign-on',
+          es: '/learn/es/federacion-de-identidad-y-single-sign-on'
+        }
+      },
+      {
+        id: 'corporate-api/api-gateways-architecture',
+        topicCount: 23,
+        routes: {
+          pt: '/learn/pt/api-gateways-conceitos-e-arquitetura',
+          en: '/learn/en/api-gateways-concepts-and-architecture',
+          es: '/learn/es/api-gateways-conceptos-y-arquitectura'
+        }
+      },
+      {
+        id: 'corporate-api/gateway-policies', topicCount: 23,
+        routes: { pt: '/learn/pt/politicas-de-gateway-policies', en: '/learn/en/gateway-policies', es: '/learn/es/politicas-de-gateway-policies' }
+      },
+      {
+        id: 'corporate-api/axway-api-gateway-architecture', topicCount: 26,
+        routes: { pt: '/learn/pt/axway-api-gateway-arquitetura-e-funcionamento', en: '/learn/en/axway-api-gateway-architecture-and-operation', es: '/learn/es/axway-api-gateway-arquitectura-y-funcionamiento' }
+      },
+      {
+        id: 'corporate-api/azure-api-management-apim', topicCount: 24,
+        routes: { pt: '/learn/pt/azure-api-management-apim', en: '/learn/en/azure-api-management-apim', es: '/learn/es/azure-api-management-apim' }
+      },
+      {
+        id: 'corporate-api/api-security-owasp-top-10', topicCount: 20,
+        routes: { pt: '/learn/pt/seguranca-apis-owasp-api-security-top-10', en: '/learn/en/api-security-owasp-api-security-top-10', es: '/learn/es/seguridad-apis-owasp-api-security-top-10' }
+      },
+      {
+        id: 'corporate-api/http-security-headers', topicCount: 23,
+        routes: { pt: '/learn/pt/cors-csp-hsts-e-outros-cabecalhos-http', en: '/learn/en/cors-csp-hsts-and-other-http-headers', es: '/learn/es/cors-csp-hsts-y-otros-encabezados-http' }
+      },
+      {
+        id: 'corporate-api/rate-limiting-quotas-throttling', topicCount: 23,
+        routes: { pt: '/learn/pt/rate-limiting-quotas-e-throttling', en: '/learn/en/rate-limiting-quotas-and-throttling', es: '/learn/es/rate-limiting-cuotas-y-throttling' }
+      },
+      {
+        id: 'corporate-api/api-versioning', topicCount: 27,
+        routes: { pt: '/learn/pt/api-versioning', en: '/learn/en/api-versioning', es: '/learn/es/api-versioning' }
+      },
+      {
+        id: 'corporate-api/service-mesh-istio-linkerd-envoy', topicCount: 23,
+        routes: { pt: '/learn/pt/service-mesh-istio-linkerd-e-envoy', en: '/learn/en/service-mesh-istio-linkerd-and-envoy', es: '/learn/es/service-mesh-istio-linkerd-y-envoy' }
+      },
+      {
+        id: 'corporate-api/microservices-integration-patterns', topicCount: 23,
+        routes: { pt: '/learn/pt/microservicos-e-padroes-de-integracao', en: '/learn/en/microservices-and-integration-patterns', es: '/learn/es/microservicios-y-patrones-de-integracion' }
+      },
+      {
+        id: 'corporate-api/messaging-kafka-rabbitmq-amqp-jms', topicCount: 23,
+        routes: { pt: '/learn/pt/mensageria-kafka-rabbitmq-amqp-e-jms', en: '/learn/en/messaging-kafka-rabbitmq-amqp-and-jms', es: '/learn/es/mensajeria-kafka-rabbitmq-amqp-y-jms' }
+      },
+      {
+        id: 'corporate-api/observability-logs-metrics-tracing-opentelemetry', topicCount: 21,
+        routes: { pt: '/learn/pt/observabilidade-logs-metricas-tracing-opentelemetry', en: '/learn/en/observability-logs-metrics-tracing-opentelemetry', es: '/learn/es/observabilidad-logs-metricas-tracing-opentelemetry' }
+      },
+      {
+        id: 'corporate-api/kubernetes-for-apis', topicCount: 25,
+        routes: { pt: '/learn/pt/kubernetes-para-apis', en: '/learn/en/kubernetes-for-apis', es: '/learn/es/kubernetes-para-apis' }
+      },
+      {
+        id: 'corporate-api/zero-trust-applied-to-apis', topicCount: 21,
+        routes: { pt: '/learn/pt/zero-trust-aplicado-a-apis', en: '/learn/en/zero-trust-applied-to-apis', es: '/learn/es/zero-trust-aplicado-a-apis' }
+      },
+      {
+        id: 'corporate-api/open-finance-open-banking-brazil', topicCount: 23,
+        routes: { pt: '/learn/pt/open-finance-e-open-banking-no-brasil', en: '/learn/en/open-finance-and-open-banking-in-brazil', es: '/learn/es/open-finance-y-open-banking-en-brasil' }
+      },
+      {
+        id: 'corporate-api/lgpd-applied-to-apis', topicCount: 24,
+        routes: { pt: '/learn/pt/lgpd-aplicada-as-apis', en: '/learn/en/lgpd-applied-to-apis', es: '/learn/es/lgpd-aplicada-a-las-apis' }
+      },
+      {
+        id: 'corporate-api/high-availability-banking-architectures', topicCount: 23,
+        routes: { pt: '/learn/pt/arquiteturas-bancarias-de-alta-disponibilidade', en: '/learn/en/high-availability-banking-architectures', es: '/learn/es/arquitecturas-bancarias-de-alta-disponibilidad' }
+      },
+      {
+        id: 'corporate-api/api-gateway-troubleshooting', topicCount: 21,
+        routes: { pt: '/learn/pt/troubleshooting-de-apis-e-gateways', en: '/learn/en/api-and-gateway-troubleshooting', es: '/learn/es/troubleshooting-de-apis-y-gateways' }
+      },
+      {
+        id: 'corporate-api/real-world-enterprise-case-studies', topicCount: 17,
+        routes: { pt: '/learn/pt/estudo-de-casos-reais-de-grandes-empresas', en: '/learn/en/real-world-case-studies-from-large-enterprises', es: '/learn/es/estudio-de-casos-reales-de-grandes-empresas' }
+      },
+      {
+        id: 'corporate-api/complete-api-platform-capstone', topicCount: 19,
+        routes: { pt: '/learn/pt/projeto-final-plataforma-completa-de-apis', en: '/learn/en/complete-api-platform-capstone-project', es: '/learn/es/proyecto-final-plataforma-completa-de-apis' }
       }
     ]
   }

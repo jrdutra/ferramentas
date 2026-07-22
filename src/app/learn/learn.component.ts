@@ -194,6 +194,83 @@ export class LearnComponent implements OnInit {
       readingTime: '140 min de leitura',
       image: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png',
       imageAlt: 'Identidade federada OpenID Connect com ID Tokens verificáveis, sessões e Relying Parties'
+    },
+    {
+      chapterLabel: 'Capítulo 18',
+      title: 'JWT, JWS, JWE e JOSE em Profundidade',
+      description: 'Claims, Base64url, assinaturas, MAC, algoritmos, JWK, JWKS, rotação de chaves, JWE, tokens aninhados e validação segura em API Gateways.',
+      route: '/learn/pt/jwt-jws-jwe-e-jose-em-profundidade',
+      readingTime: '150 min de leitura',
+      image: '/assets/learn/jwt-jws-jwe-jose-in-depth-cover.png',
+      imageAlt: 'Token em camadas protegido por assinatura, criptografia e governança de chaves na arquitetura de APIs'
+    },
+    {
+      chapterLabel: 'Capítulo 19',
+      title: 'SAML 2.0 em Profundidade',
+      description: 'Assertions, AuthnRequest, bindings, metadata, XML Signature, SSO, SLO, NameID, federação e segurança em ambientes corporativos.',
+      route: '/learn/pt/saml-2-em-profundidade',
+      readingTime: '110 min de leitura',
+      image: '/assets/learn/saml-2-in-depth-cover.png',
+      imageAlt: 'Federação SAML entre domínios corporativos com assertion XML assinada e metadata confiável'
+    },
+    {
+      chapterLabel: 'Capítulo 20',
+      title: 'Identity Federation e Single Sign-On',
+      description: 'Domínios de confiança, SSO, sessões, brokers, SAML, OIDC, account linking, MFA, B2B, workloads e integração com API Gateways.',
+      route: '/learn/pt/identity-federation-e-single-sign-on',
+      readingTime: '120 min de leitura',
+      image: '/assets/learn/identity-federation-sso-cover.png',
+      imageAlt: 'Identity Provider central conectando múltiplas aplicações e domínios por relações de confiança'
+    },
+    {
+      chapterLabel: 'Capítulo 21',
+      title: 'API Gateways: conceitos e arquitetura',
+      description: 'Data plane, control plane, políticas, roteamento, segurança, tráfego, alta disponibilidade, observabilidade, governança e troubleshooting.',
+      route: '/learn/pt/api-gateways-conceitos-e-arquitetura',
+      readingTime: '135 min de leitura',
+      image: '/assets/learn/api-gateways-architecture-cover.png',
+      imageAlt: 'API Gateway central mediando consumidores, políticas e serviços de backend'
+    },
+    {
+      chapterLabel: 'Capítulo 22', title: 'Políticas de Gateway (Policies)',
+      description: 'Pipeline, ordem, escopos, autenticação, autorização, validação, limites, transformação, roteamento, resiliência e observabilidade.',
+      route: '/learn/pt/politicas-de-gateway-policies', readingTime: '115 min de leitura', image: '/assets/learn/gateway-policies-cover.png', imageAlt: 'Pipeline luminoso de policies processando uma chamada de API'
+    },
+    { chapterLabel: 'Capítulo 23', title: 'Axway API Gateway: arquitetura e funcionamento', description: 'Policy Studio, domínio, Node Managers, runtime, API Manager, KPS, Cassandra, HA, segurança, observabilidade e operação.', route: '/learn/pt/axway-api-gateway-arquitetura-e-funcionamento', readingTime: '140 min de leitura', image: '/assets/learn/axway-api-gateway-architecture-cover.png', imageAlt: 'Arquitetura distribuída de uma plataforma corporativa de API Gateway'
+    },
+    { chapterLabel: 'Capítulo 24', title: 'Azure API Management (APIM)', description: 'Arquitetura, gateways, policies, tiers, redes privadas, segurança, alta disponibilidade, observabilidade e automação.', route: '/learn/pt/azure-api-management-apim', readingTime: '135 min de leitura', image: '/assets/learn/azure-api-management-apim-cover.png', imageAlt: 'Plataforma gerenciada de APIs conectando gateways, redes híbridas e observabilidade'
+    },
+    { chapterLabel: 'Capítulo 25', title: 'Segurança de APIs (OWASP API Security Top 10)', description: 'BOLA, autenticação, propriedades, recursos, funções, fluxos de negócio, SSRF, configuração, inventário e consumo inseguro.', route: '/learn/pt/seguranca-apis-owasp-api-security-top-10', readingTime: '105 min de leitura', image: '/assets/learn/api-security-owasp-top-10-cover.png', imageAlt: 'Defesa em profundidade protegendo identidades, gateways, backends e dados de APIs'
+    },
+    { chapterLabel: 'Capítulo 26', title: 'CORS, CSP, HSTS e outros cabeçalhos HTTP', description: 'Origem, preflight, credenciais, CSP, nonces, HSTS, isolamento cross-origin, cache, cookies e troubleshooting.', route: '/learn/pt/cors-csp-hsts-e-outros-cabecalhos-http', readingTime: '125 min de leitura', image: '/assets/learn/http-security-headers-cover.png', imageAlt: 'Navegador e APIs protegidos por políticas de origem, conteúdo e transporte seguro'
+    },
+    { chapterLabel: 'Capítulo 27', title: 'Rate Limiting, Quotas e Throttling', description: 'Algoritmos, chaves, custos, burst, concorrência, limites distribuídos, 429, retries, dimensionamento e troubleshooting.', route: '/learn/pt/rate-limiting-quotas-e-throttling', readingTime: '120 min de leitura', image: '/assets/learn/rate-limiting-quotas-throttling-cover.png', imageAlt: 'Gateway corporativo controlando fluxos, bursts e orçamentos de consumo de APIs'
+    },
+    { chapterLabel: 'Capítulo 28', title: 'API Versioning', description: 'Compatibilidade, SemVer, estratégias de seleção, coexistência, depreciação, Sunset, migração, testes e governança.', route: '/learn/pt/api-versioning', readingTime: '125 min de leitura', image: '/assets/learn/api-versioning-cover.png', imageAlt: 'Contratos de API evoluindo por versões coexistentes, migração e retirada segura'
+    },
+    { chapterLabel: 'Capítulo 29', title: 'Service Mesh (Istio, Linkerd e Envoy)', description: 'Control plane, data plane, sidecar, ambient, mTLS, traffic management, resiliência, observabilidade, xDS e multi-cluster.', route: '/learn/pt/service-mesh-istio-linkerd-e-envoy', readingTime: '130 min de leitura', image: '/assets/learn/service-mesh-istio-linkerd-envoy-cover.png', imageAlt: 'Plano de controle coordenando uma malha segura de workloads, proxies e múltiplos clusters'
+    },
+    { chapterLabel: 'Capítulo 30', title: 'Microserviços e padrões de integração', description: 'Bounded contexts, contratos, comunicação síncrona e assíncrona, Saga, Outbox, CQRS, Event Sourcing e Strangler Fig.', route: '/learn/pt/microservicos-e-padroes-de-integracao', readingTime: '135 min de leitura', image: '/assets/learn/microservices-integration-patterns-cover.png', imageAlt: 'Domínios autônomos integrados por APIs, eventos, sagas, outbox e observabilidade'
+    },
+    { chapterLabel: 'Capítulo 31', title: 'Mensageria: Kafka, RabbitMQ, AMQP e JMS', description: 'Filas, logs, entrega, ordering, Kafka, RabbitMQ, AMQP, Jakarta Messaging, DLQ, segurança, capacidade e troubleshooting.', route: '/learn/pt/mensageria-kafka-rabbitmq-amqp-e-jms', readingTime: '135 min de leitura', image: '/assets/learn/messaging-kafka-rabbitmq-amqp-jms-cover.png', imageAlt: 'Broker corporativo distribuindo mensagens duráveis entre produtores, partições, filas e consumidores'
+    },
+    { chapterLabel: 'Capítulo 32', title: 'Observabilidade: Logs, Métricas e Tracing com OpenTelemetry', description: 'Telemetria, correlação, logs estruturados, métricas, cardinalidade, traces, OTLP, Collector, sampling, exemplars e SLOs.', route: '/learn/pt/observabilidade-logs-metricas-tracing-opentelemetry', readingTime: '130 min de leitura', image: '/assets/learn/observability-logs-metrics-tracing-opentelemetry-cover.png', imageAlt: 'Plataforma de observabilidade correlacionando logs, métricas e traces de serviços distribuídos'
+    },
+    { chapterLabel: 'Capítulo 33', title: 'Kubernetes para APIs', description: 'Pods, workloads, Services, Gateway API, configuração, probes, autoscaling, scheduling, segurança, observabilidade e GitOps.', route: '/learn/pt/kubernetes-para-apis', readingTime: '140 min de leitura', image: '/assets/learn/kubernetes-for-apis-cover.png', imageAlt: 'Cluster Kubernetes executando APIs com roteamento, segurança, autoscaling e observabilidade'
+    },
+    { chapterLabel: 'Capítulo 34', title: 'Zero Trust aplicado a APIs', description: 'Identidade composta, decisão por requisição, PDP, PEP, mTLS, prova de posse, policy-as-code, microsegmentação e risco adaptativo.', route: '/learn/pt/zero-trust-aplicado-a-apis', readingTime: '135 min de leitura', image: '/assets/learn/zero-trust-applied-to-apis-cover.png', imageAlt: 'Arquitetura Zero Trust avaliando identidade, risco e políticas antes de liberar acesso a APIs'
+    },
+    { chapterLabel: 'Capítulo 35', title: 'Open Finance e Open Banking no Brasil', description: 'Consentimento, participantes, FAPI-BR, diretório, APIs padronizadas, iniciação de pagamentos, segurança e operação ponta a ponta.', route: '/learn/pt/open-finance-e-open-banking-no-brasil', readingTime: '130 min de leitura', image: '/assets/learn/open-finance-open-banking-brazil-cover.png', imageAlt: 'Ecossistema brasileiro de Open Finance conectando cliente, instituições, consentimento e APIs seguras'
+    },
+    { chapterLabel: 'Capítulo 36', title: 'LGPD aplicada às APIs', description: 'Dados pessoais, princípios, bases legais, minimização, direitos dos titulares, retenção, privacy by design, incidentes e governança.', route: '/learn/pt/lgpd-aplicada-as-apis', readingTime: '130 min de leitura', image: '/assets/learn/lgpd-applied-to-apis-cover.png', imageAlt: 'Ciclo de vida de dados pessoais protegido por controles de privacidade, segurança e governança'
+    },
+    { chapterLabel: 'Capítulo 37', title: 'Arquiteturas bancárias de alta disponibilidade', description: 'Operações críticas, tolerância à disrupção, RTO, RPO, redundância, consistência, recuperação, reconciliação e testes de resiliência.', route: '/learn/pt/arquiteturas-bancarias-de-alta-disponibilidade', readingTime: '120 min de leitura', image: '/assets/learn/high-availability-banking-architectures-cover.png', imageAlt: 'Arquitetura bancária resiliente com redundância e continuidade transacional'
+    },
+    { chapterLabel: 'Capítulo 38', title: 'Troubleshooting de APIs e Gateways', description: 'Método científico, diagnóstico por camadas, rede, TLS, HTTP, policies, backends, Kubernetes, observabilidade e resposta a incidentes.', route: '/learn/pt/troubleshooting-de-apis-e-gateways', readingTime: '125 min de leitura', image: '/assets/learn/api-gateway-troubleshooting-cover.png', imageAlt: 'Diagnóstico de APIs e gateways localizando uma falha distribuída'
+    },
+    { chapterLabel: 'Capítulo 39', title: 'Estudo de casos reais de grandes empresas', description: 'Netflix, Amazon, Stripe, Shopify, LinkedIn, Google, GitHub e Spotify: decisões, trade-offs e padrões transferíveis.', route: '/learn/pt/estudo-de-casos-reais-de-grandes-empresas', readingTime: '105 min de leitura', image: '/assets/learn/real-world-enterprise-case-studies-cover.png', imageAlt: 'Casos reais de arquitetura convergindo para padrões governados'
+    },
+    { chapterLabel: 'Capítulo 40', title: 'Projeto final: plataforma completa de APIs', description: 'Projeto integrador com contratos, identidade, gateway, serviços, eventos, Kubernetes, observabilidade, resiliência e critérios de aceite.', route: '/learn/pt/projeto-final-plataforma-completa-de-apis', readingTime: '135 min de leitura', image: '/assets/learn/complete-api-platform-capstone-cover.png', imageAlt: 'Plataforma completa de APIs integrada de ponta a ponta'
     }
   ];
   readonly englishArticles: LearnArticle[] = [
@@ -349,6 +426,83 @@ export class LearnComponent implements OnInit {
       readingTime: '140 min read',
       image: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png',
       imageAlt: 'Federated OpenID Connect identity with verifiable ID Tokens, sessions, and Relying Parties'
+    },
+    {
+      chapterLabel: 'Chapter 18',
+      title: 'JWT, JWS, JWE, and JOSE in Depth',
+      description: 'Claims, Base64url, signatures, MAC, algorithms, JWK, JWKS, key rotation, JWE, nested tokens, and secure validation in API Gateways.',
+      route: '/learn/en/jwt-jws-jwe-and-jose-in-depth',
+      readingTime: '150 min read',
+      image: '/assets/learn/jwt-jws-jwe-jose-in-depth-cover.png',
+      imageAlt: 'Layered token protected by signatures, encryption, and key governance in an API architecture'
+    },
+    {
+      chapterLabel: 'Chapter 19',
+      title: 'SAML 2.0 in Depth',
+      description: 'Assertions, AuthnRequest, bindings, metadata, XML Signature, SSO, SLO, NameID, federation, and enterprise security.',
+      route: '/learn/en/saml-2-in-depth',
+      readingTime: '110 min read',
+      image: '/assets/learn/saml-2-in-depth-cover.png',
+      imageAlt: 'SAML federation across enterprise domains with a signed XML assertion and trusted metadata'
+    },
+    {
+      chapterLabel: 'Chapter 20',
+      title: 'Identity Federation and Single Sign-On',
+      description: 'Trust domains, SSO, sessions, brokers, SAML, OIDC, account linking, MFA, B2B, workloads, and API Gateway integration.',
+      route: '/learn/en/identity-federation-and-single-sign-on',
+      readingTime: '120 min read',
+      image: '/assets/learn/identity-federation-sso-cover.png',
+      imageAlt: 'Central Identity Provider connecting multiple applications and domains through trust relationships'
+    },
+    {
+      chapterLabel: 'Chapter 21',
+      title: 'API Gateways: Concepts and Architecture',
+      description: 'Data plane, control plane, policies, routing, security, traffic control, high availability, observability, governance, and troubleshooting.',
+      route: '/learn/en/api-gateways-concepts-and-architecture',
+      readingTime: '135 min read',
+      image: '/assets/learn/api-gateways-architecture-cover.png',
+      imageAlt: 'Central API Gateway mediating consumers, policies, and backend services'
+    },
+    {
+      chapterLabel: 'Chapter 22', title: 'Gateway Policies',
+      description: 'Pipeline, ordering, scopes, authentication, authorization, validation, limits, transformation, routing, resilience, and observability.',
+      route: '/learn/en/gateway-policies', readingTime: '115 min read', image: '/assets/learn/gateway-policies-cover.png', imageAlt: 'Luminous policy pipeline processing an API call'
+    },
+    { chapterLabel: 'Chapter 23', title: 'Axway API Gateway: Architecture and Operation', description: 'Policy Studio, domains, Node Managers, runtime, API Manager, KPS, Cassandra, HA, security, observability, and operations.', route: '/learn/en/axway-api-gateway-architecture-and-operation', readingTime: '140 min read', image: '/assets/learn/axway-api-gateway-architecture-cover.png', imageAlt: 'Distributed architecture of an enterprise API Gateway platform'
+    },
+    { chapterLabel: 'Chapter 24', title: 'Azure API Management (APIM)', description: 'Architecture, gateways, policies, tiers, private networking, security, high availability, observability, and automation.', route: '/learn/en/azure-api-management-apim', readingTime: '135 min read', image: '/assets/learn/azure-api-management-apim-cover.png', imageAlt: 'Managed API platform connecting gateways, hybrid networks, and observability'
+    },
+    { chapterLabel: 'Chapter 25', title: 'API Security (OWASP API Security Top 10)', description: 'BOLA, authentication, properties, resources, functions, business flows, SSRF, configuration, inventory, and unsafe consumption.', route: '/learn/en/api-security-owasp-api-security-top-10', readingTime: '105 min read', image: '/assets/learn/api-security-owasp-top-10-cover.png', imageAlt: 'Defense in depth protecting API identities, gateways, backends, and data'
+    },
+    { chapterLabel: 'Chapter 26', title: 'CORS, CSP, HSTS, and Other HTTP Headers', description: 'Origins, preflight, credentials, CSP, nonces, HSTS, cross-origin isolation, caching, cookies, and troubleshooting.', route: '/learn/en/cors-csp-hsts-and-other-http-headers', readingTime: '125 min read', image: '/assets/learn/http-security-headers-cover.png', imageAlt: 'Browser and APIs protected by origin, content, and secure transport policies'
+    },
+    { chapterLabel: 'Chapter 27', title: 'Rate Limiting, Quotas, and Throttling', description: 'Algorithms, keys, costs, bursts, concurrency, distributed limits, 429, retries, sizing, and troubleshooting.', route: '/learn/en/rate-limiting-quotas-and-throttling', readingTime: '120 min read', image: '/assets/learn/rate-limiting-quotas-throttling-cover.png', imageAlt: 'Enterprise gateway controlling API traffic flows, bursts, and consumption budgets'
+    },
+    { chapterLabel: 'Chapter 28', title: 'API Versioning', description: 'Compatibility, SemVer, selection strategies, coexistence, deprecation, Sunset, migration, testing, and governance.', route: '/learn/en/api-versioning', readingTime: '125 min read', image: '/assets/learn/api-versioning-cover.png', imageAlt: 'API contracts evolving through coexisting versions, migration, and safe retirement'
+    },
+    { chapterLabel: 'Chapter 29', title: 'Service Mesh (Istio, Linkerd, and Envoy)', description: 'Control plane, data plane, sidecars, ambient mode, mTLS, traffic management, resilience, observability, xDS, and multi-cluster.', route: '/learn/en/service-mesh-istio-linkerd-and-envoy', readingTime: '130 min read', image: '/assets/learn/service-mesh-istio-linkerd-envoy-cover.png', imageAlt: 'Control plane coordinating a secure mesh of workloads, proxies, and multiple clusters'
+    },
+    { chapterLabel: 'Chapter 30', title: 'Microservices and Integration Patterns', description: 'Bounded contexts, contracts, synchronous and asynchronous communication, Saga, Outbox, CQRS, Event Sourcing, and Strangler Fig.', route: '/learn/en/microservices-and-integration-patterns', readingTime: '135 min read', image: '/assets/learn/microservices-integration-patterns-cover.png', imageAlt: 'Autonomous domains integrated through APIs, events, sagas, outbox, and observability'
+    },
+    { chapterLabel: 'Chapter 31', title: 'Messaging: Kafka, RabbitMQ, AMQP, and JMS', description: 'Queues, logs, delivery, ordering, Kafka, RabbitMQ, AMQP, Jakarta Messaging, DLQ, security, capacity, and troubleshooting.', route: '/learn/en/messaging-kafka-rabbitmq-amqp-and-jms', readingTime: '135 min read', image: '/assets/learn/messaging-kafka-rabbitmq-amqp-jms-cover.png', imageAlt: 'Enterprise broker distributing durable messages across producers, partitions, queues, and consumers'
+    },
+    { chapterLabel: 'Chapter 32', title: 'Observability: Logs, Metrics, and Tracing with OpenTelemetry', description: 'Telemetry, correlation, structured logs, metrics, cardinality, traces, OTLP, Collector, sampling, exemplars, and SLOs.', route: '/learn/en/observability-logs-metrics-tracing-opentelemetry', readingTime: '130 min read', image: '/assets/learn/observability-logs-metrics-tracing-opentelemetry-cover.png', imageAlt: 'Observability platform correlating logs, metrics, and traces from distributed services'
+    },
+    { chapterLabel: 'Chapter 33', title: 'Kubernetes for APIs', description: 'Pods, workloads, Services, Gateway API, configuration, probes, autoscaling, scheduling, security, observability, and GitOps.', route: '/learn/en/kubernetes-for-apis', readingTime: '140 min read', image: '/assets/learn/kubernetes-for-apis-cover.png', imageAlt: 'Kubernetes cluster running APIs with routing, security, autoscaling, and observability'
+    },
+    { chapterLabel: 'Chapter 34', title: 'Zero Trust Applied to APIs', description: 'Composite identity, per-request decisions, PDP, PEP, mTLS, proof of possession, policy-as-code, microsegmentation, and adaptive risk.', route: '/learn/en/zero-trust-applied-to-apis', readingTime: '135 min read', image: '/assets/learn/zero-trust-applied-to-apis-cover.png', imageAlt: 'Zero Trust architecture evaluating identity, risk, and policies before granting API access'
+    },
+    { chapterLabel: 'Chapter 35', title: 'Open Finance and Open Banking in Brazil', description: 'Consent, participants, FAPI-BR, directory, standardized APIs, payment initiation, security, and end-to-end operations.', route: '/learn/en/open-finance-and-open-banking-in-brazil', readingTime: '130 min read', image: '/assets/learn/open-finance-open-banking-brazil-cover.png', imageAlt: 'Brazilian Open Finance ecosystem connecting customers, institutions, consent, and secure APIs'
+    },
+    { chapterLabel: 'Chapter 36', title: 'LGPD Applied to APIs', description: 'Personal data, principles, legal bases, minimization, data subject rights, retention, privacy by design, incidents, and governance.', route: '/learn/en/lgpd-applied-to-apis', readingTime: '130 min read', image: '/assets/learn/lgpd-applied-to-apis-cover.png', imageAlt: 'Personal data lifecycle protected by privacy, security, and governance controls'
+    },
+    { chapterLabel: 'Chapter 37', title: 'High-Availability Banking Architectures', description: 'Critical operations, disruption tolerance, RTO, RPO, redundancy, consistency, recovery, reconciliation, and resilience testing.', route: '/learn/en/high-availability-banking-architectures', readingTime: '120 min read', image: '/assets/learn/high-availability-banking-architectures-cover.png', imageAlt: 'Resilient banking architecture with redundancy and transactional continuity'
+    },
+    { chapterLabel: 'Chapter 38', title: 'API and Gateway Troubleshooting', description: 'Scientific method, layered diagnostics, networking, TLS, HTTP, policies, backends, Kubernetes, observability, and incident response.', route: '/learn/en/api-and-gateway-troubleshooting', readingTime: '125 min read', image: '/assets/learn/api-gateway-troubleshooting-cover.png', imageAlt: 'API and gateway diagnostics locating a distributed failure'
+    },
+    { chapterLabel: 'Chapter 39', title: 'Real-World Case Studies from Large Enterprises', description: 'Netflix, Amazon, Stripe, Shopify, LinkedIn, Google, GitHub, and Spotify: decisions, trade-offs, and transferable patterns.', route: '/learn/en/real-world-case-studies-from-large-enterprises', readingTime: '105 min read', image: '/assets/learn/real-world-enterprise-case-studies-cover.png', imageAlt: 'Real-world architecture cases converging into governed patterns'
+    },
+    { chapterLabel: 'Chapter 40', title: 'Capstone Project: Complete API Platform', description: 'Integrating project with contracts, identity, gateways, services, events, Kubernetes, observability, resilience, and acceptance criteria.', route: '/learn/en/complete-api-platform-capstone-project', readingTime: '135 min read', image: '/assets/learn/complete-api-platform-capstone-cover.png', imageAlt: 'Complete end-to-end integrated API platform'
     }
   ];
   readonly spanishArticles: LearnArticle[] = [
@@ -504,6 +658,83 @@ export class LearnComponent implements OnInit {
       readingTime: '140 min de lectura',
       image: '/assets/learn/openid-connect-id-tokens-sessions-federation-cover.png',
       imageAlt: 'Identidad federada OpenID Connect con ID Tokens verificables, sesiones y Relying Parties'
+    },
+    {
+      chapterLabel: 'Capítulo 18',
+      title: 'JWT, JWS, JWE y JOSE en Profundidad',
+      description: 'Claims, Base64url, firmas, MAC, algoritmos, JWK, JWKS, rotación de claves, JWE, tokens anidados y validación segura en API Gateways.',
+      route: '/learn/es/jwt-jws-jwe-y-jose-en-profundidad',
+      readingTime: '150 min de lectura',
+      image: '/assets/learn/jwt-jws-jwe-jose-in-depth-cover.png',
+      imageAlt: 'Token en capas protegido por firmas, cifrado y gobernanza de claves en una arquitectura de APIs'
+    },
+    {
+      chapterLabel: 'Capítulo 19',
+      title: 'SAML 2.0 en Profundidad',
+      description: 'Assertions, AuthnRequest, bindings, metadata, XML Signature, SSO, SLO, NameID, federación y seguridad corporativa.',
+      route: '/learn/es/saml-2-en-profundidad',
+      readingTime: '110 min de lectura',
+      image: '/assets/learn/saml-2-in-depth-cover.png',
+      imageAlt: 'Federación SAML entre dominios corporativos con una assertion XML firmada y metadata confiable'
+    },
+    {
+      chapterLabel: 'Capítulo 20',
+      title: 'Federación de Identidad y Single Sign-On',
+      description: 'Dominios de confianza, SSO, sesiones, brokers, SAML, OIDC, account linking, MFA, B2B, workloads e integración con API Gateways.',
+      route: '/learn/es/federacion-de-identidad-y-single-sign-on',
+      readingTime: '120 min de lectura',
+      image: '/assets/learn/identity-federation-sso-cover.png',
+      imageAlt: 'Identity Provider central conectando múltiples aplicaciones y dominios mediante relaciones de confianza'
+    },
+    {
+      chapterLabel: 'Capítulo 21',
+      title: 'API Gateways: conceptos y arquitectura',
+      description: 'Data plane, control plane, políticas, enrutamiento, seguridad, tráfico, alta disponibilidad, observabilidad, gobernanza y troubleshooting.',
+      route: '/learn/es/api-gateways-conceptos-y-arquitectura',
+      readingTime: '135 min de lectura',
+      image: '/assets/learn/api-gateways-architecture-cover.png',
+      imageAlt: 'API Gateway central que media consumidores, políticas y servicios backend'
+    },
+    {
+      chapterLabel: 'Capítulo 22', title: 'Políticas de Gateway (Policies)',
+      description: 'Pipeline, orden, ámbitos, autenticación, autorización, validación, límites, transformación, enrutamiento, resiliencia y observabilidad.',
+      route: '/learn/es/politicas-de-gateway-policies', readingTime: '115 min de lectura', image: '/assets/learn/gateway-policies-cover.png', imageAlt: 'Pipeline luminoso de policies procesando una llamada de API'
+    },
+    { chapterLabel: 'Capítulo 23', title: 'Axway API Gateway: arquitectura y funcionamiento', description: 'Policy Studio, dominio, Node Managers, runtime, API Manager, KPS, Cassandra, HA, seguridad, observabilidad y operación.', route: '/learn/es/axway-api-gateway-arquitectura-y-funcionamiento', readingTime: '140 min de lectura', image: '/assets/learn/axway-api-gateway-architecture-cover.png', imageAlt: 'Arquitectura distribuida de una plataforma corporativa de API Gateway'
+    },
+    { chapterLabel: 'Capítulo 24', title: 'Azure API Management (APIM)', description: 'Arquitectura, gateways, policies, tiers, redes privadas, seguridad, alta disponibilidad, observabilidad y automatización.', route: '/learn/es/azure-api-management-apim', readingTime: '135 min de lectura', image: '/assets/learn/azure-api-management-apim-cover.png', imageAlt: 'Plataforma administrada de APIs conectando gateways, redes híbridas y observabilidad'
+    },
+    { chapterLabel: 'Capítulo 25', title: 'Seguridad de APIs (OWASP API Security Top 10)', description: 'BOLA, autenticación, propiedades, recursos, funciones, flujos de negocio, SSRF, configuración, inventario y consumo inseguro.', route: '/learn/es/seguridad-apis-owasp-api-security-top-10', readingTime: '105 min de lectura', image: '/assets/learn/api-security-owasp-top-10-cover.png', imageAlt: 'Defensa en profundidad protegiendo identidades, gateways, backends y datos de APIs'
+    },
+    { chapterLabel: 'Capítulo 26', title: 'CORS, CSP, HSTS y otros encabezados HTTP', description: 'Orígenes, preflight, credenciales, CSP, nonces, HSTS, aislamiento cross-origin, caché, cookies y troubleshooting.', route: '/learn/es/cors-csp-hsts-y-otros-encabezados-http', readingTime: '125 min de lectura', image: '/assets/learn/http-security-headers-cover.png', imageAlt: 'Navegador y APIs protegidos por políticas de origen, contenido y transporte seguro'
+    },
+    { chapterLabel: 'Capítulo 27', title: 'Rate Limiting, Cuotas y Throttling', description: 'Algoritmos, claves, costes, ráfagas, concurrencia, límites distribuidos, 429, reintentos, dimensionamiento y troubleshooting.', route: '/learn/es/rate-limiting-cuotas-y-throttling', readingTime: '120 min de lectura', image: '/assets/learn/rate-limiting-quotas-throttling-cover.png', imageAlt: 'Gateway corporativo controlando flujos, ráfagas y presupuestos de consumo de APIs'
+    },
+    { chapterLabel: 'Capítulo 28', title: 'API Versioning', description: 'Compatibilidad, SemVer, estrategias de selección, coexistencia, deprecación, Sunset, migración, pruebas y gobernanza.', route: '/learn/es/api-versioning', readingTime: '125 min de lectura', image: '/assets/learn/api-versioning-cover.png', imageAlt: 'Contratos de API evolucionando mediante versiones coexistentes, migración y retirada segura'
+    },
+    { chapterLabel: 'Capítulo 29', title: 'Service Mesh (Istio, Linkerd y Envoy)', description: 'Plano de control, plano de datos, sidecars, ambient, mTLS, traffic management, resiliencia, observabilidad, xDS y multi-cluster.', route: '/learn/es/service-mesh-istio-linkerd-y-envoy', readingTime: '130 min de lectura', image: '/assets/learn/service-mesh-istio-linkerd-envoy-cover.png', imageAlt: 'Plano de control coordinando una malla segura de workloads, proxies y múltiples clusters'
+    },
+    { chapterLabel: 'Capítulo 30', title: 'Microservicios y patrones de integración', description: 'Bounded contexts, contratos, comunicación síncrona y asíncrona, Saga, Outbox, CQRS, Event Sourcing y Strangler Fig.', route: '/learn/es/microservicios-y-patrones-de-integracion', readingTime: '135 min de lectura', image: '/assets/learn/microservices-integration-patterns-cover.png', imageAlt: 'Dominios autónomos integrados mediante APIs, eventos, sagas, outbox y observabilidad'
+    },
+    { chapterLabel: 'Capítulo 31', title: 'Mensajería: Kafka, RabbitMQ, AMQP y JMS', description: 'Colas, logs, entrega, ordering, Kafka, RabbitMQ, AMQP, Jakarta Messaging, DLQ, seguridad, capacidad y troubleshooting.', route: '/learn/es/mensajeria-kafka-rabbitmq-amqp-y-jms', readingTime: '135 min de lectura', image: '/assets/learn/messaging-kafka-rabbitmq-amqp-jms-cover.png', imageAlt: 'Broker corporativo distribuyendo mensajes duraderos entre productores, particiones, colas y consumidores'
+    },
+    { chapterLabel: 'Capítulo 32', title: 'Observabilidad: Logs, Métricas y Tracing con OpenTelemetry', description: 'Telemetría, correlación, logs estructurados, métricas, cardinalidad, traces, OTLP, Collector, sampling, exemplars y SLOs.', route: '/learn/es/observabilidad-logs-metricas-tracing-opentelemetry', readingTime: '130 min de lectura', image: '/assets/learn/observability-logs-metrics-tracing-opentelemetry-cover.png', imageAlt: 'Plataforma de observabilidad correlacionando logs, métricas y traces de servicios distribuidos'
+    },
+    { chapterLabel: 'Capítulo 33', title: 'Kubernetes para APIs', description: 'Pods, workloads, Services, Gateway API, configuración, probes, autoscaling, scheduling, seguridad, observabilidad y GitOps.', route: '/learn/es/kubernetes-para-apis', readingTime: '140 min de lectura', image: '/assets/learn/kubernetes-for-apis-cover.png', imageAlt: 'Cluster Kubernetes ejecutando APIs con enrutamiento, seguridad, autoscaling y observabilidad'
+    },
+    { chapterLabel: 'Capítulo 34', title: 'Zero Trust aplicado a APIs', description: 'Identidad compuesta, decisión por solicitud, PDP, PEP, mTLS, prueba de posesión, policy-as-code, microsegmentación y riesgo adaptativo.', route: '/learn/es/zero-trust-aplicado-a-apis', readingTime: '135 min de lectura', image: '/assets/learn/zero-trust-applied-to-apis-cover.png', imageAlt: 'Arquitectura Zero Trust evaluando identidad, riesgo y políticas antes de permitir acceso a APIs'
+    },
+    { chapterLabel: 'Capítulo 35', title: 'Open Finance y Open Banking en Brasil', description: 'Consentimiento, participantes, FAPI-BR, directorio, APIs estandarizadas, iniciación de pagos, seguridad y operación integral.', route: '/learn/es/open-finance-y-open-banking-en-brasil', readingTime: '130 min de lectura', image: '/assets/learn/open-finance-open-banking-brazil-cover.png', imageAlt: 'Ecosistema brasileño de Open Finance conectando clientes, instituciones, consentimiento y APIs seguras'
+    },
+    { chapterLabel: 'Capítulo 36', title: 'LGPD aplicada a las APIs', description: 'Datos personales, principios, bases legales, minimización, derechos de los titulares, retención, privacy by design, incidentes y gobernanza.', route: '/learn/es/lgpd-aplicada-a-las-apis', readingTime: '130 min de lectura', image: '/assets/learn/lgpd-applied-to-apis-cover.png', imageAlt: 'Ciclo de vida de datos personales protegido por controles de privacidad, seguridad y gobernanza'
+    },
+    { chapterLabel: 'Capítulo 37', title: 'Arquitecturas bancarias de alta disponibilidad', description: 'Operaciones críticas, tolerancia a la disrupción, RTO, RPO, redundancia, consistencia, recuperación, conciliación y pruebas de resiliencia.', route: '/learn/es/arquitecturas-bancarias-de-alta-disponibilidad', readingTime: '120 min de lectura', image: '/assets/learn/high-availability-banking-architectures-cover.png', imageAlt: 'Arquitectura bancaria resiliente con redundancia y continuidad transaccional'
+    },
+    { chapterLabel: 'Capítulo 38', title: 'Troubleshooting de APIs y Gateways', description: 'Método científico, diagnóstico por capas, red, TLS, HTTP, policies, backends, Kubernetes, observabilidad y respuesta a incidentes.', route: '/learn/es/troubleshooting-de-apis-y-gateways', readingTime: '125 min de lectura', image: '/assets/learn/api-gateway-troubleshooting-cover.png', imageAlt: 'Diagnóstico de APIs y gateways localizando un fallo distribuido'
+    },
+    { chapterLabel: 'Capítulo 39', title: 'Estudio de casos reales de grandes empresas', description: 'Netflix, Amazon, Stripe, Shopify, LinkedIn, Google, GitHub y Spotify: decisiones, trade-offs y patrones transferibles.', route: '/learn/es/estudio-de-casos-reales-de-grandes-empresas', readingTime: '105 min de lectura', image: '/assets/learn/real-world-enterprise-case-studies-cover.png', imageAlt: 'Casos reales de arquitectura convergiendo en patrones gobernados'
+    },
+    { chapterLabel: 'Capítulo 40', title: 'Proyecto final: plataforma completa de APIs', description: 'Proyecto integrador con contratos, identidad, gateway, servicios, eventos, Kubernetes, observabilidad, resiliencia y criterios de aceptación.', route: '/learn/es/proyecto-final-plataforma-completa-de-apis', readingTime: '135 min de lectura', image: '/assets/learn/complete-api-platform-capstone-cover.png', imageAlt: 'Plataforma completa de APIs integrada de extremo a extremo'
     }
   ];
 

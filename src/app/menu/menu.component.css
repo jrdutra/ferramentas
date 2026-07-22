@@ -12,9 +12,9 @@
   flex-direction: column;
   /* Organiza os itens filhos em uma coluna */
   justify-content: space-between;
-  /* Espaçamento máximo entre os itens filhos */
-  height: 8em;
-  /* Altura da div principal, ajuste conforme necessário */
+  /* Reserva apenas a altura da barra fixa (o título agora fica oculto),
+     mantendo o corpo da página próximo do menu superior. */
+  height: 4em;
 }
 
 .div-principal-menu{
@@ -36,40 +36,25 @@
   border-bottom: 1px solid rgba(91, 124, 255, 0.24);
 }
 
+/*
+ * The page-title bar is hidden visually across the whole site, but the title
+ * text stays in the DOM (screen-reader only) so accessibility and SEO signals
+ * are preserved.
+ */
 .div-rodape {
-  position: relative;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
-  background:
-    linear-gradient(120deg, #061426, #091a34 58%, #110f2d);
-  padding: 0.7em 0.7em 0.6em 1.3em;
-  color: var(--text-main);
-  height: 5em;
-  font-size: 1.5em;
-  /* Seu tamanho de fonte desejado */
-  display: flex;
-  /* Faz a div se comportar como um contêiner flexível */
-  flex-direction: column;
-  /* Organiza os itens em uma coluna */
-  justify-content: flex-end;
-  /* Alinha o conteúdo ao final (fundo) da div */
-  z-index: 1;
-  /* Valor menor que o da div-topo */
-  border-bottom: 1px solid rgba(182, 37, 255, 0.28);
-  box-shadow: inset 0 -1px 0 rgba(91, 124, 255, 0.22), 0 0 20px rgba(182, 37, 255, 0.1);
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .div-rodape::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 200%;
-  background-image:
-    linear-gradient(90deg, transparent, rgba(255, 45, 178, 0.14), rgba(91, 124, 255, 0.16), transparent);
-  background-repeat: repeat-x;
-  background-size: 50% 100%;
-  animation: titulo-luz 12s linear infinite;
-  will-change: transform;
-  opacity: 0.8;
+  content: none;
 }
 
 .titulo-aplicacao {

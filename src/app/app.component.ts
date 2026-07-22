@@ -19,7 +19,7 @@ import { ArticleInviteComponent } from './articles/article-invite/article-invite
 export class AppComponent implements OnInit {
   private readonly consentStorageKey = 'utily.tools.privacy-consent.v1';
 
-  title = 'utily.tools';
+  title = 'The Big Learn';
   showPrivacyConsent = false;
   readonly currentYear = new Date().getFullYear();
 

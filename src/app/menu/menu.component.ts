@@ -27,8 +27,12 @@ export class MenuComponent {
 
   navegaMenu(tag: string) {
     if (tag === 'home') {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       this.dataService.setTituloAplicacao('Home');
+    }
+    if (tag === 'tools') {
+      this.router.navigate(['/tools']);
+      this.dataService.setTituloAplicacao('Tools');
     }
     if (tag === 'about') {
       this.router.navigate(['/about']);

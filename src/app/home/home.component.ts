@@ -168,7 +168,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.dataService.setTituloAplicacao('Home');
+    this.dataService.setTituloAplicacao('Tools');
 
     // Backs the SearchAction declared in the home page structured data, so that
     // /?search=term really does land on a filtered catalogue.

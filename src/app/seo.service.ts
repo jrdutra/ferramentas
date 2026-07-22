@@ -49,8 +49,8 @@ export interface SeoToolListItem {
   providedIn: 'root'
 })
 export class SeoService {
-  private readonly siteName = 'utily.tools';
-  private readonly siteUrl = 'https://utily.tools';
+  private readonly siteName = 'The Big Learn';
+  private readonly siteUrl = 'https://thebiglearn.org';
   private readonly defaultImage = `${this.siteUrl}/assets/capa.png`;
   private readonly robotsDirective = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
   private initialized = false;
@@ -119,7 +119,7 @@ export class SeoService {
     this.meta.updateTag({ name: 'twitter:title', content: fullTitle });
     this.meta.updateTag({ name: 'twitter:description', content: seo.description });
     this.meta.updateTag({ name: 'twitter:url', content: canonicalUrl });
-    this.meta.updateTag({ name: 'twitter:domain', content: 'utily.tools' });
+    this.meta.updateTag({ name: 'twitter:domain', content: 'thebiglearn.org' });
     this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
     this.meta.updateTag({ name: 'twitter:image:alt', content: seo.imageAlt ?? `${seo.title} on ${this.siteName}` });
 
@@ -346,7 +346,7 @@ export class SeoService {
         '@id': `${this.siteUrl}/#website`,
         url: `${this.siteUrl}/`,
         name: this.siteName,
-        alternateName: 'utily tools',
+        alternateName: ['TBL', 'The Big Learn'],
         description: seo.description,
         inLanguage: 'en',
         publisher: { '@id': `${this.siteUrl}/#organization` }

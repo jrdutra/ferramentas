@@ -2,27 +2,31 @@
     <div class="div-topo menu-fixo">
         <mat-toolbar color="primary" class="mat-elevation-z4">
             <nav class="menu-grande" aria-label="Main navigation">
-                <a mat-button routerLink="/home">
+                <a mat-button routerLink="/">
                     <mat-icon>home</mat-icon>
                     Home
-                </a>
-                <a mat-button routerLink="/about">
-                    <mat-icon>info</mat-icon>
-                    About
-                </a>
-                <a mat-button routerLink="/articles">
-                    <mat-icon>article</mat-icon>
-                    Articles
                 </a>
                 <a mat-button routerLink="/learn">
                     <mat-icon>school</mat-icon>
                     Learn
                 </a>
+                <a mat-button routerLink="/tools">
+                    <mat-icon>construction</mat-icon>
+                    Tools
+                </a>
+                <a mat-button routerLink="/articles">
+                    <mat-icon>article</mat-icon>
+                    Articles
+                </a>
+                <a mat-button routerLink="/about">
+                    <mat-icon>info</mat-icon>
+                    About
+                </a>
             </nav>
 
             <div class="marca-direita">
-                <img src="/assets/logo-branco.svg" class="logo-direita" width="21" height="23" alt="utily.tools">
-                <span class="nome-marca">utily.tools</span>
+                <img src="/assets/logo-branco.svg" class="logo-direita" width="21" height="23" alt="The Big Learn">
+                <span class="nome-marca">The Big Learn</span>
             </div>
 
             <div class="menu-hamburger">
@@ -31,16 +35,17 @@
                     <mat-icon>menu</mat-icon>
                 </button>
                 <mat-menu #menuHamburger="matMenu">
-                    <a mat-menu-item routerLink="/home">Home</a>
-                    <a mat-menu-item routerLink="/about">About</a>
-                    <a mat-menu-item routerLink="/articles">Articles</a>
+                    <a mat-menu-item routerLink="/">Home</a>
                     <a mat-menu-item routerLink="/learn">Learn</a>
+                    <a mat-menu-item routerLink="/tools">Tools</a>
+                    <a mat-menu-item routerLink="/articles">Articles</a>
+                    <a mat-menu-item routerLink="/about">About</a>
                 </mat-menu>
             </div>
-            <span class="menu-hamburger">Tools</span>
+            <span class="menu-hamburger">The Big Learn</span>
             <span class="example-spacer menu-hamburger"></span>
             <a mat-icon-button class="example-icon home-icon menu-hamburger"
-                aria-label="Go to home page" routerLink="/home">
+                aria-label="Go to home page" routerLink="/">
                 <mat-icon>home</mat-icon>
             </a>
         </mat-toolbar>

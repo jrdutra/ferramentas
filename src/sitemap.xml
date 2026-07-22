@@ -1,586 +1,766 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://utily.tools/</loc>
+    <loc>https://thebiglearn.org/</loc>
   </url>
   <url>
-    <loc>https://utily.tools/about</loc>
+    <loc>https://thebiglearn.org/tools</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles</loc>
+    <loc>https://thebiglearn.org/about</loc>
   </url>
   <url>
-    <loc>https://utily.tools/learn</loc>
+    <loc>https://thebiglearn.org/articles</loc>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn</loc>
     <lastmod>2026-07-18</lastmod>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis</loc>
+    <loc>https://thebiglearn.org/learn/pt/fundamentos-da-internet-redes-e-apis</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/fundamentos-internet-redes-apis"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/fundamentos-da-internet-redes-e-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/fundamentos-internet-redes-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/internet-networking-api-fundamentals"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/internet-networking-api-fundamentals</loc>
+    <loc>https://thebiglearn.org/learn/en/internet-networking-api-fundamentals</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/fundamentos-internet-redes-apis"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/fundamentos-da-internet-redes-e-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/fundamentos-internet-redes-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/internet-networking-api-fundamentals"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/fundamentos-internet-redes-apis</loc>
+    <loc>https://thebiglearn.org/learn/es/fundamentos-internet-redes-apis</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/fundamentos-da-internet-redes-e-apis"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/fundamentos-internet-redes-apis"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/fundamentos-da-internet-redes-e-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/internet-networking-api-fundamentals"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/fundamentos-internet-redes-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/internet-networking-api-fundamentals"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/tcp-udp-portas-e-sockets</loc>
+    <loc>https://thebiglearn.org/learn/pt/tcp-udp-portas-e-sockets</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/tcp-udp-portas-e-sockets"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/tcp-udp-puertos-y-sockets"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/tcp-udp-portas-e-sockets"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/tcp-udp-puertos-y-sockets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/tcp-udp-ports-and-sockets"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/tcp-udp-ports-and-sockets</loc>
+    <loc>https://thebiglearn.org/learn/en/tcp-udp-ports-and-sockets</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/tcp-udp-portas-e-sockets"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/tcp-udp-puertos-y-sockets"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/tcp-udp-portas-e-sockets"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/tcp-udp-puertos-y-sockets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/tcp-udp-ports-and-sockets"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/tcp-udp-puertos-y-sockets</loc>
+    <loc>https://thebiglearn.org/learn/es/tcp-udp-puertos-y-sockets</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/tcp-udp-portas-e-sockets"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/tcp-udp-puertos-y-sockets"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/tcp-udp-portas-e-sockets"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/tcp-udp-ports-and-sockets"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/tcp-udp-puertos-y-sockets"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/tcp-udp-ports-and-sockets"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento</loc>
+    <loc>https://thebiglearn.org/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing</loc>
+    <loc>https://thebiglearn.org/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento</loc>
+    <loc>https://thebiglearn.org/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/enderecamento-ip-ipv4-ipv6-sub-redes-e-roteamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/direccionamiento-ip-ipv4-ipv6-subredes-y-enrutamiento"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/ip-addressing-ipv4-ipv6-subnetting-and-routing"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga</loc>
+    <loc>https://thebiglearn.org/learn/pt/dns-nat-proxies-e-balanceadores-de-carga</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/dns-nat-proxies-and-load-balancers"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers</loc>
+    <loc>https://thebiglearn.org/learn/en/dns-nat-proxies-and-load-balancers</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/dns-nat-proxies-and-load-balancers"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga</loc>
+    <loc>https://thebiglearn.org/learn/es/dns-nat-proxies-y-balanceadores-de-carga</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/dns-nat-proxies-e-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/dns-nat-proxies-and-load-balancers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/dns-nat-proxies-y-balanceadores-de-carga"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/dns-nat-proxies-and-load-balancers"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/http-1-1-http-2-e-http-3</loc>
+    <loc>https://thebiglearn.org/learn/pt/http-1-1-http-2-e-http-3</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/http-1-1-http-2-e-http-3"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/http-1-1-http-2-y-http-3"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/http-1-1-http-2-e-http-3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/http-1-1-http-2-y-http-3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/http-1-1-http-2-and-http-3"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/http-1-1-http-2-and-http-3</loc>
+    <loc>https://thebiglearn.org/learn/en/http-1-1-http-2-and-http-3</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/http-1-1-http-2-e-http-3"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/http-1-1-http-2-y-http-3"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/http-1-1-http-2-e-http-3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/http-1-1-http-2-y-http-3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/http-1-1-http-2-and-http-3"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/http-1-1-http-2-y-http-3</loc>
+    <loc>https://thebiglearn.org/learn/es/http-1-1-http-2-y-http-3</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/http-1-1-http-2-e-http-3"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/http-1-1-http-2-y-http-3"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/http-1-1-http-2-e-http-3"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/http-1-1-http-2-and-http-3"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/http-1-1-http-2-y-http-3"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/http-1-1-http-2-and-http-3"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/https-e-tls-em-profundidade</loc>
+    <loc>https://thebiglearn.org/learn/pt/https-e-tls-em-profundidade</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/https-e-tls-em-profundidade"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/https-y-tls-en-profundidad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/https-e-tls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/https-y-tls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/https-and-tls-in-depth"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/https-and-tls-in-depth</loc>
+    <loc>https://thebiglearn.org/learn/en/https-and-tls-in-depth</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/https-e-tls-em-profundidade"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/https-y-tls-en-profundidad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/https-e-tls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/https-y-tls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/https-and-tls-in-depth"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/https-y-tls-en-profundidad</loc>
+    <loc>https://thebiglearn.org/learn/es/https-y-tls-en-profundidad</loc>
     <lastmod>2026-07-16</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/https-e-tls-em-profundidade"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/https-y-tls-en-profundidad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/https-e-tls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/https-and-tls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/https-y-tls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/https-and-tls-in-depth"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis</loc>
+    <loc>https://thebiglearn.org/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis</loc>
     <lastmod>2026-07-17</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/cryptography-fundamentals-and-api-applications"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications</loc>
+    <loc>https://thebiglearn.org/learn/en/cryptography-fundamentals-and-api-applications</loc>
     <lastmod>2026-07-17</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/cryptography-fundamentals-and-api-applications"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis</loc>
+    <loc>https://thebiglearn.org/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis</loc>
     <lastmod>2026-07-17</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/criptografia-fundamentos-e-aplicacoes-em-apis"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/cryptography-fundamentals-and-api-applications"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/criptografia-fundamentos-y-aplicaciones-en-apis"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/cryptography-fundamentals-and-api-applications"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/certificados-digitais-pki-e-x509</loc>
+    <loc>https://thebiglearn.org/learn/pt/certificados-digitais-pki-e-x509</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/certificados-digitais-pki-e-x509"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/certificados-digitales-pki-y-x509"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/certificados-digitais-pki-e-x509"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/certificados-digitales-pki-y-x509"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/digital-certificates-pki-and-x509"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/digital-certificates-pki-and-x509</loc>
+    <loc>https://thebiglearn.org/learn/en/digital-certificates-pki-and-x509</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/certificados-digitais-pki-e-x509"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/certificados-digitales-pki-y-x509"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/certificados-digitais-pki-e-x509"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/certificados-digitales-pki-y-x509"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/digital-certificates-pki-and-x509"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/certificados-digitales-pki-y-x509</loc>
+    <loc>https://thebiglearn.org/learn/es/certificados-digitales-pki-y-x509</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/certificados-digitais-pki-e-x509"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/certificados-digitales-pki-y-x509"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/certificados-digitais-pki-e-x509"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/digital-certificates-pki-and-x509"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/certificados-digitales-pki-y-x509"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/digital-certificates-pki-and-x509"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/mtls-em-profundidade</loc>
+    <loc>https://thebiglearn.org/learn/pt/mtls-em-profundidade</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/mtls-em-profundidade"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/mtls-in-depth"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/mtls-en-profundidad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/mtls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/mtls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/mtls-in-depth"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/mtls-in-depth</loc>
+    <loc>https://thebiglearn.org/learn/en/mtls-in-depth</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/mtls-em-profundidade"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/mtls-in-depth"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/mtls-en-profundidad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/mtls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/mtls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/mtls-in-depth"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/mtls-en-profundidad</loc>
+    <loc>https://thebiglearn.org/learn/es/mtls-en-profundidad</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/mtls-em-profundidade"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/mtls-in-depth"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/mtls-en-profundidad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/mtls-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/mtls-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/mtls-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/mtls-in-depth"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/rest-arquitetura-e-boas-praticas</loc>
+    <loc>https://thebiglearn.org/learn/pt/rest-arquitetura-e-boas-praticas</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/rest-arquitetura-e-boas-praticas"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/rest-arquitectura-y-buenas-practicas"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/rest-arquitetura-e-boas-praticas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/rest-arquitectura-y-buenas-practicas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/rest-architecture-and-best-practices"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/rest-architecture-and-best-practices</loc>
+    <loc>https://thebiglearn.org/learn/en/rest-architecture-and-best-practices</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/rest-arquitetura-e-boas-praticas"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/rest-arquitectura-y-buenas-practicas"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/rest-arquitetura-e-boas-praticas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/rest-arquitectura-y-buenas-practicas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/rest-architecture-and-best-practices"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/rest-arquitectura-y-buenas-practicas</loc>
+    <loc>https://thebiglearn.org/learn/es/rest-arquitectura-y-buenas-practicas</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/rest-arquitetura-e-boas-praticas"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/rest-arquitectura-y-buenas-practicas"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/rest-arquitetura-e-boas-praticas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/rest-architecture-and-best-practices"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/rest-arquitectura-y-buenas-practicas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/rest-architecture-and-best-practices"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/modelo-de-maturidade-rest-de-richardson</loc>
+    <loc>https://thebiglearn.org/learn/pt/modelo-de-maturidade-rest-de-richardson</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/modelo-de-madurez-rest-de-richardson"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/modelo-de-madurez-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/richardson-rest-maturity-model"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/richardson-rest-maturity-model</loc>
+    <loc>https://thebiglearn.org/learn/en/richardson-rest-maturity-model</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/modelo-de-madurez-rest-de-richardson"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/modelo-de-madurez-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/richardson-rest-maturity-model"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/modelo-de-madurez-rest-de-richardson</loc>
+    <loc>https://thebiglearn.org/learn/es/modelo-de-madurez-rest-de-richardson</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/modelo-de-madurez-rest-de-richardson"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/modelo-de-maturidade-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/richardson-rest-maturity-model"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/modelo-de-madurez-rest-de-richardson"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/richardson-rest-maturity-model"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/openapi-swagger-contratos-documentacao-e-automacao</loc>
+    <loc>https://thebiglearn.org/learn/pt/openapi-swagger-contratos-documentacao-e-automacao</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation</loc>
+    <loc>https://thebiglearn.org/learn/en/openapi-swagger-contracts-documentation-and-automation</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion</loc>
+    <loc>https://thebiglearn.org/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/openapi-swagger-contratos-documentacao-e-automacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/openapi-swagger-contratos-documentacion-y-automatizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/openapi-swagger-contracts-documentation-and-automation"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/graphql-grpc-e-websocket</loc>
+    <loc>https://thebiglearn.org/learn/pt/graphql-grpc-e-websocket</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/graphql-grpc-e-websocket"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/graphql-grpc-y-websocket"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/graphql-grpc-e-websocket"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/graphql-grpc-y-websocket"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/graphql-grpc-and-websocket"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/graphql-grpc-and-websocket</loc>
+    <loc>https://thebiglearn.org/learn/en/graphql-grpc-and-websocket</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/graphql-grpc-e-websocket"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/graphql-grpc-y-websocket"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/graphql-grpc-e-websocket"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/graphql-grpc-y-websocket"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/graphql-grpc-and-websocket"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/graphql-grpc-y-websocket</loc>
+    <loc>https://thebiglearn.org/learn/es/graphql-grpc-y-websocket</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/graphql-grpc-e-websocket"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/graphql-grpc-y-websocket"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/graphql-grpc-e-websocket"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/graphql-grpc-and-websocket"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/graphql-grpc-y-websocket"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/graphql-grpc-and-websocket"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/autenticacao-x-autorizacao</loc>
+    <loc>https://thebiglearn.org/learn/pt/autenticacao-x-autorizacao</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/autenticacao-x-autorizacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/autenticacion-vs-autorizacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/autenticacao-x-autorizacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/autenticacion-vs-autorizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/authentication-vs-authorization"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/authentication-vs-authorization</loc>
+    <loc>https://thebiglearn.org/learn/en/authentication-vs-authorization</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/autenticacao-x-autorizacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/autenticacion-vs-autorizacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/autenticacao-x-autorizacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/autenticacion-vs-autorizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/authentication-vs-authorization"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/autenticacion-vs-autorizacion</loc>
+    <loc>https://thebiglearn.org/learn/es/autenticacion-vs-autorizacion</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/autenticacao-x-autorizacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/autenticacion-vs-autorizacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/autenticacao-x-autorizacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/authentication-vs-authorization"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/autenticacion-vs-autorizacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/authentication-vs-authorization"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/basic-auth-digest-e-api-keys</loc>
+    <loc>https://thebiglearn.org/learn/pt/basic-auth-digest-e-api-keys</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/basic-auth-digest-e-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/basic-auth-digest-y-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/basic-auth-digest-e-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/basic-auth-digest-y-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/basic-auth-digest-and-api-keys"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/basic-auth-digest-and-api-keys</loc>
+    <loc>https://thebiglearn.org/learn/en/basic-auth-digest-and-api-keys</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/basic-auth-digest-e-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/basic-auth-digest-y-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/basic-auth-digest-e-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/basic-auth-digest-y-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/basic-auth-digest-and-api-keys"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/basic-auth-digest-y-api-keys</loc>
+    <loc>https://thebiglearn.org/learn/es/basic-auth-digest-y-api-keys</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/basic-auth-digest-e-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/basic-auth-digest-y-api-keys"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/basic-auth-digest-e-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/basic-auth-digest-and-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/basic-auth-digest-y-api-keys"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/basic-auth-digest-and-api-keys"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/oauth-2-fluxos-tokens-e-seguranca</loc>
+    <loc>https://thebiglearn.org/learn/pt/oauth-2-fluxos-tokens-e-seguranca</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/oauth-2-flows-tokens-and-security"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/oauth-2-flows-tokens-and-security</loc>
+    <loc>https://thebiglearn.org/learn/en/oauth-2-flows-tokens-and-security</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/oauth-2-flows-tokens-and-security"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/oauth-2-flujos-tokens-y-seguridad</loc>
+    <loc>https://thebiglearn.org/learn/es/oauth-2-flujos-tokens-y-seguridad</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/oauth-2-fluxos-tokens-e-seguranca"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/oauth-2-flows-tokens-and-security"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/oauth-2-flujos-tokens-y-seguridad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/oauth-2-flows-tokens-and-security"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/pt/openid-connect-id-tokens-sessoes-e-federacao</loc>
+    <loc>https://thebiglearn.org/learn/pt/openid-connect-id-tokens-sessoes-e-federacao</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation</loc>
+    <loc>https://thebiglearn.org/learn/en/openid-connect-id-tokens-sessions-and-federation</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
   </url>
   <url>
-    <loc>https://utily.tools/learn/es/openid-connect-id-tokens-sesiones-y-federacion</loc>
+    <loc>https://thebiglearn.org/learn/es/openid-connect-id-tokens-sesiones-y-federacion</loc>
     <lastmod>2026-07-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://utily.tools/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://utily.tools/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://utily.tools/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/openid-connect-id-tokens-sessoes-e-federacao"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/openid-connect-id-tokens-sesiones-y-federacion"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/openid-connect-id-tokens-sessions-and-federation"/>
   </url>
   <url>
-    <loc>https://utily.tools/base64</loc>
+    <loc>https://thebiglearn.org/base64</loc>
   </url>
   <url>
-    <loc>https://utily.tools/json-editor</loc>
+    <loc>https://thebiglearn.org/json-editor</loc>
   </url>
   <url>
-    <loc>https://utily.tools/jwt-viewer</loc>
+    <loc>https://thebiglearn.org/jwt-viewer</loc>
   </url>
   <url>
-    <loc>https://utily.tools/jwe-viewer</loc>
+    <loc>https://thebiglearn.org/jwe-viewer</loc>
   </url>
   <url>
-    <loc>https://utily.tools/url-codec</loc>
+    <loc>https://thebiglearn.org/url-codec</loc>
   </url>
   <url>
-    <loc>https://utily.tools/image-to-text-ocr</loc>
+    <loc>https://thebiglearn.org/image-to-text-ocr</loc>
   </url>
   <url>
-    <loc>https://utily.tools/unix-timestamp</loc>
+    <loc>https://thebiglearn.org/unix-timestamp</loc>
   </url>
   <url>
-    <loc>https://utily.tools/ipv4-range-calculator</loc>
+    <loc>https://thebiglearn.org/ipv4-range-calculator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/text-to-qrcode</loc>
+    <loc>https://thebiglearn.org/text-to-qrcode</loc>
   </url>
   <url>
-    <loc>https://utily.tools/text-editor</loc>
+    <loc>https://thebiglearn.org/text-editor</loc>
   </url>
   <url>
-    <loc>https://utily.tools/text-template</loc>
+    <loc>https://thebiglearn.org/text-template</loc>
   </url>
   <url>
-    <loc>https://utily.tools/x509-viewer</loc>
+    <loc>https://thebiglearn.org/x509-viewer</loc>
   </url>
   <url>
-    <loc>https://utily.tools/x509-generator</loc>
+    <loc>https://thebiglearn.org/x509-generator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/pdf-merger</loc>
+    <loc>https://thebiglearn.org/pdf-merger</loc>
   </url>
   <url>
-    <loc>https://utily.tools/pdf-splitter</loc>
+    <loc>https://thebiglearn.org/pdf-splitter</loc>
   </url>
   <url>
-    <loc>https://utily.tools/pdf-creator</loc>
+    <loc>https://thebiglearn.org/pdf-creator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/hash-generator</loc>
+    <loc>https://thebiglearn.org/hash-generator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/text-diff</loc>
+    <loc>https://thebiglearn.org/text-diff</loc>
   </url>
   <url>
-    <loc>https://utily.tools/uuid-generator</loc>
+    <loc>https://thebiglearn.org/uuid-generator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/password-generator</loc>
+    <loc>https://thebiglearn.org/password-generator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/hmac-generator</loc>
+    <loc>https://thebiglearn.org/hmac-generator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/cpf-cnpj-generator</loc>
+    <loc>https://thebiglearn.org/cpf-cnpj-generator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/json-yaml-compare</loc>
+    <loc>https://thebiglearn.org/json-yaml-compare</loc>
   </url>
   <url>
-    <loc>https://utily.tools/certificate-validator</loc>
+    <loc>https://thebiglearn.org/certificate-validator</loc>
   </url>
   <url>
-    <loc>https://utily.tools/swagger-editor</loc>
+    <loc>https://thebiglearn.org/swagger-editor</loc>
   </url>
   <url>
-    <loc>https://utily.tools/shared-text</loc>
+    <loc>https://thebiglearn.org/shared-text</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/what-is-utily-tools</loc>
+    <loc>https://thebiglearn.org/articles/what-is-utily-tools</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/online-text-editor-text-transformation-guide</loc>
+    <loc>https://thebiglearn.org/articles/online-text-editor-text-transformation-guide</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/text-templates-variables-and-automation</loc>
+    <loc>https://thebiglearn.org/articles/text-templates-variables-and-automation</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/text-diff-algorithms-and-comparison</loc>
+    <loc>https://thebiglearn.org/articles/text-diff-algorithms-and-comparison</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/base64-encoding-decoding-guide</loc>
+    <loc>https://thebiglearn.org/articles/base64-encoding-decoding-guide</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/url-encoding-percent-encoding-guide</loc>
+    <loc>https://thebiglearn.org/articles/url-encoding-percent-encoding-guide</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/uri-vs-url-difference-explained</loc>
+    <loc>https://thebiglearn.org/articles/uri-vs-url-difference-explained</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/json-formatting-minification-and-validation</loc>
+    <loc>https://thebiglearn.org/articles/json-formatting-minification-and-validation</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/compare-json-yaml-structural-diff</loc>
+    <loc>https://thebiglearn.org/articles/compare-json-yaml-structural-diff</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/swagger-openapi-specification-guide</loc>
+    <loc>https://thebiglearn.org/articles/swagger-openapi-specification-guide</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/uuid-v1-v4-v7-generation-guide</loc>
+    <loc>https://thebiglearn.org/articles/uuid-v1-v4-v7-generation-guide</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/unix-timestamp-epoch-time-conversion</loc>
+    <loc>https://thebiglearn.org/articles/unix-timestamp-epoch-time-conversion</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/cpf-cnpj-check-digit-generation-for-testing</loc>
+    <loc>https://thebiglearn.org/articles/cpf-cnpj-check-digit-generation-for-testing</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/jwt-structure-signing-and-validation</loc>
+    <loc>https://thebiglearn.org/articles/jwt-structure-signing-and-validation</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/jwe-encryption-compact-serialization</loc>
+    <loc>https://thebiglearn.org/articles/jwe-encryption-compact-serialization</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/cryptographic-hash-functions-md5-sha</loc>
+    <loc>https://thebiglearn.org/articles/cryptographic-hash-functions-md5-sha</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/hmac-message-authentication-guide</loc>
+    <loc>https://thebiglearn.org/articles/hmac-message-authentication-guide</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/secure-password-generation-entropy</loc>
+    <loc>https://thebiglearn.org/articles/secure-password-generation-entropy</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/x509-certificate-fields-and-decoding</loc>
+    <loc>https://thebiglearn.org/articles/x509-certificate-fields-and-decoding</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/generate-self-signed-x509-certificates</loc>
+    <loc>https://thebiglearn.org/articles/generate-self-signed-x509-certificates</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/validate-certificates-and-key-pairs</loc>
+    <loc>https://thebiglearn.org/articles/validate-certificates-and-key-pairs</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/ocr-image-to-text-technology</loc>
+    <loc>https://thebiglearn.org/articles/ocr-image-to-text-technology</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/qr-code-generation-error-correction</loc>
+    <loc>https://thebiglearn.org/articles/qr-code-generation-error-correction</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/merge-pdf-and-images-in-browser</loc>
+    <loc>https://thebiglearn.org/articles/merge-pdf-and-images-in-browser</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/split-pdf-pages-and-export-jpg</loc>
+    <loc>https://thebiglearn.org/articles/split-pdf-pages-and-export-jpg</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/create-pdf-from-images-browser</loc>
+    <loc>https://thebiglearn.org/articles/create-pdf-from-images-browser</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/real-time-text-sharing-websockets</loc>
+    <loc>https://thebiglearn.org/articles/real-time-text-sharing-websockets</loc>
   </url>
   <url>
-    <loc>https://utily.tools/articles/ipv4-cidr-subnet-range-calculation-guide</loc>
+    <loc>https://thebiglearn.org/articles/ipv4-cidr-subnet-range-calculation-guide</loc>
   </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/pt/jwt-jws-jwe-e-jose-em-profundidade</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/jwt-jws-jwe-e-jose-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/jwt-jws-jwe-and-jose-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/jwt-jws-jwe-y-jose-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/jwt-jws-jwe-and-jose-in-depth"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/en/jwt-jws-jwe-and-jose-in-depth</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/jwt-jws-jwe-e-jose-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/jwt-jws-jwe-and-jose-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/jwt-jws-jwe-y-jose-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/jwt-jws-jwe-and-jose-in-depth"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/es/jwt-jws-jwe-y-jose-en-profundidad</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/jwt-jws-jwe-e-jose-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/jwt-jws-jwe-and-jose-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/jwt-jws-jwe-y-jose-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/jwt-jws-jwe-and-jose-in-depth"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/pt/saml-2-em-profundidade</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/saml-2-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/saml-2-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/saml-2-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/saml-2-in-depth"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/en/saml-2-in-depth</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/saml-2-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/saml-2-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/saml-2-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/saml-2-in-depth"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/es/saml-2-en-profundidad</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/saml-2-em-profundidade"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/saml-2-in-depth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/saml-2-en-profundidad"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/saml-2-in-depth"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/pt/identity-federation-e-single-sign-on</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/identity-federation-e-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/identity-federation-and-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/federacion-de-identidad-y-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/identity-federation-and-single-sign-on"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/en/identity-federation-and-single-sign-on</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/identity-federation-e-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/identity-federation-and-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/federacion-de-identidad-y-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/identity-federation-and-single-sign-on"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/es/federacion-de-identidad-y-single-sign-on</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/identity-federation-e-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/identity-federation-and-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/federacion-de-identidad-y-single-sign-on"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/identity-federation-and-single-sign-on"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/pt/api-gateways-conceitos-e-arquitetura</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/api-gateways-conceitos-e-arquitetura"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-gateways-concepts-and-architecture"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/api-gateways-conceptos-y-arquitectura"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-gateways-concepts-and-architecture"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/en/api-gateways-concepts-and-architecture</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/api-gateways-conceitos-e-arquitetura"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-gateways-concepts-and-architecture"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/api-gateways-conceptos-y-arquitectura"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-gateways-concepts-and-architecture"/>
+  </url>
+  <url>
+    <loc>https://thebiglearn.org/learn/es/api-gateways-conceptos-y-arquitectura</loc>
+    <lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/api-gateways-conceitos-e-arquitetura"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-gateways-concepts-and-architecture"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/api-gateways-conceptos-y-arquitectura"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-gateways-concepts-and-architecture"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/pt/politicas-de-gateway-policies</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/politicas-de-gateway-policies"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/gateway-policies"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/politicas-de-gateway-policies"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/gateway-policies"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/en/gateway-policies</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/politicas-de-gateway-policies"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/gateway-policies"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/politicas-de-gateway-policies"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/gateway-policies"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/es/politicas-de-gateway-policies</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/politicas-de-gateway-policies"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/gateway-policies"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/politicas-de-gateway-policies"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/gateway-policies"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/pt/axway-api-gateway-arquitetura-e-funcionamento</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/axway-api-gateway-arquitetura-e-funcionamento"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/axway-api-gateway-architecture-and-operation"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/axway-api-gateway-arquitectura-y-funcionamiento"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/axway-api-gateway-architecture-and-operation"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/en/axway-api-gateway-architecture-and-operation</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/axway-api-gateway-arquitetura-e-funcionamento"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/axway-api-gateway-architecture-and-operation"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/axway-api-gateway-arquitectura-y-funcionamiento"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/axway-api-gateway-architecture-and-operation"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/es/axway-api-gateway-arquitectura-y-funcionamiento</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/axway-api-gateway-arquitetura-e-funcionamento"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/axway-api-gateway-architecture-and-operation"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/axway-api-gateway-arquitetura-y-funcionamento"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/axway-api-gateway-architecture-and-operation"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/pt/azure-api-management-apim</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/azure-api-management-apim"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/en/azure-api-management-apim</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/azure-api-management-apim"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/es/azure-api-management-apim</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/azure-api-management-apim"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/azure-api-management-apim"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/pt/seguranca-apis-owasp-api-security-top-10</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/seguranca-apis-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-security-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/seguridad-apis-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-security-owasp-api-security-top-10"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/en/api-security-owasp-api-security-top-10</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/seguranca-apis-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-security-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/seguridad-apis-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-security-owasp-api-security-top-10"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/es/seguridad-apis-owasp-api-security-top-10</loc><lastmod>2026-07-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/seguranca-apis-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-security-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/seguridad-apis-owasp-api-security-top-10"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-security-owasp-api-security-top-10"/>
+  </url>
+  <url><loc>https://thebiglearn.org/learn/pt/cors-csp-hsts-e-outros-cabecalhos-http</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/cors-csp-hsts-e-outros-cabecalhos-http"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/cors-csp-hsts-and-other-http-headers"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/cors-csp-hsts-y-otros-encabezados-http"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/cors-csp-hsts-and-other-http-headers"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/cors-csp-hsts-and-other-http-headers</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/cors-csp-hsts-e-outros-cabecalhos-http"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/cors-csp-hsts-and-other-http-headers"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/cors-csp-hsts-y-otros-encabezados-http"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/cors-csp-hsts-and-other-http-headers"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/cors-csp-hsts-y-otros-encabezados-http</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/cors-csp-hsts-e-outros-cabecalhos-http"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/cors-csp-hsts-and-other-http-headers"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/cors-csp-hsts-y-otros-encabezados-http"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/cors-csp-hsts-and-other-http-headers"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/rate-limiting-quotas-e-throttling</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/rate-limiting-quotas-e-throttling"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/rate-limiting-quotas-and-throttling"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/rate-limiting-cuotas-y-throttling"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/rate-limiting-quotas-and-throttling"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/rate-limiting-quotas-and-throttling</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/rate-limiting-quotas-e-throttling"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/rate-limiting-quotas-and-throttling"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/rate-limiting-cuotas-y-throttling"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/rate-limiting-quotas-and-throttling"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/rate-limiting-cuotas-y-throttling</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/rate-limiting-quotas-e-throttling"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/rate-limiting-quotas-and-throttling"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/rate-limiting-cuotas-y-throttling"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/rate-limiting-quotas-and-throttling"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/api-versioning</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/api-versioning"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-versioning"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/api-versioning"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-versioning"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/api-versioning</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/api-versioning"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-versioning"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/api-versioning"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-versioning"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/api-versioning</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/api-versioning"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-versioning"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/api-versioning"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-versioning"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/service-mesh-istio-linkerd-e-envoy</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/service-mesh-istio-linkerd-e-envoy"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/service-mesh-istio-linkerd-and-envoy"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/service-mesh-istio-linkerd-y-envoy"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/service-mesh-istio-linkerd-and-envoy"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/service-mesh-istio-linkerd-and-envoy</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/service-mesh-istio-linkerd-e-envoy"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/service-mesh-istio-linkerd-and-envoy"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/service-mesh-istio-linkerd-y-envoy"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/service-mesh-istio-linkerd-and-envoy"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/service-mesh-istio-linkerd-y-envoy</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/service-mesh-istio-linkerd-e-envoy"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/service-mesh-istio-linkerd-and-envoy"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/service-mesh-istio-linkerd-y-envoy"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/service-mesh-istio-linkerd-and-envoy"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/microservicos-e-padroes-de-integracao</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/microservicos-e-padroes-de-integracao"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/microservices-and-integration-patterns"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/microservicios-y-patrones-de-integracion"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/microservices-and-integration-patterns"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/microservices-and-integration-patterns</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/microservicos-e-padroes-de-integracao"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/microservices-and-integration-patterns"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/microservicios-y-patrones-de-integracion"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/microservices-and-integration-patterns"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/microservicios-y-patrones-de-integracion</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/microservicos-e-padroes-de-integracao"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/microservices-and-integration-patterns"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/microservicios-y-patrones-de-integracion"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/microservices-and-integration-patterns"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/mensageria-kafka-rabbitmq-amqp-e-jms</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/mensageria-kafka-rabbitmq-amqp-e-jms"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/messaging-kafka-rabbitmq-amqp-and-jms"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/mensajeria-kafka-rabbitmq-amqp-y-jms"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/messaging-kafka-rabbitmq-amqp-and-jms"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/messaging-kafka-rabbitmq-amqp-and-jms</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/mensageria-kafka-rabbitmq-amqp-e-jms"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/messaging-kafka-rabbitmq-amqp-and-jms"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/mensajeria-kafka-rabbitmq-amqp-y-jms"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/messaging-kafka-rabbitmq-amqp-and-jms"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/mensajeria-kafka-rabbitmq-amqp-y-jms</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/mensageria-kafka-rabbitmq-amqp-e-jms"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/messaging-kafka-rabbitmq-amqp-and-jms"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/mensajeria-kafka-rabbitmq-amqp-y-jms"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/messaging-kafka-rabbitmq-amqp-and-jms"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/observabilidade-logs-metricas-tracing-opentelemetry</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/observabilidade-logs-metricas-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/observability-logs-metrics-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/observabilidad-logs-metricas-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/observability-logs-metrics-tracing-opentelemetry"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/observability-logs-metrics-tracing-opentelemetry</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/observabilidade-logs-metricas-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/observability-logs-metrics-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/observabilidad-logs-metricas-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/observability-logs-metrics-tracing-opentelemetry"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/observabilidad-logs-metricas-tracing-opentelemetry</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/observabilidade-logs-metricas-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/observability-logs-metrics-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/observabilidad-logs-metricas-tracing-opentelemetry"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/observability-logs-metrics-tracing-opentelemetry"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/kubernetes-para-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/kubernetes-para-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/kubernetes-for-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/kubernetes-para-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/kubernetes-for-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/kubernetes-for-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/kubernetes-para-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/kubernetes-for-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/kubernetes-para-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/kubernetes-for-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/kubernetes-para-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/kubernetes-para-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/kubernetes-for-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/kubernetes-para-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/kubernetes-for-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/zero-trust-aplicado-a-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/zero-trust-aplicado-a-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/zero-trust-applied-to-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/zero-trust-aplicado-a-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/zero-trust-applied-to-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/zero-trust-applied-to-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/zero-trust-aplicado-a-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/zero-trust-applied-to-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/zero-trust-aplicado-a-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/zero-trust-applied-to-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/zero-trust-aplicado-a-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/zero-trust-aplicado-a-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/zero-trust-applied-to-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/zero-trust-aplicado-a-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/zero-trust-applied-to-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/open-finance-e-open-banking-no-brasil</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/open-finance-e-open-banking-no-brasil"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/open-finance-and-open-banking-in-brazil"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/open-finance-y-open-banking-en-brasil"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/open-finance-and-open-banking-in-brazil"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/open-finance-and-open-banking-in-brazil</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/open-finance-e-open-banking-no-brasil"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/open-finance-and-open-banking-in-brazil"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/open-finance-y-open-banking-en-brasil"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/open-finance-and-open-banking-in-brazil"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/open-finance-y-open-banking-en-brasil</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/open-finance-e-open-banking-no-brasil"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/open-finance-and-open-banking-in-brazil"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/open-finance-y-open-banking-en-brasil"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/open-finance-and-open-banking-in-brazil"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/lgpd-aplicada-as-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/lgpd-aplicada-as-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/lgpd-applied-to-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/lgpd-aplicada-a-las-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/lgpd-applied-to-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/lgpd-applied-to-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/lgpd-aplicada-as-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/lgpd-applied-to-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/lgpd-aplicada-a-las-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/lgpd-applied-to-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/lgpd-aplicada-a-las-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/lgpd-aplicada-as-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/lgpd-applied-to-apis"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/lgpd-aplicada-a-las-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/lgpd-applied-to-apis"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/arquiteturas-bancarias-de-alta-disponibilidade</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/arquiteturas-bancarias-de-alta-disponibilidade"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/high-availability-banking-architectures"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/arquitecturas-bancarias-de-alta-disponibilidad"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/high-availability-banking-architectures"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/high-availability-banking-architectures</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/arquiteturas-bancarias-de-alta-disponibilidade"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/high-availability-banking-architectures"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/arquitecturas-bancarias-de-alta-disponibilidad"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/high-availability-banking-architectures"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/arquitecturas-bancarias-de-alta-disponibilidad</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/arquiteturas-bancarias-de-alta-disponibilidade"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/high-availability-banking-architectures"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/arquitecturas-bancarias-de-alta-disponibilidad"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/high-availability-banking-architectures"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/troubleshooting-de-apis-e-gateways</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/troubleshooting-de-apis-e-gateways"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-and-gateway-troubleshooting"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/troubleshooting-de-apis-y-gateways"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-and-gateway-troubleshooting"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/api-and-gateway-troubleshooting</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/troubleshooting-de-apis-e-gateways"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-and-gateway-troubleshooting"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/troubleshooting-de-apis-y-gateways"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-and-gateway-troubleshooting"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/troubleshooting-de-apis-y-gateways</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/troubleshooting-de-apis-e-gateways"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/api-and-gateway-troubleshooting"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/troubleshooting-de-apis-y-gateways"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/api-and-gateway-troubleshooting"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/estudo-de-casos-reais-de-grandes-empresas</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/estudo-de-casos-reais-de-grandes-empresas"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/real-world-case-studies-from-large-enterprises"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/estudio-de-casos-reales-de-grandes-empresas"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/real-world-case-studies-from-large-enterprises"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/real-world-case-studies-from-large-enterprises</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/estudo-de-casos-reais-de-grandes-empresas"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/real-world-case-studies-from-large-enterprises"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/estudio-de-casos-reales-de-grandes-empresas"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/real-world-case-studies-from-large-enterprises"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/estudio-de-casos-reales-de-grandes-empresas</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/estudo-de-casos-reais-de-grandes-empresas"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/real-world-case-studies-from-large-enterprises"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/estudio-de-casos-reales-de-grandes-empresas"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/real-world-case-studies-from-large-enterprises"/></url>
+  <url><loc>https://thebiglearn.org/learn/pt/projeto-final-plataforma-completa-de-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/projeto-final-plataforma-completa-de-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/complete-api-platform-capstone-project"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/proyecto-final-plataforma-completa-de-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/complete-api-platform-capstone-project"/></url>
+  <url><loc>https://thebiglearn.org/learn/en/complete-api-platform-capstone-project</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/projeto-final-plataforma-completa-de-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/complete-api-platform-capstone-project"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/proyecto-final-plataforma-completa-de-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/complete-api-platform-capstone-project"/></url>
+  <url><loc>https://thebiglearn.org/learn/es/proyecto-final-plataforma-completa-de-apis</loc><lastmod>2026-07-21</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="https://thebiglearn.org/learn/pt/projeto-final-plataforma-completa-de-apis"/><xhtml:link rel="alternate" hreflang="en" href="https://thebiglearn.org/learn/en/complete-api-platform-capstone-project"/><xhtml:link rel="alternate" hreflang="es" href="https://thebiglearn.org/learn/es/proyecto-final-plataforma-completa-de-apis"/><xhtml:link rel="alternate" hreflang="x-default" href="https://thebiglearn.org/learn/en/complete-api-platform-capstone-project"/></url>
 </urlset>
