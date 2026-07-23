@@ -240,7 +240,7 @@
   margin: 0 auto 2rem;
   max-width: 640px;
   font-size: clamp(1rem, 1.7vw, 1.18rem);
-  line-height: 1.65;
+  line-height: 2.1;
   color: rgba(244, 251, 255, 0.78);
 }
 
@@ -558,6 +558,88 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.4rem;
+}
+
+/* Section head with side controls (carousel sections) */
+.tbl-section-head-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: none;
+  text-align: left;
+}
+
+.tbl-section-head-row > div {
+  max-width: 760px;
+}
+
+.tbl-carousel-controls {
+  display: flex;
+  gap: 0.6rem;
+  flex: none;
+}
+
+.tbl-carousel-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 251, 255, 0.16);
+  background: rgba(244, 251, 255, 0.04);
+  color: var(--text-main, #f4fbff);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.tbl-carousel-controls button:hover {
+  border-color: rgba(0, 255, 209, 0.5);
+  background: rgba(0, 255, 209, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Horizontal scrolling carousel */
+.tbl-carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(280px, 320px);
+  gap: 1.4rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0.4rem 0.2rem 1.2rem;
+  margin: 0 -0.2rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 209, 0.4) transparent;
+}
+
+.tbl-carousel::-webkit-scrollbar {
+  height: 8px;
+}
+
+.tbl-carousel::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 209, 0.35);
+  border-radius: 999px;
+}
+
+.tbl-carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tbl-carousel .tbl-article-card {
+  scroll-snap-align: start;
+}
+
+@media (max-width: 640px) {
+  .tbl-section-head-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tbl-carousel {
+    grid-auto-columns: 82%;
+  }
 }
 
 .tbl-article-card {

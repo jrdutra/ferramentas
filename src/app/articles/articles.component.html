@@ -3,41 +3,73 @@
     <span class="eyebrow">utily.tools knowledge base</span>
     <h1>Articles</h1>
     <p>Guides, explanations and practical ideas to help you get more from developer tools.</p>
+
+    <app-site-progress class="articles-progress"></app-site-progress>
+
+    <!-- Article filter -->
+    <div class="articles-filtro">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="text"
+        [(ngModel)]="filtro"
+        placeholder="Filter articles by title…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Filter articles by title"
+      />
+      @if (filtro) {
+        <button type="button" (click)="limparFiltro()" aria-label="Clear filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
   </header>
 
-  <div class="articles-grid" aria-label="Published articles">
-    @for (article of articles; track article.route) {
-      <article class="article-card">
-        <a class="article-card-image" [routerLink]="article.route" tabindex="-1" aria-hidden="true">
-          <img
-            [src]="article.image"
-            [alt]="article.imageAlt"
-            [attr.width]="article.imageWidth"
-            [attr.height]="article.imageHeight"
-            loading="lazy"
-          />
-        </a>
+  <!-- Screen reader feedback while filtering -->
+  <p class="articles-sr-status" role="status" aria-live="polite">
+    {{ filtro.trim() ? articlesFiltrados.length + (articlesFiltrados.length === 1 ? ' article matches your search' : ' articles match your search') : '' }}
+  </p>
 
-        <div class="article-card-content">
-          <div class="article-card-meta">
-            <span>{{ article.category }}</span>
-            <span>{{ article.readingTime }}</span>
-          </div>
+  @if (semResultados) {
+    <div class="articles-vazio">
+      <mat-icon aria-hidden="true">search_off</mat-icon>
+      <span>No articles found for <strong>"{{ filtro }}"</strong></span>
+      <button type="button" class="botao-limpar-filtro" (click)="limparFiltro()">Clear search</button>
+    </div>
+  } @else {
+    <ul class="articles-list" aria-label="Published articles">
+      @for (article of articlesFiltrados; track article.route) {
+        <li class="article-row">
+          <a class="article-row-link" [routerLink]="article.route">
+            <div class="article-row-main">
+              <div class="article-row-meta">
+                <span class="article-row-category">{{ article.category }}</span>
+                @if (article.languageFlag; as flag) {
+                  <img
+                    class="article-language-flag"
+                    [src]="flag.src"
+                    [alt]="flag.alt"
+                    width="24"
+                    height="16"
+                    loading="lazy"
+                  />
+                }
+                <span>{{ article.readingTime }}</span>
+                <span class="article-row-dot" aria-hidden="true">•</span>
+                <time [attr.datetime]="article.publishedIso">{{ article.publishedAt }}</time>
+              </div>
 
-          <h2>
-            <a [routerLink]="article.route">{{ article.title }}</a>
-          </h2>
-          <p>{{ article.excerpt }}</p>
+              <h2>{{ article.title }}</h2>
+              <p>{{ article.excerpt }}</p>
+            </div>
 
-          <footer>
-            <time [attr.datetime]="article.publishedIso">{{ article.publishedAt }}</time>
-            <a class="read-link" [routerLink]="article.route" [attr.aria-label]="'Read ' + article.title">
+            <span class="read-link">
               Read article
-              <mat-icon>arrow_forward</mat-icon>
-            </a>
-          </footer>
-        </div>
-      </article>
-    }
-  </div>
+              <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
 </section>

@@ -39,6 +39,7 @@
           <mat-icon aria-hidden="true">article</mat-icon>
           Read the articles
         </a>
+        <app-site-progress variant="cta"></app-site-progress>
       </div>
 
       <div class="tbl-hero-stats">
@@ -89,16 +90,27 @@
 
   <!-- ─── Articles ─────────────────────────────────────────────────────── -->
   <section class="tbl-section tbl-articles tbl-reveal" aria-labelledby="tbl-articles-title">
-    <div class="tbl-section-head">
-      <span class="tbl-kicker">Articles</span>
-      <h2 id="tbl-articles-title">Practical deep-dives to read alongside</h2>
-      <p>
-        Focused, standalone articles that unpack a concept, a format or a workflow — and point you to the
-        right utility whenever one helps.
-      </p>
+    <div class="tbl-section-head tbl-section-head-row">
+      <div>
+        <span class="tbl-kicker">Articles</span>
+        <h2 id="tbl-articles-title">Practical deep-dives to read alongside</h2>
+        <p>
+          Focused, standalone articles that unpack a concept, a format or a workflow — and point you to the
+          right utility whenever one helps.
+        </p>
+      </div>
+      <div class="tbl-carousel-controls">
+        <button type="button" (click)="scrollCarousel('articles', -1)" aria-label="Previous articles">
+          <mat-icon aria-hidden="true">chevron_left</mat-icon>
+        </button>
+        <button type="button" (click)="scrollCarousel('articles', 1)" aria-label="Next articles">
+          <mat-icon aria-hidden="true">chevron_right</mat-icon>
+        </button>
+      </div>
     </div>
 
-    <div class="tbl-article-grid">
+    <div class="tbl-carousel" #articlesTrack tabindex="0" role="region"
+         aria-label="Articles carousel, scroll horizontally">
       <a class="tbl-article-card" *ngFor="let article of featuredArticles; trackBy: trackByRoute"
          [routerLink]="article.route">
         <div class="tbl-article-media">
@@ -117,6 +129,51 @@
     <div class="tbl-center">
       <a class="tbl-cta tbl-cta-ghost" routerLink="/articles">
         Browse all articles
+        <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── Learn chapters ───────────────────────────────────────────────── -->
+  <section class="tbl-section tbl-articles tbl-reveal" aria-labelledby="tbl-learn-carousel-title">
+    <div class="tbl-section-head tbl-section-head-row">
+      <div>
+        <span class="tbl-kicker">Learn articles</span>
+        <h2 id="tbl-learn-carousel-title">Standalone reads from the Learn track</h2>
+        <p>
+          Independent Learn articles — each a self-contained deep-dive into a networking, security,
+          protocol or architecture topic. Read any one on its own, no series required.
+        </p>
+      </div>
+      <div class="tbl-carousel-controls">
+        <button type="button" (click)="scrollCarousel('learn', -1)" aria-label="Previous chapters">
+          <mat-icon aria-hidden="true">chevron_left</mat-icon>
+        </button>
+        <button type="button" (click)="scrollCarousel('learn', 1)" aria-label="Next chapters">
+          <mat-icon aria-hidden="true">chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="tbl-carousel" #learnTrack tabindex="0" role="region"
+         aria-label="Learn chapters carousel, scroll horizontally">
+      <a class="tbl-article-card" *ngFor="let chapter of featuredLearn; trackBy: trackByRoute"
+         [routerLink]="chapter.route">
+        <div class="tbl-article-media">
+          <img [src]="chapter.image" [alt]="chapter.imageAlt" loading="lazy" decoding="async">
+        </div>
+        <div class="tbl-article-body">
+          <span class="tbl-article-category">{{ chapter.category }}</span>
+          <h3>{{ chapter.title }}</h3>
+          <p>{{ chapter.excerpt }}</p>
+          <span class="tbl-article-meta">{{ chapter.readingTime }}</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="tbl-center">
+      <a class="tbl-cta tbl-cta-ghost" routerLink="/learn">
+        Explore the Learn track
         <mat-icon aria-hidden="true">arrow_forward</mat-icon>
       </a>
     </div>

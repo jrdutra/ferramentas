@@ -333,6 +333,14 @@
   text-transform: uppercase;
 }
 
+.card-language-flag {
+  width: 1.35em;
+  height: 0.9em;
+  border-radius: 0.1em;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
 .learn-card h3 {
   margin: 0.65em 0 0.4em;
 }
@@ -667,4 +675,95 @@
   font-weight: 700;
   color: #7dffb8;
   flex: 0 0 auto;
+}
+
+/* ── Learning path (trilha) filter ──────────────────────────────────── */
+.trilha-filtro {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  max-width: 34em;
+  margin-top: 1.4em;
+  padding: 0.55em 0.9em;
+  border: 1px solid rgba(91, 124, 255, 0.35);
+  border-radius: 0.6em;
+  background: rgba(4, 12, 29, 0.7);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.trilha-filtro:focus-within {
+  border-color: var(--aqua);
+  box-shadow: 0 0 16px rgba(0, 255, 209, 0.16);
+}
+
+.trilha-filtro mat-icon {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.trilha-filtro input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-main);
+  font: inherit;
+  font-size: 1em;
+}
+
+.trilha-filtro input::placeholder {
+  color: var(--text-muted);
+}
+
+.trilha-filtro button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.trilha-filtro button:hover {
+  color: var(--aqua);
+}
+
+.trilha-vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7em;
+  margin-top: 2em;
+  padding: 2.5em 1em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.trilha-vazia mat-icon {
+  width: 2.4em;
+  height: 2.4em;
+  font-size: 2.4em;
+  opacity: 0.6;
+}
+
+.trilha-limpar {
+  margin-top: 0.4em;
+  padding: 0.5em 1.1em;
+  border: 1px solid var(--aqua);
+  border-radius: 0.5em;
+  background: transparent;
+  color: var(--aqua);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.trilha-limpar:hover {
+  background: var(--aqua);
+  color: var(--navy-900);
 }

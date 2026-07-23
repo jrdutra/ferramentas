@@ -1,0 +1,99 @@
+<div class="sp-actions" [class.sp-actions-cta]="variant === 'cta'">
+  @if (showCount && variant === 'pill') {
+    <span class="sp-count">
+      <mat-icon aria-hidden="true">task_alt</mat-icon>
+      {{ totalCount }} {{ totalCount === 1 ? 'item' : 'items' }} read
+    </span>
+  }
+
+  <button type="button"
+          [class]="variant === 'cta' ? 'sp-cta' : 'sp-button'"
+          (click)="openExport()">
+    <mat-icon aria-hidden="true">download</mat-icon>
+    Save progress
+  </button>
+
+  <button type="button"
+          [class]="variant === 'cta' ? 'sp-cta' : 'sp-button'"
+          (click)="triggerImport()">
+    <mat-icon aria-hidden="true">upload</mat-icon>
+    Load progress
+  </button>
+
+  <input #importInput type="file" accept="application/json,.json"
+         class="sp-hidden" (change)="onImportFile($event)" aria-hidden="true" tabindex="-1">
+</div>
+
+@if (feedback) {
+  <p class="sp-feedback" [class.is-error]="feedback.type === 'error'" role="status">
+    {{ feedback.message }}
+  </p>
+}
+
+@if (modalOpen) {
+  <div class="sp-overlay" (click)="closeExport()">
+    <div class="sp-modal" role="dialog" aria-modal="true" aria-labelledby="sp-modal-title"
+         (click)="$event.stopPropagation()">
+      <div class="sp-modal-head">
+        <h2 id="sp-modal-title">Export progress</h2>
+        <button type="button" class="sp-close" (click)="closeExport()" aria-label="Close">
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      </div>
+
+      <p class="sp-modal-lead">Choose what to include in your export file.</p>
+
+      <div class="sp-options">
+        <!-- Articles -->
+        <label class="sp-option">
+          <input type="checkbox" [(ngModel)]="articlesSelected" [disabled]="articleCount === 0">
+          <span class="sp-option-copy">
+            <span class="sp-option-title">Articles</span>
+            <span class="sp-option-sub">
+              {{ articleCount }} {{ articleCount === 1 ? 'article' : 'articles' }} read
+            </span>
+          </span>
+        </label>
+
+        <!-- Learn (parent) -->
+        <label class="sp-option sp-option-parent">
+          <input type="checkbox"
+                 [checked]="learnAllSelected"
+                 [indeterminate]="learnIndeterminate"
+                 [disabled]="learnCount === 0"
+                 (change)="toggleLearnAll($any($event.target).checked)">
+          <span class="sp-option-copy">
+            <span class="sp-option-title">Learn</span>
+            <span class="sp-option-sub">
+              {{ learnCount }} {{ learnCount === 1 ? 'chapter' : 'chapters' }} read across all paths
+            </span>
+          </span>
+        </label>
+
+        <!-- Learn paths (children) -->
+        <div class="sp-children">
+          @for (path of pathOptions; track path.id) {
+            <label class="sp-option sp-option-child" [class.is-empty]="!path.hasProgress">
+              <input type="checkbox" [(ngModel)]="pathSelected[path.id]" [disabled]="!path.hasProgress">
+              <span class="sp-option-copy">
+                <span class="sp-option-title">{{ path.title }}</span>
+                @if (!path.hasProgress) {
+                  <span class="sp-option-sub">No progress yet</span>
+                }
+              </span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="sp-modal-foot">
+        <button type="button" class="sp-button sp-button-ghost" (click)="closeExport()">Cancel</button>
+        <button type="button" class="sp-button sp-button-primary" [disabled]="!canExport"
+                (click)="confirmExport()">
+          <mat-icon aria-hidden="true">download</mat-icon>
+          Export selected
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { DataService } from '../data.service';
 import { ReadingProgressService } from './reading-progress/reading-progress.service';
+import { SiteProgressComponent } from './reading-progress/site-progress.component';
 import { LEARN_PATHS, chapterIdForRoute } from './reading-progress/learn-catalog';
 
 interface LearnArticle {
@@ -13,6 +15,8 @@ interface LearnArticle {
   readingTime: string;
   image: string;
   imageAlt: string;
+  languageFlag?: string;
+  languageFlagAlt?: string;
 }
 
 type SeriesKey = 'english' | 'spanish' | 'portuguese';
@@ -22,7 +26,7 @@ const SERIES_STATE_KEY = 'utily.learn.series-open';
 @Component({
   selector: 'app-learn',
   standalone: true,
-  imports: [MatIconModule, RouterLink],
+  imports: [FormsModule, MatIconModule, RouterLink, SiteProgressComponent],
   templateUrl: './learn.component.html',
   styleUrl: './learn.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -35,6 +39,38 @@ export class LearnComponent implements OnInit {
 
   readonly corporateApiPathContentId = 'corporate-api-path-content';
   isCorporateApiPathOpen = false;
+
+  /** Free-text filter over learning paths (trilhas). */
+  filtroTrilha = '';
+
+  /**
+   * Searchable metadata for each learning path (trilha). As new paths are
+   * added, register them here so the filter covers them automatically.
+   */
+  private readonly trilhas: ReadonlyArray<{ id: string; text: string }> = [
+    {
+      id: 'corporate-api-fundamentals',
+      text: 'Corporate API Fundamentals and Architecture Internet networking transport protocols IP addressing API infrastructure'
+    }
+  ];
+
+  /** True when the given path should be shown for the current filter term. */
+  isTrilhaVisible(id: string): boolean {
+    const termo = this.filtroTrilha.trim().toLowerCase();
+    if (!termo) return true;
+    const trilha = this.trilhas.find(t => t.id === id);
+    return !!trilha && trilha.text.toLowerCase().includes(termo);
+  }
+
+  /** Number of learning paths matching the current filter. */
+  get trilhasVisiveis(): number {
+    return this.trilhas.filter(t => this.isTrilhaVisible(t.id)).length;
+  }
+
+  limparFiltroTrilha(): void {
+    this.filtroTrilha = '';
+    this.cdr.markForCheck();
+  }
 
   /** Each language carousel starts collapsed; state is persisted in localStorage. */
   seriesOpen: Record<SeriesKey, boolean> = this.loadSeriesState();
@@ -271,6 +307,8 @@ export class LearnComponent implements OnInit {
     { chapterLabel: 'Capítulo 39', title: 'Estudo de casos reais de grandes empresas', description: 'Netflix, Amazon, Stripe, Shopify, LinkedIn, Google, GitHub e Spotify: decisões, trade-offs e padrões transferíveis.', route: '/learn/pt/estudo-de-casos-reais-de-grandes-empresas', readingTime: '105 min de leitura', image: '/assets/learn/real-world-enterprise-case-studies-cover.png', imageAlt: 'Casos reais de arquitetura convergindo para padrões governados'
     },
     { chapterLabel: 'Capítulo 40', title: 'Projeto final: plataforma completa de APIs', description: 'Projeto integrador com contratos, identidade, gateway, serviços, eventos, Kubernetes, observabilidade, resiliência e critérios de aceite.', route: '/learn/pt/projeto-final-plataforma-completa-de-apis', readingTime: '135 min de leitura', image: '/assets/learn/complete-api-platform-capstone-cover.png', imageAlt: 'Plataforma completa de APIs integrada de ponta a ponta'
+    },
+    { chapterLabel: 'Capítulo 41', title: 'O que é o Model Context Protocol (MCP)?', description: 'Guia completo sobre servidores MCP, arquitetura, ferramentas, recursos, prompts, segurança, autorização e integração com agentes de IA.', route: '/learn/pt/o-que-e-model-context-protocol-mcp', readingTime: '75 min de leitura', image: '/assets/learn/model-context-protocol-mcp-cover.png', imageAlt: 'Host de IA conectado por um hub seguro do Model Context Protocol a ferramentas, recursos, prompts, código e dados', languageFlag: '/assets/learn/brazil.png', languageFlagAlt: 'Brasil'
     }
   ];
   readonly englishArticles: LearnArticle[] = [
@@ -503,6 +541,8 @@ export class LearnComponent implements OnInit {
     { chapterLabel: 'Chapter 39', title: 'Real-World Case Studies from Large Enterprises', description: 'Netflix, Amazon, Stripe, Shopify, LinkedIn, Google, GitHub, and Spotify: decisions, trade-offs, and transferable patterns.', route: '/learn/en/real-world-case-studies-from-large-enterprises', readingTime: '105 min read', image: '/assets/learn/real-world-enterprise-case-studies-cover.png', imageAlt: 'Real-world architecture cases converging into governed patterns'
     },
     { chapterLabel: 'Chapter 40', title: 'Capstone Project: Complete API Platform', description: 'Integrating project with contracts, identity, gateways, services, events, Kubernetes, observability, resilience, and acceptance criteria.', route: '/learn/en/complete-api-platform-capstone-project', readingTime: '135 min read', image: '/assets/learn/complete-api-platform-capstone-cover.png', imageAlt: 'Complete end-to-end integrated API platform'
+    },
+    { chapterLabel: 'Chapter 41', title: 'What Is the Model Context Protocol (MCP)?', description: 'A complete guide to MCP servers, architecture, tools, resources, prompts, security, authorization, and AI agent integration.', route: '/learn/en/what-is-model-context-protocol-mcp', readingTime: '75 min read', image: '/assets/learn/model-context-protocol-mcp-cover.png', imageAlt: 'AI host connected through a secure Model Context Protocol hub to tools, resources, prompts, code, and data', languageFlag: '/assets/learn/usa.png', languageFlagAlt: 'United States'
     }
   ];
   readonly spanishArticles: LearnArticle[] = [
@@ -735,6 +775,8 @@ export class LearnComponent implements OnInit {
     { chapterLabel: 'Capítulo 39', title: 'Estudio de casos reales de grandes empresas', description: 'Netflix, Amazon, Stripe, Shopify, LinkedIn, Google, GitHub y Spotify: decisiones, trade-offs y patrones transferibles.', route: '/learn/es/estudio-de-casos-reales-de-grandes-empresas', readingTime: '105 min de lectura', image: '/assets/learn/real-world-enterprise-case-studies-cover.png', imageAlt: 'Casos reales de arquitectura convergiendo en patrones gobernados'
     },
     { chapterLabel: 'Capítulo 40', title: 'Proyecto final: plataforma completa de APIs', description: 'Proyecto integrador con contratos, identidad, gateway, servicios, eventos, Kubernetes, observabilidad, resiliencia y criterios de aceptación.', route: '/learn/es/proyecto-final-plataforma-completa-de-apis', readingTime: '135 min de lectura', image: '/assets/learn/complete-api-platform-capstone-cover.png', imageAlt: 'Plataforma completa de APIs integrada de extremo a extremo'
+    },
+    { chapterLabel: 'Capítulo 41', title: '¿Qué es el Model Context Protocol (MCP)?', description: 'Guía completa sobre servidores MCP, arquitectura, herramientas, recursos, prompts, seguridad, autorización e integración con agentes de IA.', route: '/learn/es/que-es-model-context-protocol-mcp', readingTime: '75 min de lectura', image: '/assets/learn/model-context-protocol-mcp-cover.png', imageAlt: 'Host de IA conectado mediante un hub seguro de Model Context Protocol a herramientas, recursos, prompts, código y datos', languageFlag: '/assets/learn/espanha.png', languageFlagAlt: 'España'
     }
   ];
 

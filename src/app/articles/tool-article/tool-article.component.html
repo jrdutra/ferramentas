@@ -156,6 +156,11 @@
         Open {{ article.toolName }}
         <mat-icon>arrow_forward</mat-icon>
       </a>
+      <button type="button" class="read-toggle" [class.is-read]="isRead" (click)="toggleRead()"
+              [attr.aria-pressed]="isRead">
+        <mat-icon>{{ isRead ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+        {{ isRead ? 'Marked as read' : 'Mark as read' }}
+      </button>
       <a class="secondary-link" routerLink="/articles">Read more articles</a>
     </div>
   </div>

@@ -2,6 +2,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   NgZone,
@@ -9,12 +10,14 @@ import {
   OnInit,
   PLATFORM_ID,
   ViewChild,
+  afterNextRender,
   inject
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DataService } from '../data.service';
 import { ARTICLE_SUMMARIES, ArticleSummary } from '../articles/articles.data';
+import { SiteProgressComponent } from '../learn/reading-progress/site-progress.component';
 
 interface Neuron {
   x: number;
@@ -54,15 +57,141 @@ interface Feature {
   description: string;
 }
 
+interface LearnFeature {
+  category: string;
+  title: string;
+  excerpt: string;
+  route: string;
+  readingTime: string;
+  image: string;
+  imageAlt: string;
+}
+
 interface FaqItem {
   question: string;
   answer: string;
 }
 
+/** Curated Learn chapters (English) shown in the home Learn carousel. */
+const LEARN_FEATURE_POOL: LearnFeature[] = [
+  {
+    category: 'Networking', title: 'Internet, Networking, and API Fundamentals',
+    excerpt: 'From network communication to the complete processing of a request in an API Gateway.',
+    route: '/learn/en/internet-networking-api-fundamentals', readingTime: '45 min read',
+    image: '/assets/learn/fundamentos-internet-redes-apis-cover.png',
+    imageAlt: 'An API call crossing network layers and an API Gateway'
+  },
+  {
+    category: 'Networking', title: 'TCP, UDP, Ports, and Sockets',
+    excerpt: 'From connection establishment to diagnosing timeouts, pooling, SNAT, and port exhaustion.',
+    route: '/learn/en/tcp-udp-ports-and-sockets', readingTime: '50 min read',
+    image: '/assets/learn/tcp-udp-portas-sockets-cover.png',
+    imageAlt: 'TCP streams and UDP datagrams crossing an API Gateway'
+  },
+  {
+    category: 'Protocols', title: 'HTTP/1.1, HTTP/2, and HTTP/3',
+    excerpt: 'From semantics and framing to multiplexing, HPACK, QUIC, QPACK, and protocol translation.',
+    route: '/learn/en/http-1-1-http-2-and-http-3', readingTime: '80 min read',
+    image: '/assets/learn/http-versions-cover.png',
+    imageAlt: 'Evolution from HTTP messages to multiplexed streams and QUIC through an API Gateway'
+  },
+  {
+    category: 'Security', title: 'HTTPS and TLS in Depth',
+    excerpt: 'From cryptography and TLS 1.2/1.3 handshakes to X.509 certificates, mTLS, and HSTS.',
+    route: '/learn/en/https-and-tls-in-depth', readingTime: '70 min read',
+    image: '/assets/learn/https-tls-cover.png',
+    imageAlt: 'HTTPS connection protected by TLS, a certificate chain, and an API Gateway'
+  },
+  {
+    category: 'Cryptography', title: 'Cryptography: Symmetric, Asymmetric, Hashes, and Signatures',
+    excerpt: 'From AES, hashes, HMAC, and digital signatures to key management, KMS, HSM, and PQC.',
+    route: '/learn/en/cryptography-fundamentals-and-api-applications', readingTime: '65 min read',
+    image: '/assets/learn/cryptography-cover.png',
+    imageAlt: 'Cryptographic core protecting keys, signatures, hashes, and API calls'
+  },
+  {
+    category: 'Security', title: 'Digital Certificates, PKI, and X.509',
+    excerpt: 'From identity, issuance, and trust chains to SAN, CSR, CRL, OCSP, HSM, and mTLS.',
+    route: '/learn/en/digital-certificates-pki-and-x509', readingTime: '75 min read',
+    image: '/assets/learn/digital-certificates-pki-x509-cover.png',
+    imageAlt: 'PKI trust chain connecting a root CA, certificates, an HSM, an API Gateway, and servers'
+  },
+  {
+    category: 'API design', title: 'REST: Architecture and Best Practices',
+    excerpt: "From Fielding's principles to resources, HTTP semantics, idempotency, caching, and OpenAPI.",
+    route: '/learn/en/rest-architecture-and-best-practices', readingTime: '85 min read',
+    image: '/assets/learn/rest-architecture-best-practices-cover.png',
+    imageAlt: 'Enterprise REST ecosystem with a central resource, clients, API Gateway, and persistence'
+  },
+  {
+    category: 'API design', title: 'GraphQL, gRPC, and WebSocket',
+    excerpt: 'From schemas, resolvers, and N+1 to Protobuf, streaming, deadlines, and persistent connections.',
+    route: '/learn/en/graphql-grpc-and-websocket', readingTime: '65 min read',
+    image: '/assets/learn/graphql-grpc-websocket-cover.png',
+    imageAlt: 'GraphQL, gRPC, and WebSocket connected in a modern enterprise architecture'
+  },
+  {
+    category: 'Identity', title: 'Authentication vs. Authorization',
+    excerpt: 'From identity proof to access decisions: credentials, tokens, OAuth, RBAC, ABAC, and ReBAC.',
+    route: '/learn/en/authentication-vs-authorization', readingTime: '120 min read',
+    image: '/assets/learn/authentication-authorization-cover.png',
+    imageAlt: 'Enterprise flow separating identity proof from access decisions for protected APIs'
+  },
+  {
+    category: 'Identity', title: 'OAuth 2.0 in Depth: Flows, Tokens, and Security',
+    excerpt: 'Authorization Code with PKCE, Client Credentials, refresh tokens, introspection, PAR, and DPoP.',
+    route: '/learn/en/oauth-2-flows-tokens-and-security', readingTime: '150 min read',
+    image: '/assets/learn/oauth-2-flows-tokens-security-cover.png',
+    imageAlt: 'OAuth 2.0 flows protected by PKCE, tokens, and modern security controls'
+  },
+  {
+    category: 'Identity', title: 'JWT, JWS, JWE, and JOSE in Depth',
+    excerpt: 'Claims, Base64url, signatures, MAC, algorithms, JWK, JWKS, key rotation, and secure validation.',
+    route: '/learn/en/jwt-jws-jwe-and-jose-in-depth', readingTime: '150 min read',
+    image: '/assets/learn/jwt-jws-jwe-jose-in-depth-cover.png',
+    imageAlt: 'Layered token protected by signatures, encryption, and key governance in an API architecture'
+  },
+  {
+    category: 'Architecture', title: 'API Gateways: Concepts and Architecture',
+    excerpt: 'Data plane, control plane, policies, routing, security, traffic control, and high availability.',
+    route: '/learn/en/api-gateways-concepts-and-architecture', readingTime: '135 min read',
+    image: '/assets/learn/api-gateways-architecture-cover.png',
+    imageAlt: 'Central API Gateway mediating consumers, policies, and backend services'
+  },
+  {
+    category: 'Security', title: 'API Security (OWASP API Security Top 10)',
+    excerpt: 'BOLA, authentication, properties, resources, functions, business flows, SSRF, and configuration.',
+    route: '/learn/en/api-security-owasp-api-security-top-10', readingTime: '105 min read',
+    image: '/assets/learn/api-security-owasp-top-10-cover.png',
+    imageAlt: 'Defense in depth protecting API identities, gateways, backends, and data'
+  },
+  {
+    category: 'Cloud native', title: 'Service Mesh (Istio, Linkerd, and Envoy)',
+    excerpt: 'Control plane, data plane, sidecars, ambient mode, mTLS, traffic management, and resilience.',
+    route: '/learn/en/service-mesh-istio-linkerd-and-envoy', readingTime: '130 min read',
+    image: '/assets/learn/service-mesh-istio-linkerd-envoy-cover.png',
+    imageAlt: 'Control plane coordinating a secure mesh of workloads, proxies, and multiple clusters'
+  },
+  {
+    category: 'Cloud native', title: 'Kubernetes for APIs',
+    excerpt: 'Pods, workloads, Services, Gateway API, configuration, probes, autoscaling, and GitOps.',
+    route: '/learn/en/kubernetes-for-apis', readingTime: '140 min read',
+    image: '/assets/learn/kubernetes-for-apis-cover.png',
+    imageAlt: 'Kubernetes cluster running APIs with routing, security, autoscaling, and observability'
+  },
+  {
+    category: 'Security', title: 'Zero Trust Applied to APIs',
+    excerpt: 'Composite identity, per-request decisions, PDP, PEP, mTLS, policy-as-code, and adaptive risk.',
+    route: '/learn/en/zero-trust-applied-to-apis', readingTime: '135 min read',
+    image: '/assets/learn/zero-trust-applied-to-apis-cover.png',
+    imageAlt: 'Zero Trust architecture evaluating identity, risk, and policies before granting API access'
+  }
+];
+
 @Component({
   selector: 'app-home-tbl',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIconModule],
+  imports: [CommonModule, RouterLink, MatIconModule, SiteProgressComponent],
   templateUrl: './home-tbl.component.html',
   styleUrl: './home-tbl.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -72,15 +201,26 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('homeRoot') private homeRoot?: ElementRef<HTMLElement>;
   @ViewChild('heroSection') private heroSection?: ElementRef<HTMLElement>;
   @ViewChild('heroCanvas') private heroCanvas?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('articlesTrack') private articlesTrack?: ElementRef<HTMLElement>;
+  @ViewChild('learnTrack') private learnTrack?: ElementRef<HTMLElement>;
 
   readonly articleCount = ARTICLE_SUMMARIES.length;
   readonly learnChapters = 40;
   readonly learnLanguages = 3;
 
-  /** Newest articles first, capped for the home showcase. */
-  readonly featuredArticles: ArticleSummary[] = [...ARTICLE_SUMMARIES]
+  private readonly allArticles: ArticleSummary[] = [...ARTICLE_SUMMARIES];
+
+  /**
+   * 12 articles for the home carousel. Initialised deterministically (newest
+   * first) so SSR and the first client render match; a random selection is
+   * applied in the browser after hydration (see afterNextRender below).
+   */
+  featuredArticles: ArticleSummary[] = [...ARTICLE_SUMMARIES]
     .sort((a, b) => b.publishedIso.localeCompare(a.publishedIso))
-    .slice(0, 6);
+    .slice(0, 12);
+
+  /** 12 Learn chapters for the home carousel, randomised in the browser. */
+  featuredLearn: LearnFeature[] = LEARN_FEATURE_POOL.slice(0, 12);
 
   readonly learnHighlights: string[] = [
     'TCP, UDP & Sockets',
@@ -133,6 +273,26 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       question: 'Which languages are supported?',
       answer:
         'The Learn track is available in English, Portuguese and Spanish, with the same 40+ chapters in each language.'
+    },
+    {
+      question: 'Who is The Big Learn for?',
+      answer:
+        'For developers, architects, students and anyone who works with or wants to understand corporate APIs — from people taking their first steps to experienced engineers filling gaps in networking, security or architecture.'
+    },
+    {
+      question: 'Do I need to follow the chapters in order?',
+      answer:
+        'No. The Learn track is designed as a progressive series, so reading in order builds the strongest foundation, but every chapter also works as a standalone reference you can jump straight into.'
+    },
+    {
+      question: 'Do you use cookies or track me?',
+      answer:
+        'We do not store cookies on your device. Reading progress is kept locally in your own browser, and for security we retain only the request IP and accessed path for 7 days. See the About page for the full cookie and privacy policies.'
+    },
+    {
+      question: 'Are there developer tools here too?',
+      answer:
+        'Yes. Alongside the learning content, The Big Learn includes a set of free, no-sign-up developer utilities — Base64, JSON, JWT, QR codes and more — available under Tools.'
     }
   ];
 
@@ -145,10 +305,41 @@ export class TblHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private reducedMotion = false;
   private paused = false;
 
-  constructor(private readonly dataService: DataService) {}
+  constructor(
+    private readonly dataService: DataService,
+    private readonly cdr: ChangeDetectorRef
+  ) {
+    // Randomise the home carousels in the browser only, after the first render,
+    // so server-rendered HTML and hydration stay in sync (no mismatch).
+    afterNextRender(() => {
+      this.featuredArticles = this.pickRandom(this.allArticles, 12);
+      this.featuredLearn = this.pickRandom(LEARN_FEATURE_POOL, 12);
+      this.cdr.markForCheck();
+    });
+  }
 
   ngOnInit(): void {
     this.dataService.setTituloAplicacao('Home');
+  }
+
+  /** Returns up to `count` items picked at random (Fisher–Yates on a copy). */
+  private pickRandom<T>(source: readonly T[], count: number): T[] {
+    const pool = [...source];
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, Math.min(count, pool.length));
+  }
+
+  /** Scrolls a home carousel one "page" left (-1) or right (1). */
+  scrollCarousel(which: 'articles' | 'learn', dir: -1 | 1): void {
+    const track = which === 'articles'
+      ? this.articlesTrack?.nativeElement
+      : this.learnTrack?.nativeElement;
+    if (!track) return;
+    const amount = Math.max(track.clientWidth * 0.85, 280);
+    track.scrollBy({ left: amount * dir, behavior: 'smooth' });
   }
 
   ngAfterViewInit(): void {

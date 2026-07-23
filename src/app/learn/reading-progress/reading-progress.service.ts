@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-import { VALID_CHAPTER_IDS, isValidTopicKey, topicKey } from './learn-catalog';
+import { VALID_CHAPTER_IDS, isValidTopicKey, pathIdForChapter, topicKey } from './learn-catalog';
 
 const STORAGE_KEY = 'utily.learn.reading-progress';
 
@@ -176,6 +176,47 @@ export class ReadingProgressService {
   /** Number of articles (chapters) currently marked as read. */
   count(): number {
     return Object.keys(this.state()).filter((key) => VALID_CHAPTER_IDS.has(key)).length;
+  }
+
+  /** Resolve the owning path id for a progress key (chapter id or topic key). */
+  private pathForKey(key: string): string | null {
+    const hash = key.lastIndexOf('#');
+    const chapterId = hash > 0 ? key.slice(0, hash) : key;
+    return pathIdForChapter(chapterId);
+  }
+
+  /** True when the given learning path has any read chapter or topic. */
+  pathHasProgress(pathId: string): boolean {
+    return Object.keys(this.state()).some((key) => this.pathForKey(key) === pathId);
+  }
+
+  /** Ids of learning paths that currently hold any progress. */
+  pathsWithProgress(): string[] {
+    const found = new Set<string>();
+    for (const key of Object.keys(this.state())) {
+      const pathId = this.pathForKey(key);
+      if (pathId) found.add(pathId);
+    }
+    return [...found];
+  }
+
+  /** Snapshot of progress keys belonging to any of the given path ids. */
+  snapshotForPaths(pathIds: ReadonlySet<string>): Record<string, boolean> {
+    const out: Record<string, boolean> = {};
+    for (const [key, val] of Object.entries(this.state())) {
+      if (val === true) {
+        const pathId = this.pathForKey(key);
+        if (pathId && pathIds.has(pathId)) out[key] = true;
+      }
+    }
+    return out;
+  }
+
+  /** Merge a sanitized learn map (chapter/topic keys) into current progress. */
+  merge(map: Record<string, boolean>): number {
+    const clean = this.sanitize(map);
+    this.persist({ ...this.state(), ...clean });
+    return Object.keys(clean).filter((key) => VALID_CHAPTER_IDS.has(key)).length;
   }
 
   export(): ReadingProgressExport {

@@ -290,6 +290,10 @@ export const LEARN_PATHS: LearnPath[] = [
       {
         id: 'corporate-api/complete-api-platform-capstone', topicCount: 19,
         routes: { pt: '/learn/pt/projeto-final-plataforma-completa-de-apis', en: '/learn/en/complete-api-platform-capstone-project', es: '/learn/es/proyecto-final-plataforma-completa-de-apis' }
+      },
+      {
+        id: 'corporate-api/model-context-protocol-mcp', topicCount: 23,
+        routes: { pt: '/learn/pt/o-que-e-model-context-protocol-mcp', en: '/learn/en/what-is-model-context-protocol-mcp', es: '/learn/es/que-es-model-context-protocol-mcp' }
       }
     ]
   }

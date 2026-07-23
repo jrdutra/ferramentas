@@ -9,33 +9,28 @@
         <mat-icon aria-hidden="true">task_alt</mat-icon>
         {{ totalReadCount }} {{ totalReadCount === 1 ? 'article' : 'articles' }} read
       </span>
-      <div class="progress-actions">
-        <button type="button" class="progress-button" (click)="exportProgress()">
-          <mat-icon aria-hidden="true">download</mat-icon>
-          Export progress
-        </button>
-        <button type="button" class="progress-button" (click)="triggerImport()">
-          <mat-icon aria-hidden="true">upload</mat-icon>
-          Import progress
-        </button>
-      </div>
-      <input
-        #importInput
-        type="file"
-        accept="application/json,.json"
-        class="visually-hidden"
-        (change)="onImportFile($event)"
-        aria-hidden="true"
-        tabindex="-1">
+      <app-site-progress [showCount]="false"></app-site-progress>
     </div>
 
-    @if (importFeedback) {
-      <p class="progress-feedback" [class.is-error]="importFeedback.type === 'error'" role="status">
-        {{ importFeedback.message }}
-      </p>
-    }
+    <!-- Learning path (trilha) filter -->
+    <div class="trilha-filtro">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="text"
+        [(ngModel)]="filtroTrilha"
+        placeholder="Filter learning paths…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Filter learning paths by name">
+      @if (filtroTrilha) {
+        <button type="button" (click)="limparFiltroTrilha()" aria-label="Clear filter">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
   </header>
 
+  @if (isTrilhaVisible('corporate-api-fundamentals')) {
   <section class="learning-path" aria-labelledby="corporate-api-path-title">
     <button
       type="button"
@@ -130,6 +125,9 @@
           <div class="learn-card-content">
           <div class="learn-card-meta">
             <span class="chapter-label">{{ article.chapterLabel }}</span>
+            @if (article.languageFlag) {
+              <img class="card-language-flag" [src]="article.languageFlag" [alt]="article.languageFlagAlt ?? ''">
+            }
             <span aria-hidden="true">•</span>
             <span>{{ article.readingTime }}</span>
           </div>
@@ -193,6 +191,9 @@
           <div class="learn-card-content">
           <div class="learn-card-meta">
             <span class="chapter-label">{{ article.chapterLabel }}</span>
+            @if (article.languageFlag) {
+              <img class="card-language-flag" [src]="article.languageFlag" [alt]="article.languageFlagAlt ?? ''">
+            }
             <span aria-hidden="true">•</span>
             <span>{{ article.readingTime }}</span>
           </div>
@@ -256,6 +257,9 @@
           <div class="learn-card-content">
           <div class="learn-card-meta">
             <span class="chapter-label">{{ article.chapterLabel }}</span>
+            @if (article.languageFlag) {
+              <img class="card-language-flag" [src]="article.languageFlag" [alt]="article.languageFlagAlt ?? ''">
+            }
             <span aria-hidden="true">•</span>
             <span>{{ article.readingTime }}</span>
           </div>
@@ -276,4 +280,13 @@
       </div>
     }
   </section>
+  }
+
+  @if (trilhasVisiveis === 0) {
+    <div class="trilha-vazia">
+      <mat-icon aria-hidden="true">search_off</mat-icon>
+      <span>No learning paths found for <strong>"{{ filtroTrilha }}"</strong></span>
+      <button type="button" class="trilha-limpar" (click)="limparFiltroTrilha()">Clear search</button>
+    </div>
+  }
 </section>
